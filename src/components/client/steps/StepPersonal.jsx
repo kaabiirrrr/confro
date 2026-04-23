@@ -31,7 +31,8 @@ export default function StepPersonal({ next, back }) {
       await profileApi.updateStepStatus("personal_info", formData);
       next();
     } catch (error) {
-      toast.error("Failed to save progress");
+      console.error("StepPersonal save error:", error?.response?.data || error.message);
+      toast.error(error?.response?.data?.message || "Failed to save progress");
     } finally {
       setLoading(false);
     }
