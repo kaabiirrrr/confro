@@ -1,0 +1,68 @@
+{
+  "name": "Connectfreelance - Hire Freelancers & Find Work Online",
+  "short_name": "Connectfreelance",
+  "description": "India's freelance marketplace to hire top freelancers or find remote work. Web development, design, writing & more.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#0F172A",
+  "orientation": "portrait-primary",
+  "lang": "en-IN",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "social"],
+  "icons": [
+    {
+      "src": "/favicon-light.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-dark.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/Logo2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/Hero-image.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Connectfreelance Homepage"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Find Freelancers",
+      "short_name": "Hire",
+      "description": "Browse and hire top freelancers",
+      "url": "/find-freelancers",
+      "icons": [{ "src": "/Icons/icons8-search-64.png", "sizes": "64x64" }]
+    },
+    {
+      "name": "Find Work",
+      "short_name": "Work",
+      "description": "Browse freelance job listings",
+      "url": "/find-work",
+      "icons": [{ "src": "/Icons/icons8-bag-100.png", "sizes": "64x64" }]
+    },
+    {
+      "name": "Sign Up",
+      "short_name": "Join",
+      "description": "Create your free account",
+      "url": "/signup",
+      "icons": [{ "src": "/Icons/icons8-account-male-96.png", "sizes": "64x64" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/favicon-light.png" media="(prefers-color-scheme: light)" />
+  <link rel="icon" type="image/png" href="/favicon-dark.png" media="(prefers-color-scheme: dark)" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary Meta Tags -->
+  <title>Connectfreelance – Find Freelancers & Work Opportunities Online</title>
+  <meta name="title" content="Connectfreelance – Find Freelancers & Work Opportunities Online" />
+  <meta name="description" content="Connectfreelance is a freelance platform in India to hire freelancers and find remote work easily. Web development, design, writing & more." />
+  <meta name="keywords" content="find freelancers online, hire freelancers India, freelancer jobs platform, freelance marketplace, hire web developers, UI UX designers for hire, content writers, remote jobs India, connectfreelance, connect freelance" />
+
+  <script>
+    /**
+     * SUPREME IMAGE INTERCEPTOR (Nuclear Phase 4)
+     * Overrides every possible way an image can load a broken localhost URL.
+     */
+    (function() {
+      const isDirty = (url) => {
+        if (typeof url !== 'string') return false;
+        // Don't intercept images from our OWN dev server (current origin) or relative paths
+        if (url.startsWith(window.location.origin) || url.startsWith('/')) return false;
+        // Intercept other localhost/127.0.0.1 URLs (broken database paths)
+        return url.includes('localhost:') || url.includes('127.0.0.1:');
+      };
+      
+      const getFallback = (url) => {
+        try {
+          // Instead of showing alphabets, try to REROUTE to local public path
+          const parts = url.split('/');
+          const fileName = parts[parts.length - 1];
+          return `/${fileName}`;
+        } catch(e) {
+          return "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80";
+        }
+      };
+
+      // 1. Override .src setter
+      const originalSrc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+      Object.defineProperty(HTMLImageElement.prototype, 'src', {
+          set: function(v) {
+              if (isDirty(v)) originalSrc.set.call(this, getFallback(this.alt));
+              else originalSrc.set.call(this, v);
+          },
+          get: function() { return originalSrc.get.call(this); }
+      });
+
+      // 2. Override .setAttribute
+      const originalSetAttr = Element.prototype.setAttribute;
+      Element.prototype.setAttribute = function(name, value) {
+          if (name === 'src' && this.tagName === 'IMG' && isDirty(value)) {
+              originalSetAttr.call(this, name, getFallback(this.getAttribute('alt')));
+          } else {
+              originalSetAttr.call(this, name, value);
+          }
+      };
+
+      // 3. Early DOM MutationObserver (Catches images before React hydrates)
+      const obs = new MutationObserver((ms) => {
+        ms.forEach(m => m.addedNodes.forEach(n => {
+          if (n.tagName === 'IMG' && isDirty(n.src)) n.src = getFallback(n.alt);
+          else if (n.querySelectorAll) n.querySelectorAll('img').forEach(img => {
+            if (isDirty(img.src)) img.src = getFallback(img.alt);
+          });
+        }));
+      });
+      obs.observe(document.documentElement, { childList: true, subtree: true });
+
+      console.log("%c[SUPREME CLEANUP] Interceptor Active", "color: #38bdf8; font-weight: bold;");
+    })();
+  </script>
+  <meta name="author" content="Connect" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <link rel="canonical" href="https://connectfreelance.in/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://connectfreelance.in/" />
+  <meta property="og:title" content="Connectfreelance – Find Freelancers & Work Opportunities Online" />
+  <meta property="og:description" content="Connectfreelance is a freelance platform in India to hire freelancers and find remote work easily. Web development, design, writing & more." />
+  <meta property="og:image" content="https://connectfreelance.in/Hero-image.png" />
+  <meta property="og:site_name" content="Connectfreelance" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://connectfreelance.in/" />
+  <meta property="twitter:title" content="Connectfreelance – Find Freelancers & Work Opportunities Online" />
+  <meta property="twitter:description" content="Connectfreelance is a freelance platform in India to hire freelancers and find remote work easily. Web development, design, writing & more." />
+  <meta property="twitter:image" content="https://connectfreelance.in/Hero-image.png" />
+
+  <!-- Additional SEO -->
+  <meta name="theme-color" content="#0F172A" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="format-detection" content="telephone=no" />
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+  
+  <!-- Geo Tags -->
+  <meta name="geo.region" content="IN-MH" />
+  <meta name="geo.placename" content="Nashik" />
+  <meta name="geo.position" content="19.9975;73.7898" />
+  <meta name="ICBM" content="19.9975, 73.7898" />
+
+  <!-- Google Site Verification -->
+  <meta name="google-site-verification" content="3p4vNWBeLF8g8RWXC_lJMpUw8tshanU1UIlRoGiwREs" />
+  <meta name="google-site-verification" content="4T5YcxLmEr1F-uLZjmACynTPjKkGYJ1hNi50GBGUG_Q" />
+
+  <!-- Bing Site Verification -->
+  <meta name="msvalidate.01" content="265E1B0558935063666F37202BBF0B4D" />
+
+  <!-- Structured Data - Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Connectfreelance",
+    "alternateName": "Connect Freelance",
+    "url": "https://connectfreelance.in",
+    "logo": "https://connectfreelance.in/Logo2.png",
+    "description": "Freelance platform in India connecting businesses with expert freelancers for remote work",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Nashik",
+      "addressRegion": "Maharashtra",
+      "addressCountry": "IN"
+    },
+    "sameAs": [
+      "https://www.facebook.com/profile.php?id=61570676549371",
+      "https://x.com/connectfreelanc",
+      "https://www.instagram.com/connectfreelance.in",
+      "https://www.linkedin.com/company/115777310"
+    ]
+  }
+  </script>
+
+  <!-- Structured Data - WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Connectfreelance",
+    "alternateName": "Connect Freelance",
+    "url": "https://connectfreelance.in",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://connectfreelance.in/find-freelancers?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <!-- Structured Data - Service -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Freelance Marketplace",
+    "provider": {
+      "@type": "Organization",
+      "name": "Connect"
+    },
+    "areaServed": "Worldwide",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Freelance Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Web Development"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "UI/UX Design"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Content Writing"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Mobile App Development"
+          }
+        }
+      ]
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+  <!-- Razorpay Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</body>
+
+</html>

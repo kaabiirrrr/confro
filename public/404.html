@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connectfreelance – Page Not Found</title>
+  <meta name="robots" content="noindex" />
+  <script>
+    // SPA redirect: preserve the path and redirect to index.html
+    // so React Router can handle the route
+    var path = window.location.pathname + window.location.search + window.location.hash;
+    var encoded = encodeURIComponent(path);
+    window.location.replace('/?redirect=' + encoded);
+  </script>
+  <style>
+    body {
+      margin: 0;
+      background: #0F172A;
+      color: #fff;
+      font-family: system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    p { color: rgba(255,255,255,0.4); font-size: 14px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div>
+    <p>Redirecting...</p>
+  </div>
+</body>
+</html>

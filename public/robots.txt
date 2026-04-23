@@ -1,0 +1,95 @@
+# Connectfreelance - robots.txt
+# https://connectfreelance.in
+
+User-agent: *
+Allow: /
+
+# Block private/authenticated routes
+Disallow: /admin/
+Disallow: /admin
+Disallow: /freelancer/dashboard
+Disallow: /freelancer/messages
+Disallow: /freelancer/earnings
+Disallow: /freelancer/proposals
+Disallow: /freelancer/projects
+Disallow: /freelancer/connects
+Disallow: /freelancer/buy-connects
+Disallow: /freelancer/membership
+Disallow: /freelancer/services/new
+Disallow: /freelancer/services/edit/
+Disallow: /freelancer/direct-contracts
+Disallow: /freelancer/identity-verification
+Disallow: /freelancer/setup-profile
+Disallow: /client/dashboard
+Disallow: /client/messages
+Disallow: /client/post-job
+Disallow: /client/contracts
+Disallow: /client/payments
+Disallow: /client/setup-profile
+Disallow: /client/identity-verification
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /profile-wizard
+Disallow: /kyc
+Disallow: /kyc/status
+Disallow: /meeting/
+Disallow: /auth/callback
+Disallow: /verify-email
+Disallow: /verify-email-waiting
+Disallow: /registration-success
+Disallow: /reset-password
+Disallow: /logout
+Disallow: /success
+
+# Allow public pages explicitly
+Allow: /find-freelancers
+Allow: /find-work
+Allow: /services
+Allow: /about
+Allow: /about/mission
+Allow: /about/services
+Allow: /about/team
+Allow: /how-it-works
+Allow: /for-freelancers
+Allow: /for-clients
+Allow: /solutions
+Allow: /blog/
+Allow: /legal
+Allow: /app-download
+Allow: /login
+Allow: /signup
+Allow: /signup-freelancer
+Allow: /signup-client
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://connectfreelance.in/sitemap.xml
+
+# Google
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Crawl-delay: 0
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
