@@ -39,12 +39,12 @@ export default defineConfig({
     fs: { strict: true },
     proxy: {
       '/api': {
-        target: 'https://connect-backend-1-varc.onrender.com',
+        target: 'https://connectfreelance-backend.onrender.com',
         changeOrigin: true,
         secure: false,
       },
       '/socket.io': {
-        target: 'https://connect-backend-1-varc.onrender.com',
+        target: 'https://connectfreelance-backend.onrender.com',
         changeOrigin: true,
         secure: false,
         ws: true,

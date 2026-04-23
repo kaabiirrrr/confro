@@ -6,11 +6,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://connect-backend-1-dm8d.onrender.com/api/:path*"
+      "destination": "https://connectfreelance-backend.onrender.com/api/:path*"
     },
     {
       "source": "/socket.io/:path*",
-      "destination": "https://connect-backend-1-dm8d.onrender.com/socket.io/:path*"
+      "destination": "https://connectfreelance-backend.onrender.com/socket.io/:path*"
     },
     {
       "source": "/((?!api|socket\\.io|_next|favicon\\.ico|sitemap\\.xml|robots\\.txt|manifest\\.json).*)",

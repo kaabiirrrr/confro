@@ -18,7 +18,7 @@ export const getApiUrl = () => {
         }
     }
     // Production Render Backend (Prioritize Env Var, fallback to dm8d)
-    return import.meta.env.VITE_API_URL || "https://connect-backend-1-dm8d.onrender.com";
+    return import.meta.env.VITE_API_URL || "https://connectfreelance-backend.onrender.com";
 };
 
 export const getSocketUrl = () => {
@@ -28,7 +28,7 @@ export const getSocketUrl = () => {
             return "http://127.0.0.1:5001";
         }
     }
-    return import.meta.env.VITE_SOCKET_URL || "https://connect-backend-1-dm8d.onrender.com";
+    return import.meta.env.VITE_SOCKET_URL || "https://connectfreelance-backend.onrender.com";
 };
 
 export const getOauthRedirectUrl = () => {
