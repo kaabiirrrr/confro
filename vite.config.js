@@ -58,7 +58,7 @@ export default defineConfig({
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-ui': ['framer-motion', 'lucide-react', 'react-icons', 'recharts', 'react-hot-toast'],
-          'vendor-utils': ['axios', 'canvas-confetti', 'date-fns', 'socket.io-client', 'clsx', 'tailwind-merge'],
+          'vendor-utils': ['axios', 'date-fns', 'socket.io-client'],
           'supabase-core': ['@supabase/supabase-js'],
         },
       },
