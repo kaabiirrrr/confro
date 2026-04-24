@@ -763,6 +763,28 @@ export const rejectVerification = async (id, rejection_reason = 'Does not meet r
     return data;
 };
 
+// ── NEW FULL VERIFICATION MANAGEMENT ─────────────────────────────────────────
+export const getVerificationList = async (role, status = 'ALL') => {
+    const params = status && status !== 'ALL' ? `?status=${status}` : '';
+    const { data } = await api.get(`/api/admin/verifications/${role.toLowerCase()}${params}`);
+    return data;
+};
+
+export const adminApproveVerification = async (id, admin_notes = '') => {
+    const { data } = await api.patch(`/api/admin/verifications/${id}/approve`, { admin_notes });
+    return data;
+};
+
+export const adminRejectVerification = async (id, admin_notes = '') => {
+    const { data } = await api.patch(`/api/admin/verifications/${id}/reject`, { admin_notes });
+    return data;
+};
+
+export const sendVerificationReminder = async (user_id, role) => {
+    const { data } = await api.post(`/api/admin/verifications/send-reminder`, { user_id, role });
+    return data;
+};
+
 // â”€â”€â”€ WITHDRAWALS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export const getWithdrawals = async () => {
