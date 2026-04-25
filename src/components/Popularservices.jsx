@@ -149,7 +149,7 @@ const PopularServices = () => {
                   return (
                     <div
                       key={item.id || index}
-                      className="bg-secondary rounded-2xl sm:rounded-3xl border border-white/10 overflow-hidden flex flex-col sm:flex-row h-auto sm:h-[240px] md:h-[280px] transition-all duration-300 shadow-lg shadow-black/10"
+                      className="bg-transparent rounded-2xl sm:rounded-3xl border border-white/10 overflow-hidden flex flex-col sm:flex-row h-auto sm:h-[240px] md:h-[280px] transition-all duration-300 shadow-lg shadow-black/10"
                     >
                       <div className={`w-full sm:w-1/2 p-4 sm:p-6 md:p-8 flex flex-col justify-between order-2 sm:order-none ${(index === 1 || index === 2) ? 'sm:order-2' : ''}`}>
                         <div>
