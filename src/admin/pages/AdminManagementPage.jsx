@@ -123,9 +123,10 @@ const AdminManagementPage = () => {
                 </div>
             </div>
 
-            {/* Admin Table container (overflow-hidden removed to prevent dropdown clipping) */}
+            {/* Admin Table */}
             <div className="bg-transparent border border-white/10 rounded-2xl shadow-xl shadow-black/40">
-                <div className="">
+                {/* Desktop Table */}
+                <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="text-white/40 text-xs uppercase tracking-widest font-bold border-b border-white/10">
@@ -139,17 +140,15 @@ const AdminManagementPage = () => {
                             {loading ? (
                                 <tr><td colSpan="4" className="px-6 py-12 text-center text-white/30">Loading administrators...</td></tr>
                             ) : filteredAdmins.length === 0 ? (
-                                <tr><td colSpan="4" className="px-6 py-12 text-center text-white/30">No administrators found matching your search</td></tr>
+                                <tr><td colSpan="4" className="px-6 py-12 text-center text-white/30">No administrators found</td></tr>
                             ) : filteredAdmins.map((admin) => (
                                 <tr key={admin.id} className="hover:bg-white/[0.02] transition-colors group">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold shadow-inner">
+                                            <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold shadow-inner shrink-0">
                                                 {admin.photo_url ? (
                                                     <img src={admin.photo_url} alt="" className="w-full h-full object-cover rounded-full" />
-                                                ) : (
-                                                    admin.email.charAt(0).toUpperCase()
-                                                )}
+                                                ) : admin.email.charAt(0).toUpperCase()}
                                             </div>
                                             <div>
                                                 <div className="text-white font-medium">{admin.name || admin.email.split('@')[0]}</div>
@@ -166,7 +165,7 @@ const AdminManagementPage = () => {
                                             value={admin.role}
                                             onChange={(val) => handleRoleChange(admin.id, val)}
                                             variant="accent"
-                                            className={`text-[10px] font-black uppercase tracking-widest w-40 !rounded-full`}
+                                            className="text-[10px] font-black uppercase tracking-widest w-40 !rounded-full"
                                         />
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-white/50 text-sm">
@@ -174,26 +173,56 @@ const AdminManagementPage = () => {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right">
                                         <div className="flex justify-end gap-2">
-                                            <button 
-                                                onClick={() => handleViewAdmin(admin)}
-                                                className="p-2 text-white/40 hover:text-white transition-colors"
-                                                title="View Admin Details"
-                                            >
-                                                <Eye size={18} />
-                                            </button>
-                                            <button 
-                                                onClick={() => handleRemoveAdmin(admin.id)}
-                                                className="p-2 text-white/40 hover:text-red-400 transition-colors"
-                                                title="Remove Admin"
-                                            >
-                                                <Trash2 size={18} />
-                                            </button>
+                                            <button onClick={() => handleViewAdmin(admin)} className="p-2 text-white/40 hover:text-white transition-colors"><Eye size={18} /></button>
+                                            <button onClick={() => handleRemoveAdmin(admin.id)} className="p-2 text-white/40 hover:text-red-400 transition-colors"><Trash2 size={18} /></button>
                                         </div>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Mobile Cards */}
+                <div className="md:hidden divide-y divide-white/5">
+                    {loading ? (
+                        <div className="px-4 py-12 text-center text-white/30 text-sm">Loading administrators...</div>
+                    ) : filteredAdmins.length === 0 ? (
+                        <div className="px-4 py-12 text-center text-white/30 text-sm">No administrators found</div>
+                    ) : filteredAdmins.map((admin) => (
+                        <div key={admin.id} className="p-4 space-y-3">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold shrink-0">
+                                        {admin.photo_url ? (
+                                            <img src={admin.photo_url} alt="" className="w-full h-full object-cover rounded-full" />
+                                        ) : admin.email.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <p className="text-white font-medium text-sm">{admin.name || admin.email.split('@')[0]}</p>
+                                        <p className="text-white/40 text-xs truncate max-w-[180px]">{admin.email}</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-1">
+                                    <button onClick={() => handleViewAdmin(admin)} className="p-2 text-white/40 hover:text-white transition-colors"><Eye size={16} /></button>
+                                    <button onClick={() => handleRemoveAdmin(admin.id)} className="p-2 text-white/40 hover:text-red-400 transition-colors"><Trash2 size={16} /></button>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between pl-13">
+                                <span className="text-white/30 text-xs">{new Date(admin.created_at).toLocaleDateString()}</span>
+                                <CustomDropdown
+                                    options={[
+                                        { label: 'ADMIN', value: 'ADMIN' },
+                                        { label: 'SUPER ADMIN', value: 'SUPER_ADMIN' }
+                                    ]}
+                                    value={admin.role}
+                                    onChange={(val) => handleRoleChange(admin.id, val)}
+                                    variant="accent"
+                                    className="text-[10px] font-black uppercase tracking-widest w-36 !rounded-full"
+                                />
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
 
