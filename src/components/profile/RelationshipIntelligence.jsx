@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../lib/api';
+// RelationshipIntelligence v2
 import { 
     Zap, ShieldCheck, Target, MessageSquare, 
     AlertTriangle, Diamond, TrendingUp, Info,
@@ -15,30 +16,37 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
 
+    const isClient = userRole === 'CLIENT';
+    const isAdmin = userRole === 'ADMIN' || userRole === 'SUPER_ADMIN';
+
     useEffect(() => {
+        if (!freelancerId || (!isClient && !isAdmin)) {
+            setLoading(false);
+            return;
+        }
+
+        // Wait for token to be available before fetching
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        if (!token) {
+            setLoading(false);
+            return;
+        }
+
         const fetchStats = async () => {
-            const isAdmin = userRole === 'ADMIN' || userRole === 'SUPER_ADMIN';
-            const isClient = userRole === 'CLIENT';
-
-            if (!freelancerId || (!isClient && !isAdmin)) {
-                setLoading(false);
-                return;
-            }
-
             try {
-                // Determine effective clientId
                 const effectiveClientId = isAdmin ? propClientId : null;
-                const url = effectiveClientId 
+                const url = effectiveClientId
                     ? `/api/relationship/stats/${freelancerId}?clientId=${effectiveClientId}`
                     : `/api/relationship/stats/${freelancerId}`;
 
-                const response = await axios.get(url);
+                const response = await api.get(url);
                 if (response.data.success) {
                     setData(response.data.data);
                 }
             } catch (err) {
-                console.error('Failed to fetch relationship stats:', err);
-                // The backend provides a failsafe, but we catch network errors here
+                if (err?.response?.status !== 401) {
+                    console.error('Failed to fetch relationship stats:', err);
+                }
                 setError(err.message);
             } finally {
                 setLoading(false);
@@ -48,7 +56,7 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
         fetchStats();
     }, [freelancerId, userRole, propClientId]);
 
-    const isAdminView = userRole === 'ADMIN' || userRole === 'SUPER_ADMIN';
+    const isAdminView = isAdmin;
     if (userRole !== 'CLIENT' && !isAdminView) return null;
     
     if (loading) return (

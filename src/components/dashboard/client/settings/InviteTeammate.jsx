@@ -126,29 +126,21 @@ return (
 
 {/* ROLE SECTION */}
 
-<div className="bg-secondary border border-white/10 rounded-2xl p-8 mb-10 shadow-xl shadow-black/20">
+<div className="mb-10">
 
-<div className="flex justify-between items-center mb-6">
-
-<div className="flex items-center gap-3">
-
-<h3 className="text-lg font-bold text-white">
-  Assign role
-</h3>
-
+<div className="flex flex-wrap justify-between items-start gap-3 mb-6">
+<div className="flex flex-wrap items-center gap-2">
+<h3 className="text-base sm:text-lg font-bold text-white">Assign role</h3>
 <span className="text-[10px] font-black uppercase tracking-widest bg-accent/10 text-accent px-3 py-1 rounded-full border border-accent/20">
   Unlock Business Plus
 </span>
-
 </div>
-
   <Link 
     to="/client/membership"
-    className="bg-white/5 border border-white/10 text-white hover:bg-white/10 px-5 py-2.5 rounded-xl text-sm font-bold transition-all"
+    className="bg-white/5 border border-white/10 text-white hover:bg-white/10 px-4 py-2 rounded-xl text-sm font-bold transition-all shrink-0"
   >
     Upgrade
   </Link>
-
 </div>
 
 <p className="text-sm text-white/50 mb-8 leading-relaxed font-medium">
@@ -158,8 +150,7 @@ return (
 
 
 {/* ROLE OPTIONS */}
-
-<div className="grid grid-cols-3 gap-4">
+<div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
 
       <button
         onClick={() => setRole("messenger")}
@@ -256,24 +247,23 @@ return (
 </div>
 
 {/* ACTION BUTTONS */}
-<div className="flex items-center gap-4 border-t border-white/5 pt-10 mt-6">
+<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 border-t border-white/5 pt-8 mt-6">
   <button 
     onClick={handleSendInvite}
     disabled={inviteStatus !== "idle"}
-    className={`px-10 py-3.5 rounded-2xl text-sm font-bold transition-all flex items-center justify-center gap-2 min-w-[220px] shadow-lg shadow-accent/20 border border-white/5 ${
+    className={`w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-lg shadow-accent/20 ${
       inviteStatus === "sent" 
-        ? "bg-green-500/10 text-green-400 border-green-500/20" 
+        ? "bg-green-500/10 text-green-400 border border-green-500/20" 
         : inviteStatus === "sending"
         ? "bg-accent/40 text-white cursor-not-allowed"
-        : "bg-accent text-white hover:bg-accent/90 hover:scale-[1.02] active:scale-[0.98]"
+        : "bg-accent text-white hover:opacity-90 active:scale-[0.98]"
     }`}
   >
-    {inviteStatus === "idle" && <><Send size={18} /> Send invites</>}
-    {inviteStatus === "sending" && <><InfinityLoader size={20} /> Sending...</>}
-    {inviteStatus === "sent" && <><CheckCircle2 size={18} /> Invites Sent!</>}
+    {inviteStatus === "idle" && <><Send size={16} /> Send invites</>}
+    {inviteStatus === "sending" && <><InfinityLoader size={18} /> Sending...</>}
+    {inviteStatus === "sent" && <><CheckCircle2 size={16} /> Invites Sent!</>}
   </button>
-
-  <Link to="/client/settings" className="text-white/40 hover:text-white hover:bg-white/5 px-8 py-3.5 rounded-2xl text-sm font-bold transition-all">
+  <Link to="/client/settings" className="w-full sm:w-auto text-center text-white/40 hover:text-white hover:bg-white/5 px-8 py-3.5 rounded-full text-sm font-bold transition-all border border-white/10">
     Cancel
   </Link>
 </div>

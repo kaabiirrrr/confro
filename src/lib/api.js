@@ -97,39 +97,29 @@ api.interceptors.response.use((response) => {
         originalRequest._retried = true;
 
         try {
-            const { data: { session } } = await supabase.auth.getSession();
+            // Try to refresh the session first
+            const { data: refreshData } = await supabase.auth.refreshSession();
+            const freshToken = refreshData?.session?.access_token;
 
-            if (session?.access_token) {
-                const freshToken = session.access_token;
+            if (freshToken) {
                 localStorage.setItem('token', freshToken);
                 sessionStorage.setItem('token', freshToken);
                 originalRequest.headers['Authorization'] = `Bearer ${freshToken}`;
                 return api(originalRequest);
             }
         } catch (refreshErr) {
-            console.warn('[API Interceptor] Token refresh attempt failed:', refreshErr.message);
+            // Refresh failed — session is truly expired
         }
 
-        // Only log out if there's genuinely no token anywhere
-        const stillHasToken = localStorage.getItem('token') || sessionStorage.getItem('token');
-        if (stillHasToken) {
-            // Token exists but backend rejected it — could be a race condition or
-            // a specific endpoint issue. Don't log the user out.
-            console.warn('[API Interceptor] 401 on', originalRequest.url, '— token present, skipping logout.');
-            return Promise.reject(error);
-        }
-
-        console.error('[API Interceptor] Session unrecoverable (401). Clearing app token.');
+        // Refresh failed — clear stale token and redirect to login
         localStorage.removeItem('token');
         sessionStorage.removeItem('token');
 
         const path = window.location.pathname;
         const isOnboarding = path.includes('/auth/callback') || path.includes('/profile-wizard') || path.includes('/setup-profile');
-        
+
         if (!isOnboarding) {
             window.dispatchEvent(new Event('auth-unauthorized'));
-        } else {
-            console.warn('[API Interceptor] 401 suppressed during onboarding/callback phase:', path);
         }
     }
 

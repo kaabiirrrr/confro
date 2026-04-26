@@ -6,6 +6,8 @@ import { toast } from "react-hot-toast";
 import { toastApiError } from "../../../../utils/apiErrorToast";
 import InfinityLoader from '../../../common/InfinityLoader';
 
+const CANVAS_SIZE = 220;
+
 const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
   const fileRef = useRef(null);
   const canvasRef = useRef(null);
@@ -20,8 +22,6 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
   const [dragging, setDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
-  const CANVAS_SIZE = 300;
-
   const handleUploadClick = () => fileRef.current?.click();
 
   const handleFileChange = (e) => {
@@ -29,7 +29,13 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
     if (!file) return;
     if (!file.type.startsWith("image/")) { toast.error("Please upload an image file"); return; }
     const reader = new FileReader();
-    reader.onload = (ev) => { setImageSrc(ev.target.result); setCropMode(true); setZoom(1); setRotation(0); setOffset({ x: 0, y: 0 }); };
+    reader.onload = (ev) => {
+      setImageSrc(ev.target.result);
+      setCropMode(true);
+      setZoom(1);
+      setRotation(0);
+      setOffset({ x: 0, y: 0 });
+    };
     reader.readAsDataURL(file);
   };
 
@@ -45,7 +51,6 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
     ctx.scale(zoom, zoom);
     ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
     ctx.restore();
-    // Circle mask
     ctx.globalCompositeOperation = "destination-in";
     ctx.beginPath();
     ctx.arc(CANVAS_SIZE / 2, CANVAS_SIZE / 2, CANVAS_SIZE / 2, 0, Math.PI * 2);
@@ -100,53 +105,62 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
   const handleDrop = (e) => {
     e.preventDefault(); e.stopPropagation(); setDragActive(false);
     const file = e.dataTransfer.files?.[0];
-    if (file) { const reader = new FileReader(); reader.onload = (ev) => { setImageSrc(ev.target.result); setCropMode(true); setZoom(1); setRotation(0); setOffset({ x: 0, y: 0 }); }; reader.readAsDataURL(file); }
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setImageSrc(ev.target.result);
+        setCropMode(true);
+        setZoom(1);
+        setRotation(0);
+        setOffset({ x: 0, y: 0 });
+      };
+      reader.readAsDataURL(file);
+    }
   };
+
+  const handleClose = () => { setCropMode(false); setImageSrc(null); onClose(); };
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 pointer-events-none flex items-center justify-center z-[100] p-4 sm:p-6">
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm">
           <motion.div
-            drag dragMomentum={false}
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="glass-card w-full max-w-[800px] rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-10 pointer-events-auto cursor-default"
+            initial={{ y: "100%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100%", opacity: 0 }}
+            transition={{ type: "spring", damping: 30, stiffness: 300 }}
+            className="bg-secondary border border-white/10 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl"
           >
             {/* Header */}
-            <div className="h-14 px-6 border-b border-white/10 bg-white/5 flex items-center justify-between cursor-move select-none">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center text-accent">
-                  <Camera size={16} />
-                </div>
-                <div className="flex flex-col">
-                  <h2 className="text-white font-bold text-[11px] uppercase tracking-[0.2em]">
+                <Camera size={18} className="text-accent shrink-0" />
+                <div>
+                  <p className="text-white font-bold text-xs uppercase tracking-widest">
                     {cropMode ? "Crop Photo" : "Profile Editor"}
-                  </h2>
-                  <p className="text-white/20 text-[9px] font-medium uppercase tracking-widest">
-                    {cropMode ? "Drag to reposition · Scroll to zoom" : "Modalless Window"}
+                  </p>
+                  <p className="text-white/30 text-[10px]">
+                    {cropMode ? "Drag to reposition" : "Update your profile photo"}
                   </p>
                 </div>
               </div>
-              <button onClick={() => { setCropMode(false); setImageSrc(null); onClose(); }}
-                className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all cursor-pointer">
-                <X size={20} />
+              <button onClick={handleClose}
+                className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all shrink-0">
+                <X size={18} />
               </button>
             </div>
 
-            <div className="p-8 lg:p-12 bg-gradient-to-br from-transparent to-accent/5">
+            {/* Body */}
+            <div className="p-5 space-y-5">
               {cropMode ? (
-                /* -- CROP MODE -- */
-                <div className="flex flex-col items-center gap-6">
-                  <div className="relative" style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }}>
-                    {imageSrc && (
-                      <img ref={imgRef} src={imageSrc} onLoad={handleImgLoad}
-                        style={{ display: "none" }} alt="" />
-                    )}
+                /* Crop mode */
+                <div className="flex flex-col items-center gap-5">
+                  <div style={{ width: CANVAS_SIZE, height: CANVAS_SIZE }}>
+                    {imageSrc && <img ref={imgRef} src={imageSrc} onLoad={handleImgLoad} style={{ display: "none" }} alt="" />}
                     <canvas
                       ref={canvasRef}
-                      width={CANVAS_SIZE} height={CANVAS_SIZE}
+                      width={CANVAS_SIZE}
+                      height={CANVAS_SIZE}
                       style={{ borderRadius: "50%", cursor: dragging ? "grabbing" : "grab", border: "2px solid rgba(255,255,255,0.15)" }}
                       onMouseDown={handleMouseDown}
                       onMouseMove={handleMouseMove}
@@ -155,81 +169,77 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
                     />
                   </div>
 
-                  {/* Controls */}
-                  <div className="flex items-center gap-4 w-full max-w-xs">
-                    <ZoomOut size={16} className="text-white/40 shrink-0" />
+                  {/* Zoom + rotate */}
+                  <div className="flex items-center gap-3 w-full">
+                    <ZoomOut size={14} className="text-white/40 shrink-0" />
                     <input type="range" min={0.5} max={3} step={0.05} value={zoom}
                       onChange={e => { setZoom(parseFloat(e.target.value)); setTimeout(drawCrop, 10); }}
                       className="flex-1 accent-accent" />
-                    <ZoomIn size={16} className="text-white/40 shrink-0" />
+                    <ZoomIn size={14} className="text-white/40 shrink-0" />
                     <button onClick={() => { setRotation(r => r + 90); setTimeout(drawCrop, 10); }}
-                      className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all">
-                      <RotateCw size={14} />
+                      className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all shrink-0">
+                      <RotateCw size={13} />
                     </button>
                   </div>
 
-                  <div className="flex gap-4 w-full max-w-xs">
-                    <button onClick={() => { setCropMode(false); setImageSrc(null); if (fileRef.current) fileRef.current.value = ""; }}
-                      className="flex-1 h-11 rounded-xl bg-white/5 border border-white/10 text-white/60 font-bold text-sm uppercase tracking-widest hover:text-white hover:bg-white/10 transition-all">
+                  {/* Actions */}
+                  <div className="flex gap-3 w-full">
+                    <button
+                      onClick={() => { setCropMode(false); setImageSrc(null); if (fileRef.current) fileRef.current.value = ""; }}
+                      className="flex-1 h-11 rounded-full bg-white/5 border border-white/10 text-white/60 font-bold text-sm hover:bg-white/10 transition-all">
                       Back
                     </button>
                     <button onClick={handleCropDone} disabled={uploading}
-                      className="flex-1 h-11 rounded-xl bg-accent text-white font-bold text-sm uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20 disabled:opacity-50 flex items-center justify-center gap-2">
-                      {uploading ? <InfinityLoader size={20} /> : <Check size={16} />}
+                      className="flex-1 h-11 rounded-full bg-accent text-white font-bold text-sm shadow-lg shadow-accent/20 disabled:opacity-50 flex items-center justify-center gap-2 transition-all">
+                      {uploading ? <InfinityLoader size={18} /> : <Check size={15} />}
                       {uploading ? "Uploading..." : "Apply"}
                     </button>
                   </div>
                 </div>
               ) : (
-                /* -- UPLOAD MODE -- */
-                <div className="flex flex-col lg:flex-row gap-12 items-center lg:items-start">
-                  <div className="w-full lg:w-[320px] shrink-0">
-                    <div onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}
-                      onClick={handleUploadClick}
-                      className={`relative aspect-square rounded-full border-2 border-dashed transition-all cursor-pointer flex flex-col items-center justify-center overflow-hidden ${dragActive ? "border-accent bg-accent/5" : "border-white/10 hover:border-accent/40 bg-white/[0.02]"}`}>
-                      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 pointer-events-none" />
-                      <div className="flex flex-col items-center text-center px-6">
-                        <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 shadow-xl">
-                          <Upload size={32} className="text-white/60" />
-                        </div>
-                        <p className="text-white font-bold text-lg mb-1 tracking-tight">Click or Drag Image</p>
-                        <p className="text-white/30 text-xs font-medium">PNG, JPG or WEBP (Max 5MB)</p>
-                      </div>
-                    </div>
+                /* Upload mode */
+                <div className="space-y-5">
+                  {/* Upload zone */}
+                  <div
+                    onDragEnter={handleDrag} onDragLeave={handleDrag}
+                    onDragOver={handleDrag} onDrop={handleDrop}
+                    onClick={handleUploadClick}
+                    className={`w-full h-36 rounded-2xl border-2 border-dashed transition-all cursor-pointer flex flex-col items-center justify-center gap-2 ${
+                      dragActive ? "border-accent bg-accent/5" : "border-white/10 hover:border-accent/40"
+                    }`}
+                  >
+                    <Upload size={24} className="text-white/40" />
+                    <p className="text-white font-bold text-sm">Click or Drag Image</p>
+                    <p className="text-white/30 text-xs">PNG, JPG or WEBP Â· Max 5MB</p>
                   </div>
 
-                  <div className="flex-1 space-y-8">
-                    <div className="space-y-4">
-                      <h3 className="text-2xl font-black text-white tracking-tight leading-tight">
-                        Show clients the best <span className="text-accent italic">version</span> of yourself.
-                      </h3>
-                      <p className="text-white/40 text-sm font-medium leading-relaxed">
-                        Maintaining a professional identity is crucial for trust. Your profile photo helps building confidence with potential clients.
-                      </p>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/5">
-                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0">
-                          <Info size={16} />
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-white text-xs font-bold uppercase tracking-wider">Photo Guidelines</p>
-                          <p className="text-white/30 text-[13px] font-medium leading-normal">
-                            Must be an actual photo of you. Logos, clip-art, group photos, and digitally altered images are strictly not allowed.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="pt-6 flex flex-col sm:flex-row gap-4">
-                      <button onClick={handleUploadClick}
-                        className="flex-1 h-12 rounded-xl bg-accent text-white font-bold text-sm uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20">
-                        Choose Profile Image
-                      </button>
-                      <button onClick={onClose}
-                        className="px-8 h-12 rounded-xl bg-white/5 border border-white/10 text-white/60 font-bold text-sm uppercase tracking-widest hover:text-white hover:bg-white/10 transition-all">
-                        Cancel
-                      </button>
-                    </div>
+                  {/* Info */}
+                  <div>
+                    <h3 className="text-lg font-black text-white leading-snug">
+                      Show clients the best <span className="text-accent italic">version</span> of yourself.
+                    </h3>
+                    <p className="text-white/40 text-sm mt-1 leading-relaxed">
+                      Your profile photo builds confidence with potential clients.
+                    </p>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                    <Info size={14} className="text-blue-400 shrink-0 mt-0.5" />
+                    <p className="text-white/40 text-xs leading-relaxed">
+                      Must be an actual photo of you. Logos, group photos, and altered images are not allowed.
+                    </p>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex flex-col gap-3 pb-2">
+                    <button onClick={handleUploadClick}
+                      className="w-full h-11 rounded-full bg-accent text-white font-bold text-sm shadow-lg shadow-accent/20 hover:opacity-90 transition-all">
+                      Choose Profile Image
+                    </button>
+                    <button onClick={handleClose}
+                      className="w-full h-11 rounded-full bg-white/5 border border-white/10 text-white/60 font-bold text-sm hover:bg-white/10 transition-all">
+                      Cancel
+                    </button>
                   </div>
                 </div>
               )}

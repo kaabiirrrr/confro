@@ -781,9 +781,6 @@ const FreelancerProfilePage = () => {
                                         </div>
                                     ) : (
                                         <div className="grid grid-cols-1 sm:grid-cols-12 gap-y-6">
-                                            <div className="sm:col-span-3 text-sm font-bold text-slate-900/40 dark:text-gray-400">Phone:</div>
-                                            <div className="sm:col-span-9 text-sm font-bold text-accent">{profile.phone || 'Not Provided'}</div>
-
                                             <div className="sm:col-span-3 text-sm font-bold text-slate-900/40 dark:text-gray-400">Address:</div>
                                             <div className="sm:col-span-9 text-sm font-bold text-slate-900/60 dark:text-white/60 leading-relaxed uppercase tracking-widest">
                                                 {profile.location || 'Not Provided'}

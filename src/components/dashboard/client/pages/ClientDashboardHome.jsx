@@ -663,30 +663,30 @@ const ClientDashboardHome = () => {
               <div
                 key={item.id ?? i}
                 onClick={() => navigate(isContract ? `/client/contracts` : `/client/jobs`)}
-                className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex items-center gap-4 hover:border-accent/40 cursor-pointer transition shadow-sm backdrop-blur-sm group"
+                className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex items-start gap-3 hover:border-accent/40 cursor-pointer transition shadow-sm backdrop-blur-sm group"
               >
-                <div className="shrink-0">
+                <div className="shrink-0 mt-0.5">
                   {isContract ? (
-                    <img src="/Icons/icons8-contract-60.png" alt="Contract" className="w-12 h-12 object-contain" />
+                    <img src="/Icons/icons8-contract-60.png" alt="Contract" className="w-10 h-10 object-contain" />
                   ) : (
-                    <img src="/Icons/icons8-bag-100.png" alt="Job" className="w-12 h-12 object-contain" />
+                    <img src="/Icons/icons8-bag-100.png" alt="Job" className="w-10 h-10 object-contain" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm text-slate-700 dark:text-white/70 truncate group-hover:text-accent transition-colors">{title}</p>
-                  <p className="text-slate-400 dark:text-light-text/30 text-[10px] uppercase font-bold tracking-widest mt-0.5">{isContract ? "Contract" : "Job"} · {fmtDate(date)}</p>
-                </div>
-
-                {isContract && item.deadline_risk && (
-                  <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter shrink-0 border transition-all duration-500 shadow-sm ${item.deadline_risk.risk === 'high' ? 'bg-rose-500/10 text-rose-500 border-rose-500/30 shadow-[0_0_10px_rgba(244,63,94,0.1)]' :
-                    item.deadline_risk.risk === 'medium' ? 'bg-amber-500/10 text-amber-500 border-amber-500/30' :
-                      'bg-emerald-500/10 text-emerald-500 border-emerald-500/30'
-                    }`}>
-                    {item.deadline_risk.probability}% Delay Risk
+                  <p className="font-semibold text-sm text-slate-700 dark:text-white/70 group-hover:text-accent transition-colors leading-snug break-words">{title}</p>
+                  <p className="text-slate-400 dark:text-light-text/30 text-[10px] uppercase font-bold tracking-widest mt-1">{isContract ? "Contract" : "Job"} · {fmtDate(date)}</p>
+                  <div className="flex flex-wrap items-center gap-2 mt-2">
+                    {isContract && item.deadline_risk && (
+                      <div className={`px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-tighter border ${item.deadline_risk.risk === 'high' ? 'bg-rose-500/10 text-rose-500 border-rose-500/30' :
+                        item.deadline_risk.risk === 'medium' ? 'bg-amber-500/10 text-amber-500 border-amber-500/30' :
+                          'bg-emerald-500/10 text-emerald-500 border-emerald-500/30'
+                        }`}>
+                        {item.deadline_risk.probability}% Delay Risk
+                      </div>
+                    )}
+                    <StatusBadge status={item.status} />
                   </div>
-                )}
-
-                <StatusBadge status={item.status} />
+                </div>
               </div>
             );
           })}

@@ -121,15 +121,15 @@ const NotificationDropdown = ({ role }) => {
                     right: 0;
                     top: calc(100% + 12px);
                     width: min(420px, calc(100vw - 16px));
-                    background: rgba(15, 23, 42, 0.4);
-                    backdrop-filter: blur(40px) saturate(200%);
-                    -webkit-backdrop-filter: blur(40px) saturate(200%);
-                    border: 1px solid rgba(255, 255, 255, 0.12);
+                    background: rgba(15, 23, 42, 0.92);
+                    backdrop-filter: blur(24px) saturate(180%);
+                    -webkit-backdrop-filter: blur(24px) saturate(180%);
+                    border: 1px solid rgba(255, 255, 255, 0.10);
                     border-radius: 20px;
                     overflow: hidden;
                     z-index: 9999;
                     animation: nd-slideIn 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
-                    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+                    box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.7);
                     padding: 4px 0 0 0;
                 }
                 @media (max-width: 767px) {

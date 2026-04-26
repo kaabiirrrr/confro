@@ -97,46 +97,55 @@ export default function StepDocuments({ next, back }) {
     }
   };
 
-  const UploadBox = ({ label, type, required, allowMultiple }) => (
-    <div className="space-y-3">
-      <p className="text-sm font-semibold text-white/50 px-1">
-        {label} {required && <span className="text-accent">*</span>}
-      </p>
+  const UploadBox = ({ label, type, required, allowMultiple }) => {
+    const inputRef = useState(null);
+    return (
+      <div className="space-y-3">
+        <p className="text-sm font-semibold text-white/50 px-1">
+          {label} {required && <span className="text-accent">*</span>}
+        </p>
 
-      <label className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-4 cursor-pointer transition-all group ${
-        documents[type] ? 'border-accent/40 bg-accent/5' : 'border-white/5 hover:border-white/20 bg-white/[0.01]'
-      }`}>
-        <div className="flex flex-col items-center gap-2">
-          {documents[type] ? (
-            <>
-              <FiCheckCircle className="text-2xl text-accent" />
-              <p className="text-xs font-semibold text-white truncate max-w-[150px]">
-                {Array.isArray(documents[type]) 
-                  ? `${documents[type].length} files selected` 
-                  : documents[type].name}
-              </p>
-            </>
-          ) : (
-            <>
-              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent/10 group-hover:text-accent transition-colors">
-                <FiUploadCloud className="text-xl" />
-              </div>
-              <p className="text-[10px] font-medium text-white/20 group-hover:text-white/40 transition-colors uppercase tracking-widest">
-                {allowMultiple ? 'Select Files/Folder' : 'Upload File'}
-              </p>
-            </>
-          )}
+        <div
+          onClick={() => document.getElementById(`file-input-${type}`)?.click()}
+          className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-6 cursor-pointer transition-all group ${
+            documents[type] ? 'border-accent/40 bg-accent/5' : 'border-white/5 hover:border-white/20 bg-white/[0.01]'
+          }`}
+        >
+          <div className="flex flex-col items-center gap-2">
+            {documents[type] ? (
+              <>
+                <FiCheckCircle className="text-2xl text-accent" />
+                <p className="text-xs font-semibold text-white truncate max-w-[150px]">
+                  {Array.isArray(documents[type])
+                    ? `${documents[type].length} files selected`
+                    : documents[type].name}
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent/10 group-hover:text-accent transition-colors">
+                  <FiUploadCloud className="text-xl" />
+                </div>
+                <p className="text-[10px] font-medium text-white/20 group-hover:text-white/40 transition-colors uppercase tracking-widest">
+                  {allowMultiple ? 'Select Files' : 'Upload File'}
+                </p>
+              </>
+            )}
+          </div>
         </div>
+
+        {/* Input outside the div — avoids mobile browser issues */}
         <input
+          id={`file-input-${type}`}
           type="file"
           className="hidden"
           multiple={allowMultiple}
-          webkitdirectory={allowMultiple ? "" : undefined}
+          accept="image/*,application/pdf,.doc,.docx"
           onChange={(e) => handleUpload(type, e.target.files)}
         />
-      </label>
-    </div>
-  );
+      </div>
+    );
+  };
 
   return (
     <motion.div

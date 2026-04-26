@@ -12,28 +12,42 @@ const SettingsSidebar = ({ active, setActive }) => {
   ];
 
   return (
-    <div className="w-full lg:w-[260px]">
-      <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
+    <div className="w-full lg:w-[220px]">
+      {/* Mobile: horizontal scrollable tabs */}
+      <div className="flex lg:hidden gap-1 overflow-x-auto no-scrollbar border-b border-white/5 pb-1">
         {menu.map(item => (
           <button
             key={item.id}
             onClick={() => setActive(item.id)}
-            className={`relative text-left whitespace-nowrap px-4 lg:pl-6 py-3 transition-all duration-300 ${
-              active === item.id 
-                ? "text-white font-semibold bg-white/5 lg:bg-transparent" 
-                : "text-white/40 hover:text-white hover:bg-white/5 lg:hover:bg-transparent"
-            } rounded-lg lg:rounded-none`}
+            className={`relative shrink-0 px-3 py-2.5 text-xs font-semibold whitespace-nowrap transition-all rounded-lg ${
+              active === item.id
+                ? "text-white bg-white/5"
+                : "text-white/40 hover:text-white"
+            }`}
           >
-            {/* Desktop side indicator */}
+            {item.label}
             {active === item.id && (
-              <span className="hidden lg:block absolute left-0 top-0 h-full w-[3px] bg-accent shadow-[0_0_10px_rgba(var(--accent-rgb),0.5)]"></span>
+              <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-accent rounded-full" />
             )}
-            
-            {/* Mobile bottom indicator */}
+          </button>
+        ))}
+      </div>
+
+      {/* Desktop: vertical sidebar */}
+      <div className="hidden lg:flex flex-col gap-1">
+        {menu.map(item => (
+          <button
+            key={item.id}
+            onClick={() => setActive(item.id)}
+            className={`relative text-left pl-6 pr-4 py-3 text-sm transition-all rounded-lg ${
+              active === item.id
+                ? "text-white font-semibold"
+                : "text-white/40 hover:text-white hover:bg-white/5"
+            }`}
+          >
             {active === item.id && (
-              <span className="lg:hidden absolute bottom-0 left-2 right-2 h-[2px] bg-accent"></span>
+              <span className="absolute left-0 top-0 h-full w-[3px] bg-accent rounded-full shadow-[0_0_10px_rgba(var(--accent-rgb),0.5)]" />
             )}
-            
             {item.label}
           </button>
         ))}

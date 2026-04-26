@@ -8,26 +8,52 @@ import { profileApi } from "../../../../services/profileApi";
 import CustomDropdown from "../../../ui/CustomDropdown";
 
 const CompanyContactsSection = () => {
-  const { profile, refreshProfile, user: authUser } = useAuth();
+  const { profile: contextProfile, refreshProfile, user: authUser } = useAuth();
   const [edit,setEdit] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState(contextProfile);
+
+  // Always fetch fresh data on mount
+  useEffect(() => {
+    const loadFresh = async () => {
+      try {
+        const res = await profileApi.getClientProfile();
+        if (res?.data) setProfile(res.data);
+      } catch {
+        setProfile(contextProfile);
+      }
+    };
+    loadFresh();
+  }, []);
+
+  const getLocation = (p) => {
+    if (p?.location) return p.location;
+    const si = p?.step_data?.location_info;
+    if (si?.city && si?.country) return `${si.city}, ${si.country}`;
+    if (si?.city) return si.city;
+    if (si?.country) return si.country;
+    return "";
+  };
+
+  const getPhone = (p) =>
+    p?.phone || p?.mobile_number || p?.step_data?.contact_info?.phone || "";
 
   const [form,setForm] = useState({
-    owner: profile?.name || "User",
-    phone: profile?.mobile_number || "",
-    email: profile?.contact_email || authUser?.email || "",
-    timezone: "UTC+05:30 Mumbai, Kolkata, Chennai, New Delhi", // Default or extract from location if possible
-    location: profile?.location || ""
+    owner: "",
+    phone: "",
+    email: "",
+    timezone: "UTC+05:30 Mumbai, Kolkata, Chennai, New Delhi",
+    location: ""
   });
 
   useEffect(() => {
     if (profile) {
       setForm({
         owner: profile.name || "User",
-        phone: profile.mobile_number || "",
+        phone: getPhone(profile),
         email: profile.contact_email || authUser?.email || "",
         timezone: "UTC+05:30 Mumbai, Kolkata, Chennai, New Delhi",
-        location: profile.location || ""
+        location: getLocation(profile)
       });
     }
   }, [profile, authUser]);
@@ -40,11 +66,15 @@ const CompanyContactsSection = () => {
     try {
       setLoading(true);
       await profileApi.updateClientProfile({
+        phone: form.phone,
         mobile_number: form.phone,
         contact_email: form.email,
         location: form.location
       });
       await refreshProfile();
+      // Refresh local state too
+      const res = await profileApi.getClientProfile();
+      if (res?.data) setProfile(res.data);
       toast.success('Contacts updated');
       setEdit(false);
     } catch (error) {

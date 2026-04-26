@@ -1,64 +1,33 @@
-import axios from 'axios';
-import { supabase } from '../lib/supabase';
+import api from '../lib/api';
 import { logger } from '../utils/logger';
-
-import { getApiUrl } from '../utils/authUtils';
- 
-const API_URL = getApiUrl();
-
-const getHeaders = async () => {
-    try {
-        // Priority: storage token first (fastest), then Supabase session
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        if (token && token !== 'undefined' && token !== 'null') {
-            return { headers: { Authorization: `Bearer ${token}` } };
-        }
-        // Fallback to live Supabase session
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.access_token) {
-            return { headers: { Authorization: `Bearer ${session.access_token}` } };
-        }
-        return { headers: {} };
-    } catch (e) {
-        logger.error("Failed to retrieve auth headers for notifications", e);
-        return { headers: {} };
-    }
-};
 
 /**
  * Fetches both platform announcements and user-specific notifications
- * @param {string} role - CLIENT or FREELANCER (or ALL)
  */
 export const fetchUnifiedNotifications = async (role) => {
-    try {
-        const isAdmin = role && role.includes('ADMIN') || role === 'MODERATOR';
+    // Don't fetch if no token — avoids 401 spam on initial render
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (!token) return [];
 
-        // 1. Fetch public announcements from backend proxy (avoiding direct Supabase connection issues)
+    try {
         let activeAnnouncements = [];
         try {
-            const headers = await getHeaders();
-            const annResponse = await axios.get(`${API_URL}/api/notifications/announcements`, headers);
+            const annResponse = await api.get('/api/notifications/announcements');
             const announcements = annResponse.data.data || [];
-            
-            // Filter out dismissed announcements
             const dismissedIds = JSON.parse(localStorage.getItem('dismissed_announcements') || '[]');
             activeAnnouncements = announcements.filter(a => !dismissedIds.includes(a.id));
         } catch (e) {
-            logger.error("NotificationService: Failed to fetch announcements", e);
-            // Fallback: stay as empty array, keep the rest of the flow working
+            if (e?.response?.status !== 401) logger.error("NotificationService: Failed to fetch announcements", e);
         }
 
-        // 2. Fetch private notifications from API
         let notifications = [];
         try {
-            const headers = await getHeaders();
-            const response = await axios.get(`${API_URL}/api/notifications`, headers);
+            const response = await api.get('/api/notifications');
             notifications = response.data.data || [];
         } catch (e) {
-            logger.error("NotificationService: Failed to fetch private notifications", e);
+            if (e?.response?.status !== 401) logger.error("NotificationService: Failed to fetch private notifications", e);
         }
 
-        // 3. Merge and sort
         const unified = [
             ...activeAnnouncements.map(a => ({ ...a, type: 'ANNOUNCEMENT' })),
             ...notifications.map(n => ({ ...n, type: 'NOTIFICATION' }))
@@ -66,7 +35,7 @@ export const fetchUnifiedNotifications = async (role) => {
 
         return unified;
     } catch (error) {
-        logger.error("NotificationService: Critical error in unified notification fetch", error);
+        logger.error("NotificationService: Critical error", error);
         return [];
     }
 };
@@ -87,8 +56,7 @@ export const dismissUnifiedItem = async (item) => {
             return true;
         } else {
             // Call API to delete private notification
-            const headers = await getHeaders();
-            await axios.delete(`${API_URL}/api/notifications/${item.id}`, headers);
+            await api.delete(`/api/notifications/${item.id}`);
             return true;
         }
     } catch (error) {
@@ -117,10 +85,9 @@ export const markUnifiedAsRead = async (items) => {
     // 2. Mark notifications in API
     if (notificationIds.length > 0) {
         try {
-            const headers = await getHeaders();
-            await axios.put(`${API_URL}/api/notifications/read`, { id: notificationIds }, headers);
+            await api.put('/api/notifications/read', { id: notificationIds });
         } catch (e) {
-            logger.error("NotificationService: Failed to mark notifications as read", e);
+            if (e?.response?.status !== 401) logger.error("NotificationService: Failed to mark notifications as read", e);
         }
     }
 };
