@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { FiTarget, FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { profileApi } from "../../../services/profileApi";
 import toast from "react-hot-toast";
+import AIRewriteButton from '../../ui/AIRewriteButton';
 
 export default function StepPersonal({ next, back }) {
   const [loading, setLoading] = useState(false);
@@ -51,7 +52,15 @@ export default function StepPersonal({ next, back }) {
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-white/50 px-1">Mission Statement / Bio</label>
+          <div className="flex items-center justify-between px-1">
+            <label className="text-sm font-medium text-white/50">Mission Statement / Bio</label>
+            <AIRewriteButton
+              field="mission"
+              value={formData.bio}
+              context={{ mission: formData.bio }}
+              onApply={(val) => setFormData({ ...formData, bio: val })}
+            />
+          </div>
           <textarea
             name="bio"
             value={formData.bio}

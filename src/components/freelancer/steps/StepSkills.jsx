@@ -3,13 +3,13 @@ import { motion } from "framer-motion";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { profileApi } from "../../../services/profileApi";
 import { toast } from "react-hot-toast";
+import AIRewriteButton from '../../ui/AIRewriteButton';
 
-export default function StepSkills({ next, back }) {
+export default function StepSkills({ next, back, wizardData = {} }) {
     const [skills, setSkills] = useState("");
 
     const handleContinue = async () => {
         try {
-            // Convert comma separated string to array
             const skillsArray = skills.split(',').map(s => s.trim()).filter(s => s);
             await profileApi.updateStepStatus('skills', { skills: skillsArray });
             next();
@@ -26,13 +26,20 @@ export default function StepSkills({ next, back }) {
             className="space-y-6"
         >
             <div>
-                <h2 className="text-xl font-bold text-white mb-1">
-                    Your Skills
-                </h2>
+                <h2 className="text-xl font-bold text-white mb-1">Your Skills</h2>
                 <p className="text-white/40 text-sm">List the skills that help you stand out. Separate them with commas.</p>
             </div>
 
             <div className="space-y-2">
+                <div className="flex items-center justify-between mb-1">
+                    <label className="text-sm font-medium text-white/50">Skills</label>
+                    <AIRewriteButton
+                        field="skills"
+                        value={skills}
+                        context={{ title: wizardData.title || '', bio: wizardData.bio || '' }}
+                        onApply={(val) => setSkills(val)}
+                    />
+                </div>
                 <input
                     value={skills}
                     onChange={(e) => setSkills(e.target.value)}
@@ -42,21 +49,15 @@ export default function StepSkills({ next, back }) {
             </div>
 
             <div className="flex justify-end gap-5 pt-4">
-                <button
-                    onClick={back}
-                    className="flex items-center gap-2 px-8 py-4 text-white/40 hover:text-white transition-colors text-sm font-semibold"
-                >
-                    <FiArrowLeft />
-                    Back
+                <button onClick={back} className="flex items-center gap-2 px-8 py-4 text-white/40 hover:text-white transition-colors text-sm font-semibold">
+                    <FiArrowLeft /> Back
                 </button>
-
                 <button
                     onClick={handleContinue}
                     disabled={!skills.trim()}
                     className="bg-accent text-white font-bold px-10 py-4 rounded-full hover:bg-accent/90 disabled:opacity-30 flex items-center gap-3 transition-all shadow-xl shadow-accent/10"
                 >
-                    Continue
-                    <FiArrowRight />
+                    Continue <FiArrowRight />
                 </button>
             </div>
         </motion.div>

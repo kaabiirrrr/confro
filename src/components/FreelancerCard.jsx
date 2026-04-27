@@ -183,10 +183,14 @@ const FreelancerCard = ({
           </div>
         </div>
 
-        {hourly_rate != null && (
+        {hourly_rate != null ? (
           <div className="text-right flex-shrink-0 ml-1">
             <p className="text-white font-black text-lg leading-none">{formatINR(hourly_rate)}</p>
             <p className="text-light-text/30 text-[10px] uppercase font-bold tracking-widest mt-1">/hr</p>
+          </div>
+        ) : (
+          <div className="text-right flex-shrink-0 ml-1">
+            <p className="text-light-text/20 text-[10px] uppercase font-bold tracking-widest">Rate<br/>not set</p>
           </div>
         )}
       </div>

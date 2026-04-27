@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { profileApi } from "../../../services/profileApi";
 import { toast } from "react-hot-toast";
 import { FiCamera, FiUser, FiArrowRight } from "react-icons/fi";
+import AIRewriteButton from '../../ui/AIRewriteButton';
 import CustomDropdown from "../../ui/CustomDropdown";
 import CustomDatePicker from "../../ui/CustomDatePicker";
 import { countries } from "../../../utils/countries";
@@ -76,6 +77,9 @@ export default function StepBasic({ next }) {
 
   const validate = () => {
     let newErrors = {};
+
+    if (!avatarFile && !avatarPreview)
+      newErrors.avatar = "Profile photo is required";
 
     if (!formData.fullName.trim())
       newErrors.fullName = "Full name is required";
@@ -171,7 +175,7 @@ export default function StepBasic({ next }) {
         </div>
 
         <div className="space-y-1">
-          <p className="text-lg font-semibold text-white">Profile Photo</p>
+          <p className="text-lg font-semibold text-white">Profile Photo <span className="text-red-400 text-sm">*</span></p>
           <p className="text-sm text-white/30">
             Professional photos build trust. Max 20MB.
           </p>
@@ -262,7 +266,15 @@ export default function StepBasic({ next }) {
         </div>
 
         <div className="col-span-1 md:col-span-2 space-y-2">
-          <label className="text-sm font-medium text-white/50 px-1">Professional Bio</label>
+          <div className="flex items-center justify-between px-1">
+            <label className="text-sm font-medium text-white/50">Professional Bio</label>
+            <AIRewriteButton
+              field="bio"
+              value={formData.bio}
+              context={{ title: formData.title }}
+              onApply={(val) => setFormData({ ...formData, bio: val })}
+            />
+          </div>
           <textarea
             name="bio"
             value={formData.bio}
