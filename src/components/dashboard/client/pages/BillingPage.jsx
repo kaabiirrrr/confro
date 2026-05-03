@@ -128,7 +128,7 @@ export default function BillingPage() {
   const noStripeKey = !import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
       <SectionHeader 
         title="Billing"
         subtext="Manage your payment methods and billing history."
@@ -181,7 +181,7 @@ export default function BillingPage() {
                     <button
                       onClick={() => handleSetDefault(m.id)}
                       disabled={!!actionId}
-                      className="p-2 rounded-lg border border-white/10 text-white/50 hover:text-white hover:border-white/20 transition disabled:opacity-40"
+                      className="p-2 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-white/20 transition disabled:opacity-40"
                       title="Set as default"
                     >
                       {isSettingDefault ? <InfinityLoader size={20} /> : <Star size={13} />}
@@ -190,7 +190,7 @@ export default function BillingPage() {
                   <button
                     onClick={() => handleRemove(m.id)}
                     disabled={!!actionId}
-                    className="p-2 text-white/30 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition disabled:opacity-40"
+                    className="p-2 text-white/30 hover:text-red-400 hover:bg-red-500/10 rounded-full transition disabled:opacity-40"
                     title="Remove card"
                   >
                     {isRemoving ? <InfinityLoader size={20} /> : <Trash2 size={14} />}
@@ -208,7 +208,7 @@ export default function BillingPage() {
           <Card>
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-semibold text-lg">Add New Card</h3>
-              <button onClick={() => setShowAddForm(false)} className="text-white/30 hover:text-white transition p-1 hover:bg-white/5 rounded-lg">
+              <button onClick={() => setShowAddForm(false)} className="text-white/30 hover:text-white transition p-1 hover:bg-white/5 rounded-full">
                 <X size={20} />
               </button>
             </div>

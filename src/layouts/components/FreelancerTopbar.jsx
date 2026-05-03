@@ -13,6 +13,7 @@ import { useProfile } from "../../context/ProfileContext";
 import AIAssistant from "../../components/shared/AIAssistant";
 import HelpSupportModal from "../../components/shared/HelpSupportModal";
 import JoinMeetingModal from "../../components/shared/JoinMeetingModal";
+import { motion, AnimatePresence } from "framer-motion";
 import { Video, Link2 } from 'lucide-react';
 
 
@@ -97,7 +98,7 @@ const Topbar = () => {
         if (searchType === 'Jobs') endpoint = `/api/jobs/all?search=${encodeURIComponent(searchQuery)}&limit=5&status=OPEN`;
         else if (searchType === 'Talent') endpoint = `/api/profile/freelancers?search=${encodeURIComponent(searchQuery)}&limit=5`;
         else if (searchType === 'Projects') endpoint = `/api/services?search=${encodeURIComponent(searchQuery)}&limit=5`;
-        
+
         if (!endpoint) return;
 
         const res = await api.get(endpoint);
@@ -158,7 +159,7 @@ const Topbar = () => {
           Meetings <Arrow />
         </button>
         {openMenu === "meetings" && (
-          <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[240px] p-1 bg-secondary border border-border rounded-2xl shadow-2xl z-50 flex flex-col gap-1">
+          <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[240px] p-1 bg-secondary border border-border rounded-2xl shadow-2xl z-[2010] flex flex-col gap-1">
             <button
               onClick={() => { navigate('/meeting/create'); setOpenMenu(null); }}
               className="dropdown-item w-full text-left"
@@ -175,9 +176,9 @@ const Topbar = () => {
         )}
       </div>
 
-      <JoinMeetingModal 
-        isOpen={isJoinModalOpen} 
-        onClose={() => setIsJoinModalOpen(false)} 
+      <JoinMeetingModal
+        isOpen={isJoinModalOpen}
+        onClose={() => setIsJoinModalOpen(false)}
         onJoin={(id) => { navigate(`/meeting/${id}`); setIsJoinModalOpen(false); }}
       />
     </>
@@ -187,7 +188,7 @@ const Topbar = () => {
     <>
       {/* Type picker dropdown */}
       {openSearchType && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[280px] bg-secondary border border-border rounded-xl shadow-xl p-2 z-50">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[280px] bg-secondary border border-border rounded-xl shadow-xl p-2 z-[2010]">
           <SearchItem
             title="Jobs"
             desc="Apply to jobs posted by clients"
@@ -205,7 +206,7 @@ const Topbar = () => {
 
       {/* Live suggestions dropdown */}
       {showSuggestions && !openSearchType && suggestions.length > 0 && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] p-3 bg-primary/40 backdrop-blur-3xl rounded-2xl shadow-2xl z-50 flex flex-col gap-2 border border-white/10">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] p-3 bg-primary/40 backdrop-blur-3xl rounded-2xl shadow-2xl z-[2010] flex flex-col gap-2 border border-white/10">
           <div className="w-full">
             <div className="px-1 py-1 flex items-center justify-between">
               <span className="text-[10px] font-bold uppercase tracking-widest text-slate-900/40 dark:text-white/30">Top Results</span>
@@ -266,31 +267,29 @@ const Topbar = () => {
       {/* AI Assistant button */}
       <div className="relative">
         <button
-          onClick={() => setOpenAI(o => !o)}
-          className={`relative w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 group ${openAI ? 'bg-accent/10' : 'hover:bg-accent/10'} `}
+          onClick={() => {
+            if (window.innerWidth < 768) {
+              navigate('/freelancer/ai');
+            } else {
+              setOpenAI(o => !o);
+            }
+          }}
+          className={`relative w-7 h-7 md:w-10 md:h-10 flex items-center justify-center rounded-full transition-all duration-200 group ${openAI ? 'bg-accent/10' : 'hover:bg-accent/10'} `}
           title="Connect AI"
         >
           <img
             src="/Icons/White-AI-Connect.png"
             alt="Connect AI"
-            className={`w-8 h-8 object-contain transition-all mr-2 duration-200 select-none pointer-events-none hidden dark:block grayscale brightness-200 ${openAI ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
+            className={`w-4.5 h-4.5 md:w-6 md:h-6 object-contain transition-all duration-200 select-none pointer-events-none hidden dark:block grayscale brightness-200 ${openAI ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
           />
           <img
             src="/Icons/AI-Connect.png"
             alt="Connect AI"
-            className={`w-8 h-8 object-contain transition-all mr-2 duration-200 select-none pointer-events-none block dark:hidden ${openAI ? 'opacity-100 [filter:invert(67%)_sepia(61%)_saturate(2462%)_hue-rotate(165deg)_brightness(102%)_contrast(100%)]' : 'opacity-50 group-hover:opacity-100 group-hover:[filter:invert(67%)_sepia(61%)_saturate(2462%)_hue-rotate(165deg)_brightness(102%)_contrast(100%)]'}`}
+            className={`w-4.5 h-4.5 md:w-6 md:h-6 object-contain transition-all duration-200 select-none pointer-events-none block dark:hidden ${openAI ? 'opacity-100 [filter:invert(67%)_sepia(61%)_saturate(2462%)_hue-rotate(165deg)_brightness(102%)_contrast(100%)]' : 'opacity-50 group-hover:opacity-100 group-hover:[filter:invert(67%)_sepia(61%)_saturate(2462%)_hue-rotate(165deg)_brightness(102%)_contrast(100%)]'}`}
           />
         </button>
         {openAI && (
-          <div className="hidden md:block" style={{ position: 'absolute', top: '110%', right: 0, zIndex: 9999, maxWidth: 'calc(100vw - 16px)' }}>
-            <AIAssistant userRole="freelancer" externalOpen onClose={() => setOpenAI(false)} />
-          </div>
-        )}
-        {openAI && (
-          <div
-            className="md:hidden ai-panel-mobile-wrapper"
-            onClick={e => e.stopPropagation()}
-          >
+          <div className="hidden md:block" style={{ position: 'absolute', top: 'calc(100% + 12px)', right: 0, width: 400, zIndex: 9999, maxWidth: 'calc(100vw - 16px)' }}>
             <AIAssistant userRole="freelancer" externalOpen onClose={() => setOpenAI(false)} />
           </div>
         )}

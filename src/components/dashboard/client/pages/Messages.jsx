@@ -200,7 +200,7 @@ const Messages = () => {
     const isPartnerOnline = activePartner && onlineUsers.includes(activePartner.id);
 
     return (
-        <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8">
             <div className="mb-0">
                 <h1 className="text-2xl font-semibold text-white tracking-tight">Intelligence Relay</h1>
                 <p className="text-white/40 text-sm mt-1 font-medium">Coordinate real-time communications and signal exchanges with global talent.</p>
@@ -215,7 +215,7 @@ const Messages = () => {
                     <div className="p-6 border-b border-white/5">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-[10px] text-white font-black uppercase tracking-[0.2em] opacity-40">Active Nodes</h2>
-                            <span className="px-2 py-1 bg-accent/10 text-accent text-[8px] font-black uppercase tracking-widest rounded-md border border-accent/20 shadow-lg shadow-accent/5">
+                            <span className="px-2 py-1 bg-accent/10 text-accent text-[8px] font-black uppercase tracking-widest rounded-full border border-accent/20 shadow-lg shadow-accent/5">
                                 {conversations.length} SECURE CHANNELS
                             </span>
                         </div>
@@ -224,7 +224,7 @@ const Messages = () => {
                             <input
                                 value={searchQuery}
                                 onChange={e => setSearchQuery(e.target.value)}
-                                className="w-full bg-secondary/50 border border-white/5 rounded-xl pl-11 pr-4 py-3.5 text-[11px] font-bold text-white placeholder-white/10 focus:outline-none focus:border-accent/40 focus:bg-secondary transition-all"
+                                className="w-full bg-secondary/50 border border-white/5 rounded-full pl-11 pr-4 py-3.5 text-[11px] font-bold text-white placeholder-white/10 focus:outline-none focus:border-accent/40 focus:bg-secondary transition-all"
                                 placeholder="IDENTIFY CONVERSATION..."
                             />
                         </div>
@@ -316,7 +316,7 @@ const Messages = () => {
                         <div className="flex-1 flex flex-col z-10">
                             {/* Chat Header */}
                             <div className="flex items-center gap-4 px-8 py-6 border-b border-white/5 bg-secondary/80 backdrop-blur-md sticky top-0">
-                                <button onClick={() => setMobileShowChat(false)} className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl text-white/40 hover:text-white hover:bg-white/5 transition-all">
+                                <button onClick={() => setMobileShowChat(false)} className="md:hidden w-10 h-10 flex items-center justify-center rounded-full text-white/40 hover:text-white hover:bg-white/5 transition-all">
                                     <ArrowLeft size={20} />
                                 </button>
                                 <div className="relative group">
@@ -345,10 +345,10 @@ const Messages = () => {
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <button onClick={() => setShowAudioCall(true)} className="w-11 h-11 flex items-center justify-center text-white/30 hover:text-accent hover:bg-accent/5 border border-transparent hover:border-accent/10 rounded-xl transition-all active:scale-95" title="Initialize Audio Signal">
+                                    <button onClick={() => setShowAudioCall(true)} className="w-11 h-11 flex items-center justify-center text-white/30 hover:text-accent hover:bg-accent/5 border border-transparent hover:border-accent/10 rounded-full transition-all active:scale-95" title="Initialize Audio Signal">
                                         <Phone size={18} />
                                     </button>
-                                    <button onClick={() => setShowVideoCall(true)} className="w-11 h-11 flex items-center justify-center text-white/30 hover:text-accent hover:bg-accent/5 border border-transparent hover:border-accent/10 rounded-xl transition-all active:scale-95" title="Initialize Visual Signal">
+                                    <button onClick={() => setShowVideoCall(true)} className="w-11 h-11 flex items-center justify-center text-white/30 hover:text-accent hover:bg-accent/5 border border-transparent hover:border-accent/10 rounded-full transition-all active:scale-95" title="Initialize Visual Signal">
                                         <Video size={18} />
                                     </button>
                                 </div>
@@ -457,7 +457,7 @@ const Messages = () => {
                                             {showEmoji && (
                                                 <div className="absolute bottom-12 left-0 bg-secondary border border-border rounded-2xl p-4 flex flex-wrap gap-2 w-56 z-50 shadow-3xl animate-in fade-in slide-in-from-bottom-2 duration-200 backdrop-blur-xl">
                                                     {EMOJI_LIST.map(e => (
-                                                        <button key={e} onClick={() => { setText(t => t + e); setShowEmoji(false); }} className="w-9 h-9 flex items-center justify-center hover:bg-white/10 rounded-xl text-xl transition-all hover:scale-110">
+                                                        <button key={e} onClick={() => { setText(t => t + e); setShowEmoji(false); }} className="w-9 h-9 flex items-center justify-center hover:bg-white/10 rounded-full text-xl transition-all hover:scale-110">
                                                             {e}
                                                         </button>
                                                     ))}
@@ -485,7 +485,7 @@ const Messages = () => {
                                     <button
                                         onClick={handleSend}
                                         disabled={!text.trim() || isSending}
-                                        className="mb-1 w-12 h-12 rounded-2xl bg-accent text-white flex items-center justify-center shadow-xl shadow-accent/20 hover:bg-accent/90 transition-all active:scale-95 disabled:opacity-20 disabled:grayscale disabled:shadow-none shrink-0"
+                                        className="mb-1 w-12 h-12 rounded-full bg-accent text-white flex items-center justify-center shadow-xl shadow-accent/20 hover:bg-accent/90 transition-all active:scale-95 disabled:opacity-20 disabled:grayscale disabled:shadow-none shrink-0"
                                     >
                                         {isSending ? <InfinityLoader size={20} /> : <Send size={20} strokeWidth={2.5} />}
                                     </button>

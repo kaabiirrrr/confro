@@ -26,7 +26,7 @@ const SettingsPage = () => {
     };
 
     return (
-        <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-10 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-10 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
             <div className="mb-6 sm:mb-12 border-b border-white/5 pb-6 sm:pb-8">
                 <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Settings</h1>
@@ -57,7 +57,7 @@ const SettingsPage = () => {
                     {active === "appearance" && <AppearanceSection />}
                     {active === "billing" && <BillingPaymentsSection />}
                     {active === "password" && <PasswordSecuritySection />}
-                    {active === "team" && <TeamsMembersSection />}
+                    {active === "team" && <TeamsMembersSection setActive={setActive} />}
                     {active === "notification" && <NotificationSection />}
 
                 </div>

@@ -50,14 +50,14 @@ const Payments = () => {
   ];
 
   return (
-    <div className="max-w-[1630px] mx-auto py-6 sm:py-8 text-light-text font-sans tracking-tight animate-in fade-in duration-700">
+    <div className="max-w-[1500px] mx-auto py-6 sm:py-8 text-light-text font-sans tracking-tight animate-in fade-in duration-700">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
         <div className="space-y-1">
           <h1 className="text-lg sm:text-2xl font-semibold text-white tracking-tight">Payments</h1>
           <p className="text-sm sm:text-base text-light-text/70">Your payment history and transactions</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-secondary/70 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-all">
+          <button className="flex items-center gap-2 px-4 py-2 bg-secondary/70 border border-white/10 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-all">
             <Download size={14} /> Export CSV
           </button>
         </div>

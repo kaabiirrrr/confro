@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const Tabs = ({ tabs, activeTab, onChange, className = '' }) => {
   return (
-    <div className={`flex items-center gap-10 border-b border-white/5 overflow-x-auto no-scrollbar ${className}`}>
+    <div className={`flex items-center max-sm:justify-between sm:gap-10 border-b border-white/5 overflow-x-auto no-scrollbar ${className}`}>
       {tabs.map(tab => {
         const isActive = activeTab === (tab.key || tab.id);
         const label = (tab.label || '').toUpperCase();
@@ -12,7 +12,7 @@ const Tabs = ({ tabs, activeTab, onChange, className = '' }) => {
           <button 
             key={tab.key || tab.id} 
             onClick={() => onChange(tab.key || tab.id)}
-            className={`pb-4 text-[11px] font-bold tracking-[0.15em] transition-all relative whitespace-nowrap ${
+            className={`flex-1 sm:flex-none pb-4 text-[11px] font-bold tracking-[0.15em] transition-all relative whitespace-nowrap ${
               isActive ? 'text-accent' : 'text-white/40 hover:text-white/80'
             }`}
           >

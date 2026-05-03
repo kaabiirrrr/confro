@@ -33,6 +33,7 @@ const ServicesMarketplace = () => {
   
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
   const [search, setSearch] = useState(queryParam);
   const [activeCategory, setActiveCategory] = useState("All");
 
@@ -41,7 +42,7 @@ const ServicesMarketplace = () => {
   }, [queryParam]);
 
   const loadServices = useCallback(async () => {
-    setLoading(true);
+    setIsFetching(true);
     try {
       const filters = {};
       if (activeCategory !== "All") filters.category = activeCategory;
@@ -52,6 +53,7 @@ const ServicesMarketplace = () => {
     } catch (err) {
       logger.error("Failed to fetch services", err);
     } finally {
+      setIsFetching(false);
       setLoading(false);
     }
   }, [activeCategory, search]);
@@ -109,8 +111,8 @@ const ServicesMarketplace = () => {
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition ${activeCategory === cat
-                  ? "bg-accent/10 text-accent border border-accent/20"
-                  : "text-white/50 border border-transparent hover:text-white"
+                  ? "bg-accent text-white shadow-md shadow-accent/20"
+                  : "text-white/50 border border-transparent hover:text-white hover:bg-white/5"
                   }`}
               >
                 {cat}
@@ -148,7 +150,7 @@ const ServicesMarketplace = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8"
+            className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 transition-opacity duration-300 opacity-100`}
           >
             {services.map((service, idx) => (
               <ServiceCard key={service.id || idx} service={service} index={idx} />
@@ -189,7 +191,7 @@ const ServiceCard = ({ service, index }) => {
       {/* Content */}
       <div className="p-5 flex flex-col flex-1 space-y-4">
         <div className="space-y-3">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between">
             <span className="px-2 py-0.5 bg-accent/10 border border-accent/20 text-accent rounded-full text-[10px] font-bold uppercase tracking-widest">
               {service.category || "Service"}
             </span>
@@ -214,7 +216,12 @@ const ServiceCard = ({ service, index }) => {
 
           <div className="flex items-center gap-1 text-yellow-400">
             <Star size={12} fill="currentColor" />
-            <span className="text-xs font-bold text-white">{service.rating || "5.0"}</span>
+            <span className="text-xs font-bold text-white">
+              {service.rating || service.freelancer?.rating || "5.0"} 
+              <span className="text-white/40 font-normal ml-1">
+                ({service.reviews_count || service.freelancer?.reviews_count || 0})
+              </span>
+            </span>
           </div>
         </div>
       </div>

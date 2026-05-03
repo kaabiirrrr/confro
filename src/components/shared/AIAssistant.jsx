@@ -120,22 +120,14 @@ export default function AIAssistant({ userRole = 'client', externalOpen = false,
   }, []);
 
   useEffect(() => {
-    if (chatScrollRef.current) {
-      if (chatLoading) {
-        // While AI is "typing", stay at the bottom to see progress
-        chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
-      } else {
-        const lastMsg = chatHistory[chatHistory.length - 1];
-        if (lastMsg?.role === 'user') {
-          // User message: scroll to bottom
-          chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
-        } else if (lastMsg?.role === 'ai' && chatHistory.length > 1) {
-          // AI response finished: scroll to the START of the message
-          const messages = chatScrollRef.current.querySelectorAll('.ai-msg');
-          const lastMsgElement = messages[messages.length - 1];
-          if (lastMsgElement) {
-            lastMsgElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
+    if (chatScrollRef.current && !chatLoading) {
+      const lastMsg = chatHistory[chatHistory.length - 1];
+      if (lastMsg?.role === 'ai' && chatHistory.length > 1) {
+        // AI response finished: scroll to the START of the message
+        const messages = chatScrollRef.current.querySelectorAll('.ai-msg');
+        const lastMsgElement = messages[messages.length - 1];
+        if (lastMsgElement) {
+          lastMsgElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }
     }
@@ -225,19 +217,21 @@ export default function AIAssistant({ userRole = 'client', externalOpen = false,
         <div className="ai-panel" role="dialog" aria-label="AI Assistant">
           {/* Header */}
           <div className="ai-header">
-            <div className="w-10 h-10 flex items-center justify-center">
-              <img src="/Icons/AI-Connect.png" alt="c.ai" className="w-8 h-8 object-contain" style={{ filter: 'invert(67%) sepia(61%) saturate(2462%) hue-rotate(165deg) brightness(102%) contrast(100%)' }} />
+            <div className="ai-header-logo-container" style={{ width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <img src="/Icons/AI-Connect.png" alt="c.ai" className="ai-header-logo-img" style={{ width: 32, height: 32, objectFit: 'contain', filter: 'invert(67%) sepia(61%) saturate(2462%) hue-rotate(165deg) brightness(102%) contrast(100%)' }} />
             </div>
             <div className="ai-header-info">
               <div className="ai-header-title">
-                <span style={{ color: '#F1F5F9', fontWeight: 700 }}>Connect</span>
-                <span style={{ color: '#22D3EE', fontWeight: 800, marginLeft: 4 }}>AI</span>
+                <span className="ai-header-title-text-1">Connect</span>
+                <span className="ai-header-title-text-2">AI</span>
               </div>
               <div className="ai-header-sub">{pageGuide ? `On: ${pageGuide.title}` : 'Powered by Connect AI'}</div>
             </div>
-            <button className="ai-header-close" onClick={handleClose} aria-label="Close">
-              <CloseIcon size={16} strokeWidth={2.5} />
-            </button>
+            {!externalOpen && (
+              <button className="ai-header-close" onClick={handleClose} aria-label="Close">
+                <CloseIcon size={16} strokeWidth={2.5} />
+              </button>
+            )}
           </div>
 
           {/* Page guide banner */}
@@ -346,11 +340,13 @@ export default function AIAssistant({ userRole = 'client', externalOpen = false,
                 )}
               </div>
               <div className="ai-chat-input-row">
-                <input className="ai-chat-input" type="text" placeholder="Ask AI anything..."
-                  value={chatMsg} onChange={e => setChatMsg(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleChat()} />
+                <div className="ai-chat-input-container">
+                  <input className="ai-chat-input" type="text" placeholder="Ask AI anything..."
+                    value={chatMsg} onChange={e => setChatMsg(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleChat()} />
+                </div>
                 <button className="ai-send-btn" onClick={() => handleChat()} disabled={chatLoading || !chatMsg.trim()} aria-label="Send">
-                  &gt;
+                  <img src="/Icons/icons8-send-96.png" alt="Send" className="w-8 h-8 object-contain" />
                 </button>
               </div>
             </div>

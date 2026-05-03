@@ -104,7 +104,7 @@ const ClientWorkActivityPage = () => {
 
     if (activeJobs.length === 0) {
         return (
-            <div className="max-w-[1480px] mx-auto py-20 border-b border-white/5 text-center">
+            <div className="max-w-[1500px] mx-auto py-20 border-b border-white/5 text-center">
                 <AlertCircle size={24} className="text-white/10 mx-auto mb-6" />
                 <h3 className="text-xl font-bold text-white mb-2 uppercase tracking-tighter">No Active Tracking</h3>
                 <p className="text-white/30 max-w-sm mx-auto text-sm">You don't have any active contracts currently. Once a freelancer starts working, their daily updates will appear here.</p>
@@ -113,7 +113,7 @@ const ClientWorkActivityPage = () => {
     }
 
     return (
-        <div className="max-w-[1480px] mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="max-w-[1500px] mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* ── HEADER ── */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 pb-8">
                 <div>
@@ -146,7 +146,7 @@ const ClientWorkActivityPage = () => {
                         className="pb-10 border-b border-white/5"
                     >
                         <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 rounded-full bg-accent/5 border border-accent/10 flex items-center justify-center overflow-hidden p-1 shrink-0">
+                            <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden shrink-0">
                                 {selectedJob?.freelancer?.avatar_url ? (
                                     <img src={selectedJob.freelancer.avatar_url} className="w-full h-full object-cover rounded-full" />
                                 ) : (
@@ -194,9 +194,7 @@ const ClientWorkActivityPage = () => {
                 <div className="lg:col-span-3 space-y-8">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center">
-                                <History className="text-white/20" size={14} />
-                            </div>
+                            <History className="text-white/20" size={18} />
                             <h2 className="text-sm font-black text-white uppercase tracking-widest">Activity Stream</h2>
                         </div>
                         {logsLoading && <Clock className="animate-spin text-accent" size={16} />}

@@ -335,7 +335,7 @@ const PostJob = () => {
   }
 
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <SectionHeader
         title={editJobId ? 'Edit Job' : 'Post a Job'}
         subtext="Find the perfect freelancer for your project"
@@ -416,7 +416,7 @@ const PostJob = () => {
             type="text"
             value={form.title}
             onChange={e => handleChange('title', e.target.value)}
-            className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-4 text-sm text-white placeholder-white/10 focus:outline-none focus:border-accent transition-all"
+            className="w-full bg-white/[0.02] border border-white/5 rounded-full px-5 py-4 text-sm text-white placeholder-white/10 focus:outline-none focus:border-accent transition-all"
             placeholder="e.g. React Developer Needed for E-commerce Website"
             maxLength={100}
           />
@@ -433,10 +433,13 @@ const PostJob = () => {
                 <button 
                     onClick={handleAIImprove}
                     disabled={aiModal.isThinking}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-lg text-accent text-[8px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50"
+                    className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-full text-accent text-[8px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50"
+                    title={aiModal.isThinking ? 'Reading Context...' : 'Rewrite with Connect AI'}
                 >
-                    <Sparkles size={10} />
-                    {aiModal.isThinking ? 'Reading Context...' : 'Rewrite with Connect AI'}
+                    <Sparkles size={12} className="sm:w-2.5 sm:h-2.5" />
+                    <span className="hidden sm:inline">
+                        {aiModal.isThinking ? 'Reading Context...' : 'Rewrite with Connect AI'}
+                    </span>
                 </button>
             }
         >
@@ -444,7 +447,7 @@ const PostJob = () => {
             rows="10"
             value={form.description}
             onChange={e => handleChange('description', e.target.value)}
-            className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-4 text-sm text-white placeholder-white/10 focus:outline-none focus:border-accent resize-none transition-all leading-relaxed"
+            className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-5 py-5 text-sm text-white placeholder-white/10 focus:outline-none focus:border-accent resize-none transition-all leading-relaxed"
             placeholder="Describe your project in detail..."
           />
         </FormSection>
@@ -468,16 +471,19 @@ const PostJob = () => {
                 <button 
                     onClick={handleAISuggestSkills}
                     disabled={aiModal.isThinking}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-lg text-accent text-[8px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50"
+                    className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-full text-accent text-[8px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50"
+                    title={aiModal.isThinking ? 'Analyzing Market...' : 'Suggest Skills'}
                 >
-                    <Wand2 size={10} />
-                    {aiModal.isThinking ? 'Analyzing Market...' : 'Suggest Skills'}
+                    <Wand2 size={12} className="sm:w-2.5 sm:h-2.5" />
+                    <span className="hidden sm:inline">
+                        {aiModal.isThinking ? 'Analyzing Market...' : 'Suggest Skills'}
+                    </span>
                 </button>
             }
         >
           <div className="flex flex-wrap gap-2 mb-4">
             {selectedSkills.map(skill => (
-              <span key={skill} className="flex items-center gap-1.5 bg-accent/5 text-accent border border-accent/10 rounded-lg px-3 py-1.5 text-xs font-semibold uppercase tracking-wider">
+              <span key={skill} className="flex items-center gap-1.5 bg-accent/5 text-accent border border-accent/10 rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wider">
                 {skill}
                 <button onClick={() => removeSkill(skill)} className="hover:text-white transition-colors">
                   <X size={12} />
@@ -492,7 +498,7 @@ const PostJob = () => {
               onChange={e => { setSkillInput(e.target.value); setShowSkillSuggestions(true); }}
               onFocus={() => setShowSkillSuggestions(true)}
               onKeyDown={e => { if (e.key === 'Enter' && skillInput.trim()) { addSkill(skillInput.trim()); } }}
-              className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-4 text-sm text-white placeholder-white/10 focus:outline-none focus:border-accent transition-all"
+              className="w-full bg-white/[0.02] border border-white/5 rounded-full px-5 py-4 text-sm text-white placeholder-white/10 focus:outline-none focus:border-accent transition-all"
               placeholder="Add skill (up to 10)..."
               disabled={selectedSkills.length >= 10}
             />
@@ -509,7 +515,7 @@ const PostJob = () => {
                     key={type}
                     type="button"
                     onClick={() => handleChange('budget_type', type)}
-                    className={`flex-1 py-3 px-4 rounded-xl border text-[10px] font-bold uppercase tracking-widest transition-all ${form.budget_type === type
+                    className={`flex-1 py-3 px-4 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all ${form.budget_type === type
                       ? 'bg-accent/10 border-accent text-accent'
                       : 'bg-white/[0.02] border-white/5 text-white/40 hover:bg-white/[0.04]'
                       }`}
@@ -524,7 +530,7 @@ const PostJob = () => {
                   type="number"
                   value={form.budget_amount}
                   onChange={e => handleChange('budget_amount', e.target.value)}
-                  className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-10 pr-4 py-4 text-sm text-white focus:outline-none focus:border-accent transition-all"
+                  className="w-full bg-white/[0.02] border border-white/5 rounded-full pl-12 pr-5 py-4 text-sm text-white focus:outline-none focus:border-accent transition-all"
                   placeholder={form.budget_type === 'hourly' ? '0.00 / hr' : '0.00'}
                   min="1"
                 />
@@ -554,7 +560,7 @@ const PostJob = () => {
                           type="text"
                           value={role.title}
                           onChange={e => updateRole(idx, 'title', e.target.value)}
-                          className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-accent"
+                          className="w-full bg-white/[0.02] border border-white/5 rounded-full px-5 py-3 text-sm text-white focus:outline-none focus:border-accent"
                           placeholder="e.g. Lead Frontend Architect"
                         />
                       </div>
@@ -579,7 +585,7 @@ const PostJob = () => {
                               type="number"
                               value={role.budget}
                               onChange={e => updateRole(idx, 'budget', e.target.value)}
-                              className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-8 pr-4 py-3 text-sm text-white focus:outline-none focus:border-accent"
+                              className="w-full bg-white/[0.02] border border-white/5 rounded-full pl-10 pr-5 py-3 text-sm text-white focus:outline-none focus:border-accent"
                               placeholder="0.00"
                             />
                           </div>
@@ -590,7 +596,7 @@ const PostJob = () => {
                             type="number"
                             value={role.positions}
                             onChange={e => updateRole(idx, 'positions', e.target.value)}
-                            className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-accent"
+                            className="w-full bg-white/[0.02] border border-white/5 rounded-full px-5 py-3 text-sm text-white focus:outline-none focus:border-accent"
                             min="1"
                           />
                         </div>
@@ -636,7 +642,7 @@ const PostJob = () => {
                 key={level.value}
                 type="button"
                 onClick={() => handleChange('experience_level', level.value)}
-                className={`w-full p-4 rounded-xl border text-left transition-all ${form.experience_level === level.value
+                className={`w-full p-4 rounded-full border text-left transition-all px-8 ${form.experience_level === level.value
                   ? 'border-accent bg-accent/5'
                   : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.04]'
                   }`}
@@ -658,7 +664,7 @@ const PostJob = () => {
                 key={d}
                 type="button"
                 onClick={() => handleChange('duration', d)}
-                className={`w-full py-3.5 px-4 rounded-xl border text-[10px] font-bold uppercase tracking-widest text-left transition-all ${form.duration === d
+                className={`w-full py-3.5 px-8 rounded-full border text-[10px] font-bold uppercase tracking-widest text-left transition-all ${form.duration === d
                   ? 'border-accent bg-accent/5 text-accent'
                   : 'bg-white/[0.02] border-white/5 text-white/20 hover:bg-white/[0.04]'
                   }`}
@@ -676,7 +682,7 @@ const PostJob = () => {
               type="datetime-local"
               value={form.bid_deadline}
               onChange={e => handleChange('bid_deadline', e.target.value)}
-              className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-4 text-sm text-white focus:outline-none focus:border-accent transition-all [color-scheme:dark]"
+              className="w-full bg-white/[0.02] border border-white/5 rounded-full px-6 py-4 text-sm text-white focus:outline-none focus:border-accent transition-all [color-scheme:dark]"
             />
             <p className="mt-2 text-[10px] text-white/20 uppercase font-bold tracking-wider">
               Bidding will automatically close at this time.
@@ -758,18 +764,17 @@ const PostJob = () => {
 };
 
 const FormSection = ({ label, icon, action, children }) => (
-  <div className="space-y-3">
-    <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-white/40 flex-1">
-            <div className="shrink-0">{icon}</div>
-            <label className="text-[11px] font-bold uppercase tracking-[0.2em] whitespace-nowrap">
-                {label}
-            </label>
-            <div className="h-[1px] w-full bg-white/5 ml-2" />
+  <div className="mb-8 sm:mb-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="flex items-center justify-between mb-4 gap-3">
+      <div className="flex items-center gap-3 min-w-0">
+        <div className="w-8 h-8 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-white/20 shrink-0">
+          {icon}
         </div>
-        {action && <div className="ml-4">{action}</div>}
+        <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 truncate">{label}</h3>
+      </div>
+      {action && <div className="shrink-0">{action}</div>}
     </div>
-    <div className="pt-1">
+    <div className="w-full">
       {children}
     </div>
   </div>

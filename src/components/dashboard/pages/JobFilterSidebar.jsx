@@ -36,7 +36,7 @@ const JobFilterSidebar = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+            className="fixed inset-0 bg-black/60 z-[9998]"
           />
 
           {/* Sidebar */}
@@ -45,10 +45,10 @@ const JobFilterSidebar = ({
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 h-full w-full max-w-[450px] bg-secondary border-l border-border shadow-2xl z-[110] flex flex-col"
+            className="fixed inset-y-0 right-0 h-[100dvh] w-[85vw] max-w-[400px] bg-secondary border-l border-border shadow-2xl z-[9999] flex flex-col"
           >
             {/* Header */}
-            <div className="px-5 sm:px-8 py-5 sm:py-7 border-b border-border flex items-center justify-between bg-secondary/80 backdrop-blur-md sticky top-0 z-10">
+            <div className="px-5 sm:px-8 py-5 sm:py-7 border-b border-border flex items-center justify-between bg-secondary sticky top-0 z-10">
               <h2 className="text-base sm:text-xl font-bold text-light-text tracking-tight">Filter Jobs</h2>
               <button onClick={onClose} className="p-2 rounded-full hover:bg-light-text/5 text-light-text/40 hover:text-light-text transition-all">
                 <X size={18} />
@@ -64,13 +64,13 @@ const JobFilterSidebar = ({
                   <h3 className="text-[10px] sm:text-[11px] font-bold text-light-text/30 uppercase tracking-[0.1em]">Experience Level</h3>
                   <ChevronDown size={13} className="text-light-text/20" />
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {[
                     { id: 'beginner', label: 'Entry Level', count: 0 },
                     { id: 'intermediate', label: 'Intermediate', count: 3 },
                     { id: 'expert', label: 'Expert', count: 2 }
                   ].map((level) => (
-                    <label key={level.id} className="flex items-center justify-between cursor-pointer group" onClick={() => toggleExp(level.id)}>
+                    <label key={level.id} className="flex items-center justify-between cursor-pointer group py-2.5" onClick={() => toggleExp(level.id)}>
                       <div className="flex items-center gap-3">
                         <div className={`w-4 h-4 sm:w-5 sm:h-5 rounded border transition-all flex items-center justify-center ${expLevel === level.id ? 'bg-accent border-accent' : 'border-border bg-white/5 group-hover:border-accent/40'}`}>
                           {expLevel === level.id && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-white rounded-sm" />}
@@ -91,12 +91,12 @@ const JobFilterSidebar = ({
                   <h3 className="text-[10px] sm:text-[11px] font-bold text-light-text/30 uppercase tracking-[0.1em]">Job Type</h3>
                   <ChevronDown size={13} className="text-light-text/20" />
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {[
                     { id: 'hourly', label: 'Hourly', count: 2 },
                     { id: 'fixed', label: 'Fixed-Price', count: 5 }
                   ].map((type) => (
-                    <label key={type.id} className="flex items-center justify-between cursor-pointer group" onClick={() => toggleBudgetType(type.id)}>
+                    <label key={type.id} className="flex items-center justify-between cursor-pointer group py-2.5" onClick={() => toggleBudgetType(type.id)}>
                       <div className="flex items-center gap-3">
                         <div className={`w-4 h-4 sm:w-5 sm:h-5 rounded border transition-all flex items-center justify-center ${budgetType === type.id ? 'bg-accent border-accent' : 'border-border bg-white/5 group-hover:border-accent/40'}`}>
                           {budgetType === type.id && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-white rounded-sm" />}
@@ -153,10 +153,10 @@ const JobFilterSidebar = ({
 
             {/* Footer Actions */}
             <div className="px-5 sm:px-8 py-4 sm:py-8 border-t border-border bg-secondary flex gap-3 sm:gap-4">
-              <button onClick={onClear} className="flex-1 h-10 sm:h-12 rounded-xl sm:rounded-2xl border border-border text-[11px] sm:text-[12px] font-bold uppercase tracking-widest text-light-text/40 hover:text-light-text hover:bg-light-text/5 transition-all">
+              <button onClick={onClear} className="flex-1 h-10 sm:h-12 rounded-full border border-border text-[11px] sm:text-[12px] font-bold uppercase tracking-widest text-light-text/40 hover:text-light-text hover:bg-light-text/5 transition-all">
                 Clear All
               </button>
-              <button onClick={onApply} className="flex-[1.5] h-10 sm:h-12 rounded-xl sm:rounded-2xl bg-accent text-white text-[11px] sm:text-[12px] font-bold uppercase tracking-widest hover:bg-accent/90 shadow-xl shadow-accent/20 transition-all active:scale-[0.98]">
+              <button onClick={onApply} className="flex-[1.5] h-10 sm:h-12 rounded-full bg-accent text-white text-[11px] sm:text-[12px] font-bold uppercase tracking-widest hover:bg-accent/90 shadow-xl shadow-accent/20 transition-all active:scale-[0.98]">
                 Apply Filters
               </button>
             </div>

@@ -249,10 +249,12 @@ export default function EscrowFundingModal({ isOpen, onClose, contractId, jobTit
               ) : import.meta.env.VITE_ESCROW_MODE === 'FAKE' ? (
                 <div className="space-y-4">
                   <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 flex flex-col items-center gap-2">
-                    <span className="text-[10px] text-slate-500 dark:text-white/30 font-bold uppercase tracking-widest">Available Balance</span>
-                    <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
-                      {formatINR(10000)}
-                    </span>
+                    <div className="flex flex-col text-right">
+                      <span className="text-slate-500 dark:text-white/40 text-[9px] font-bold uppercase tracking-widest mb-0.5">Available</span>
+                      <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
+                        {formatINR(wallet?.balance || 0)}
+                      </span>
+                    </div>
                   </div>
                   <button 
                     onClick={async () => {
@@ -261,6 +263,7 @@ export default function EscrowFundingModal({ isOpen, onClose, contractId, jobTit
                         const { fundFakeEscrow } = await import('../../../../services/apiService');
                         const res = await fundFakeEscrow({
                           contract_id: contractId,
+                          freelancer_id: teamMembers.length > 0 ? teamMembers[0].user_id : undefined, // Fallback for team
                           amount: amount
                         });
                         if (res.success) {

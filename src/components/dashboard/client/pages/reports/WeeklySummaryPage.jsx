@@ -54,33 +54,33 @@ export default function WeeklySummaryPage() {
   }));
 
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-white tracking-tight">Weekly Financial Summary</h1>
         <p className="text-white/50 text-sm mt-1 font-medium">Overview of your spending activity over time.</p>
       </div>
 
       {/* Temporal Parameters & Presets */}
-      <div className="flex flex-wrap items-end gap-5 mb-10 p-6 bg-transparent border border-white/10 rounded-2xl">
-        <div className="space-y-1.5 min-w-[160px]">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-4 mb-10 p-4 sm:p-6 bg-transparent border border-white/10 rounded-2xl">
+        <div className="space-y-1.5 w-full sm:min-w-[160px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">From</label>
           <input type="date" value={from} onChange={e => setFrom(e.target.value)}
-            className="w-full bg-transparent border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-accent/50 transition-all font-medium" />
+            className="w-full bg-transparent border border-white/10 text-white text-xs sm:text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-accent/50 transition-all font-medium" />
         </div>
-        <div className="space-y-1.5 min-w-[160px]">
+        <div className="space-y-1.5 w-full sm:min-w-[160px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">To</label>
           <input type="date" value={to} onChange={e => setTo(e.target.value)}
-            className="w-full bg-transparent border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-accent/50 transition-all font-medium" />
+            className="w-full bg-transparent border border-white/10 text-white text-xs sm:text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-accent/50 transition-all font-medium" />
         </div>
-        <div className="h-10 w-px bg-white/5 mx-2 hidden md:block" />
-        <div className="flex flex-wrap gap-2">
+        <div className="h-px w-full sm:h-10 sm:w-px bg-white/5 sm:mx-2" />
+        <div className="flex gap-2 w-full sm:w-auto">
           {[
             { label: '4 weeks', weeks: 4 },
             { label: '8 weeks', weeks: 8 },
             { label: '12 weeks', weeks: 12 },
           ].map(({ label, weeks }) => (
             <button key={weeks} onClick={() => { setFrom(nWeeksAgo(weeks)); setTo(toInputDate(new Date())); }}
-              className="px-4 py-2.5 text-[10px] font-black uppercase tracking-widest border border-white/10 text-white/40 hover:text-white hover:bg-white/5 hover:border-white/20 rounded-xl transition-all active:scale-95">
+              className="flex-1 sm:flex-none px-3 sm:px-4 py-2.5 text-[9px] sm:text-[10px] font-black uppercase tracking-widest border border-white/10 text-white/40 hover:text-white hover:bg-white/5 hover:border-white/20 rounded-xl transition-all active:scale-95">
               Last {label}
             </button>
           ))}
@@ -126,9 +126,7 @@ export default function WeeklySummaryPage() {
           {chartData.length > 0 ? (
             <div className="bg-transparent border border-white/10 rounded-2xl p-8">
               <div className="flex items-center gap-3 mb-8">
-                 <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
-                   <BarChart3 size={20} />
-                 </div>
+                 <BarChart3 size={20} className="text-accent" />
                  <div>
                    <p className="text-[10px] text-light-text/20 font-black uppercase tracking-widest leading-none mb-1">Analytics</p>
                    <h3 className="text-light-text font-bold text-sm uppercase tracking-wider">Weekly Spending</h3>

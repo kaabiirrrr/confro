@@ -124,7 +124,7 @@ export default function DirectContractDetailPage() {
 
   if (loading) {
     return (
-      <div className="max-w-[1630px] mx-auto p-12 flex justify-center">
+      <div className="max-w-[1500px] mx-auto p-12 flex justify-center">
         <InfinityLoader size={40} />
       </div>
     );
@@ -152,7 +152,7 @@ export default function DirectContractDetailPage() {
     : '—';
 
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
         <div>
@@ -188,23 +188,25 @@ export default function DirectContractDetailPage() {
                 {freelancerTitle && <p className="text-white/50 text-xs font-medium mt-1">{freelancerTitle}</p>}
               </div>
             </div>
-            <button
-              onClick={handleMessage}
-              disabled={messaging}
-              className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-accent text-white font-bold text-xs uppercase tracking-widest hover:bg-accent/90 transition-all active:scale-95 disabled:opacity-50"
-            >
-              {messaging ? <InfinityLoader size={20} /> : <MessageCircle size={16} />}
-              Message Freelancer
-            </button>
-
-            {contract.status === 'ACTIVE' && (
+            <div className="flex items-center gap-3">
               <button
-                onClick={() => navigate(`/meeting/create?projectId=${contract.job_id}&clientId=${contract.client_id}&freelancerId=${contract.freelancer?.id}`)}
-                className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-blue-600/10 border border-blue-500/20 text-blue-400 font-bold text-xs uppercase tracking-widest hover:bg-blue-600/20 transition-all active:scale-95"
+                onClick={handleMessage}
+                disabled={messaging}
+                className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-accent text-white font-bold text-xs uppercase tracking-widest hover:bg-accent/90 transition-all active:scale-95 disabled:opacity-50"
               >
-                <Video size={16} /> Start Meeting
+                {messaging ? <InfinityLoader size={20} /> : <MessageCircle size={16} />}
+                Message Freelancer
               </button>
-            )}
+
+              {contract.status === 'ACTIVE' && (
+                <button
+                  onClick={() => navigate(`/meeting/create?projectId=${contract.job_id}&clientId=${contract.client_id}&freelancerId=${contract.freelancer?.id}`)}
+                  className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-blue-600/10 border border-blue-500/20 text-blue-400 font-bold text-xs uppercase tracking-widest hover:bg-blue-600/20 transition-all active:scale-95"
+                >
+                  <Video size={16} /> Start Meeting
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Work Delivery System Integration */}
@@ -253,7 +255,7 @@ export default function DirectContractDetailPage() {
                   <button
                     onClick={() => setConfirm({ status: 'COMPLETED', message: 'Mark this contract as completed? All milestones and deliveries should be finalized.' })}
                     disabled={!!updating}
-                    className="flex items-center justify-center gap-2 px-4 py-3.5 bg-green-500/10 border border-green-500/20 text-green-400 font-bold text-[11px] uppercase tracking-widest rounded-xl hover:bg-green-500/20 transition-all disabled:opacity-50 active:scale-95"
+                    className="flex items-center justify-center gap-2 px-4 py-3.5 bg-green-500/10 border border-green-500/20 text-green-400 font-bold text-[11px] uppercase tracking-widest rounded-full hover:bg-green-500/20 transition-all disabled:opacity-50 active:scale-95"
                   >
                     {updating === 'COMPLETED' ? <InfinityLoader size={20} /> : <CheckCircle2 size={16} />}
                     Complete Contract
@@ -262,7 +264,7 @@ export default function DirectContractDetailPage() {
                 <button
                   onClick={() => setConfirm({ status: 'CANCELLED', message: 'Are you sure you want to cancel this contract? Ongoing work will be stopped.' })}
                   disabled={!!updating}
-                  className="flex items-center justify-center gap-2 px-4 py-3.5 bg-red-500/10 border border-red-500/20 text-red-500 font-bold text-[11px] uppercase tracking-widest rounded-xl hover:bg-red-500/20 transition-all disabled:opacity-50 active:scale-95"
+                  className="flex items-center justify-center gap-2 px-4 py-3.5 bg-red-500/10 border border-red-500/20 text-red-500 font-bold text-[11px] uppercase tracking-widest rounded-full hover:bg-red-500/20 transition-all disabled:opacity-50 active:scale-95"
                 >
                   {updating === 'CANCELLED' ? <InfinityLoader size={20} /> : <XCircle size={16} />}
                   Terminate Contract

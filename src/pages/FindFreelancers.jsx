@@ -12,6 +12,8 @@ import {
 import FreelancerCard from "../components/FreelancerCard";
 import FilterSidebar from "../components/FilterSidebar";
 import Navbar from "../components/Navbar";
+import ClientTopbar from "../layouts/components/ClientTopbar";
+import FreelancerTopbar from "../layouts/components/FreelancerTopbar";
 import Footer from "../components/Footer";
 import { toast } from "react-hot-toast";
 import { toastApiError } from "../utils/apiErrorToast";
@@ -56,12 +58,18 @@ const FindFreelancers = () => {
   const location = useLocation();
   const isDashboard = location.pathname.startsWith('/freelancer') || location.pathname.startsWith('/client');
   const queryParam = searchParams.get("q") || "";
-  const { role } = useAuth();
+  const { role, isAuthenticated, loading: authLoading } = useAuth();
+  
+  // Direct check for token to prevent flicker if auth state hasn't fully hydrated
+  const hasToken = !!localStorage.getItem('token');
+  const isUserAuthenticated = isAuthenticated || hasToken;
 
   const [selectedSkill, setSelectedSkill] = useState("");
   const [searchTerm, setSearchTerm] = useState(queryParam);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(queryParam);
   const [freelancers, setFreelancers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searching, setSearching] = useState(false);
   const [savedIds, setSavedIds] = useState(() => new Set());
   const [saveBusyId, setSaveBusyId] = useState(null);
   const [showMobileFilter, setShowMobileFilter] = useState(false);
@@ -69,12 +77,22 @@ const FindFreelancers = () => {
   const isClient = role === "CLIENT";
 
   useEffect(() => {
-    setSearchTerm(queryParam);
+    if (queryParam) {
+      setSearchTerm(queryParam);
+    }
   }, [queryParam]);
+
+  // Debounce search term
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 400);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
 
   useEffect(() => {
     fetchFreelancers();
-  }, [selectedSkill, searchTerm]);
+  }, [selectedSkill, debouncedSearchTerm]);
 
   useEffect(() => {
     if (!isClient) return;
@@ -94,10 +112,17 @@ const FindFreelancers = () => {
 
   const fetchFreelancers = async () => {
     try {
-      setLoading(true);
+      // Only show full loader if no freelancers are currently displayed
+      const isInitial = freelancers.length === 0;
+      if (isInitial) {
+        setLoading(true);
+      } else {
+        setSearching(true);
+      }
+
       const filters = { limit: 1000 };
       if (selectedSkill) filters.skill = selectedSkill;
-      if (searchTerm) filters.search = searchTerm;
+      if (debouncedSearchTerm) filters.search = debouncedSearchTerm;
 
       const response = await getFreelancers(filters);
       if (response.success) {
@@ -108,6 +133,7 @@ const FindFreelancers = () => {
       toast.error("Failed to load freelancers");
     } finally {
       setLoading(false);
+      setSearching(false);
     }
   };
 
@@ -149,7 +175,13 @@ const FindFreelancers = () => {
       transition={{ duration: 0.4 }}
       className={`relative ${isDashboard ? '' : 'bg-primary min-h-screen'}`}
     >
-      {!isDashboard && <Navbar />}
+      {!isDashboard && !authLoading && (
+        isUserAuthenticated ? (
+          role === 'CLIENT' ? <ClientTopbar /> : <FreelancerTopbar />
+        ) : (
+          <Navbar />
+        )
+      )}
 
       {/* Header */}
       <motion.div
@@ -186,7 +218,7 @@ const FindFreelancers = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[200] bg-black/50 md:hidden"
+              className="fixed inset-0 z-[4999] bg-black/50 md:hidden"
               onClick={() => setShowMobileFilter(false)}
             />
             <motion.div
@@ -194,7 +226,7 @@ const FindFreelancers = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 right-0 h-full z-[201] w-[80vw] max-w-[300px] bg-primary border-l border-white/10 p-5 overflow-y-auto md:hidden"
+              className="fixed top-0 right-0 h-full z-[5000] w-[80vw] max-w-[300px] bg-primary border-l border-white/10 p-5 overflow-y-auto md:hidden"
             >
               <div className="flex items-center justify-between mb-4">
                 <span className="text-white font-semibold text-sm">Filters</span>
@@ -205,6 +237,8 @@ const FindFreelancers = () => {
               <FilterSidebar
                 selectedSkill={selectedSkill}
                 setSelectedSkill={(s) => { setSelectedSkill(s); setShowMobileFilter(false); }}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
               />
             </motion.div>
           </>
@@ -224,11 +258,13 @@ const FindFreelancers = () => {
           <FilterSidebar
             selectedSkill={selectedSkill}
             setSelectedSkill={setSelectedSkill}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
           />
         </motion.div>
 
         {/* Cards */}
-        <div className="flex-1 min-w-0">
+        <div className={`flex-1 min-w-0 transition-opacity duration-300 ${searching ? 'opacity-60' : 'opacity-100'}`}>
           {loading ? (
             <InfinityLoader size={40} />
           ) : freelancers.length > 0 ? (

@@ -123,7 +123,7 @@ const MyJobs = () => {
   };
 
   return (
-    <div className="max-w-[1480px] mx-auto py-6 sm:py-8 text-light-text font-sans tracking-tight">
+    <div className="max-w-[1500px] mx-auto py-6 sm:py-8 text-light-text font-sans tracking-tight">
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
         <div className="space-y-1">
@@ -199,27 +199,32 @@ const MyJobs = () => {
                     <p className="text-light-text/60 text-sm line-clamp-2 mb-4 leading-relaxed">{job.description}</p>
                   )}
 
-                  <div className="flex flex-wrap gap-x-6 gap-y-3">
+                  <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-0.5">Budget</span>
-                      <span className="text-sm font-semibold text-white/90">
-                        {formatBudget(job)}
-                        {job.budget_type && <span className="text-light-text/40 font-medium ml-1">({job.budget_type})</span>}
-                      </span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-1">Budget</span>
+                      <div className="flex items-center gap-1.5">
+                        <IndianRupee size={12} className="text-emerald-500/50" />
+                        <span className="text-sm font-bold text-white/90">
+                          {formatBudget(job).replace('₹', '')}
+                          {job.budget_type && <span className="text-light-text/30 font-medium ml-1.5 text-[10px]">({job.budget_type.toUpperCase()})</span>}
+                        </span>
+                      </div>
                     </div>
                     {job.duration && (
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-0.5">Duration</span>
-                        <span className="text-sm font-semibold text-white/90">{job.duration}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-1">Duration</span>
+                        <div className="flex items-center gap-1.5">
+                          <Clock size={12} className="text-white/20" />
+                          <span className="text-sm font-bold text-white/90">{job.duration}</span>
+                        </div>
                       </div>
                     )}
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-0.5">Proposals</span>
-                      <span className="text-sm font-semibold text-white/90">{job.proposal_count || 0} applications</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-0.5">Posted</span>
-                      <span className="text-sm font-semibold text-white/90">{formatDate(job.created_at)}</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-1">Activity</span>
+                      <div className="flex items-center gap-1.5">
+                        <Users size={12} className="text-white/20" />
+                        <span className="text-sm font-bold text-white/90">{job.proposal_count || 0} Proposals</span>
+                      </div>
                     </div>
                   </div>
 
@@ -227,7 +232,7 @@ const MyJobs = () => {
                   {job.skills?.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-5">
                       {job.skills.slice(0, 5).map(skill => (
-                        <span key={skill} className="px-2.5 py-0.5 bg-white/5 text-white/50 border border-white/5 rounded-md text-[10px] font-bold uppercase tracking-wider">{skill}</span>
+                        <span key={skill} className="px-2.5 py-0.5 bg-white/5 text-white/50 border border-white/5 rounded-full text-[10px] font-bold uppercase tracking-wider">{skill}</span>
                       ))}
                       {job.skills.length > 5 && (
                         <span className="px-2.5 py-0.5 text-light-text/30 text-[10px] font-bold tracking-widest">+{job.skills.length - 5} MORE</span>
@@ -237,63 +242,64 @@ const MyJobs = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 shrink-0 self-end md:self-start">
-                  {job.is_bidding_open !== false && (job.status === 'OPEN' || job.status === 'IN_PROGRESS') && (
-                    <button
-                        onClick={() => {
-                            setConfirmModal({
-                                isOpen: true,
-                                title: 'Stop Hiring Process',
-                                message: 'Are you sure you want to stop hiring for this job? This will immediately remove it from the public marketplace and lock the team.',
-                                confirmText: 'Stop Hiring',
-                                type: 'primary',
-                                onConfirm: async () => {
-                                    try {
-                                        const { closeJobBidding } = await import('../../../../services/apiService');
-                                        const res = await closeJobBidding(job.id);
-                                        if (res.success) {
-                                            toast.success("Bidding closed. Team is now locked.");
-                                            loadJobs();
+                  <div className="flex items-center gap-2 sm:gap-3 shrink-0 self-end md:self-start">
+                    {(job.proposal_count || 0) > 0 && (
+                      <button
+                        onClick={() => navigate(`/client/proposals?job=${job.id}`)}
+                        className="h-10 px-5 bg-accent text-white rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 flex items-center gap-2 active:scale-95 whitespace-nowrap"
+                      >
+                        Proposals <ChevronRight size={14} />
+                      </button>
+                    )}
+                    <div className="flex items-center gap-1 bg-white/5 rounded-full px-1 py-1 border border-white/5">
+                      {job.is_bidding_open !== false && (job.status === 'OPEN' || job.status === 'IN_PROGRESS') && (
+                        <button
+                            onClick={() => {
+                                setConfirmModal({
+                                    isOpen: true,
+                                    title: 'Stop Hiring Process',
+                                    message: 'Are you sure you want to stop hiring for this job? This will immediately remove it from the public marketplace and lock the team.',
+                                    confirmText: 'Stop Hiring',
+                                    type: 'primary',
+                                    onConfirm: async () => {
+                                        try {
+                                            const { closeJobBidding } = await import('../../../../services/apiService');
+                                            const res = await closeJobBidding(job.id);
+                                            if (res.success) {
+                                                toast.success("Bidding closed. Team is now locked.");
+                                                loadJobs();
+                                            }
+                                        } catch (err) {
+                                            toast.error("Failed to close bidding");
+                                        } finally {
+                                            setConfirmModal(prev => ({ ...prev, isOpen: false }));
                                         }
-                                    } catch (err) {
-                                        toast.error("Failed to close bidding");
-                                    } finally {
-                                        setConfirmModal(prev => ({ ...prev, isOpen: false }));
                                     }
-                                }
-                            });
-                        }}
-
-                        className="p-2.5 bg-transparent text-white/40 hover:text-accent transition-all"
-                        title="Stop Hiring"
-                    >
-                        <Lock size={16} />
-                    </button>
-                  )}
-                  {(job.proposal_count || 0) > 0 && (
-                    <button
-                      onClick={() => navigate(`/client/proposals?job=${job.id}`)}
-                      className="flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent border border-accent/20 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-accent/20 transition-all shadow-lg shadow-accent/5"
-                    >
-                      Proposals <ChevronRight size={14} />
-                    </button>
-                  )}
-                  <button
-                    onClick={() => navigate(`/client/post-job?edit=${job.id}`)}
-                    className="p-2.5 bg-transparent text-white/40 hover:text-accent transition-all"
-                    title="Edit"
-                  >
-                    <Edit2 size={16} />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(job)}
-                    disabled={deletingId === job.id}
-                    className="p-2.5 bg-transparent text-white/40 hover:text-red-400 transition-all"
-                    title="Delete"
-                  >
-                    {deletingId === job.id ? <InfinityLoader size={20} /> : <Trash2 size={16} />}
-                  </button>
-                </div>
+                                });
+                            }}
+                            className="p-2 text-white/40 hover:text-accent transition-all rounded-full"
+                            title="Stop Hiring"
+                        >
+                            <Lock size={16} />
+                        </button>
+                      )}
+                      <button
+                        onClick={() => navigate(`/client/post-job?edit=${job.id}`)}
+                        className="p-2 text-white/40 hover:text-white transition-all rounded-full"
+                        title="Edit"
+                      >
+                        <Edit2 size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(job)}
+                        disabled={deletingId === job.id}
+                        className="p-2 text-white/40 hover:text-red-400 transition-all rounded-full"
+                        title="Delete"
+                      >
+                        {deletingId === job.id ? <InfinityLoader size={16} /> : <Trash2 size={16} />}
+                      </button>
+                    </div>
+                  </div>
               </div>
             </div>
           ))}

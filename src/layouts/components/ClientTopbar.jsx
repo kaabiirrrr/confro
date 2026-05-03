@@ -154,7 +154,7 @@ const ClientTopbar = () => {
           Meetings <Arrow />
         </button>
         {openMenu === "meetings" && (
-          <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[240px] p-1 bg-secondary border border-border rounded-2xl shadow-2xl z-50 flex flex-col gap-1">
+          <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[240px] p-1 bg-secondary border border-border rounded-2xl shadow-2xl z-[2010] flex flex-col gap-1">
             <button
               onClick={() => { navigate('/meeting/create'); setOpenMenu(null); }}
               className="dropdown-item w-full text-left"
@@ -187,7 +187,7 @@ const ClientTopbar = () => {
     <>
       {/* Type picker dropdown */}
       {openSearchType && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[280px] bg-secondary border border-border rounded-xl shadow-xl p-2 z-50">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[280px] bg-secondary border border-border rounded-xl shadow-xl p-2 z-[2010]">
           <SearchItem
             title="Talent"
             desc="Find freelancers and agencies"
@@ -205,7 +205,7 @@ const ClientTopbar = () => {
 
       {/* Live suggestions dropdown */}
       {showSuggestions && !openSearchType && suggestions.length > 0 && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] p-3 bg-primary/40 backdrop-blur-3xl rounded-2xl shadow-2xl z-50 flex flex-col gap-2 border border-white/10">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] p-3 bg-primary/40 backdrop-blur-3xl rounded-2xl shadow-2xl z-[2010] flex flex-col gap-2 border border-white/10">
           <div className="px-1 py-1 flex items-center justify-between">
             <span className="text-[10px] font-bold uppercase tracking-widest text-slate-900/40 dark:text-white/30">Top Results</span>
             <span className="w-1 h-1 rounded-full bg-accent animate-pulse"></span>
@@ -366,13 +366,15 @@ const ClientTopbar = () => {
               <AIAssistant userRole="client" externalOpen onClose={() => setOpenAI(false)} />
             </div>
           )}
-          {/* Mobile AI — centered modal */}
+          {/* Mobile AI — full screen bottom sheet */}
           {openAI && (
             <div
               className="md:hidden ai-panel-mobile-wrapper"
-              onClick={e => e.stopPropagation()}
+              onClick={() => setOpenAI(false)}
             >
-              <AIAssistant userRole="client" externalOpen onClose={() => setOpenAI(false)} />
+              <div onClick={e => e.stopPropagation()} style={{ width: '100%' }}>
+                <AIAssistant userRole="client" externalOpen onClose={() => setOpenAI(false)} />
+              </div>
             </div>
           )}
         </div>

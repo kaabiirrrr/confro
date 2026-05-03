@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { fetchUnifiedNotifications, markUnifiedAsRead, getUnifiedUnreadCount, dismissUnifiedItem } from '../../../services/notificationService';
 import { useNotification } from '../../../hooks/useNotification';
+import InfinityLoader from '../../../components/common/InfinityLoader';
 
 /* ─── helpers ──────────────────────────────────────────────────── */
 const getTimeAgo = (date) => {
@@ -21,15 +22,15 @@ const getTimeAgo = (date) => {
 };
 
 const CATEGORIES = {
-    JOB: { icon: Briefcase, label: 'Job', cls: 'ndc-job', textColor: '#ffffff' },
-    MESSAGE: { icon: MessageSquare, label: 'Message', cls: 'ndc-message', textColor: '#ffffff' },
-    PAYMENT: { icon: DollarSign, label: 'Payment', cls: 'ndc-payment', textColor: '#ffffff' },
-    SYSTEM: { icon: Shield, label: 'System', cls: 'ndc-system', textColor: '#ffffff' },
-    CONTRACT: { icon: UserCheck, label: 'Contract', cls: 'ndc-contract', textColor: '#ffffff' },
-    REVIEW: { icon: () => <img src="/Icons/icons8-review-100.png" alt="Review" style={{ width: '15px', height: '15px' }} />, label: 'Review', cls: 'ndc-review', textColor: '#ffffff' },
-    PROPOSAL: { icon: TrendingUp, label: 'Proposal', cls: 'ndc-proposal', textColor: '#ffffff' },
-    ANNOUNCEMENT: { icon: Megaphone, label: 'Platform', cls: 'ndc-announce', textColor: '#ffffff' },
-    DEFAULT: { icon: Bell, label: 'Activity', cls: 'ndc-default', textColor: '#ffffff' },
+    JOB: { icon: Briefcase, label: 'Job', cls: 'ndc-job' },
+    MESSAGE: { icon: MessageSquare, label: 'Message', cls: 'ndc-message' },
+    PAYMENT: { icon: DollarSign, label: 'Payment', cls: 'ndc-payment' },
+    SYSTEM: { icon: Shield, label: 'System', cls: 'ndc-system' },
+    CONTRACT: { icon: UserCheck, label: 'Contract', cls: 'ndc-contract' },
+    REVIEW: { icon: () => <img src="/Icons/icons8-review-100.png" alt="Review" style={{ width: '15px', height: '15px' }} />, label: 'Review', cls: 'ndc-review' },
+    PROPOSAL: { icon: TrendingUp, label: 'Proposal', cls: 'ndc-proposal' },
+    ANNOUNCEMENT: { icon: Megaphone, label: 'Platform', cls: 'ndc-announce' },
+    DEFAULT: { icon: Bell, label: 'Activity', cls: 'ndc-default' },
 };
 
 const getCat = (item) => {
@@ -121,16 +122,19 @@ const NotificationDropdown = ({ role }) => {
                     right: 0;
                     top: calc(100% + 12px);
                     width: min(420px, calc(100vw - 16px));
-                    background: rgba(15, 23, 42, 0.92);
+                    background: var(--color-dropdown-bg);
                     backdrop-filter: blur(24px) saturate(180%);
                     -webkit-backdrop-filter: blur(24px) saturate(180%);
-                    border: 1px solid rgba(255, 255, 255, 0.10);
+                    border: 1px solid var(--color-dropdown-border);
                     border-radius: 20px;
                     overflow: hidden;
                     z-index: 9999;
                     animation: nd-slideIn 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
-                    box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.7);
+                    box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.15);
                     padding: 4px 0 0 0;
+                }
+                .dark .nd-wrap {
+                    box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.7);
                 }
                 @media (max-width: 767px) {
                     .nd-wrap {
@@ -191,7 +195,7 @@ const NotificationDropdown = ({ role }) => {
                 /* ── Tabs ── */
                 .nd-tabs {
                     display: flex;
-                    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                    border-bottom: 1px solid var(--color-border);
                     margin: 0 16px;
                     gap: 20px;
                     padding-bottom: 0;
@@ -206,14 +210,14 @@ const NotificationDropdown = ({ role }) => {
                     text-transform: uppercase;
                     cursor: pointer;
                     transition: all 0.2s ease;
-                    color: rgba(255, 255, 255, 0.4);
+                    color: var(--color-text-muted);
                     border-bottom: 2px solid transparent;
                     display: flex;
                     align-items: center;
                     gap: 6px;
                 }
                 .nd-tab:hover:not(.nd-tab--active) {
-                    color: rgba(255, 255, 255, 0.8);
+                    color: var(--color-light-text);
                 }
                 .nd-tab--active {
                     color: var(--color-accent);
@@ -224,12 +228,12 @@ const NotificationDropdown = ({ role }) => {
                     font-weight: 800;
                     padding: 2px 6px;
                     border-radius: 4px;
-                    background: rgba(56, 189, 248, 0.15);
+                    background: transparent;
                     color: var(--color-accent);
                 }
                 .nd-tab:not(.nd-tab--active) .nd-tab__count {
-                    background: rgba(255, 255, 255, 0.1);
-                    color: inherit;
+                    background: transparent;
+                    color: var(--color-text-muted);
                 }
 
                 /* ── Scroll area ── */
@@ -250,8 +254,8 @@ const NotificationDropdown = ({ role }) => {
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    padding: 48px 24px;
-                    gap: 12px;
+                    padding: 24px;
+                    gap: 8px;
                 }
                 .nd-spinner {
                     width: 32px; height: 32px;
@@ -308,15 +312,25 @@ const NotificationDropdown = ({ role }) => {
                     cursor: pointer;
                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                     animation: nd-itemFade 0.25s ease both;
-                    background: rgba(255, 255, 255, 0.05);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    background: var(--color-hover);
+                    border: 1px solid var(--color-border);
                 }
                 .nd-item:hover { 
+                    background: var(--color-secondary);
+                    border-color: var(--color-accent);
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                }
+                .dark .nd-item:hover {
                     background: rgba(255, 255, 255, 0.09);
                     border-color: rgba(255, 255, 255, 0.15);
-                    transform: translateY(-1px);
+                    box-shadow: none;
                 }
                 .nd-item--unread {
+                    background: rgba(59, 130, 246, 0.08);
+                    border-color: rgba(59, 130, 246, 0.2);
+                }
+                .dark .nd-item--unread {
                     background: rgba(56, 189, 248, 0.12);
                     border-color: rgba(56, 189, 248, 0.3);
                 }
@@ -325,12 +339,12 @@ const NotificationDropdown = ({ role }) => {
                 /* ── Item icon ── */
                 .nd-item__icon {
                     flex-shrink: 0;
-                    width: 36px; height: 36px;
-                    border-radius: 10px;
+                    width: 24px; height: 24px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    transition: box-shadow 0.3s;
+                    transition: transform 0.3s;
+                    background: transparent;
                 }
                 .nd-item__icon--glow {
                     box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
@@ -338,13 +352,13 @@ const NotificationDropdown = ({ role }) => {
                 /* Category colours — custom types */
                 .ndc-job      { color: #3b82f6; }
                 .ndc-message  { color: var(--color-accent); }
-                .ndc-payment  { color: #4ade80; }
-                .ndc-system   { color: #ffffff; }
-                .ndc-contract { color: #a78bfa; }
-                .ndc-review   { color: #facc15; }
+                .ndc-payment  { color: #10b981; }
+                .ndc-system   { color: var(--color-light-text); }
+                .ndc-contract { color: #8b5cf6; }
+                .ndc-review   { color: #f59e0b; }
                 .ndc-proposal { color: var(--color-accent); }
-                .ndc-announce { color: #ffffff; }
-                .ndc-default  { color: #ffffff; }
+                .ndc-announce { color: var(--color-light-text); }
+                .ndc-default  { color: var(--color-light-text); }
 
                 /* ── Item text ── */
                 .nd-item__body { flex: 1; min-width: 0; }
@@ -358,13 +372,13 @@ const NotificationDropdown = ({ role }) => {
                     font-size: 10px;
                     font-weight: 500;
                     letter-spacing: 0.02em;
-                    color: rgba(255, 255, 255, 0.4) !important;
+                    color: var(--color-text-muted) !important;
                 }
                 .nd-new-dot {
                     width: 6px; height: 6px;
                     border-radius: 50%;
-                    background: #4ade80;
-                    box-shadow: 0 0 6px rgba(74, 222, 128, 0.5);
+                    background: #10b981;
+                    box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
                     display: inline-block;
                 }
                 .nd-item__time {
@@ -378,7 +392,7 @@ const NotificationDropdown = ({ role }) => {
                     margin: 0 0 2px;
                     font-size: 12.5px;
                     font-weight: 500;
-                    color: var(--color-text-muted);
+                    color: var(--color-text-secondary);
                     line-height: 1.4;
                     white-space: nowrap;
                     overflow: hidden;
@@ -418,7 +432,7 @@ const NotificationDropdown = ({ role }) => {
                     transition: all 0.15s;
                 }
                 .nd-x:hover {
-                    background: rgba(239, 68, 68, 0.12);
+                    background: rgba(239, 68, 68, 0.1);
                     color: #ef4444;
                 }
 
@@ -516,7 +530,7 @@ const NotificationDropdown = ({ role }) => {
                     <div className="nd-scroll">
                         {loading ? (
                             <div className="nd-loading">
-                                <div className="nd-spinner" />
+                                <InfinityLoader size="sm" fullScreen={false} text="" />
                                 <span>Loading activity…</span>
                             </div>
                         ) : displayed.length === 0 ? (
@@ -550,7 +564,7 @@ const NotificationDropdown = ({ role }) => {
 
                                             <div className="nd-item__body">
                                                 <div className="nd-item__meta">
-                                                    <span className="nd-cat-label" style={{ color: cat.textColor }}>{cat.label}</span>
+                                                    <span className="nd-cat-label">{cat.label}</span>
                                                     {unread && <span className="nd-new-dot" />}
                                                     <span className="nd-item__time">{getTimeAgo(item.created_at)}</span>
                                                 </div>

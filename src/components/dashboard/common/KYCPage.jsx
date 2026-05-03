@@ -378,7 +378,7 @@ export default function KYCPage() {
                   </div>
                   {error && <p className="text-red-400 text-xs mb-4 flex items-center gap-1"><AlertCircle size={11} />{error}</p>}
                   <button onClick={() => { if (!docType) { setError('Please select a document type'); return; } setError(''); setStep(2); }}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-semibold rounded-xl transition-colors ml-auto">
+                    className="max-sm:w-full flex items-center justify-center gap-2 px-5 py-2.5 bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-semibold rounded-xl transition-colors sm:ml-auto">
                     Continue <ChevronRight size={15} />
                   </button>
                 </motion.div>
@@ -397,14 +397,14 @@ export default function KYCPage() {
                     <p className="text-[#64748b] text-xs">Ensure all text is clearly visible. OCR will extract your details automatically.</p>
                   </div>
                   {error && <p className="text-red-400 text-xs mt-3 flex items-center gap-1"><AlertCircle size={11} />{error}</p>}
-                  <div className="flex items-center justify-between mt-6">
+                  <div className="max-sm:flex-col-reverse flex sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6">
                     <button onClick={() => { setStep(1); setError(''); }}
-                      className="flex items-center gap-1.5 text-[#475569] hover:text-white text-sm transition-colors">
+                      className="flex items-center justify-center gap-1.5 text-[#475569] hover:text-white text-sm transition-colors py-2.5">
                       <ChevronLeft size={15} /> Back
                     </button>
                     <button onClick={handleDocUpload} disabled={uploading || !docFile}
-                      className="flex items-center gap-2 px-5 py-2.5 bg-[#3b82f6] hover:bg-[#2563eb] disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors">
-                      {uploading ? <><Loader2 size={15} className="animate-spin" /> Scanning…</> : <>Upload & Scan <ChevronRight size={15} /></>}
+                      className="max-sm:w-full flex items-center justify-center gap-2 px-5 py-2.5 bg-[#3b82f6] hover:bg-[#2563eb] disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors">
+                      {uploading ? <><Loader2 size={15} className="animate-spin" /> Scanning…</> : <>Upload &amp; Scan <ChevronRight size={15} /></>}
                     </button>
                   </div>
                 </motion.div>
@@ -432,20 +432,20 @@ export default function KYCPage() {
 
                   {error && <p className="text-red-400 text-xs mb-4 flex items-center gap-1"><AlertCircle size={11} />{error}</p>}
 
-                  <div className="flex items-center justify-between">
+                  <div className="max-sm:flex-col-reverse flex sm:flex-row items-stretch sm:items-center justify-between gap-3">
                     <button onClick={() => { setStep(2); setError(''); }}
-                      className="flex items-center gap-1.5 text-[#475569] hover:text-white text-sm transition-colors">
+                      className="flex items-center justify-center gap-1.5 text-[#475569] hover:text-white text-sm transition-colors py-2.5">
                       <ChevronLeft size={15} /> Back
                     </button>
-                    <div className="flex items-center gap-2">
+                    <div className="max-sm:flex-col flex sm:flex-row items-stretch sm:items-center gap-2">
                       {!selfieFile && (
                         <button onClick={() => handleSubmit(true)} disabled={submitting}
-                          className="flex items-center gap-1.5 px-4 py-2.5 border border-[#1a2744] text-[#64748b] hover:text-white hover:border-[#2a3a5a] text-sm rounded-xl transition-colors disabled:opacity-40">
+                          className="max-sm:w-full flex items-center justify-center gap-1.5 px-4 py-2.5 border border-[#1a2744] text-[#64748b] hover:text-white hover:border-[#2a3a5a] text-sm rounded-xl transition-colors disabled:opacity-40">
                           <SkipForward size={14} /> Skip
                         </button>
                       )}
                       <button onClick={() => handleSubmit(false)} disabled={submitting}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-[#3b82f6] hover:bg-[#2563eb] disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors">
+                        className="max-sm:w-full flex items-center justify-center gap-2 px-5 py-2.5 bg-[#3b82f6] hover:bg-[#2563eb] disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors">
                         {submitting ? <><Loader2 size={15} className="animate-spin" /> Submitting…</> : 'Submit for Review'}
                       </button>
                     </div>

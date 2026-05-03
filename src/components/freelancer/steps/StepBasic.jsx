@@ -195,7 +195,7 @@ export default function StepBasic({ next }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
         <div className="space-y-2">
           <label className="text-sm font-medium text-white/50 px-1">Full Name</label>
           <input
@@ -203,7 +203,7 @@ export default function StepBasic({ next }) {
             value={formData.fullName}
             onChange={handleChange}
             placeholder="e.g. John Doe"
-            className="bg-transparent border border-white/10 p-3 rounded-xl w-full focus:border-accent outline-none transition-all text-white placeholder:text-white/20 text-sm"
+            className="bg-secondary/20 border border-white/10 p-3.5 rounded-xl w-full focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-sm"
           />
           {errors.fullName && (
             <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.fullName}</p>
@@ -217,7 +217,7 @@ export default function StepBasic({ next }) {
             value={formData.title}
             onChange={handleChange}
             placeholder="e.g. Senior Product Designer"
-            className="bg-transparent border border-white/10 p-3 rounded-xl w-full focus:border-accent outline-none transition-all text-white placeholder:text-white/20 text-sm"
+            className="bg-secondary/20 border border-white/10 p-3.5 rounded-xl w-full focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-sm"
           />
           {errors.title && (
             <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.title}</p>
@@ -268,30 +268,35 @@ export default function StepBasic({ next }) {
             value={formData.city}
             onChange={handleChange}
             placeholder="e.g. New York"
-            className="bg-transparent border border-white/10 p-3 rounded-xl w-full focus:border-accent outline-none transition-all text-white placeholder:text-white/20 text-sm"
+            className="bg-secondary/20 border border-white/10 p-3.5 rounded-xl w-full focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-sm"
           />
           {errors.city && (
             <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.city}</p>
           )}
         </div>
 
-        <div className="col-span-1 md:col-span-2 space-y-2">
-          <div className="flex items-center justify-between px-1">
-            <label className="text-sm font-medium text-white/50">Professional Bio</label>
-            <AIRewriteButton
-              field="bio"
+        {/* Bio Section - Refined for better alignment */}
+        <div className="col-span-1 md:col-span-2 space-y-3 pt-2">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between px-1">
+              <label className="text-sm font-medium text-white/50">Professional Bio</label>
+              <div className="w-auto">
+                <AIRewriteButton
+                  field="bio"
+                  value={formData.bio}
+                  context={{ title: formData.title }}
+                  onApply={(val) => setFormData({ ...formData, bio: val })}
+                />
+              </div>
+            </div>
+            <textarea
+              name="bio"
               value={formData.bio}
-              context={{ title: formData.title }}
-              onApply={(val) => setFormData({ ...formData, bio: val })}
+              onChange={handleChange}
+              placeholder="Write a brief introduction about your professional background and passions..."
+              className="bg-secondary/20 border border-white/10 p-4 rounded-2xl w-full h-36 resize-none focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-sm leading-relaxed"
             />
           </div>
-          <textarea
-            name="bio"
-            value={formData.bio}
-            onChange={handleChange}
-            placeholder="Write a brief introduction about your professional background and passions..."
-            className="bg-transparent border border-white/10 p-4 rounded-xl w-full h-32 resize-none focus:border-accent outline-none transition-all text-white placeholder:text-white/20 text-sm leading-relaxed"
-          />
           {errors.bio && (
             <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.bio}</p>
           )}

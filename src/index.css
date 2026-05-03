@@ -3,6 +3,11 @@
 /* Enable class-based dark mode (Tailwind v4 requires explicit registration) */
 @custom-variant dark (&:where(.dark, .dark *));
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px; /* Accounts for sticky header height */
+}
+
 :root {
   color-scheme: light dark;
 }
@@ -245,7 +250,7 @@ input, textarea {
   .btn-primary {
     @apply text-white px-6 py-2.5 font-medium;
     background: var(--color-cta);
-    border-radius: 10px;
+    border-radius: 9999px;
     transition: all 0.2s ease;
   }
 
@@ -259,7 +264,7 @@ input, textarea {
     @apply px-6 py-2.5 font-medium;
     border: 1px solid var(--color-accent);
     color: var(--color-accent);
-    border-radius: 10px;
+    border-radius: 9999px;
     transition: all 0.2s ease;
   }
 
@@ -348,7 +353,7 @@ a:focus, button:focus { outline: none; }
   gap: 12px;
   padding: 10px 14px;
   font-size: 14px;
-  border-radius: 6px;
+  border-radius: 9999px;
   color: var(--color-nav-text);
   transition: all 0.15s ease;
 }

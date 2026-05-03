@@ -129,7 +129,7 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="bg-secondary border border-white/10 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl"
+            className="bg-secondary border border-white/10 w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl shadow-2xl"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
@@ -177,7 +177,7 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
                       className="flex-1 accent-accent" />
                     <ZoomIn size={14} className="text-white/40 shrink-0" />
                     <button onClick={() => { setRotation(r => r + 90); setTimeout(drawCrop, 10); }}
-                      className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all shrink-0">
+                      className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all shrink-0">
                       <RotateCw size={13} />
                     </button>
                   </div>
@@ -204,7 +204,7 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
                     onDragEnter={handleDrag} onDragLeave={handleDrag}
                     onDragOver={handleDrag} onDrop={handleDrop}
                     onClick={handleUploadClick}
-                    className={`w-full h-36 rounded-2xl border-2 border-dashed transition-all cursor-pointer flex flex-col items-center justify-center gap-2 ${
+                    className={`w-full h-36 rounded-[2rem] border-2 border-dashed transition-all cursor-pointer flex flex-col items-center justify-center gap-2 ${
                       dragActive ? "border-accent bg-accent/5" : "border-white/10 hover:border-accent/40"
                     }`}
                   >
@@ -223,7 +223,7 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
                     </p>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                  <div className="flex items-start gap-3 p-3 rounded-[2rem] bg-white/5 border border-white/5">
                     <Info size={14} className="text-blue-400 shrink-0 mt-0.5" />
                     <p className="text-white/40 text-xs leading-relaxed">
                       Must be an actual photo of you. Logos, group photos, and altered images are not allowed.

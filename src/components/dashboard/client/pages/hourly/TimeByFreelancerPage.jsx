@@ -44,7 +44,7 @@ export default function TimeByFreelancerPage() {
   const totalAmount = rows.reduce((s, r) => s + (parseFloat(r.total_amount) || 0), 0);
 
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-white">Time by Freelancer</h1>
         <p className="text-white/50 text-sm mt-1">Summary of operational hours logged per contractor across all hourly engagements.</p>

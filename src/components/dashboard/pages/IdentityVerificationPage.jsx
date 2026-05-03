@@ -49,11 +49,11 @@ function UploadZone({ label, url, onUpload, uploading }) {
             <img src={url} alt={label} className="w-full h-full object-cover" style={{ maxHeight: '180px' }} />
             <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition flex items-center justify-center gap-3">
               <button type="button" onClick={e => { e.stopPropagation(); ref.current?.click(); }}
-                className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition">
+                className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition">
                 <Upload size={16} className="text-white" />
               </button>
               <a href={url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition">
+                className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition">
                 <Eye size={16} className="text-white" />
               </a>
             </div>
@@ -197,13 +197,13 @@ export default function IdentityVerificationPage() {
   );
 
   return (
-    <div className="w-full mx-auto space-y-4 sm:space-y-6 pb-20 px-0">
+    <div className="w-full max-w-[1500px] mx-auto space-y-4 sm:space-y-6 pb-20 px-0">
       {/* Header */}
       <div className="flex items-center gap-3">
         {step > 1 && (
           <button 
             onClick={() => setStep(step === 5 ? 3 : step - 1)} 
-            className="p-1.5 rounded-lg bg-white/[0.02] hover:bg-white/5 text-white/50 hover:text-white transition"
+            className="p-1.5 rounded-full bg-white/[0.02] hover:bg-white/5 text-white/50 hover:text-white transition"
           >
             <ArrowLeft size={16} />
           </button>
@@ -223,7 +223,7 @@ export default function IdentityVerificationPage() {
           {/* NOT_STARTER */}
           {(vstatus === 'NOT_STARTED') && (
             <div className="space-y-6">
-              <div className="border border-white/10 rounded-2xl p-10 text-center backdrop-blur-sm bg-white/[0.01]">
+              <div className="border border-white/10 rounded-[2rem] p-10 text-center backdrop-blur-sm bg-white/[0.01]">
                 <div className={`w-16 h-16 flex items-center justify-center mx-auto mb-5`}>
                   <ShieldCheck size={32} className="text-accent" />
                 </div>
@@ -232,7 +232,7 @@ export default function IdentityVerificationPage() {
                   Verify your identity to stand out from the crowd. Verified accounts earn more trust and get hired faster.
                 </p>
                 <button onClick={() => setStep(2)}
-                  className={`flex items-center gap-2 px-5 h-9 bg-accent hover:bg-accent/80 text-white rounded-lg text-[10px] sm:text-[11px] font-bold uppercase tracking-widest transition mx-auto shadow-lg`}>
+                  className={`flex items-center gap-2 px-6 h-10 bg-accent hover:bg-accent/80 text-white rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-widest transition mx-auto shadow-lg`}>
                   Start Verification <ArrowRight size={14} />
                 </button>
               </div>
@@ -250,7 +250,7 @@ export default function IdentityVerificationPage() {
 
           {/* PENDING */}
           {(vstatus === 'PENDING') && (
-            <div className="border border-yellow-500/10 rounded-2xl p-10 text-center bg-yellow-500/[0.01]">
+            <div className="border border-yellow-500/10 rounded-[2rem] p-10 text-center bg-yellow-500/[0.01]">
               <div className="w-16 h-16 flex items-center justify-center mx-auto mb-5">
                 <Clock size={32} className="text-yellow-400" />
               </div>
@@ -268,7 +268,7 @@ export default function IdentityVerificationPage() {
 
           {/* APPROVED */}
           {(vstatus === 'APPROVED') && (
-            <div className="border border-green-500/10 rounded-2xl p-10 text-center bg-green-500/[0.01]">
+            <div className="border border-green-500/10 rounded-[2rem] p-10 text-center bg-green-500/[0.01]">
               <div className="w-16 h-16 flex items-center justify-center mx-auto mb-5">
                 <BadgeCheck size={32} className="text-green-400" />
               </div>
@@ -281,13 +281,13 @@ export default function IdentityVerificationPage() {
 
           {/* REJECTED */}
           {vstatus === 'REJECTED' && (
-            <div className="border border-red-500/10 rounded-2xl p-10 text-center bg-red-500/[0.01]">
+            <div className="border border-red-500/10 rounded-[2rem] p-10 text-center bg-red-500/[0.01]">
               <div className="w-16 h-16 flex items-center justify-center mx-auto mb-5">
                 <XCircle size={32} className="text-red-400" />
               </div>
               <h2 className="text-base font-bold text-white mb-2">Verification Rejected</h2>
                <button onClick={() => { setFrontUrl(''); setBackUrl(''); setDocType(''); setStep(2); }}
-                className="flex items-center gap-2 px-4 h-9 mt-4 bg-red-500/10 text-red-400 rounded-lg text-[11px] font-bold uppercase tracking-widest hover:bg-red-500/20 transition mx-auto shadow-lg shadow-red-500/5">
+                className="flex items-center gap-2 px-5 h-10 mt-4 bg-red-500/10 text-red-400 rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-red-500/20 transition mx-auto shadow-lg shadow-red-500/5">
                 <RefreshCw size={13} /> Resubmit Documents
               </button>
             </div>
@@ -297,7 +297,7 @@ export default function IdentityVerificationPage() {
 
       {/* ── STEP 2: SELECT DOC TYPE ── */}
       {step === 2 && (
-        <div className="border border-white/10 rounded-2xl p-6 space-y-5 bg-white/[0.01]">
+        <div className="border border-white/10 rounded-[2rem] p-6 space-y-5 bg-white/[0.01]">
           <div>
             <h2 className="text-white font-semibold text-base">Select Document Type</h2>
             <p className="text-white/40 text-[13px] mt-0.5">Choose the type of government-issued ID you'll be uploading</p>
@@ -313,7 +313,7 @@ export default function IdentityVerificationPage() {
           </div>
           <button 
             onClick={() => docType ? setStep(3) : toast.error('Select a document type')}
-            className={`flex items-center gap-2 px-5 h-9 bg-accent hover:bg-accent/80 text-white rounded-lg text-[11px] font-bold uppercase tracking-widest transition shadow-lg mt-2`}
+            className={`flex items-center gap-2 px-6 h-10 bg-accent hover:bg-accent/80 text-white rounded-full text-[11px] font-bold uppercase tracking-widest transition shadow-lg mt-2`}
           >
             Continue <ArrowRight size={14} />
           </button>
@@ -322,7 +322,7 @@ export default function IdentityVerificationPage() {
 
       {/* ── STEP 3: UPLOAD ── */}
       {step === 3 && (
-        <div className="border border-white/10 rounded-2xl p-6 space-y-6 bg-white/[0.01]">
+        <div className="border border-white/10 rounded-[2rem] p-6 space-y-6 bg-white/[0.01]">
           <div>
             <h2 className="text-white font-semibold text-base">Upload Documents</h2>
             <p className="text-white/40 text-[13px] mt-0.5">Make sure images are clear, well-lit, and all text is readable</p>
@@ -346,7 +346,7 @@ export default function IdentityVerificationPage() {
 
           <button onClick={handleExtract}
             disabled={!frontUrl || (selectedDoc?.hasBack && !backUrl)}
-            className={`flex items-center gap-2 px-5 h-9 bg-accent hover:bg-accent/80 text-white rounded-lg text-[11px] font-bold uppercase tracking-widest transition disabled:opacity-40 shadow-lg`}>
+            className={`flex items-center gap-2 px-6 h-10 bg-accent hover:bg-accent/80 text-white rounded-full text-[11px] font-bold uppercase tracking-widest transition disabled:opacity-40 shadow-lg`}>
             Extract Data <ArrowRight size={14} />
           </button>
         </div>
@@ -354,7 +354,7 @@ export default function IdentityVerificationPage() {
 
       {/* ── STEP 4: EXTRACTING ── */}
       {step === 4 && (
-        <div className="border border-white/10 rounded-2xl p-16 flex flex-col items-center justify-center text-center bg-white/[0.01]">
+        <div className="border border-white/10 rounded-[2rem] p-16 flex flex-col items-center justify-center text-center bg-white/[0.01]">
             <InfinityLoader size={48} className="mb-4" />
             <h2 className="text-xl font-bold text-white mb-2">Analyzing Document</h2>
             <p className="text-white/50 text-sm">Our AI is extracting data from your document using OCR...</p>
@@ -363,7 +363,7 @@ export default function IdentityVerificationPage() {
 
       {/* ── STEP 5: REVIEW / EDITABLE ── */}
       {step === 5 && (
-        <div className="border border-white/10 rounded-2xl p-6 bg-white/[0.01]">
+        <div className="border border-white/10 rounded-[2rem] p-6 bg-white/[0.01]">
           <div className="mb-6">
             <h2 className="text-white font-bold text-xl">Review & Confirm Details</h2>
             <p className="text-white/50 text-sm mt-1">Please verify the extracted information. If any details are incorrect, you can edit them directly before submitting.</p>
@@ -378,7 +378,7 @@ export default function IdentityVerificationPage() {
                           type="text" 
                           value={extractedData.name} 
                           onChange={(e) => setExtractedData({...extractedData, name: e.target.value})}
-                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition"
+                          className="w-full bg-white/5 border border-white/10 rounded-full px-4 py-3 text-white focus:outline-none focus:border-accent transition"
                           placeholder="e.g. John Doe"
                       />
                   </div>
@@ -390,7 +390,7 @@ export default function IdentityVerificationPage() {
                               type="text" 
                               value={extractedData.dob} 
                               onChange={(e) => setExtractedData({...extractedData, dob: e.target.value})}
-                              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition"
+                              className="w-full bg-white/5 border border-white/10 rounded-full px-4 py-3 text-white focus:outline-none focus:border-accent transition"
                               placeholder="DD/MM/YYYY"
                           />
                       </div>
@@ -399,7 +399,7 @@ export default function IdentityVerificationPage() {
                           <select 
                               value={extractedData.gender} 
                               onChange={(e) => setExtractedData({...extractedData, gender: e.target.value})}
-                              className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition appearance-none"
+                              className="w-full bg-[#1a1a1a] border border-white/10 rounded-full px-4 py-3 text-white focus:outline-none focus:border-accent transition appearance-none"
                           >
                               <option value="">Select Gender</option>
                               <option value="Male">Male</option>
@@ -417,7 +417,7 @@ export default function IdentityVerificationPage() {
                           type="text" 
                           value={extractedData.idNumber} 
                           onChange={(e) => setExtractedData({...extractedData, idNumber: e.target.value})}
-                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white font-mono uppercase focus:outline-none focus:border-accent transition"
+                          className="w-full bg-white/5 border border-white/10 rounded-full px-4 py-3 text-white font-mono uppercase focus:outline-none focus:border-accent transition"
                           placeholder={`Enter ${selectedDoc?.label} number`}
                       />
                   </div>
@@ -429,7 +429,7 @@ export default function IdentityVerificationPage() {
                   <div className="bg-black/50 border border-white/10 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center relative group">
                         <img src={frontUrl} alt="Document Preview" className="w-full h-full object-contain" />
                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                            <a href={frontUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-lg text-white font-medium text-sm flex items-center gap-2">
+                            <a href={frontUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white font-medium text-sm flex items-center gap-2">
                                 <Eye size={16} /> View Full
                             </a>
                         </div>
@@ -441,7 +441,7 @@ export default function IdentityVerificationPage() {
               <button 
                   onClick={handleSubmit} 
                   disabled={submitting}
-                  className={`flex items-center gap-2 px-8 py-3 bg-accent hover:bg-accent/80 text-white rounded-xl text-sm font-bold uppercase tracking-widest transition shadow-xl disabled:opacity-50`}
+                  className={`flex items-center gap-2 px-8 py-3 bg-accent hover:bg-accent/80 text-white rounded-full text-sm font-bold uppercase tracking-widest transition shadow-xl disabled:opacity-50`}
               >
                   {submitting && <InfinityLoader size={16} />}
                   Confirm & Submit

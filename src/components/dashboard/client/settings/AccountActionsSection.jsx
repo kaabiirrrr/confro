@@ -64,7 +64,7 @@ const AccountActionsSection = () => {
   return (
     <div className="space-y-10">
       {/* ACCOUNT ACTION CARD */}
-      <div className="glass-card rounded-2xl p-8 lg:p-10 relative overflow-hidden group">
+      <div className="glass-card rounded-[2rem] p-8 lg:p-10 relative overflow-hidden group">
         <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
 
         <div className="relative z-10 text-center sm:text-left">
@@ -74,7 +74,7 @@ const AccountActionsSection = () => {
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <button
               onClick={() => navigate("/join")}
-              className="w-full sm:w-auto h-12 px-8 rounded-xl bg-accent text-white font-bold text-base hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20"
+              className="w-full sm:w-auto h-12 px-8 rounded-full bg-accent text-white font-bold text-base hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20"
             >
               Create New Account
             </button>
@@ -109,7 +109,7 @@ const AccountActionsSection = () => {
             transition={{ duration: 0.3, ease: "circOut" }}
             className="overflow-hidden"
           >
-            <div className="glass-card rounded-2xl p-8 lg:p-10 relative shadow-2xl">
+            <div className="glass-card rounded-[2rem] p-8 lg:p-10 relative shadow-2xl">
               <div className="flex justify-between items-center mb-8">
                 <div>
                   <h2 className="text-xl font-bold text-white tracking-tight">Transfer Ownership</h2>
@@ -124,14 +124,14 @@ const AccountActionsSection = () => {
                 <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-accent transition-colors" />
                 <input
                   placeholder="Enter team member name or email..."
-                  className="w-full pl-12 pr-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/20"
+                  className="w-full pl-12 pr-5 py-4 bg-white/5 border border-white/10 rounded-full text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/20"
                 />
               </div>
 
               <div className="flex justify-end pt-4 border-t border-white/5">
                 <button
                   onClick={() => setShowTransfer(false)}
-                  className="px-6 py-2 rounded-lg bg-white/5 text-white/60 hover:text-white text-sm font-bold transition-all border border-white/10"
+                  className="px-6 py-2 rounded-full bg-white/5 text-white/60 hover:text-white text-sm font-bold transition-all border border-white/10"
                 >
                   Cancel Transfer
                 </button>
@@ -148,18 +148,18 @@ const AccountActionsSection = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[100] p-4"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-start justify-center z-[100] p-4 pt-20"
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="glass-card w-full max-w-[520px] rounded-2xl overflow-hidden shadow-2xl"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -20, opacity: 0 }}
+              className="bg-secondary border border-white/10 w-full max-w-[520px] rounded-2xl overflow-hidden shadow-2xl"
             >
               <div className="p-8 lg:p-10">
                 <div className="flex justify-between items-center mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-transparent flex items-center justify-center">
                       <AlertTriangle size={20} className="text-red-500" />
                     </div>
                     <div>
@@ -167,7 +167,7 @@ const AccountActionsSection = () => {
                       <p className="text-white/30 text-xs mt-0.5">Step {step} of 2</p>
                     </div>
                   </div>
-                  <button onClick={resetModal} className="text-white/20 hover:text-white transition-colors">
+                  <button onClick={resetModal} className="text-white/20 hover:text-red-500 transition-colors">
                     <X size={22} />
                   </button>
                 </div>
@@ -204,13 +204,13 @@ const AccountActionsSection = () => {
                     <div className="flex gap-3 pt-2">
                       <button
                         onClick={resetModal}
-                        className="flex-1 h-12 rounded-xl bg-white/5 border border-white/10 text-white/60 font-bold text-sm hover:bg-white/10 transition-all"
+                        className="flex-1 h-12 rounded-full bg-white/5 border border-white/10 text-white/60 font-bold text-sm hover:bg-white/10 transition-all"
                       >
                         Cancel
                       </button>
                       <button
                         onClick={() => { if (!reason) { toast.error("Please select a reason"); return; } setStep(2); }}
-                        className="flex-1 h-12 rounded-xl bg-red-600/80 text-white font-bold text-sm hover:bg-red-600 transition-all"
+                        className="flex-1 h-12 rounded-full bg-red-600/80 text-white font-bold text-sm hover:bg-red-600 transition-all"
                       >
                         Continue
                       </button>
@@ -222,7 +222,7 @@ const AccountActionsSection = () => {
                   <div className="space-y-6">
                     <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20">
                       <p className="text-red-400 text-sm font-semibold mb-1">This action is permanent</p>
-                      <p className="text-white/40 text-xs leading-relaxed">All your jobs, contracts, and payment history will be permanently deleted. This cannot be undone.</p>
+                      <p className="text-white/40 text-[10px] leading-relaxed">All your jobs, contracts, and payment history will be permanently deleted. This cannot be undone.</p>
                     </div>
 
                     <div className="p-4 rounded-xl bg-white/5 border border-white/10">
@@ -237,21 +237,21 @@ const AccountActionsSection = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-red-500/40 transition-all placeholder:text-white/10"
+                        className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-full text-white outline-none focus:border-red-500/40 transition-all placeholder:text-white/10"
                       />
                     </div>
 
                     <div className="flex gap-3 pt-2">
                       <button
                         onClick={() => setStep(1)}
-                        className="flex-1 h-12 rounded-xl bg-white/5 border border-white/10 text-white/60 font-bold text-sm hover:bg-white/10 transition-all"
+                        className="flex-1 h-12 rounded-full bg-white/5 border border-white/10 text-white/60 font-bold text-[11px] hover:bg-white/10 transition-all"
                       >
                         Back
                       </button>
                       <button
                         onClick={handleCloseAccount}
                         disabled={isDeleting}
-                        className="flex-1 h-12 rounded-xl bg-red-600 text-white font-black text-sm uppercase tracking-widest hover:bg-red-500 transition-all shadow-lg shadow-red-600/20 disabled:opacity-50 flex items-center justify-center gap-2"
+                        className="flex-1 h-12 rounded-full bg-red-600 text-white font-black text-[11px] uppercase tracking-widest hover:bg-red-500 transition-all shadow-lg shadow-red-600/20 disabled:opacity-50 flex items-center justify-center gap-2"
                       >
                         {isDeleting ? <><InfinityLoader size={14} /> Closing...</> : "Permanently Close"}
                       </button>

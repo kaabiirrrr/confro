@@ -176,20 +176,18 @@ const WorkActivity = () => {
                         exit={{ height: 0, opacity: 0 }}
                         className="overflow-hidden"
                     >
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                        <div className="flex flex-col gap-3 mb-8">
                             {queries.map((q) => (
                                 <div key={q.id} className="bg-accent/5 border border-accent/20 rounded-2xl p-4 flex items-start gap-4 transition shadow-sm animate-pulse-slow">
-                                    <div className="w-8 h-8 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
-                                        <Clock className="text-accent" size={16} />
-                                    </div>
-                                    <div className="flex-1">
+                                    <Clock className="text-accent shrink-0 mt-0.5" size={16} />
+                                    <div className="flex-1 min-w-0">
                                         <h4 className="text-[10px] font-black text-accent uppercase tracking-widest mb-1">Update Requested</h4>
-                                        <p className="text-white font-bold text-xs truncate max-w-[180px] mb-1">{q.job?.title || 'Project'}</p>
-                                        <p className="text-[11px] text-white/50 italic">&ldquo;{q.message}&rdquo;</p>
+                                        <p className="text-slate-900 dark:text-white font-bold text-xs truncate mb-1">{q.job?.title || 'Project'}</p>
+                                        <p className="text-[11px] text-slate-600 dark:text-white/50 italic">&ldquo;{q.message}&rdquo;</p>
                                     </div>
                                     <button 
                                         onClick={() => setQueries(prev => prev.filter(item => item.id !== q.id))}
-                                        className="text-white/20 hover:text-white"
+                                        className="text-white/20 hover:text-white shrink-0"
                                     >
                                         <X size={14} />
                                     </button>
@@ -229,9 +227,7 @@ const WorkActivity = () => {
                         className="pb-10 border-b border-white/5"
                     >
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-7 h-7 rounded-lg bg-accent/5 flex items-center justify-center">
-                                <MessageSquare className="text-accent" size={14} />
-                            </div>
+                            <MessageSquare className="text-accent" size={18} />
                             <div>
                                 <h3 className="text-white font-bold text-xs">Today's Update</h3>
                                 <p className="text-white/30 text-[8px] uppercase tracking-widest font-black">
@@ -273,7 +269,7 @@ const WorkActivity = () => {
                             <button
                                 type="submit"
                                 disabled={submitting || note.trim().length < 10 || !hours}
-                                className="w-full btn-primary py-3.5 rounded-xl flex items-center justify-center gap-2 group disabled:opacity-50 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                className="w-full bg-accent text-white py-3.5 rounded-full flex items-center justify-center gap-2 group disabled:opacity-50 hover:bg-accent/90 transition-all active:scale-[0.98]"
                             >
                                 {submitting ? <Clock className="animate-spin" size={16} /> : (
                                     <>
@@ -303,10 +299,10 @@ const WorkActivity = () => {
                                 <img 
                                     src={selectedJob.client.avatar_url} 
                                     alt={selectedJob.client.name} 
-                                    className="w-12 h-12 rounded-xl object-cover ring-2 ring-white/10 transition-transform group-hover/client:scale-105"
+                                    className="w-12 h-12 rounded-full object-cover transition-transform group-hover/client:scale-105"
                                 />
                             ) : (
-                                <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center text-accent text-lg font-black group-hover/client:rotate-6 transition-transform">
+                                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center text-accent text-lg font-black group-hover/client:rotate-6 transition-transform">
                                     {selectedJob?.client?.name?.[0] || 'C'}
                                 </div>
                             )}
@@ -333,9 +329,7 @@ const WorkActivity = () => {
                 <div className="lg:col-span-2 space-y-8">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center">
-                                <History size={14} className="text-white/20" />
-                            </div>
+                            <History size={18} className="text-white/20" />
                             <h3 className="text-sm font-black text-white uppercase tracking-widest">Activity Timeline</h3>
                         </div>
                         {fetchLogsLoading && <Clock className="animate-spin text-accent" size={14} />}

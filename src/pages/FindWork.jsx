@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { SlidersHorizontal, X } from "lucide-react";
 import Navbar from "../components/Navbar";
+import ClientTopbar from "../layouts/components/ClientTopbar";
+import FreelancerTopbar from "../layouts/components/FreelancerTopbar";
 import Footer from "../components/Footer";
 import TalentFilterSidebar from "../components/filters/TalentFilterSidebar";
 import { getAllJobs } from "../services/apiService";
@@ -38,8 +40,12 @@ const FindWork = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showMobileFilter, setShowMobileFilter] = useState(false);
-  const { user, role } = useAuth();
+  const { user, role, isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  
+  // Direct check for token to prevent flicker if auth state hasn't fully hydrated
+  const hasToken = !!localStorage.getItem('token');
+  const isUserAuthenticated = isAuthenticated || hasToken;
 
   useEffect(() => {
     setSearchTerm(queryParam);
@@ -77,7 +83,13 @@ const FindWork = () => {
       transition={{ duration: 0.4 }}
       className={`relative ${isDashboard ? '' : 'bg-primary min-h-screen'}`}
     >
-      {!isDashboard && <Navbar />}
+      {!isDashboard && !authLoading && (
+        isUserAuthenticated ? (
+          role === 'CLIENT' ? <ClientTopbar /> : <FreelancerTopbar />
+        ) : (
+          <Navbar />
+        )
+      )}
 
       {/* Header */}
       <motion.div
@@ -97,11 +109,10 @@ const FindWork = () => {
           </div>
           {/* Mobile filter toggle */}
           <button
-            className="md:hidden flex items-center gap-2 px-3 py-2 rounded-xl border border-white/10 text-white/70 text-sm"
+            className="md:hidden relative flex items-center justify-center w-10 h-10 rounded-full text-accent hover:bg-accent/10 transition-all"
             onClick={() => setShowMobileFilter(true)}
           >
-            <SlidersHorizontal size={16} className="text-accent" />
-            Filters
+            <SlidersHorizontal size={20} className="text-accent" />
           </button>
         </div>
       </motion.div>
@@ -112,13 +123,13 @@ const FindWork = () => {
           <>
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[200] bg-black/50 md:hidden"
+              className="fixed inset-0 z-[4999] bg-black/50 md:hidden"
               onClick={() => setShowMobileFilter(false)}
             />
             <motion.div
               initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 right-0 h-full z-[201] w-[80vw] max-w-[300px] bg-primary border-l border-white/10 p-5 overflow-y-auto md:hidden"
+              className="fixed top-0 right-0 h-full z-[5000] w-[80vw] max-w-[300px] bg-primary border-l border-white/10 p-5 overflow-y-auto md:hidden"
             >
               <div className="flex items-center justify-between mb-4">
                 <span className="text-white font-semibold text-sm">Filters</span>

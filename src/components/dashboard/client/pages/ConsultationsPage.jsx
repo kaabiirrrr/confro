@@ -194,7 +194,7 @@ export default function ConsultationsPage() {
   };
 
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 text-light-text">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 text-light-text">
       <div className="flex items-start justify-between mb-6 gap-4">
         <div>
           <h1 className="text-3xl font-bold mb-1">Consultations</h1>

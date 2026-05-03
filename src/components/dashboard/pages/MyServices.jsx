@@ -88,18 +88,17 @@ export default function MyServices() {
   const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
 
   return (
-    <div className="max-w-[1630px] mx-auto space-y-4 sm:space-y-6 pb-10 animate-in ml-0 sm:ml-10 mr-0 sm:mr-6 fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight">
+    <div className="max-w-[1480px] w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6 pb-10 animate-in fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight">
       {/* Header */}
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-3">
         <div>
           <h1 className="text-lg sm:text-2xl font-semibold text-light-text">My Services</h1>
           <p className="text-light-text/60 text-xs sm:text-sm mt-1">Manage your offerings and incoming orders</p>
         </div>
         <button onClick={() => navigate('/freelancer/services/new')}
-          className="flex items-center px-4 sm:px-6 h-9 sm:h-10 bg-accent text-white rounded-full text-[10px] font-black uppercase tracking-[0.2em] hover:bg-accent/90 transition-all flex-shrink-0"
+          className="flex items-center justify-center w-full sm:w-auto px-4 sm:px-6 h-10 bg-accent text-white rounded-full text-[10px] font-black uppercase tracking-[0.2em] hover:bg-accent/90 transition-all flex-shrink-0 mt-1 sm:mt-0"
         >
-          <span className="hidden sm:inline">CREATE SERVICE</span>
-          <span className="sm:hidden">+ NEW</span>
+          CREATE NEW SERVICE
         </button>
       </div>
 
@@ -121,11 +120,11 @@ export default function MyServices() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-6 sm:gap-10 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] border-b border-border overflow-x-auto no-scrollbar">
+      <div className="flex max-sm:justify-between sm:gap-10 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] border-b border-border overflow-x-auto no-scrollbar">
         {[{ key: 'services', label: 'MY SERVICES', Icon: Package },
         { key: 'orders', label: 'ORDERS', Icon: ShoppingBag }].map(({ key, label, Icon }) => (
           <button key={key} onClick={() => setTab(key)}
-            className={`pb-3 sm:pb-4 transition-all relative whitespace-nowrap flex items-center gap-2 ${tab === key ? "text-accent" : "text-light-text/40 hover:text-light-text"}`}>
+            className={`flex-1 sm:flex-none pb-3 sm:pb-4 transition-all relative whitespace-nowrap flex items-center justify-center sm:justify-start gap-2 ${tab === key ? "text-accent" : "text-light-text/40 hover:text-light-text"}`}>
             {label}
             {tab === key && <motion.div layoutId="activeTabServices" className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent rounded-full" />}
           </button>
@@ -162,7 +161,7 @@ export default function MyServices() {
               .map(svc => (
                 <div key={svc.id} className="group p-5 bg-transparent border border-white/10 rounded-2xl hover:border-accent transition-all shadow-sm hover:shadow-2xl hover:shadow-accent/5 flex flex-col md:flex-row gap-6">
                   {/* Left: Thumbnail (Find Work style integrated) */}
-                  <div className="w-full md:w-52 aspect-video rounded-xl overflow-hidden bg-black/40 border border-white/5 shrink-0 relative">
+                  <div className="w-full md:w-64 h-40 md:h-auto rounded-xl overflow-hidden bg-transparent border border-white/5 shrink-0 relative">
                     {svc.images?.[0] ? (
                       <img src={svc.images[0]} alt={svc.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     ) : (
@@ -178,39 +177,44 @@ export default function MyServices() {
                   {/* Right: Content (Mirroring JobCard) */}
                   <div className="flex-1 flex flex-col min-w-0">
                     <div className="flex justify-between items-start mb-3">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 flex-1 min-w-0">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent truncate pr-2">
                           {svc.category || 'Service'}
                         </p>
-                        <div className="h-1 w-1 rounded-full bg-white/10" />
-                        <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-light-text/20">
+                        <div className="hidden sm:block h-1 w-1 rounded-full bg-white/10 shrink-0" />
+                        <p className="hidden sm:block text-[10px] font-bold uppercase tracking-[0.1em] text-light-text/20">
                           Created {fmtDate(svc.created_at)}
                         </p>
                       </div>
 
-                      <div className="flex gap-4 items-center">
-                        <button
-                          onClick={() => handleToggle(svc)}
-                          disabled={togglingId === svc.id}
-                          className={`relative w-9 h-5 rounded-full transition-colors duration-300 focus:outline-none ${svc.is_active ? 'bg-accent' : 'bg-white/10'
-                            } ${togglingId === svc.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                          title={svc.is_active ? "Deactivate service" : "Activate service"}
-                        >
-                          <motion.div
-                            animate={{ x: svc.is_active ? 18 : 2 }}
-                            initial={false}
-                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-sm"
-                          />
-                        </button>
-                        <button onClick={() => navigate(`/freelancer/services/edit/${svc.id}`)}
-                          className="text-light-text/20 hover:text-accent transition-colors transform hover:scale-110 active:scale-95">
-                          <Edit2 size={16} />
-                        </button>
-                        <button onClick={() => handleDelete(svc.id)} disabled={deletingId === svc.id}
-                          className="text-light-text/20 hover:text-red-400 transition-colors transform hover:scale-110 active:scale-95">
-                          {deletingId === svc.id ? <InfinityLoader size={20} /> : <Trash2 size={16} />}
-                        </button>
+                      <div className="flex flex-col items-end gap-2 shrink-0">
+                        <div className="flex gap-4 items-center">
+                          <button
+                            onClick={() => handleToggle(svc)}
+                            disabled={togglingId === svc.id}
+                            className={`relative w-9 h-5 rounded-full transition-colors duration-300 focus:outline-none ${svc.is_active ? 'bg-accent' : 'bg-white/10'
+                              } ${togglingId === svc.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                            title={svc.is_active ? "Deactivate service" : "Activate service"}
+                          >
+                            <motion.div
+                              animate={{ x: svc.is_active ? 18 : 2 }}
+                              initial={false}
+                              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                              className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-sm"
+                            />
+                          </button>
+                          <button onClick={() => navigate(`/freelancer/services/edit/${svc.id}`)}
+                            className="text-light-text/20 hover:text-accent transition-colors transform hover:scale-110 active:scale-95">
+                            <Edit2 size={16} />
+                          </button>
+                          <button onClick={() => handleDelete(svc.id)} disabled={deletingId === svc.id}
+                            className="text-light-text/20 hover:text-red-400 transition-colors transform hover:scale-110 active:scale-95">
+                            {deletingId === svc.id ? <InfinityLoader size={20} /> : <Trash2 size={16} />}
+                          </button>
+                        </div>
+                        <p className="sm:hidden text-[9px] font-bold uppercase tracking-[0.1em] text-light-text/20">
+                          {fmtDate(svc.created_at)}
+                        </p>
                       </div>
                     </div>
 
@@ -218,38 +222,67 @@ export default function MyServices() {
                       {svc.title}
                     </h3>
 
-                    <div className="flex flex-wrap gap-5 text-[12px] mb-5 items-center">
-                      <span className="flex items-center gap-1.5 font-bold text-light-text/60">
+                    <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-y-3 sm:gap-y-0 gap-x-5 text-[12px] mb-4 items-center">
+                      <span className="flex items-center gap-1.5 font-bold text-light-text/60 col-span-1">
                         <IndianRupee size={13} className="text-accent/60" /> Starting {formatINR(svc.price)}
                       </span>
-                      <span className="flex items-center gap-1.5 font-bold text-light-text/60">
+                      <span className="flex items-center justify-end sm:justify-start gap-1.5 font-bold text-light-text/60 col-span-1">
                         <Clock size={13} className="text-accent/60" /> {svc.delivery_days}d Delivery
                       </span>
-                      <span className="flex items-center gap-1.5 font-bold text-light-text/60">
+                      <span className="flex items-center gap-1.5 font-bold text-light-text/60 col-span-1">
                         <RefreshCw size={13} className="text-accent/60" /> {svc.revisions} Revisions
                       </span>
                       {svc.orders_count > 0 && (
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-accent/40 bg-accent/5 px-2 py-0.5 rounded-md border border-accent/10">
-                          {svc.orders_count} Active Orders
+                        <div className="flex justify-end sm:justify-start col-span-1">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-accent/40 bg-accent/5 px-2 py-0.5 rounded-full border border-accent/10 whitespace-nowrap">
+                            {svc.orders_count} Active Orders
+                          </span>
+                        </div>
+                      )}
+                      {svc.rating > 0 && (
+                        <span className="flex items-center gap-1 font-bold text-yellow-400 text-[12px] col-span-1">
+                          ★ {Number(svc.rating).toFixed(1)}
                         </span>
                       )}
                     </div>
 
-                    <p className="text-[13px] text-light-text/40 mb-5 line-clamp-2 leading-relaxed font-normal">
-                      {svc.description}
+                    <p className="text-[13px] text-light-text/40 mb-4 line-clamp-2 leading-relaxed font-normal">
+                      {svc.description || 'No description provided.'}
                     </p>
 
                     {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mt-auto">
-                      {(svc.tags || []).map((tag, i) => (
-                        <span key={i} className="text-[9px] font-bold uppercase tracking-wider bg-white/5 border border-white/5 px-3 py-1.5 rounded-lg text-light-text/30 group-hover:text-light-text/50 transition-colors">
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {(svc.tags || []).slice(0, 5).map((tag, i) => (
+                        <span key={i} className="text-[9px] font-bold uppercase tracking-wider bg-white/5 border border-white/5 px-3 py-1.5 rounded-full text-light-text/30 group-hover:text-light-text/50 transition-colors">
                           {tag}
                         </span>
                       ))}
                     </div>
+
+                    {/* Bottom row — stats + action */}
+                    <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/5">
+                      <div className="flex items-center gap-4 text-[10px] text-light-text/20 font-bold uppercase tracking-widest">
+                        {svc.subcategory && (
+                          <span className="text-accent/50">{svc.subcategory}</span>
+                        )}
+                        {svc.profile_views > 0 && (
+                          <span>{svc.profile_views} views</span>
+                        )}
+                        <span className={svc.is_active ? 'text-emerald-400' : 'text-white/20'}>
+                          {svc.is_active ? 'Live' : 'Paused'}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => navigate(`/service/${svc.id}`)}
+                        className="px-4 py-1.5 bg-white/5 border border-white/10 hover:border-accent/40 hover:text-accent text-white/50 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all"
+                      >
+                        {'View \u2192'}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              ))}
+              ))
+            }
           </div>
         )
       )}
@@ -273,42 +306,53 @@ export default function MyServices() {
               const name = client.name || 'Client';
               const isUpdating = updatingOrderId === order.id;
               return (
-                <div key={order.id} className="bg-transparent border border-white/10 rounded-[24px] p-6 flex flex-col md:flex-row md:items-center gap-6 hover:border-white/20 transition-all duration-300 group">
-                  <div className="flex items-center gap-4 md:w-1/4 shrink-0">
-                    <div className="relative">
-                      {client.avatar_url
-                        ? <img src={client.avatar_url} alt={name} className="w-12 h-12 rounded-full object-cover shrink-0" />
-                        : <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold text-lg shrink-0">{name[0]}</div>
-                      }
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-primary rounded-full" title="Client Active" />
+                <div key={order.id} className="bg-transparent border border-white/10 rounded-2xl p-5 flex flex-col md:flex-row md:items-center gap-4 hover:border-accent/40 transition-all duration-300 group">
+                  {/* Top: Client + Date (Justified on Mobile) */}
+                  <div className="flex items-center justify-between md:justify-start gap-4 md:w-1/4 shrink-0">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="relative shrink-0">
+                        {client.avatar_url
+                          ? <img src={client.avatar_url} alt={name} className="w-10 h-10 rounded-full object-cover" />
+                          : <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold text-base">{name[0]}</div>
+                        }
+                        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-primary rounded-full" title="Client Active" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-bold text-light-text text-sm truncate">{name}</p>
+                        <p className="text-light-text/30 text-[10px] uppercase font-bold tracking-wider md:hidden mt-0.5">{fmtDate(order.created_at)}</p>
+                      </div>
                     </div>
-                    <div className="min-w-0">
-                      <p className="font-bold text-light-text truncate">{name}</p>
-                      <p className="text-light-text/30 text-[11px] uppercase font-bold tracking-wider mt-0.5">{fmtDate(order.created_at)}</p>
-                    </div>
+                    <p className="text-light-text/30 text-[10px] uppercase font-bold tracking-wider hidden md:block">{fmtDate(order.created_at)}</p>
                   </div>
+
+                  {/* Middle: Title & Package */}
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-light-text truncate text-lg group-hover:text-accent transition-colors">{order.service?.title || 'Service Title'}</p>
-                    {order.package_name && <p className="text-light-text/40 text-xs font-medium mt-1">{order.package_name} package</p>}
+                    <p className="font-bold text-light-text truncate text-base group-hover:text-accent transition-colors">{order.service?.title || 'Service Title'}</p>
+                    {order.package_name && <p className="text-light-text/40 text-[10px] font-medium mt-0.5">{order.package_name} package</p>}
                   </div>
-                  <div className="flex items-center gap-2 text-accent font-black text-2xl tracking-tighter shrink-0">
-                    <span className="text-sm font-bold text-accent/60">₹</span>{parseFloat(order.price * 92.74 || 0).toFixed(0)}
-                  </div>
-                  <div className="shrink-0 flex items-center gap-4">
-                    <StatusBadge status={order.status} />
-                    <div className="w-px h-8 bg-white/5 hidden md:block" />
-                    {order.status === 'PENDING' && (
-                      <button onClick={() => handleOrderStatus(order, 'IN_PROGRESS')} disabled={isUpdating}
-                        className="h-10 px-6 bg-accent/10 border border-accent/20 text-accent rounded-xl text-[10px] font-bold uppercase tracking-wider hover:bg-accent/20 transition disabled:opacity-50">
-                        {isUpdating ? <InfinityLoader size={20} /> : 'Start Order'}
-                      </button>
-                    )}
-                    {(order.status === 'IN_PROGRESS' || order.status === 'REVISION') && (
-                      <button onClick={() => handleOrderStatus(order, 'DELIVERED')} disabled={isUpdating}
-                        className="h-10 px-6 bg-purple-500/10 border border-purple-500/20 text-purple-400 rounded-xl text-[10px] font-bold uppercase tracking-wider hover:bg-purple-500/20 transition disabled:opacity-50">
-                        {isUpdating ? <InfinityLoader size={20} /> : 'Deliver Work'}
-                      </button>
-                    )}
+
+                  {/* Bottom: Price + Status/Action (Justified on Mobile) */}
+                  <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto pt-3 md:pt-0 border-t md:border-t-0 border-white/5">
+                    <div className="flex items-center gap-1 text-accent font-bold text-lg tracking-tight shrink-0">
+                      <span className="text-xs font-bold text-accent/60">₹</span>{parseFloat(order.price * 92.74 || 0).toFixed(0)}
+                    </div>
+
+                    <div className="shrink-0 flex items-center gap-3">
+                      <StatusBadge status={order.status} />
+                      <div className="w-px h-6 bg-white/5 hidden md:block" />
+                      {order.status === 'PENDING' && (
+                        <button onClick={() => handleOrderStatus(order, 'IN_PROGRESS')} disabled={isUpdating}
+                          className="h-9 px-5 bg-accent text-white rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-accent/90 transition disabled:opacity-50">
+                          {isUpdating ? <InfinityLoader size={18} /> : 'Start Order'}
+                        </button>
+                      )}
+                      {(order.status === 'IN_PROGRESS' || order.status === 'REVISION') && (
+                        <button onClick={() => handleOrderStatus(order, 'DELIVERED')} disabled={isUpdating}
+                          className="h-9 px-5 bg-purple-500/10 border border-purple-500/20 text-purple-400 rounded-xl text-[10px] font-bold uppercase tracking-wider hover:bg-purple-500/20 transition disabled:opacity-50">
+                          {isUpdating ? <InfinityLoader size={18} /> : 'Deliver Work'}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               );

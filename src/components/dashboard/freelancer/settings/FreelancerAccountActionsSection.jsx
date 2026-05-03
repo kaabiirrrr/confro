@@ -41,14 +41,14 @@ const FreelancerAccountActionsSection = () => {
         icon="/Icons/icons8-alert-96 (1).png"
         iconClassName="w-[30px] h-[30px]"
       >
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div>
-            <h4 className="text-white font-bold text-lg">Close Account</h4>
-            <p className="text-white/40 text-sm font-medium mt-1">Permanently remove your freelancer profile and history.</p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-6">
+          <div className="flex-1 min-w-0">
+            <h4 className="text-white font-bold text-sm sm:text-lg">Close Account</h4>
+            <p className="text-white/40 text-xs sm:text-sm font-medium mt-0.5 sm:mt-1 leading-relaxed">Permanently remove your freelancer profile and history.</p>
           </div>
           <button
             onClick={() => { setShowDeleteModal(true); setDeleteError(null); setDeleteReason(""); }}
-            className="px-8 h-12 rounded-xl border border-red-500/20 bg-red-500/5 text-red-500 font-bold text-sm hover:bg-red-500/10 transition-all"
+            className="w-full sm:w-auto px-6 sm:px-8 h-9 sm:h-12 shrink-0 rounded-full border border-red-500/20 bg-red-500/5 text-red-500 font-bold text-xs sm:text-sm hover:bg-red-500/10 transition-all active:scale-95"
           >
             Close Account
           </button>
@@ -61,40 +61,40 @@ const FreelancerAccountActionsSection = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[110] p-4"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-start justify-center z-[110] p-4 pt-16 sm:pt-24"
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="glass-card w-full max-w-[500px] rounded-3xl overflow-hidden shadow-2xl"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -20, opacity: 0 }}
+              className="bg-secondary border border-white/10 w-full max-w-[500px] rounded-xl overflow-hidden shadow-2xl"
             >
-              <div className="p-8 lg:p-10">
-                <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-2xl font-black text-white tracking-tight uppercase">Confirm Deletion</h2>
-                  <button onClick={() => setShowDeleteModal(false)} className="text-white/20 hover:text-white transition-colors">
+              <div className="p-6 lg:p-8">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-bold text-white tracking-tight">Confirm Deletion</h2>
+                  <button onClick={() => setShowDeleteModal(false)} className="p-2 text-white/20 hover:text-accent transition-colors -mr-2">
                     <X size={24} />
                   </button>
                 </div>
 
-                <div className="space-y-6">
-                  <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                    <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] mb-1">Authenticated Identity</p>
-                    <p className="text-white font-medium">{profile?.email || "user@example.com"}</p>
+                <div className="space-y-5">
+                  <div className="p-3.5 rounded-xl bg-white/5 border border-white/10">
+                    <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] mb-1">Authenticated Identity</p>
+                    <p className="text-white text-sm font-medium">{profile?.email || "user@example.com"}</p>
                   </div>
 
-                  <p className="text-white/50 text-sm leading-relaxed">
+                  <p className="text-white/50 text-xs leading-relaxed">
                     This action is permanent. All your projects, feedback, and certifications will be removed from our architecture.
                   </p>
 
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] pl-1">Reason (Optional)</label>
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] pl-1">Reason (Optional)</label>
                     <textarea
                       value={deleteReason}
                       onChange={e => setDeleteReason(e.target.value)}
                       placeholder="Why are you leaving us?"
                       rows={3}
-                      className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-red-500/40 focus:bg-white/[0.07] transition-all placeholder:text-white/10 resize-none"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm outline-none focus:border-red-500/40 focus:bg-white/[0.07] transition-all placeholder:text-white/20 resize-none"
                     />
                   </div>
 
@@ -105,18 +105,18 @@ const FreelancerAccountActionsSection = () => {
                   )}
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 mt-12">
+                <div className="flex gap-3 mt-8">
                   <button
                     onClick={handleDelete}
                     disabled={deleting}
-                    className="flex-1 h-14 rounded-xl bg-red-600 text-white font-black text-sm uppercase tracking-widest hover:bg-red-500 transition-all shadow-lg shadow-red-600/20 disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="flex-1 h-12 rounded-full bg-red-600 text-white font-bold text-[13px] sm:text-sm hover:bg-red-500 transition-all shadow-lg shadow-red-600/20 disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     {deleting && <InfinityLoader size={20} />}
-                    Delete Forever
+                    Delete Account
                   </button>
                   <button
                     onClick={() => setShowDeleteModal(false)}
-                    className="flex-1 h-14 rounded-xl bg-white/5 border border-white/10 text-white font-black text-sm uppercase tracking-widest hover:bg-white/10 transition-all"
+                    className="flex-1 h-12 rounded-full bg-white/5 border border-white/10 text-white font-bold text-[13px] sm:text-sm hover:bg-white/10 transition-all"
                   >
                     Cancel
                   </button>

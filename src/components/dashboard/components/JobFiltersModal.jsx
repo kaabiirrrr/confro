@@ -141,7 +141,7 @@ export default function JobFiltersModal({ isOpen, onClose, currentFilters, onApp
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="overflow-hidden space-y-1"
+                    className="overflow-hidden space-y-3"
                   >
                     {section.options.map((option) => {
                       const isChecked = (tempFilters[section.id] || []).includes(option.id);
@@ -150,7 +150,7 @@ export default function JobFiltersModal({ isOpen, onClose, currentFilters, onApp
                       return (
                         <label
                           key={option.id}
-                          className="flex items-center justify-between cursor-pointer group py-2"
+                          className="flex items-center justify-between cursor-pointer group py-2.5"
                         >
                           <div className="flex items-center gap-3">
                             <div className="relative flex-shrink-0">

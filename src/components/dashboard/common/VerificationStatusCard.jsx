@@ -27,7 +27,7 @@ export default function VerificationStatusCard({ vstatus, verification, role = '
     return (
       <div className="space-y-6">
         {/* Main card */}
-        <div className="max-w-[680px] mx-auto bg-[#0d1526] border border-[#1a2744] rounded-2xl p-8">
+        <div className="max-w-[1500px] mx-auto bg-[#0d1526] border border-[#1a2744] rounded-[2rem] p-8">
           <div className="flex items-start gap-5">
             <div className="w-12 h-12 rounded-xl bg-[#1e3a5f] flex items-center justify-center shrink-0">
               <ShieldCheck size={22} className="text-[#3b82f6]" />
@@ -43,7 +43,7 @@ export default function VerificationStatusCard({ vstatus, verification, role = '
               </p>
               <button
                 onClick={onStartVerification}
-                className="flex items-center gap-2 px-5 py-2.5 bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-semibold rounded-xl transition-colors"
+                className="flex items-center gap-2 px-6 py-3 bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-semibold rounded-full transition-colors"
               >
                 Start Verification <ArrowRight size={15} />
               </button>
@@ -52,7 +52,7 @@ export default function VerificationStatusCard({ vstatus, verification, role = '
         </div>
 
         {/* What this unlocks */}
-        <div className="max-w-[680px] mx-auto">
+        <div className="max-w-[1500px] mx-auto">
           <p className="text-[#475569] text-xs font-semibold uppercase tracking-wider mb-3">What this unlocks</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {unlocks.map((item, i) => (
@@ -70,8 +70,8 @@ export default function VerificationStatusCard({ vstatus, verification, role = '
   // ── PENDING / UNDER REVIEW ───────────────────────────────────
   if (vstatus === 'PENDING' || vstatus === 'UNDER_REVIEW' || vstatus === 'VERIFYING') {
     return (
-      <div className="max-w-[680px] mx-auto space-y-4">
-        <div className="bg-[#0d1526] border border-[#1a2744] rounded-2xl p-8">
+      <div className="max-w-[1500px] mx-auto space-y-4">
+        <div className="bg-[#0d1526] border border-[#1a2744] rounded-[2rem] p-8">
           <div className="flex items-start gap-5">
             <div className="w-12 h-12 rounded-xl bg-[#1c1a0a] border border-[#3d3000] flex items-center justify-center shrink-0">
               <Clock size={22} className="text-[#fbbf24]" />
@@ -105,7 +105,7 @@ export default function VerificationStatusCard({ vstatus, verification, role = '
 
         <div className="flex gap-3">
           <button onClick={() => navigate(dashboardPath)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-semibold rounded-xl transition-colors">
+            className="flex items-center gap-2 px-6 py-3 bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-semibold rounded-full transition-colors">
             <LayoutDashboard size={15} /> Go to Dashboard
           </button>
         </div>
@@ -116,9 +116,9 @@ export default function VerificationStatusCard({ vstatus, verification, role = '
   // ── APPROVED / VERIFIED ──────────────────────────────────────
   if (vstatus === 'APPROVED' || vstatus === 'VERIFIED') {
     return (
-      <div className="max-w-[680px] mx-auto space-y-5">
+      <div className="max-w-[1500px] mx-auto space-y-5">
         {/* Status card — neutral with blue tint, minimal green */}
-        <div className="bg-[#0d1526] border border-[#1a2744] rounded-2xl p-8">
+        <div className="bg-[#0d1526] border border-[#1a2744] rounded-[2rem] p-8">
           <div className="flex items-start gap-5">
             <div className="w-12 h-12 rounded-xl bg-[#0a1f0a] border border-[#1a3a1a] flex items-center justify-center shrink-0">
               <BadgeCheck size={22} className="text-[#4ade80]" />
@@ -153,11 +153,11 @@ export default function VerificationStatusCard({ vstatus, verification, role = '
         {/* CTAs */}
         <div className="flex gap-3 flex-wrap">
           <button onClick={() => navigate(dashboardPath)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-semibold rounded-xl transition-colors">
+            className="flex items-center gap-2 px-6 py-3 bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-semibold rounded-full transition-colors">
             <LayoutDashboard size={15} /> Go to Dashboard
           </button>
           <button onClick={() => navigate(profilePath)}
-            className="flex items-center gap-2 px-5 py-2.5 border border-[#1a2744] text-[#94a3b8] hover:text-white hover:border-[#2a3a5a] text-sm font-medium rounded-xl transition-colors">
+            className="flex items-center gap-2 px-6 py-3 border border-[#1a2744] text-[#94a3b8] hover:text-white hover:border-[#2a3a5a] text-sm font-medium rounded-full transition-colors">
             <User size={15} /> View Profile
           </button>
         </div>
@@ -184,8 +184,8 @@ export default function VerificationStatusCard({ vstatus, verification, role = '
   // ── REJECTED ─────────────────────────────────────────────────
   if (vstatus === 'REJECTED') {
     return (
-      <div className="max-w-[680px] mx-auto space-y-4">
-        <div className="bg-[#0d1526] border border-[#1a2744] rounded-2xl p-8">
+      <div className="max-w-[1500px] mx-auto space-y-4">
+        <div className="bg-[#0d1526] border border-[#1a2744] rounded-[2rem] p-8">
           <div className="flex items-start gap-5">
             <div className="w-12 h-12 rounded-xl bg-[#1a0a0a] border border-[#3a1a1a] flex items-center justify-center shrink-0">
               <XCircle size={22} className="text-[#f87171]" />
@@ -201,7 +201,7 @@ export default function VerificationStatusCard({ vstatus, verification, role = '
                 </div>
               )}
               <button onClick={onStartVerification}
-                className="flex items-center gap-2 px-5 py-2.5 bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-semibold rounded-xl transition-colors">
+                className="flex items-center gap-2 px-6 py-3 bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-semibold rounded-full transition-colors">
                 <RefreshCw size={15} /> Retry Verification
               </button>
             </div>

@@ -28,7 +28,7 @@ const ProfileMenu = () => {
   const displayAvatar = status?.avatar_url || profile?.avatar_url || user?.user_metadata?.avatar_url || null;
 
   return (
-    <div className="absolute top-[calc(100%+12px)] right-0 w-[300px] p-1 bg-secondary border border-border rounded-2xl shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200 fixed-mobile-menu">
+    <div className="absolute top-[calc(100%+12px)] right-0 max-sm:left-0 max-sm:right-0 max-sm:mx-2 sm:w-[300px] p-1 bg-secondary border border-border rounded-2xl shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200 fixed-mobile-menu">
       <div className="w-full">
 
         {/* USER INFO */}
@@ -46,6 +46,7 @@ const ProfileMenu = () => {
             <p className="text-xs text-light-text/60 capitalize">
               {displayRole === 'FREELANCER' ? 'Freelancer' : displayRole}
             </p>
+
           </div>
         </div>
 

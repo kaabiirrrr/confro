@@ -38,7 +38,7 @@ const HiredTalent = () => {
   };
 
   return (
-    <div className="max-w-[1480px] mx-auto py-6 sm:py-8 text-light-text font-sans tracking-tight animate-in fade-in duration-700">
+    <div className="max-w-[1500px] mx-auto py-6 sm:py-8 text-light-text font-sans tracking-tight animate-in fade-in duration-700">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
         <div className="space-y-1">
           <h1 className="text-lg sm:text-2xl font-semibold text-white tracking-tight">Hired Talent</h1>
@@ -113,53 +113,57 @@ const HiredTalent = () => {
                   </div>
 
                   {/* Contract Details */}
-                  <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3">
-                    <div>
-                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-0.5">Contract Title</p>
+                  <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-4">
+                    <div className="min-w-0">
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Contract Title</p>
                       <p className="text-sm font-medium text-white truncate">{jobTitle}</p>
                     </div>
                     {budget != null && (
-                      <div>
-                        <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-0.5">Bid Budget</p>
+                      <div className="text-right sm:text-left">
+                        <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Bid Budget</p>
                         <p className="text-sm font-semibold text-accent">₹{parseFloat(budget).toLocaleString('en-IN')}{budgetType === 'hourly' ? '/hr' : ''}</p>
                       </div>
                     )}
                     <div>
-                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-0.5">Started</p>
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Started</p>
                       <p className="text-xs text-white/60">{startDate || createdAt}</p>
                     </div>
                     {deadline && (
-                      <div>
-                        <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-0.5">Bid Deadline</p>
+                      <div className="text-right sm:text-left">
+                        <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Bid Deadline</p>
                         <p className="text-xs text-white/60">{deadline}</p>
                       </div>
                     )}
                     {endDate && (
                       <div>
-                        <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-0.5">Completion</p>
+                        <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Completion</p>
                         <p className="text-xs text-white/60">{endDate}</p>
                       </div>
                     )}
-                    <div>
-                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-0.5">Hired On</p>
+                    
+                    {/* Spacer to push 'Hired On' to the right column on mobile (2rd row, 2nd col) */}
+                    {!endDate && <div className="sm:hidden" />} 
+                    
+                    <div className="text-right sm:text-left">
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Hired On</p>
                       <p className="text-xs text-white/60">{createdAt}</p>
                     </div>
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2 shrink-0 self-end md:self-start">
+                  <div className="flex items-center justify-between md:justify-start w-full md:w-auto gap-3 shrink-0 self-end md:self-start mt-2 md:mt-0">
                     <button
                       onClick={() => {
                         const fid = contract.freelancer_id || contract.freelancer?.id;
                         if (fid) navigate(`/freelancer/${fid}`);
                       }}
-                      className="flex items-center gap-1.5 px-3 py-2 bg-white/5 text-white/60 border border-white/10 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all"
+                      className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4 py-2 bg-white/5 text-white/70 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all shadow-sm"
                     >
                       <ExternalLink size={12} /> Profile
                     </button>
                     <button
                       onClick={() => handleMessage(contract.freelancer_id || contract.freelancer?.id)}
-                      className="flex items-center gap-1.5 px-3 py-2 bg-accent/10 text-accent border border-accent/20 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-accent/20 transition-all"
+                      className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-5 py-2 bg-accent text-white border border-accent rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-accent/90 transition-all shadow-md shadow-accent/20"
                     >
                       <MessageSquare size={12} /> Message
                     </button>

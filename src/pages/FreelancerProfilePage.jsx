@@ -94,8 +94,8 @@ const FreelancerProfilePage = () => {
             const response = await profileApi.getPublicProfile(id);
             if (response.success) {
                 const data = response.data;
-                const normalizedSkills = Array.isArray(data.skills) && data.skills.length > 0 
-                    ? data.skills 
+                const normalizedSkills = Array.isArray(data.skills) && data.skills.length > 0
+                    ? data.skills
                     : (Array.isArray(data.step_data?.skills) ? data.step_data.skills : []);
 
                 setProfile({
@@ -266,31 +266,54 @@ const FreelancerProfilePage = () => {
                 <FreelancerTopbar />
             )}
 
-            <div className="max-w-[1480px] mx-auto px-6 py-12">
+            <div className="max-w-[1480px] mx-auto px-4 md:px-6 py-6 md:py-12">
 
                 {/* 1. TOP HEADER SECTION */}
-                <div className="bg-secondary rounded-[40px] border border-border shadow-sm overflow-hidden mb-12">
-                    <div className="flex flex-col md:flex-row p-10 gap-12 items-center md:items-start">
-                        {/* Profile Image Column */}
-                        <div className="relative shrink-0">
-                            <div className="relative group">
-                                <div className="w-28 h-28 rounded-full border-2 border-accent overflow-hidden shadow-2xl bg-secondary relative z-10">
-                                    {profile.avatar_url ? (
-                                        <img src={profile.avatar_url} alt={profile.name} className="w-full h-full object-cover" />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center">
-                                            <User size={40} className="text-slate-900/10 dark:text-white/10" />
-                                        </div>
+                <div className="mb-8 md:mb-12 bg-transparent border-none shadow-none">
+                    <div className="flex flex-col md:flex-row px-4 sm:px-6 md:px-0 py-4 sm:py-6 md:py-10 gap-6 md:gap-12 items-start">
+                        {/* Profile Image & Mobile Header Info Container */}
+                        <div className="flex flex-col gap-6 md:gap-12 w-full md:w-auto items-start md:items-start shrink-0">
+                            <div className="flex flex-row items-center justify-center sm:justify-start gap-4 sm:gap-6 w-full md:w-auto">
+                                <div className="relative group shrink-0">
+                                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-accent overflow-hidden shadow-2xl bg-primary md:bg-secondary relative z-10">
+                                        {profile.avatar_url ? (
+                                            <img src={profile.avatar_url} alt={profile.name} className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center">
+                                                <User size={40} className="text-slate-900/10 dark:text-white/10" />
+                                            </div>
+                                        )}
+                                    </div>
+                                    {isOwnProfile && (
+                                        <label className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                            <Camera className="text-white w-6 h-6" />
+                                            <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                                        </label>
                                     )}
                                 </div>
-                                {isOwnProfile && (
-                                    <label className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                                        <Camera className="text-white w-6 h-6" />
-                                        <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                                    </label>
-                                )}
+
+                                {/* Mobile Name Only (Next to Avatar) */}
+                                <div className="md:hidden flex flex-col pt-1">
+                                    <div className="flex items-center gap-2">
+                                        <h1 className="text-xl font-bold text-slate-950 dark:text-white leading-tight">{profile.name}</h1>
+                                        {profile.is_verified && (
+                                            <ShieldCheck size={18} className="text-blue-500 shrink-0" />
+                                        )}
+                                    </div>
+                                </div>
                             </div>
 
+                            {/* Mobile-Only Title & Rate (Full Width Below Avatar/Name) */}
+                            <div className="md:hidden w-full space-y-3 mt-4 flex flex-col items-center">
+                                <div className="w-full pb-3 border-b border-slate-900/5 dark:border-white/5 flex justify-center text-center">
+                                    <p className="text-slate-950 dark:text-white font-bold text-xl leading-relaxed">{profile.title || 'Professional Freelancer'}</p>
+                                </div>
+                                <div className="flex items-center justify-center gap-3">
+                                    <span className="text-accent text-xl font-black">{formatINR(profile.hourly_rate || 0)}/hr</span>
+                                    <div className="w-px h-4 bg-slate-900/10 dark:bg-white/10" />
+                                    <span className="text-slate-950 dark:text-white/70 text-sm font-bold uppercase tracking-wider">{profile.experience_years || '0'}+ Years Exp.</span>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Name and Header Info Column */}
@@ -298,13 +321,13 @@ const FreelancerProfilePage = () => {
                             {editSection === 'header' ? (
                                 <div className="space-y-4 max-w-xl">
                                     <input
-                                        className="bg-primary/50 border border-white/10 rounded-xl px-4 py-2 w-full text-white outline-none focus:border-accent"
+                                        className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-4 py-2 w-full text-slate-950 dark:text-white outline-none focus:border-accent"
                                         value={editData.name || ''}
                                         onChange={(e) => setEditData({ ...editData, name: e.target.value })}
                                         placeholder="Full Name"
                                     />
                                     <input
-                                        className="bg-primary/50 border border-white/10 rounded-xl px-4 py-2 w-full text-accent outline-none focus:border-accent"
+                                        className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-4 py-2 w-full text-accent outline-none focus:border-accent"
                                         value={editData.title || ''}
                                         onChange={(e) => setEditData({ ...editData, title: e.target.value })}
                                         placeholder="Professional Title"
@@ -315,10 +338,10 @@ const FreelancerProfilePage = () => {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between mb-2">
-                                    <div className="space-y-1 text-center sm:text-left">
-                                        <div className="flex items-center gap-3">
-                                            <h1 className="text-4xl font-bold tracking-tight text-slate-950 dark:text-white">{profile.name}</h1>
+                                <div className="hidden md:flex flex-col sm:flex-row items-center sm:items-start justify-between mb-2">
+                                    <div className="space-y-1 text-left">
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                                            <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-slate-950 dark:text-white">{profile.name}</h1>
                                             {profile.has_availability_badge && (
                                                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 shadow-lg shadow-emerald-500/5 mt-1 ml-1 scale-110">
                                                     <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] animate-pulse" />
@@ -360,11 +383,10 @@ const FreelancerProfilePage = () => {
                                                 </button>
                                             )}
                                         </div>
-                                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                                            <p className="text-accent text-xl font-medium">{profile.title || 'Professional Freelancer'}</p>
+                                        <div className="flex flex-wrap items-center justify-start gap-x-4 gap-y-1">
+                                            <p className="text-accent text-lg font-medium">{profile.title || 'Professional Freelancer'}</p>
                                             <div className="hidden sm:block w-px h-4 bg-white/10" />
                                             <div className="flex items-center gap-1.5 text-slate-900/60 dark:text-white/60 text-lg font-bold">
-                                                <IndianRupee size={18} className="text-accent" />
                                                 <span>{formatINR(profile.hourly_rate || 0)}/hr</span>
                                             </div>
                                             <div className="hidden sm:block w-px h-4 bg-white/10" />
@@ -374,14 +396,14 @@ const FreelancerProfilePage = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-3 mt-4 sm:mt-0">
+                                    <div className="flex items-center justify-center sm:justify-start gap-3 mt-4 sm:mt-0">
                                         <div className="flex items-center gap-1.5 text-slate-900/40 dark:text-white/40 text-sm font-medium">
                                             <MapPin size={16} />
                                             <span>{profile.location || 'Remote'}</span>
                                         </div>
                                         <div className="w-px h-4 bg-white/10" />
                                         <button className="flex items-center gap-1.5 text-slate-900/40 dark:text-white/40 hover:text-accent transition text-sm font-bold uppercase tracking-widest">
-                                            <Heart size={16} /> Bookmark
+                                            <Heart size={16} /> BOOKMARK
                                         </button>
                                     </div>
                                 </div>
@@ -429,19 +451,19 @@ const FreelancerProfilePage = () => {
                                 </div>
                             )}
 
-                            <div className="mt-8 flex flex-wrap gap-8 items-center justify-center sm:justify-start">
+                            <div className="mt-10 grid grid-cols-2 md:flex md:flex-row gap-4 md:gap-12 w-full">
                                 {/* Ratings */}
-                                <div className="space-y-2">
-                                    <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-900/30 dark:text-white/30">Client Rating</p>
-                                    <div className="flex items-center gap-4">
-                                        <span className="text-2xl font-black text-slate-950 dark:text-gray-400">{profile.rating || '0.0'}</span>
-                                        <div className="flex gap-1">
+                                <div className="py-2 flex flex-col items-center md:items-start space-y-2 w-full md:w-auto">
+                                    <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-950/50 dark:text-white/30">Client Rating</p>
+                                    <div className="flex flex-col items-center md:items-start gap-1">
+                                        <span className="text-3xl font-black text-slate-950 dark:text-white leading-none">{profile.rating || '0.0'}</span>
+                                        <div className="flex gap-1 mt-1">
                                             {[1, 2, 3, 4, 5].map(s => (
                                                 <Star
                                                     key={s}
-                                                    size={18}
+                                                    size={14}
                                                     fill={s <= (profile.rating || 0) ? "currentColor" : "none"}
-                                                    className={s <= (profile.rating || 0) ? "text-accent" : "text-white/10"}
+                                                    className={s <= (profile.rating || 0) ? "text-accent drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]" : "text-slate-900/10 dark:text-white/10"}
                                                 />
                                             ))}
                                         </div>
@@ -449,69 +471,61 @@ const FreelancerProfilePage = () => {
                                 </div>
 
                                 {/* Reliability Score */}
-                                <div className="space-y-3 min-w-[160px]">
-                                    <div className="flex items-center justify-between">
-                                        <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-900/30 dark:text-white/30">Reliability Score</p>
-                                        <span className="text-[12px] font-black text-accent tracking-tighter">{reliability?.score || 100}%</span>
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                        <div className="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5 relative">
+                                <div className="py-2 flex flex-col items-center md:items-start space-y-2 w-full md:w-auto">
+                                    <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-950/50 dark:text-white/30">Reliability</p>
+                                    <div className="flex flex-col items-center md:items-start gap-1.5 w-full">
+                                        <div className="flex items-end gap-1.5">
+                                            <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent/60 leading-none">{reliability?.score || 100}%</span>
+                                        </div>
+                                        <div className="w-full md:w-32 h-1.5 bg-slate-900/5 dark:bg-white/5 rounded-full overflow-hidden border border-slate-900/5 dark:border-white/5 relative shadow-inner">
                                             <motion.div
                                                 initial={{ width: 0 }}
                                                 animate={{ width: `${reliability?.score || 100}%` }}
-                                                transition={{ duration: 1.5, ease: "easeOut" }}
-                                                className="absolute inset-y-0 left-0 bg-accent shadow-[0_0_15px_rgba(var(--color-accent-rgb),0.3)]"
-                                            />
-                                        </div>
-                                        <div className="shrink-0 flex items-center">
-                                            {reliability?.isNew ? (
-                                                <span className="px-2 py-0.5 bg-blue-500/10 border border-blue-500/20 text-blue-500 rounded text-[10px] font-black uppercase tracking-widest">New</span>
-                                            ) : (reliability?.trend !== undefined && reliability?.trend !== 0) && (
-                                                <div className={`flex items-center gap-1 text-[10px] font-bold ${reliability.trend > 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
-                                                    <TrendingUp size={12} className={reliability.trend < 0 ? 'rotate-180' : ''} />
-                                                    {reliability.trend > 0 ? '+' : ''}{reliability.trend}%
-                                                </div>
-                                            )}
+                                                className="h-full bg-gradient-to-r from-accent/50 to-accent relative"
+                                            >
+                                                <div className="absolute inset-0 bg-white/20 w-full h-full animate-pulse" />
+                                            </motion.div>
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* Risk Indicator (Client Only OR Admin) */}
-                                {(role === 'CLIENT' || role === 'SUPER_ADMIN' || role === 'ADMIN') && risk && (
-                                    <div className="space-y-2">
-                                        <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/30">Assurance Check</p>
-                                        <div className="flex items-center gap-3">
-                                            <div className={`px-3 py-1.5 rounded-xl border flex items-center gap-2 transition-all duration-500 shadow-sm ${risk.riskLevel === 'high' ? 'bg-rose-500/10 border-rose-500/30 text-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.1)]' :
-                                                risk.riskLevel === 'medium' ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' :
-                                                    risk.riskLevel === 'low' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500' :
-                                                        'bg-white/5 border-white/10 text-white/50'
-                                                }`}>
-                                                {risk.riskLevel === 'high' || risk.riskLevel === 'medium' ? <AlertCircle size={14} /> : <ShieldCheck size={14} />}
-                                                <span className="text-[11px] font-black uppercase tracking-wider">
-                                                    {risk.label || 'New Freelancer'}
-                                                </span>
-                                            </div>
-                                            {risk.isPreliminary && (
-                                                <span className="px-2 py-1 bg-accent/10 border border-accent/20 text-accent rounded-lg text-[9px] font-bold uppercase tracking-widest">Preliminary</span>
-                                            )}
-                                            {risk.confidence > 0 && (
-                                                <div className="flex flex-col">
-                                                    <span className="text-[9px] text-slate-900/20 dark:text-white/20 font-bold uppercase tracking-tighter">Confidence</span>
-                                                    <span className="text-[10px] text-slate-900/40 dark:text-white/40 font-black">{Math.round(risk.confidence * 100)}%</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
                             </div>
 
+                            {/* Risk Indicator (Client Only OR Admin) */}
+                            {(role === 'CLIENT' || role === 'SUPER_ADMIN' || role === 'ADMIN') && risk && (
+                                <div className="space-y-2 flex flex-col items-center sm:items-start">
+                                    <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-950/50 dark:text-white/30">Assurance Check</p>
+                                    <div className="flex items-center gap-3">
+                                        <div className={`px-3 py-1.5 rounded-xl border flex items-center gap-2 transition-all duration-500 shadow-sm ${risk.riskLevel === 'high' ? 'bg-rose-500/10 border-rose-500/30 text-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.1)]' :
+                                            risk.riskLevel === 'medium' ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' :
+                                                risk.riskLevel === 'low' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500' :
+                                                    'bg-slate-900/5 dark:bg-white/5 border-slate-900/10 dark:border-white/10 text-slate-950/50 dark:text-white/50'
+                                            }`}>
+                                            {risk.riskLevel === 'high' || risk.riskLevel === 'medium' ? <AlertCircle size={14} /> : <ShieldCheck size={14} />}
+                                            <span className="text-[11px] font-black uppercase tracking-wider">
+                                                {risk.label || 'New Freelancer'}
+                                            </span>
+                                        </div>
+                                        {risk.isPreliminary && (
+                                            <span className="px-2 py-1 bg-accent/10 border border-accent/20 text-accent rounded-lg text-[9px] font-bold uppercase tracking-widest">Preliminary</span>
+                                        )}
+                                        {risk.confidence > 0 && (
+                                            <div className="flex flex-col">
+                                                <span className="text-[9px] text-slate-900/20 dark:text-white/20 font-bold uppercase tracking-tighter">Confidence</span>
+                                                <span className="text-[10px] text-slate-900/40 dark:text-white/40 font-black">{Math.round(risk.confidence * 100)}%</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+
                             {/* Buttons Area */}
-                            <div className="mt-10 flex flex-wrap gap-4 justify-center sm:justify-start">
+                            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center sm:justify-start">
                                 {!isOwnProfile ? (
                                     <>
                                         <button
                                             onClick={() => navigate('/freelancer/messages', { state: { recipientId: profile.id } })}
-                                            className="flex items-center gap-2 px-8 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 rounded-2xl font-bold text-sm tracking-wide transition shadow-sm"
+                                            className="flex items-center gap-2 px-8 py-3.5 bg-slate-900/5 dark:bg-white/5 border border-slate-900/10 dark:border-white/10 hover:bg-slate-900/10 dark:hover:bg-white/10 text-slate-950 dark:text-white rounded-2xl font-bold text-sm tracking-wide transition shadow-sm"
                                         >
                                             <MessageSquare size={18} /> Send message
                                         </button>
@@ -520,7 +534,7 @@ const FreelancerProfilePage = () => {
                                         </button>
                                         <button
                                             onClick={() => toast.success('Report submitted successfully. Our safety team will review it.')}
-                                            className="flex items-center gap-2 px-6 py-3.5 text-slate-900/30 dark:text-white/30 hover:text-white transition text-sm font-bold"
+                                            className="flex items-center gap-2 px-6 py-3.5 text-slate-950/30 dark:text-white/30 hover:text-slate-950 dark:hover:text-white transition text-sm font-bold"
                                         >
                                             Report user
                                         </button>
@@ -528,7 +542,7 @@ const FreelancerProfilePage = () => {
                                 ) : (
                                     <button
                                         onClick={() => navigate('/freelancer/setup-profile')}
-                                        className="flex items-center gap-2 px-8 py-3.5 bg-accent/10 border border-accent/20 hover:bg-accent/20 text-accent rounded-2xl font-bold text-sm tracking-wide transition"
+                                        className="flex items-center justify-center gap-2 px-8 py-3.5 bg-accent/10 border border-accent/20 hover:bg-accent/20 text-accent rounded-2xl font-bold text-sm tracking-wide transition w-full sm:w-auto"
                                     >
                                         Complete Profile Wizard
                                     </button>
@@ -536,7 +550,7 @@ const FreelancerProfilePage = () => {
                             </div>
 
                             {/* Tab Selection Row */}
-                            <div className="mt-auto pt-12 flex gap-12 border-b border-white/5">
+                            <div className="flex items-center w-full mt-8 md:mt-12 border-b border-slate-900/10 dark:border-white/10">
                                 {[
                                     { id: 'about', label: 'About', icon: <User size={16} /> },
                                     { id: 'timeline', label: 'Portfolio', icon: <Clock size={16} /> }
@@ -544,14 +558,14 @@ const FreelancerProfilePage = () => {
                                     <button
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id === 'timeline' ? 'portfolio' : 'about')}
-                                        className={`flex items-center gap-2 pb-6 text-sm font-bold tracking-tight transition-all relative ${(activeTab === 'about' && tab.id === 'about') || (activeTab === 'portfolio' && tab.id === 'timeline')
+                                        className={`flex-1 flex items-center justify-center gap-2 pb-4 md:pb-6 text-sm font-bold tracking-tight transition-all relative ${(activeTab === 'about' && tab.id === 'about') || (activeTab === 'portfolio' && tab.id === 'timeline')
                                             ? 'text-slate-950 dark:text-white' : 'text-slate-900/40 dark:text-white/40 hover:text-slate-900/60 dark:hover:text-white/60'
                                             }`}
                                     >
                                         {tab.id === 'about' ? <User size={16} /> : <Award size={16} />}
                                         {tab.label}
                                         {((activeTab === 'about' && tab.id === 'about') || (activeTab === 'portfolio' && tab.id === 'timeline')) && (
-                                            <motion.div layoutId="headerTab" className="absolute bottom-0 left-0 w-full h-0.5 bg-white" />
+                                            <motion.div layoutId="headerTab" className="absolute bottom-0 left-0 w-full h-0.5 bg-accent" />
                                         )}
                                     </button>
                                 ))}
@@ -562,8 +576,8 @@ const FreelancerProfilePage = () => {
 
                 {/* Relationship Intelligence Section (Trust Graph v2) */}
                 <div className="mb-12">
-                    <RelationshipIntelligence 
-                        freelancerId={id} 
+                    <RelationshipIntelligence
+                        freelancerId={id}
                         currentUserId={currentUser?.id}
                         userRole={role}
                     />
@@ -580,7 +594,7 @@ const FreelancerProfilePage = () => {
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    className="p-6 rounded-3xl bg-gradient-to-br from-white/[0.03] to-transparent border border-white/5 space-y-4 relative overflow-hidden group"
+                                    className="p-6 rounded-3xl bg-gradient-to-br from-slate-900/[0.03] dark:from-white/[0.03] to-transparent border border-slate-900/5 dark:border-white/5 space-y-4 relative overflow-hidden group"
                                 >
                                     <div className="absolute top-0 right-0 p-8 bg-accent/5 blur-3xl rounded-full -mr-10 -mt-10" />
 
@@ -625,7 +639,7 @@ const FreelancerProfilePage = () => {
                                     </div>
                                 </motion.div>
                             )}
-                            <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-slate-900/30 dark:text-white/30 pb-4 border-b border-white/5">Work</h3>
+                            <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-slate-900/30 dark:text-white/30 pb-4 border-b border-slate-900/5 dark:border-white/5">Work</h3>
                             <div className="space-y-8">
                                 {profile.experience && profile.experience.length > 0 ? (
                                     profile.experience.map((exp, i) => (
@@ -650,7 +664,7 @@ const FreelancerProfilePage = () => {
 
                         {/* Skills Section */}
                         <div className="space-y-6">
-                            <div className="flex items-center justify-between pb-4 border-b border-white/5">
+                            <div className="flex items-center justify-between pb-4 border-b border-slate-900/5 dark:border-white/5">
                                 <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-slate-900/30 dark:text-white/30">Skills</h3>
                                 {isOwnProfile && editSection !== 'skills' && (
                                     <button
@@ -668,14 +682,14 @@ const FreelancerProfilePage = () => {
                             {editSection === 'skills' ? (
                                 <div className="space-y-4">
                                     <textarea
-                                        className="bg-primary/50 border border-white/10 rounded-xl px-4 py-3 w-full text-sm text-white outline-none focus:border-accent min-h-[100px]"
+                                        className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-4 py-3 w-full text-sm text-slate-950 dark:text-white outline-none focus:border-accent min-h-[100px]"
                                         value={editData.skills?.join(', ') || ''}
                                         onChange={(e) => setEditData({ ...editData, skills: e.target.value.split(',').map(s => s.trim()).filter(s => s !== '') })}
                                         placeholder="React, Node.js, Design (Comma separated)"
                                     />
                                     <div className="flex gap-2">
                                         <button onClick={handleUpdateProfile} className="px-3 py-1 bg-accent text-primary rounded-lg text-[10px] font-bold uppercase tracking-widest">Save</button>
-                                        <button onClick={() => setEditSection(null)} className="px-3 py-1 bg-white/5 rounded-lg text-[10px] font-bold uppercase tracking-widest">Cancel</button>
+                                        <button onClick={() => setEditSection(null)} className="px-3 py-1 bg-slate-900/5 dark:bg-white/5 rounded-lg text-[10px] font-bold uppercase tracking-widest">Cancel</button>
                                     </div>
                                 </div>
                             ) : (
@@ -695,22 +709,22 @@ const FreelancerProfilePage = () => {
 
                         {/* Trust & Safety Section (Own Profile) */}
                         {isOwnProfile && (
-                            <div className="pt-8 border-t border-white/5 space-y-6">
+                            <div className="pt-8 border-t border-slate-900/5 dark:border-white/5 space-y-6">
                                 <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-900/20 dark:text-white/20">Trust & Safety</h3>
                                 <div className="space-y-4">
-                                    <div className="flex items-center justify-between p-4 bg-slate-900/5 dark:bg-white/5 rounded-2xl border border-white/5">
+                                    <div className="flex items-center justify-between p-4 bg-slate-900/5 dark:bg-white/5 rounded-2xl border border-slate-900/5 dark:border-white/5">
                                         <div className="flex items-center gap-3">
                                             <Mail size={16} className={profile.is_email_verified ? 'text-emerald-500' : 'text-slate-900/20 dark:text-white/20'} />
                                             <span className="text-sm font-bold text-slate-900/60 dark:text-white/60">Email</span>
                                         </div>
                                         {profile.is_email_verified ? <CheckCircle2 size={14} className="text-emerald-400" /> : <button onClick={handleSendOtp} className="text-[10px] font-bold text-accent uppercase tracking-widest hover:underline">Verify</button>}
                                     </div>
-                                    <div className="flex items-center justify-between p-4 bg-slate-900/5 dark:bg-white/5 rounded-2xl border border-white/5">
+                                    <div className="flex items-center justify-between p-4 bg-slate-900/5 dark:bg-white/5 rounded-2xl border border-slate-900/5 dark:border-white/5">
                                         <div className="flex items-center gap-3">
-                                            <ShieldCheck size={16} className={profile.is_verified ? 'text-[#22c55e]' : (idvStatus?.verification_status === 'PENDING' || idvStatus?.verification_status === 'UNDER_REVIEW') ? 'text-[#f59e0b]' : 'text-slate-900/20 dark:text-white/20'} />
+                                            <ShieldCheck size={16} className={(profile.is_verified || idvStatus?.verification_status === 'APPROVED' || idvStatus?.verification_status === 'VERIFIED') ? 'text-[#22c55e]' : (idvStatus?.verification_status === 'PENDING' || idvStatus?.verification_status === 'UNDER_REVIEW') ? 'text-[#f59e0b]' : 'text-slate-900/20 dark:text-white/20'} />
                                             <span className="text-sm font-bold text-slate-900/60 dark:text-white/60">Identity</span>
                                         </div>
-                                        {profile.is_verified ? (
+                                        {(profile.is_verified || idvStatus?.verification_status === 'APPROVED' || idvStatus?.verification_status === 'VERIFIED') ? (
                                             <span className="text-[10px] font-bold text-[#22c55e] uppercase tracking-widest flex items-center gap-1"><CheckCircle2 size={14} /> VERIFIED ✓</span>
                                         ) : (idvStatus?.verification_status === 'PENDING' || idvStatus?.verification_status === 'UNDER_REVIEW') ? (
                                             <span className="text-[10px] font-bold text-[#f59e0b] uppercase tracking-widest flex items-center gap-1"><Clock size={14} /> UNDER REVIEW</span>
@@ -729,8 +743,8 @@ const FreelancerProfilePage = () => {
                             <>
                                 {/* Section: Contact Information */}
                                 <div className="space-y-8">
-                                    <div className="flex items-center justify-between pb-4 border-b border-white/5">
-                                        <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-white/30">Contact Information</h3>
+                                    <div className="flex items-center justify-between pb-4 border-b border-slate-900/5 dark:border-white/5">
+                                        <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-slate-900/30 dark:text-white/30">Contact Information</h3>
                                         {isOwnProfile && editSection !== 'contact' && (
                                             <button
                                                 onClick={() => {
@@ -751,43 +765,47 @@ const FreelancerProfilePage = () => {
                                     {editSection === 'contact' ? (
                                         <div className="grid grid-cols-1 gap-4 max-w-xl">
                                             <div className="space-y-1">
-                                                <label className="text-[10px] text-white/30 uppercase font-bold">Phone</label>
+                                                <label className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold">Phone</label>
                                                 <input
-                                                    className="bg-primary/50 border border-white/10 rounded-xl px-4 py-2 w-full text-white outline-none focus:border-accent"
+                                                    className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-4 py-2 w-full text-slate-950 dark:text-white outline-none focus:border-accent"
                                                     value={editData.phone || ''}
                                                     onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
                                                 />
                                             </div>
                                             <div className="space-y-1">
-                                                <label className="text-[10px] text-white/30 uppercase font-bold">Location</label>
+                                                <label className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold">Location</label>
                                                 <input
-                                                    className="bg-primary/50 border border-white/10 rounded-xl px-4 py-2 w-full text-white outline-none focus:border-accent"
+                                                    className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-4 py-2 w-full text-slate-950 dark:text-white outline-none focus:border-accent"
                                                     value={editData.location || ''}
                                                     onChange={(e) => setEditData({ ...editData, location: e.target.value })}
                                                 />
                                             </div>
                                             <div className="space-y-1">
-                                                <label className="text-[10px] text-white/30 uppercase font-bold">Website</label>
+                                                <label className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold">Website</label>
                                                 <input
-                                                    className="bg-primary/50 border border-white/10 rounded-xl px-4 py-2 w-full text-white outline-none focus:border-accent"
+                                                    className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-4 py-2 w-full text-slate-950 dark:text-white outline-none focus:border-accent"
                                                     value={editData.website || ''}
                                                     onChange={(e) => setEditData({ ...editData, website: e.target.value })}
                                                 />
                                             </div>
                                             <div className="flex gap-2 pt-2">
                                                 <button onClick={handleUpdateProfile} className="px-4 py-2 bg-accent text-primary rounded-lg text-xs font-bold uppercase tracking-widest">Save</button>
-                                                <button onClick={() => setEditSection(null)} className="px-4 py-2 bg-white/5 rounded-lg text-xs font-bold uppercase tracking-widest">Cancel</button>
+                                                <button onClick={() => setEditSection(null)} className="px-4 py-2 bg-slate-900/5 dark:bg-white/5 rounded-lg text-xs font-bold uppercase tracking-widest">Cancel</button>
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="grid grid-cols-1 sm:grid-cols-12 gap-y-6">
-                                            <div className="sm:col-span-3 text-sm font-bold text-slate-900/40 dark:text-gray-400">Address:</div>
-                                            <div className="sm:col-span-9 text-sm font-bold text-slate-900/60 dark:text-white/60 leading-relaxed uppercase tracking-widest">
-                                                {profile.location || 'Not Provided'}
+                                        <div className="flex flex-col gap-6">
+                                            <div className="flex flex-row items-center justify-between sm:justify-start sm:gap-12">
+                                                <div className="text-sm font-bold text-slate-900/40 dark:text-gray-400">Address:</div>
+                                                <div className="text-sm font-bold text-slate-900/60 dark:text-white/60 leading-relaxed uppercase tracking-widest text-right sm:text-left">
+                                                    {profile.location || 'Not Provided'}
+                                                </div>
                                             </div>
 
-                                            <div className="sm:col-span-3 text-sm font-bold text-slate-900/40 dark:text-gray-400">Site:</div>
-                                            <div className="sm:col-span-9 text-sm font-bold text-accent italic">{profile.website || 'Not Provided'}</div>
+                                            <div className="flex flex-row items-center justify-between sm:justify-start sm:gap-12">
+                                                <div className="text-sm font-bold text-slate-900/40 dark:text-gray-400">Site:</div>
+                                                <div className="text-sm font-bold text-accent italic text-right sm:text-left">{profile.website || 'Not Provided'}</div>
+                                            </div>
                                         </div>
                                     )}
                                 </div>
@@ -820,7 +838,7 @@ const FreelancerProfilePage = () => {
                                                 <p className="text-slate-900/60 dark:text-white/80 text-lg leading-relaxed font-medium italic select-none">
                                                     "{reliability.insight.summary}"
                                                 </p>
-                                                <div className="flex items-start gap-3 p-4 bg-transparent border border-white/5 rounded-2xl">
+                                                <div className="flex items-start gap-3 p-4 bg-slate-900/[0.02] dark:bg-transparent border border-slate-900/5 dark:border-white/5 rounded-2xl">
 
                                                     <div className="mt-1 text-accent">
                                                         <ShieldCheck size={16} />
@@ -842,7 +860,7 @@ const FreelancerProfilePage = () => {
                                 {/* Section: Basic Information */}
 
                                 <div className="space-y-8">
-                                    <div className="flex items-center justify-between pb-4 border-b border-white/5">
+                                    <div className="flex items-center justify-between pb-4 border-b border-slate-900/5 dark:border-white/5">
                                         <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-slate-900/30 dark:text-white/30">Basic Information</h3>
                                         {isOwnProfile && editSection !== 'basic' && (
                                             <button
@@ -863,16 +881,16 @@ const FreelancerProfilePage = () => {
                                     {editSection === 'basic' ? (
                                         <div className="grid grid-cols-1 gap-4 max-w-xl">
                                             <div className="space-y-1">
-                                                <label className="text-[10px] text-white/30 uppercase font-bold">Birthday</label>
+                                                <label className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold">Birthday</label>
                                                 <input
                                                     type="date"
-                                                    className="bg-primary/50 border border-white/10 rounded-xl px-4 py-2 w-full text-white outline-none focus:border-accent"
+                                                    className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-4 py-2 w-full text-slate-950 dark:text-white outline-none focus:border-accent"
                                                     value={editData.dob || ''}
                                                     onChange={(e) => setEditData({ ...editData, dob: e.target.value })}
                                                 />
                                             </div>
                                             <div className="space-y-1">
-                                                <label className="text-[10px] text-white/30 uppercase font-bold">Gender</label>
+                                                <label className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold">Gender</label>
                                                 <CustomDropdown
                                                     options={[
                                                         { label: 'Male', value: 'Male' },
@@ -888,16 +906,20 @@ const FreelancerProfilePage = () => {
                                             </div>
                                             <div className="flex gap-2 pt-2">
                                                 <button onClick={handleUpdateProfile} className="px-4 py-2 bg-accent text-primary rounded-lg text-xs font-bold uppercase tracking-widest">Save</button>
-                                                <button onClick={() => setEditSection(null)} className="px-4 py-2 bg-white/5 rounded-lg text-xs font-bold uppercase tracking-widest">Cancel</button>
+                                                <button onClick={() => setEditSection(null)} className="px-4 py-2 bg-slate-900/5 dark:bg-white/5 rounded-lg text-xs font-bold uppercase tracking-widest">Cancel</button>
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="grid grid-cols-1 sm:grid-cols-12 gap-y-6">
-                                            <div className="sm:col-span-3 text-sm font-bold text-gray-400">Birthday:</div>
-                                            <div className="sm:col-span-9 text-sm font-bold text-white/60">{profile.dob ? new Date(profile.dob).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Not Provided'}</div>
+                                        <div className="flex flex-col gap-6">
+                                            <div className="flex flex-row items-center justify-between sm:justify-start sm:gap-12">
+                                                <div className="text-sm font-bold text-slate-900/40 dark:text-gray-400">Birthday:</div>
+                                                <div className="text-sm font-bold text-slate-900/60 dark:text-white/60 text-right sm:text-left">{profile.dob ? new Date(profile.dob).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Not Provided'}</div>
+                                            </div>
 
-                                            <div className="sm:col-span-3 text-sm font-bold text-gray-400">Gender:</div>
-                                            <div className="sm:col-span-9 text-sm font-bold text-white/60">{profile.gender || 'Not Provided'}</div>
+                                            <div className="flex flex-row items-center justify-between sm:justify-start sm:gap-12">
+                                                <div className="text-sm font-bold text-slate-900/40 dark:text-gray-400">Gender:</div>
+                                                <div className="text-sm font-bold text-slate-900/60 dark:text-white/60 text-right sm:text-left">{profile.gender || 'Not Provided'}</div>
+                                            </div>
                                         </div>
                                     )}
                                 </div>
@@ -922,18 +944,18 @@ const FreelancerProfilePage = () => {
                                     {editSection === 'bio' ? (
                                         <div className="space-y-4">
                                             <textarea
-                                                className="bg-primary/50 border border-white/10 rounded-xl px-6 py-4 w-full text-lg text-white outline-none focus:border-accent min-h-[200px] leading-relaxed"
+                                                className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-6 py-4 w-full text-lg text-slate-950 dark:text-white outline-none focus:border-accent min-h-[200px] leading-relaxed"
                                                 value={editData.bio || ''}
                                                 onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
                                                 placeholder="Write something about yourself..."
                                             />
                                             <div className="flex gap-2 pt-2">
                                                 <button onClick={handleUpdateProfile} className="px-6 py-2 bg-accent text-primary rounded-lg text-xs font-bold uppercase tracking-widest">Save Bio</button>
-                                                <button onClick={() => setEditSection(null)} className="px-6 py-2 bg-white/5 rounded-lg text-xs font-bold uppercase tracking-widest">Cancel</button>
+                                                <button onClick={() => setEditSection(null)} className="px-6 py-2 bg-slate-900/5 dark:bg-white/5 rounded-lg text-xs font-bold uppercase tracking-widest">Cancel</button>
                                             </div>
                                         </div>
                                     ) : (
-                                        <p className="text-lg text-slate-900/60 dark:text-white/60 leading-relaxed font-medium">
+                                        <p className="text-lg text-slate-900/60 dark:text-white/60 leading-relaxed font-medium text-justify">
                                             {profile.bio || "No bio provided yet."}
                                         </p>
                                     )}
@@ -941,14 +963,14 @@ const FreelancerProfilePage = () => {
                             </>
                         ) : (
                             /* Portfolio Tab Content */
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                            <div className="grid grid-cols-1 gap-12">
                                 {profile.portfolio && profile.portfolio.length > 0 ? (
                                     profile.portfolio.map((p, i) => (
-                                        <div key={i} className="aspect-[4/3] bg-white/5 rounded-3xl overflow-hidden border border-white/5 group relative shadow-2xl">
-                                            {p.image ? (
-                                                <img src={p.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                        <div key={i} className="aspect-video bg-slate-900/5 dark:bg-white/5 rounded-3xl overflow-hidden border border-slate-900/5 dark:border-white/5 group relative shadow-2xl">
+                                            {p.url || p.image ? (
+                                                <img src={p.url || p.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                             ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-white/5">
+                                                <div className="w-full h-full flex items-center justify-center text-slate-900/20 dark:text-white/5">
                                                     <Award size={64} />
                                                 </div>
                                             )}

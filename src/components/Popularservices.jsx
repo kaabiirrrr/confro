@@ -77,9 +77,9 @@ const PopularServices = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
           viewport={{ once: true }}
-          className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6 mb-8 sm:mb-12"
+          className="flex flex-col sm:flex-row justify-between items-center sm:items-center gap-6 sm:gap-6 mb-8 sm:mb-12 text-center sm:text-left"
         >
-          <div>
+          <div className="flex flex-col items-center sm:items-start">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">POPULAR SERVICES</h2>
             <p className="text-light-text/60 mt-2 sm:mt-3 max-w-xl text-xs sm:text-sm md:text-base">
               Writing, catering to various clients' needs.

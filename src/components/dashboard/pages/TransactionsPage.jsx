@@ -14,6 +14,7 @@ import {
   DollarSign
 } from 'lucide-react';
 import { getMyPayments, getMyContracts } from '../../../services/apiService';
+import CustomDatePicker from '../../ui/CustomDatePicker';
 import CustomDropdown from '../../ui/CustomDropdown';
 import { formatINR } from '../../../utils/currencyUtils';
 
@@ -107,14 +108,12 @@ const TransactionsPage = () => {
 
   const STATUSES = ['', 'released', 'escrow', 'pending', 'refunded', 'failed'];
 
-  const inputCls = "w-full bg-transparent border border-border text-white text-xs rounded-xl px-4 h-10 focus:outline-none focus:border-accent/40 transition-all cursor-pointer hover:border-accent/20 hover:bg-accent/5";
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-[1630px] mx-auto space-y-4 sm:space-y-6 pb-10 animate-in ml-0 sm:ml-10 mr-0 sm:mr-6 fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight"
+      className="max-w-[1480px] w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6 pb-10 animate-in fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight"
     >
       <div>
         <h1 className="text-lg sm:text-2xl font-semibold text-white tracking-tight">Transaction History</h1>
@@ -122,24 +121,22 @@ const TransactionsPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 border border-border p-4 sm:p-5 rounded-xl sm:rounded-2xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 border border-border p-4 sm:p-5 rounded-xl sm:rounded-2xl">
         <div>
           <label className="block text-[10px] font-bold uppercase tracking-widest text-light-text/30 mb-2 ml-1">Start Date</label>
-          <input
-            type="date"
+          <CustomDatePicker
             value={filters.from}
-            onChange={(e) => handleFilterChange('from', e.target.value)}
-            className={inputCls}
+            onChange={(val) => handleFilterChange('from', val)}
+            placeholder="Start Date"
           />
         </div>
 
         <div>
           <label className="block text-[10px] font-bold uppercase tracking-widest text-light-text/30 mb-2 ml-1">End Date</label>
-          <input
-            type="date"
+          <CustomDatePicker
             value={filters.to}
-            onChange={(e) => handleFilterChange('to', e.target.value)}
-            className={inputCls}
+            onChange={(val) => handleFilterChange('to', val)}
+            placeholder="End Date"
           />
         </div>
 
@@ -165,7 +162,7 @@ const TransactionsPage = () => {
             options={[
               { label: 'All Active Contracts', value: '' },
               ...contracts.map(c => ({
-                label: c.title || `Contract #${String(c.id).slice(-4)}`,
+                label: c.title || c.job?.title || `Contract #${String(c.id).slice(-4)}`,
                 value: c.id
               }))
             ]}
@@ -206,7 +203,7 @@ const TransactionsPage = () => {
                     <span className="text-light-text/40 text-xs font-medium">{fmtDate(tx.created_at ?? tx.date)}</span>
                     <div className="flex flex-col min-w-0">
                       <span className="text-white text-xs sm:text-sm font-semibold truncate group-hover:text-accent transition-colors tracking-tight">
-                        {tx.contract_title || `Contract #${String(tx.contract_id).slice(-4)}`}
+                        {tx.contract_title || tx.contract?.title || tx.job?.title || `Contract #${String(tx.contract_id).slice(-4)}`}
                       </span>
                       <span className="text-light-text/20 text-[10px] font-medium tracking-widest uppercase mt-0.5">ID: {String(tx.id).toUpperCase().slice(-8)}</span>
                     </div>

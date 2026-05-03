@@ -66,7 +66,7 @@ const WeeklySummary = () => {
   };
 
     return (
-        <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/5">
                 <div className="space-y-4">
                     <div className="flex items-center gap-3">

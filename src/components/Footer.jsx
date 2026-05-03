@@ -35,13 +35,13 @@ const Footer = () => {
 
   return (
     <footer className="bg-primary border-t border-white/5 mt-12 sm:mt-20">
-      <div className="max-w-[1630px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 py-12 sm:py-16">
+      <div className="max-w-[1630px] mx-auto px-4 md:px-6 lg:px-10 py-12 sm:py-16">
 
         {/* Top Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8 sm:gap-10">
 
           {/* Logo */}
-          <div className="col-span-2 sm:col-span-3 lg:col-span-1 space-y-6">
+          <div className="ml-[-5px] col-span-2 sm:col-span-3 lg:col-span-1 space-y-6">
             <Link to="/" className="flex items-center justify-start">
               <img
                 src="/Logo2.png"
@@ -133,9 +133,9 @@ const Footer = () => {
           </div>
 
           {/* Apps */}
-          <div className="col-span-2 sm:col-span-1 lg:col-span-1">
+          <div className="col-span-2 sm:col-span-1 lg:col-span-1 flex flex-col items-center sm:items-start">
             <h4 className="font-semibold mb-4 text-sm sm:text-base">Apps</h4>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col items-center sm:items-start gap-3">
               <a href="/app-download" target="_blank" rel="noopener noreferrer" className="w-[140px] sm:w-[160px]">
                 <img src="https://www.f-cdn.com/assets/main/en/assets/footer/app-store.svg" alt="App Store" className="w-full invert dark:invert-0" />
               </a>
@@ -145,7 +145,7 @@ const Footer = () => {
             </div>
 
             {/* Social */}
-            <div className="flex justify-center w-[140px] sm:w-[160px] gap-4 mt-6 text-light-text/70">
+            <div className="flex justify-center sm:justify-start lg:justify-center w-[140px] sm:w-[160px] gap-4 mt-6 text-light-text/70">
               <a href="https://www.facebook.com/profile.php?id=61570676549371" target="_blank" rel="noopener noreferrer" className="hover:text-accent">
                 <Facebook size={18} />
               </a>
@@ -178,21 +178,20 @@ const Footer = () => {
             <Link to="/legal" className="hover:text-accent font-medium tracking-wide">Legal</Link>
           </div>
 
-          {/* Stats */}
-          <div className="flex gap-12 sm:gap-20 justify-center">
+          <div className="flex gap-8 sm:gap-20 justify-center">
             <div>
-              <p className="font-bold text-2xl sm:text-3xl text-white leading-none mb-2">{formatNumber(stats.registeredUsers)}</p>
-              <p className="text-light-text/60 text-[10px] sm:text-xs uppercase tracking-[0.2em] font-medium">Registered Users</p>
+              <p className="font-bold text-xl sm:text-3xl text-slate-950 dark:text-white leading-none mb-2">{formatNumber(stats.registeredUsers)}</p>
+              <p className="text-slate-900/60 dark:text-white/60 text-[9px] sm:text-[10px] uppercase tracking-[0.2em] font-medium">Registered Users</p>
             </div>
             <div>
-              <p className="font-bold text-2xl sm:text-3xl text-white leading-none mb-2">{formatNumber(stats.totalJobs)}</p>
-              <p className="text-light-text/60 text-[10px] sm:text-xs uppercase tracking-[0.2em] font-medium">Total Jobs Posted</p>
+              <p className="font-bold text-xl sm:text-3xl text-slate-950 dark:text-white leading-none mb-2">{formatNumber(stats.totalJobs)}</p>
+              <p className="text-slate-900/60 dark:text-white/60 text-[9px] sm:text-[10px] uppercase tracking-[0.2em] font-medium">Total Jobs Posted</p>
             </div>
           </div>
 
           {/* Copyright */}
-          <div className="text-[10px] sm:text-xs text-light-text font-medium max-w-xl">
-            ©️ 2026 Connect. All rights reserved.
+          <div className="text-[10px] sm:text-xs text-slate-950 dark:text-white font-medium max-w-xl">
+            ©️ 2026 Connect Freelance. All rights reserved.
             <br className="sm:hidden" />
             Designed and Developed by <span className="text-accent font-bold">Skimmers❤️‍🔥</span>
           </div>

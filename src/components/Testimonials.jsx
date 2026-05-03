@@ -13,7 +13,7 @@ const Testimonials = () => {
     >
       <div className="max-w-[1500px] mx-auto">
 
-        <div className="relative bg-secondary rounded-[40px] px-6 sm:px-20 py-10 sm:py-20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-10 sm:gap-0 overflow-hidden">
+        <div className="relative bg-secondary rounded-[40px] px-6 sm:px-20 py-10 sm:py-20 flex flex-col sm:flex-row justify-between items-center sm:items-center gap-10 sm:gap-0 overflow-hidden text-center sm:text-left">
 
           {/* CURVED ARROW — desktop only */}
           <motion.img
@@ -36,7 +36,7 @@ const Testimonials = () => {
               WHAT OUR <br /> CUSTOMERS SAY
             </h2>
 
-            <div className="flex gap-6 mt-8 sm:mt-16">
+            <div className="flex gap-6 mt-8 sm:mt-16 justify-center sm:justify-start">
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -66,7 +66,7 @@ const Testimonials = () => {
                 transition: { staggerChildren: 0.2 },
               },
             }}
-            className="w-full sm:w-1/2 relative flex flex-col z-10"
+            className="w-full sm:w-1/2 relative flex flex-col z-10 items-center sm:items-start"
           >
             {/* Floating Quote Icon */}
             <motion.div
@@ -102,7 +102,7 @@ const Testimonials = () => {
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0 },
               }}
-              className="flex items-center gap-4"
+              className="flex items-center gap-4 justify-center sm:justify-start"
             >
               <motion.img
                 whileHover={{ scale: 1.1 }}

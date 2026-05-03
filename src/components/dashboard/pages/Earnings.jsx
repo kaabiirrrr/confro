@@ -98,7 +98,7 @@ const Earnings = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-[1630px] mx-auto space-y-4 sm:space-y-6 pb-10 animate-in ml-0 sm:ml-10 mr-0 sm:mr-6 fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight"
+      className="max-w-[1480px] w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6 pb-10 animate-in fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-6 sm:mb-12 gap-3">
@@ -115,14 +115,14 @@ const Earnings = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-10 sm:mb-20">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-10 sm:mb-20">
         {[
           { label: 'Available Now', value: fmtINR(available), icon: '/Icons/credit.png' },
           { label: 'Pending Payout', value: fmtINR(pending), icon: '/Icons/growth.png' },
           { label: 'In Review', value: fmtINR(inReview), icon: '/Icons/progress.png' },
           { label: 'Total Earned', value: fmtINR(total), icon: '/Icons/rupee.png' }
         ].map((stat, i) => (
-          <div key={i} className="border border-border p-4 sm:p-6 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 hover:border-accent/30 transition-all group shadow-sm bg-transparent">
+          <div key={i} className="p-4 sm:p-6 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 transition-all group bg-transparent">
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
               <img src={stat.icon} alt={stat.label} className="w-8 h-8 sm:w-12 sm:h-12 object-contain opacity-80" />
             </div>
@@ -140,14 +140,14 @@ const Earnings = () => {
 
       {/* Recent Activity Section */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-border pb-4">
-          <div className="flex gap-8 text-[11px] font-bold uppercase tracking-[0.2em]">
-            <button className="text-accent relative pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border pb-0 sm:pb-4 gap-4 sm:gap-0">
+          <div className="flex w-full sm:w-auto text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em]">
+            <button className="text-accent relative pb-3 sm:pb-4 w-full sm:w-auto text-center sm:text-left">
               RECENT ACTIVITY
               <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent rounded-full" />
             </button>
           </div>
-          <div className="flex items-center gap-3 min-w-[140px] sm:min-w-[180px]">
+          <div className="flex items-center gap-3 w-full sm:w-auto sm:min-w-[180px] mb-4 sm:mb-0">
             <CustomDropdown
               options={STATUSES.map(s => ({
                 label: s === '' ? 'ALL STATUSES' : s.toUpperCase(),
@@ -179,21 +179,21 @@ const Earnings = () => {
           <div className="space-y-4">
             <div className="bg-transparent border border-border rounded-2xl overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
-              <div className="grid grid-cols-[1fr_1fr_120px_130px_160px] gap-4 px-4 sm:px-8 py-4 sm:py-5 border-b border-border/50 text-[9px] sm:text-[10px] font-bold text-light-text/30 uppercase tracking-widest min-w-[600px]">
+              <div className="grid grid-cols-[1fr_100px_100px] sm:grid-cols-[1.5fr_1fr_120px_130px_160px] gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-5 border-b border-border/50 text-[9px] sm:text-[10px] font-bold text-light-text/30 uppercase tracking-widest min-w-0">
                 <span>Sender / Note</span>
-                <span>Payment Method</span>
+                <span className="hidden sm:block">Payment Method</span>
                 <span className="text-right">Amount</span>
                 <span className="text-right">Status</span>
-                <span className="text-right">Date</span>
+                <span className="hidden sm:block text-right">Date</span>
               </div>
               <div className="divide-y divide-border/30 min-w-[600px]">
                 {paged.map((tx, i) => {
                   const sender = tx.sender_name || tx.payer_name || tx.client?.name || '—';
                   const upiId = tx.upi_id || tx.upi || 'Wire Transfer';
                   return (
-                    <div key={tx.id ?? i} className="grid grid-cols-[1fr_1fr_120px_130px_160px] gap-4 px-4 sm:px-8 py-4 sm:py-6 hover:bg-primary/30 transition-colors items-center group cursor-default">
+                    <div key={tx.id ?? i} className="grid grid-cols-[1fr_100px_100px] sm:grid-cols-[1.5fr_1fr_120px_130px_160px] gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-6 hover:bg-white/[0.02] transition-colors items-center group cursor-default">
                       <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-accent/5 border border-accent/20 flex items-center justify-center text-accent text-sm font-black shrink-0">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-accent/5 border border-accent/20 flex items-center justify-center text-accent text-sm font-black shrink-0 group-hover:bg-accent/10 transition-colors">
                           {sender[0]?.toUpperCase()}
                         </div>
                         <div className="flex flex-col min-w-0">
@@ -201,16 +201,16 @@ const Earnings = () => {
                           <span className="text-light-text/20 text-[9px] font-mono uppercase tracking-tighter">ID: {String(tx.id || i).slice(-8)}</span>
                         </div>
                       </div>
-                      <div className="flex flex-col">
-                        <span className="text-light-text/60 text-xs font-bold uppercase tracking-tight">{upiId}</span>
+                      <div className="hidden sm:flex flex-col">
+                        <span className="text-light-text/60 text-xs font-bold uppercase tracking-tight truncate">{upiId}</span>
                         <span className="text-light-text/10 text-[9px] font-black uppercase tracking-widest leading-none mt-1">Direct Deposit</span>
                       </div>
-                      <span className="text-right text-white font-bold text-sm sm:text-lg tracking-tight flex items-center justify-end gap-0.5">
+                      <span className="text-right text-white font-bold text-sm sm:text-lg tracking-tight flex items-center justify-end gap-0.5 whitespace-nowrap">
                         <IndianRupee size={12} className="text-white/40" />
                         {fmtINR(tx.amount).replace('₹', '')}
                       </span>
                       <div className="flex justify-end"><StatusBadge status={tx.status} /></div>
-                      <span className="text-right text-light-text/30 text-[9px] sm:text-[10px] font-bold font-mono tracking-tighter uppercase whitespace-nowrap">
+                      <span className="hidden sm:block text-right text-light-text/30 text-[9px] sm:text-[10px] font-bold font-mono tracking-tighter uppercase whitespace-nowrap">
                         {fmtDate(tx.created_at ?? tx.date)}
                       </span>
                     </div>

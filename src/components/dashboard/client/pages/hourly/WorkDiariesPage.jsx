@@ -107,7 +107,7 @@ export default function WorkDiariesPage() {
   const inputCls = "w-full bg-transparent border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-accent/50 transition-all";
 
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
       <div className="flex items-start justify-between mb-8 gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-white">Work Diaries</h1>
@@ -116,7 +116,7 @@ export default function WorkDiariesPage() {
         {isFreelancer && (
           <button
             onClick={() => setShowForm(p => !p)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-accent text-white rounded-xl text-sm font-bold shadow-lg shadow-accent/20 hover:scale-105 active:scale-95 transition-all shrink-0"
+            className="flex items-center gap-2 px-5 py-2.5 bg-accent text-white rounded-full text-sm font-bold shadow-lg shadow-accent/20 hover:scale-105 active:scale-95 transition-all shrink-0"
           >
             <Plus size={18} />
             LOG TIME
@@ -125,13 +125,13 @@ export default function WorkDiariesPage() {
       </div>
 
       {/* Filters Interface */}
-      <div className="flex flex-wrap items-end gap-4 mb-8 p-5 bg-transparent border border-white/10 rounded-2xl">
-        <div className="space-y-1.5 flex-1 min-w-[240px]">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-3 sm:gap-4 mb-8 p-4 sm:p-5 bg-transparent border border-white/10 rounded-2xl">
+        <div className="space-y-1.5 w-full sm:flex-1 sm:min-w-[240px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Select Contract</label>
           <CustomDropdown
             options={[
               { label: 'All active contracts', value: '' },
-              ...contracts.map(c => ({ label: c.title || `Contract #${c.id}`, value: c.id }))
+              ...contracts.map(c => ({ label: c.job?.title || c.title || `Contract #${c.id.substring(0, 8)}`, value: c.id }))
             ]}
             value={filters.contract_id}
             onChange={val => setFilters(p => ({ ...p, contract_id: val }))}
@@ -140,22 +140,16 @@ export default function WorkDiariesPage() {
           {errors.contract_id && <p className="text-red-400 text-[10px] font-bold uppercase tracking-wider mt-1">{errors.contract_id}</p>}
         </div>
         
-        <div className="space-y-1.5 min-w-[200px]">
+        <div className="space-y-1.5 w-full sm:min-w-[200px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Filter By Date</label>
           <input
             type="date"
             value={filters.week_start}
             onChange={e => setFilters(p => ({ ...p, week_start: e.target.value }))}
-            className="w-full bg-transparent border border-white/10 text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-accent/50 transition-all"
+            className="w-full bg-transparent border border-white/10 text-white text-xs sm:text-sm rounded-full px-3 py-2.5 focus:outline-none focus:border-accent/50 transition-all"
           />
         </div>
 
-        <button 
-          onClick={load}
-          className="p-2.5 bg-white/5 border border-white/10 rounded-lg text-white/40 hover:text-white transition-all active:scale-95"
-        >
-          <BookOpen size={20} />
-        </button>
       </div>
 
       {/* Log Time Command Console */}
@@ -193,8 +187,8 @@ export default function WorkDiariesPage() {
           </div>
 
           <div className="flex gap-4 pt-2">
-            <button type="button" onClick={() => setShowForm(false)} className="flex-1 py-3 rounded-xl border border-white/5 bg-white/5 text-white/40 hover:text-white font-bold text-xs uppercase tracking-widest transition-all active:scale-95">Discard</button>
-            <button type="submit" disabled={submitting} className="flex-1 py-3 rounded-xl bg-accent text-white text-xs font-bold uppercase tracking-widest shadow-lg shadow-accent/20 hover:bg-accent/90 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2">
+            <button type="button" onClick={() => setShowForm(false)} className="flex-1 py-3 rounded-full border border-white/5 bg-white/5 text-white/40 hover:text-white font-bold text-xs uppercase tracking-widest transition-all active:scale-95">Discard</button>
+            <button type="submit" disabled={submitting} className="flex-1 py-3 rounded-full bg-accent text-white text-xs font-bold uppercase tracking-widest shadow-lg shadow-accent/20 hover:bg-accent/90 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2">
               {submitting ? <InfinityLoader size={20} /> : 'Confirm Log Entry'}
             </button>
           </div>
@@ -229,7 +223,7 @@ export default function WorkDiariesPage() {
               {/* Data Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="px-2 py-0.5 bg-accent/10 border border-accent/20 text-accent rounded-md text-[10px] font-black uppercase tracking-widest">
+                  <span className="px-2 py-0.5 bg-accent/10 border border-accent/20 text-accent rounded-full text-[10px] font-black uppercase tracking-widest">
                     {entry.hours} HOURS
                   </span>
                   <div className="w-1 h-1 bg-white/10 rounded-full" />
@@ -249,7 +243,7 @@ export default function WorkDiariesPage() {
                 <button
                   onClick={() => handleDelete(entry.id)}
                   disabled={deletingId === entry.id}
-                  className="p-3 text-white/10 hover:text-red-500 hover:bg-red-500/5 rounded-xl transition-all disabled:opacity-50 shrink-0 active:scale-90"
+                  className="p-3 text-white/10 hover:text-red-500 hover:bg-red-500/5 rounded-full transition-all disabled:opacity-50 shrink-0 active:scale-90"
                   title="Dispose Log Entry"
                 >
                   {deletingId === entry.id ? <InfinityLoader size={20} /> : <Trash2 size={18} />}

@@ -60,7 +60,7 @@ const Transactions = () => {
   };
 
     return (
-        <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/5">
                 <div className="space-y-4">
                     <div className="flex items-center gap-3">
@@ -75,13 +75,13 @@ const Transactions = () => {
                     </p>
                 </div>
                 <div className="flex items-center gap-4">
-                    <button className="flex items-center gap-2.5 px-6 py-3.5 bg-white/5 border border-white/10 text-white/40 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-white hover:bg-white/10 transition-all active:scale-95 shadow-xl shadow-black/10">
+                    <button className="flex items-center gap-2.5 px-6 py-3.5 bg-white/5 border border-white/10 text-white/40 rounded-full text-[10px] font-black uppercase tracking-widest hover:text-white hover:bg-white/10 transition-all active:scale-95 shadow-xl shadow-black/10">
                         <Filter size={16} strokeWidth={2.5} />
                         <span>Filter Registry</span>
                     </button>
                     <button 
                         onClick={handleDownload}
-                        className="flex items-center gap-2.5 px-6 py-3.5 bg-accent text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition-all active:scale-95 shadow-xl shadow-accent/20"
+                        className="flex items-center gap-2.5 px-6 py-3.5 bg-accent text-white rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition-all active:scale-95 shadow-xl shadow-accent/20"
                     >
                         <Download size={16} strokeWidth={3} />
                         <span>Export PDF Report</span>
@@ -157,7 +157,7 @@ const Transactions = () => {
                                             <span className="text-[9px] text-white/20 font-black uppercase ml-1.5 tracking-widest">INR</span>
                                         </td>
                                         <td className="py-6 px-10 text-right">
-                                            <span className={`px-4 py-1.5 text-[9px] rounded-lg font-black uppercase tracking-widest inline-block border ${
+                                            <span className={`px-4 py-1.5 text-[9px] rounded-full font-black uppercase tracking-widest inline-block border ${
                                                 txn.status === 'Completed' ? 'bg-green-500/10 text-green-400 border-green-500/20 shadow-lg shadow-green-500/5' : 
                                                 txn.status === 'Failed' ? 'bg-red-500/10 text-red-400 border-red-500/20 shadow-lg shadow-red-500/5' : 
                                                 'bg-white/5 text-white/40 border-white/10'

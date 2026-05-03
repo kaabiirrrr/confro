@@ -20,7 +20,7 @@ const Profile = () => {
                 {/* Left Column */}
                 <div className="w-full sm:w-80 shrink-0 space-y-4 sm:space-y-6">
                     <div className="relative group flex justify-center sm:justify-start">
-                        <div className="w-36 h-36 sm:w-64 sm:h-64 rounded-full border-4 sm:border-8 border-primary bg-secondary overflow-hidden shadow-2xl">
+                        <div className="w-36 h-36 sm:w-64 sm:h-64 rounded-full border-4 sm:border-8 border-slate-900/5 dark:border-primary bg-slate-900/5 dark:bg-secondary overflow-hidden shadow-2xl">
                             {user?.user_metadata?.avatar_url || profile?.avatar_url ? (
                                 <img src={user?.user_metadata?.avatar_url || profile?.avatar_url} className="w-full h-full object-cover" alt="Profile" />
                             ) : (
@@ -34,26 +34,26 @@ const Profile = () => {
                         </button>
                     </div>
 
-                    <div className="bg-secondary/40 border border-white/5 p-5 sm:p-8 rounded-[24px] sm:rounded-[35px] space-y-4 sm:space-y-6 backdrop-blur-sm">
+                    <div className="bg-slate-900/5 dark:bg-secondary/40 border border-slate-900/5 dark:border-white/5 p-5 sm:p-8 rounded-[24px] sm:rounded-[35px] space-y-4 sm:space-y-6 backdrop-blur-sm">
                         <div className="space-y-3">
-                            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/30">Verification</h3>
-                            <div className="flex items-center gap-3 text-emerald-400 bg-emerald-400/5 p-3 rounded-xl sm:rounded-2xl border border-emerald-400/10">
+                            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-900/30 dark:text-white/30">Verification</h3>
+                            <div className="flex items-center gap-3 text-emerald-600 dark:text-emerald-400 bg-emerald-400/5 p-3 rounded-xl sm:rounded-2xl border border-emerald-400/10">
                                 <ShieldCheck size={16} />
                                 <span className="text-xs sm:text-sm font-bold tracking-tight">Identity Verified</span>
                             </div>
                         </div>
-                        <div className="space-y-3 pt-3 border-t border-white/5">
-                            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/30">Quick Info</h3>
+                        <div className="space-y-3 pt-3 border-t border-slate-900/5 dark:border-white/5">
+                            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-900/30 dark:text-white/30">Quick Info</h3>
                             <div className="space-y-2 sm:space-y-3">
-                                <div className="flex items-center gap-3 text-white/60">
+                                <div className="flex items-center gap-3 text-slate-900/60 dark:text-white/60">
                                     <MapPin size={14} />
                                     <span className="text-xs sm:text-sm font-medium">{profile?.location || 'Remote'}</span>
                                 </div>
-                                <div className="flex items-center gap-3 text-white/60">
+                                <div className="flex items-center gap-3 text-slate-900/60 dark:text-white/60">
                                     <Calendar size={14} />
                                     <span className="text-xs sm:text-sm font-medium">Joined Mar 2024</span>
                                 </div>
-                                <div className="flex items-center gap-3 text-white/60">
+                                <div className="flex items-center gap-3 text-slate-900/60 dark:text-white/60">
                                     <Globe size={14} />
                                     <span className="text-xs sm:text-sm font-medium">English • Hindi</span>
                                 </div>
@@ -66,7 +66,7 @@ const Profile = () => {
                 <div className="flex-1 pt-4 sm:pt-32 space-y-6 sm:space-y-10">
                     <div className="space-y-2">
                         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                            <h1 className="text-2xl sm:text-5xl font-bold tracking-tight text-white mb-1">
+                            <h1 className="text-2xl sm:text-5xl font-bold tracking-tight text-slate-950 dark:text-white mb-1">
                                 {profile?.full_name || user?.user_metadata?.full_name || 'Freelancer'}
                             </h1>
                             <div className="flex items-center gap-1.5 px-3 py-1 bg-accent/10 border border-accent/20 rounded-full text-accent shadow-sm">
@@ -80,8 +80,8 @@ const Profile = () => {
                     </div>
 
                     <div className="space-y-3 sm:space-y-6">
-                        <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/20">About Me</h3>
-                        <p className="text-sm sm:text-lg text-white/60 leading-relaxed font-medium">
+                        <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-900/20 dark:text-white/20">About Me</h3>
+                        <p className="text-sm sm:text-lg text-slate-900/60 dark:text-white/60 leading-relaxed font-medium">
                             {profile?.bio || "I'm a dedicated professional looking to help brands and businesses grow through innovative design and robust engineering solutions."}
                         </p>
                     </div>
@@ -92,10 +92,10 @@ const Profile = () => {
                             { label: 'Total Earned', value: '₹2k+', sub: 'Last 12 months' },
                             { label: 'Completion Rate', value: '98%', sub: 'On-time delivery' }
                         ].map((stat, i) => (
-                            <div key={i} className="bg-secondary/40 border border-white/5 p-4 sm:p-8 rounded-[20px] sm:rounded-[35px] space-y-1">
-                                <p className="text-lg sm:text-2xl font-bold text-white">{stat.value}</p>
+                            <div key={i} className="bg-slate-900/5 dark:bg-secondary/40 border border-slate-900/5 dark:border-white/5 p-4 sm:p-8 rounded-[20px] sm:rounded-[35px] space-y-1">
+                                <p className="text-lg sm:text-2xl font-bold text-slate-950 dark:text-white">{stat.value}</p>
                                 <p className="text-[9px] sm:text-[10px] uppercase tracking-widest font-bold text-accent">{stat.label}</p>
-                                <p className="text-[9px] sm:text-[10px] text-white/20 font-bold mt-1 sm:mt-2 uppercase">{stat.sub}</p>
+                                <p className="text-[9px] sm:text-[10px] text-slate-900/20 dark:text-white/20 font-bold mt-1 sm:mt-2 uppercase">{stat.sub}</p>
                             </div>
                         ))}
                     </div>
@@ -105,7 +105,7 @@ const Profile = () => {
                             Apply to Jobs
                         </button>
                         <button onClick={() => window.open(`/freelancer/${user?.id}`, '_blank')}
-                            className="px-6 sm:px-10 py-3 sm:py-5 bg-white/5 text-white/80 border border-white/10 text-xs font-bold uppercase tracking-[0.2em] rounded-2xl sm:rounded-3xl hover:bg-white/10 transition">
+                            className="px-6 sm:px-10 py-3 sm:py-5 bg-slate-900/5 dark:bg-white/5 text-slate-900/80 dark:text-white/80 border border-slate-900/10 dark:border-white/10 text-xs font-bold uppercase tracking-[0.2em] rounded-2xl sm:rounded-3xl hover:bg-slate-900/10 dark:hover:bg-white/10 transition">
                             View Public Profile
                         </button>
                     </div>

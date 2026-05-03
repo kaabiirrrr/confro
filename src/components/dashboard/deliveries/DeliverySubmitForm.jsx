@@ -119,25 +119,25 @@ export default function DeliverySubmitForm({ contractId, jobId, onSuccess }) {
 
     return (
         <div className="bg-transparent border-none p-0 backdrop-blur-none">
-            <div className="flex items-center gap-4 mb-8">
-                <div className="w-10 h-10 rounded-full bg-transparent flex items-center justify-center text-accent">
+            <div className="flex items-center gap-4 mb-6 md:mb-8">
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-transparent flex items-center justify-center text-accent">
                     <Upload size={18} />
                 </div>
                 <div>
-                    <h3 className="text-white font-bold text-lg tracking-tight">Deliver Work</h3>
-                    <p className="text-white/20 text-xs mt-1">Submit your final files or live project links</p>
+                    <h3 className="text-white font-bold text-base md:text-lg tracking-tight">Deliver Work</h3>
+                    <p className="text-white/20 text-[10px] md:text-xs mt-1">Submit final files or live project links</p>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
                 {/* Description */}
                 <div className="space-y-2">
-                    <label className="text-white/20 text-[9px] font-bold uppercase tracking-[0.2em] ml-1">Work Description</label>
+                    <label className="text-white/20 text-[8px] md:text-[9px] font-bold uppercase tracking-[0.2em] ml-1">Work Description</label>
                     <textarea
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         placeholder="What have you completed? Highlight key updates..."
-                        className="w-full h-32 bg-transparent border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/10 focus:border-accent/30 outline-none transition-all resize-none text-sm"
+                        className="w-full h-28 md:h-32 bg-transparent border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/10 focus:border-accent/30 outline-none transition-all resize-none text-xs md:text-sm"
                     />
                 </div>
 
@@ -182,8 +182,8 @@ export default function DeliverySubmitForm({ contractId, jobId, onSuccess }) {
                                     <Upload size={24} />
                                 </div>
                                 <div className="text-center">
-                                    <p className="text-white font-medium">Click to upload files</p>
-                                    <p className="text-white/40 text-xs mt-1">ZIP, PDF, JPG, PNG, DOCX (Max 5GB)</p>
+                                    <p className="text-light-text dark:text-white font-medium">Click to upload files</p>
+                                    <p className="text-light-text/60 dark:text-white/40 text-xs mt-1">ZIP, PDF, JPG, PNG, DOCX (Max 5GB)</p>
                                 </div>
                             </>
                         )}

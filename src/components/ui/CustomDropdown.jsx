@@ -181,11 +181,13 @@ const CustomDropdown = ({
         aria-haspopup="listbox"
         className={`
           group flex items-center justify-between px-4 py-2.5 
-          transition-all duration-300 cursor-pointer border
-          ${className.includes('rounded-') ? '' : 'rounded-2xl'}
-          ${isOpen ? 'border-accent shadow-[0_0_0_3px_rgba(59,130,246,0.1)]' : 'border-white/10 hover:border-white/20'}
-          bg-secondary
+          transition-all duration-300 cursor-pointer
+          ${variant === 'minimal' ? 'border-none bg-transparent !p-0' : 'border rounded-2xl bg-secondary'}
+          ${isOpen && variant !== 'minimal' ? 'border-accent shadow-[0_0_0_3px_rgba(59,130,246,0.1)]' : variant !== 'minimal' ? 'border-white/10 hover:border-white/20' : ''}
           ${error ? 'border-red-500/50' : ''}
+          ${className.includes('!bg-') ? '' : ''} 
+          ${className.includes('!border-') ? '' : ''}
+          ${className.includes('!p-') ? '' : ''}
         `}
       >
         <div className="flex items-center gap-3 overflow-hidden">

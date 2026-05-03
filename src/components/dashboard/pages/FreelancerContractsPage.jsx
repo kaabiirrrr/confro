@@ -88,7 +88,7 @@ export default function FreelancerContractsPage() {
   ];
 
   return (
-    <div className="min-w-[1000px] mx-auto space-y-7 pb-20">
+    <div className="max-w-[1480px] w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-7 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white">My Contracts</h1>
@@ -97,7 +97,7 @@ export default function FreelancerContractsPage() {
 
       {/* Stats */}
       {!loading && contracts.length > 0 && (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="bg-secondary border border-white/10 rounded-2xl p-5">
             <div className="w-9 h-9 rounded-xl bg-green-500/10 flex items-center justify-center mb-3">
               <Zap size={17} className="text-green-400" />
@@ -123,10 +123,10 @@ export default function FreelancerContractsPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-white/8 pb-0">
+      <div className="flex max-sm:justify-between sm:gap-2 border-b border-white/8 pb-0">
         {TABS.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`px-4 py-2.5 text-sm font-medium transition border-b-2 -mb-px ${tab === t.key ? 'border-accent text-accent' : 'border-transparent text-white/40 hover:text-white'}`}>
+            className={`flex-1 sm:flex-none px-4 py-2.5 text-xs sm:text-sm font-medium transition border-b-2 -mb-px ${tab === t.key ? 'border-accent text-accent' : 'border-transparent text-white/40 hover:text-white'}`}>
             {t.label}
             <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${tab === t.key ? 'bg-accent/20 text-accent' : 'bg-white/5 text-white/30'}`}>
               {t.count}
@@ -189,7 +189,7 @@ export default function FreelancerContractsPage() {
               <div key={contract.id}
                 className="bg-secondary border border-white/10 rounded-2xl p-5 hover:border-white/20 transition group"
               >
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                   {/* Left */}
                   <div className="flex items-start gap-4 flex-1 min-w-0">
                     {/* Client avatar */}
@@ -239,7 +239,7 @@ export default function FreelancerContractsPage() {
                     <button
                       onClick={() => handleMessage(contract.client?.id)}
                       disabled={messagingId === contract.client?.id}
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-white/10 text-white/50 hover:text-white hover:border-white/20 text-xs transition disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-white/20 text-xs transition disabled:opacity-50"
                     >
                       {messagingId === contract.client?.id
                         ? <InfinityLoader size={20} />

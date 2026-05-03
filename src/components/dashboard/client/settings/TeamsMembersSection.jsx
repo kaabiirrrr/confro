@@ -11,8 +11,8 @@ const [tab,setTab] = useState("teams");
 return (
 
     <div className="max-w-[1200px]">
-      <div className="mb-10">
-        <h2 className="text-3xl font-bold text-white tracking-tight leading-none mb-4">
+      <div className="mb-8">
+        <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-none mb-3">
           Teams & Members
         </h2>
         <p className="text-white/40 text-sm font-medium">
@@ -30,16 +30,16 @@ return (
       </button>
 
       {/* TABS */}
-      <div className="flex gap-10 border-b border-white/5 mb-10">
+      <div className="flex gap-4 sm:gap-10 border-b border-white/5 mb-10 overflow-x-auto no-scrollbar">
         {[
-          { id: "teams", label: "Organization Teams" },
-          { id: "members", label: "Active Members" },
-          { id: "invites", label: "Pending Invitations" },
+          { id: "teams", label: "Org Teams" },
+          { id: "members", label: "Members" },
+          { id: "invites", label: "Invitations" },
         ].map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all relative ${
+            className={`pb-4 text-xs sm:text-sm font-bold uppercase tracking-widest transition-all relative whitespace-nowrap shrink-0 ${
               tab === t.id ? "text-white" : "text-white/30 hover:text-white/60"
             }`}
           >
@@ -63,7 +63,7 @@ return (
             animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
-            <div className="glass-card rounded-2xl p-16 flex flex-col items-center text-center relative overflow-hidden group">
+            <div className="glass-card rounded-2xl p-8 sm:p-16 flex flex-col items-center text-center relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
               
               <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center border border-white/10 mb-8 group-hover:scale-110 transition-transform duration-500 shadow-xl">
@@ -83,7 +83,7 @@ return (
 
               <Link
                 to="/client/invite"
-                className="h-12 px-8 rounded-xl bg-accent text-white font-black text-xs uppercase tracking-widest flex items-center gap-3 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20"
+                className="h-12 px-8 rounded-full bg-accent text-white font-black text-xs uppercase tracking-widest flex items-center gap-3 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20"
               >
                 <Plus size={18} strokeWidth={3} />
                 Invite Teammate
@@ -105,7 +105,7 @@ return (
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-accent transition-colors" size={18} />
                     <input
                       placeholder="Search members by name or alias..."
-                      className="w-full h-12 pl-12 pr-5 glass-card border border-white/10 rounded-xl text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/20 text-sm font-medium"
+                      className="w-full h-12 pl-12 pr-5 glass-card border border-white/10 rounded-full text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/20 text-sm font-medium"
                     />
                   </div>
                   <CustomDropdown
@@ -117,13 +117,13 @@ return (
                </div>
                <Link
                 to="/client/invite"
-                className="h-12 px-8 rounded-xl bg-white/5 border border-white/10 text-white font-black text-xs uppercase tracking-widest flex items-center justify-center hover:bg-white/10 transition-all w-full sm:w-auto"
+                className="h-12 px-8 rounded-full bg-white/5 border border-white/10 text-white font-black text-xs uppercase tracking-widest flex items-center justify-center hover:bg-white/10 transition-all w-full sm:w-auto"
               >
                 Invite New
               </Link>
             </div>
 
-            <div className="glass-card rounded-2xl p-16 flex flex-col items-center text-center">
+            <div className="glass-card rounded-2xl p-8 sm:p-16 flex flex-col items-center text-center">
               <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center border border-white/10 mb-8 shadow-xl">
                  <img
                   src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
@@ -148,16 +148,16 @@ return (
             animate={{ opacity: 1, y: 0 }}
             className="space-y-8"
           >
-             <div className="flex justify-end">
+             <div className="flex sm:justify-end">
                <Link
                 to="/client/invite"
-                className="h-12 px-8 rounded-xl bg-accent text-white font-black text-xs uppercase tracking-widest flex items-center justify-center hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20"
+                className="w-full sm:w-auto h-12 px-8 rounded-full bg-accent text-white font-black text-xs uppercase tracking-widest flex items-center justify-center hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20"
               >
                 Draft Invitation
               </Link>
             </div>
 
-            <div className="glass-card rounded-2xl p-16 flex flex-col items-center text-center relative overflow-hidden">
+            <div className="glass-card rounded-2xl p-8 sm:p-16 flex flex-col items-center text-center relative overflow-hidden">
               <div className="absolute top-0 left-0 w-32 h-32 bg-white/5 rounded-full blur-[40px] pointer-events-none" />
               <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center border border-white/10 mb-8 shadow-xl">
                  <img

@@ -47,19 +47,19 @@ const FreelancerPasswordSection = () => {
     }
   };
 
-  const inputCls = "w-full h-14 px-5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/10";
+  const inputCls = "w-full h-11 sm:h-14 px-5 bg-white/5 border border-white/10 rounded-full text-white text-sm outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/10";
 
   return (
-    <SettingsCard 
-      title="Password & Security" 
-      subtitle="Manage your account access and security credentials" 
+    <SettingsCard
+      title="Password & Security"
+      subtitle="Manage your account access and security credentials"
       icon="/Icons/icons8-privacy-100.png"
       iconClassName="w-[30px] h-[30px]"
     >
-      <div className="max-w-xl space-y-8">
+      <div className="max-w-xl mx-auto space-y-8 py-4">
         {[
           { key: 'current', label: 'Current Password' },
-          { key: 'new',     label: 'New Password' },
+          { key: 'new', label: 'New Password' },
           { key: 'confirm', label: 'Confirm New Password' },
         ].map(({ key, label }) => (
           <div key={key} className="space-y-2">
@@ -74,8 +74,8 @@ const FreelancerPasswordSection = () => {
                 placeholder="••••••••"
                 className={`${inputCls} pr-14 group-hover:border-white/20`}
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => setShow(s => ({ ...s, [key]: !s[key] }))}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-colors p-2"
               >
@@ -85,16 +85,16 @@ const FreelancerPasswordSection = () => {
           </div>
         ))}
 
-        <div className="pt-4 flex flex-col sm:flex-row gap-6 items-center">
-          <button 
-            onClick={handlePasswordChange} 
+        <div className="pt-4 flex flex-col sm:flex-row gap-4 sm:gap-6 items-center">
+          <button
+            onClick={handlePasswordChange}
             disabled={saving || !passwords.current || !passwords.new}
-            className="h-14 px-10 rounded-xl bg-accent text-white font-bold text-sm uppercase tracking-widest hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 shadow-lg shadow-accent/20 flex items-center gap-3"
+            className="w-full sm:w-auto h-10 sm:h-12 px-6 sm:px-10 rounded-full bg-accent text-white font-bold text-xs sm:text-sm uppercase tracking-widest hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 shadow-lg shadow-accent/20 flex items-center justify-center gap-2"
           >
-            {saving ? <InfinityLoader size={20} /> : <Lock size={18} />}
+            {saving ? <InfinityLoader size={16} /> : null}
             {saving ? 'Processing...' : 'Apply Password Change'}
           </button>
-          
+
           <button className="text-accent text-[11px] font-black uppercase tracking-widest hover:underline px-1 disabled:opacity-50 flex items-center gap-1"
             onClick={handleForgotPassword}
             disabled={sendingReset}

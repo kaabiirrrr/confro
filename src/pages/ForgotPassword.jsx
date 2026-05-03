@@ -41,31 +41,16 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div style={{
-            minHeight: '100vh',
-            background: '#0a0f1e',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '24px',
-            fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
-        }}>
+        <div className="min-h-screen bg-primary flex items-center md:items-start md:pt-[12vh] justify-center p-6 font-sans selection:bg-accent/30">
             <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.28, ease: 'easeOut' }}
-                style={{
-                    width: '100%',
-                    maxWidth: '440px',
-                    background: '#0d1526',
-                    border: '1px solid #1a2744',
-                    borderRadius: '20px',
-                    padding: '40px 36px',
-                }}
+                className="w-full max-w-[440px] bg-secondary border border-[var(--color-border)] rounded-2xl p-8 sm:p-10"
             >
                 {/* Logo */}
                 <img src="/Logo2.png" alt="Connect"
-                    style={{ width: 80, display: 'block', margin: '0 auto 32px' }} />
+                    className="w-20 mx-auto block mb-8 invert dark:invert-0 object-contain" />
 
                 <AnimatePresence mode="wait">
                     {!submitted ? (
@@ -73,80 +58,45 @@ const ForgotPassword = () => {
                             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             transition={{ duration: 0.2 }}
                         >
-                            <h1 style={{ color: '#f1f5f9', fontSize: 22, fontWeight: 700, marginBottom: 8, textAlign: 'center' }}>
+                            <h1 className="text-light-text text-[22px] font-bold text-center mb-2">
                                 Reset your password
                             </h1>
-                            <p style={{ color: '#64748b', fontSize: 14, textAlign: 'center', marginBottom: 28, lineHeight: 1.6 }}>
+                            <p className="text-text-secondary text-sm text-center mb-7 leading-relaxed">
                                 Enter your email and we'll send you a reset link.
                             </p>
 
-                            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                                 <div>
-                                    <label style={{ display: 'block', color: '#94a3b8', fontSize: 12, fontWeight: 500, marginBottom: 6 }}>
+                                    <label className="block text-text-secondary text-xs font-medium mb-1.5">
                                         Email address
                                     </label>
-                                    <div style={{ position: 'relative' }}>
-                                        <Mail size={15} style={{
-                                            position: 'absolute', left: 14, top: '50%',
-                                            transform: 'translateY(-50%)', color: '#475569',
-                                            pointerEvents: 'none',
-                                        }} />
+                                    <div className="relative">
+                                        <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
                                         <input
                                             type="email"
                                             value={email}
                                             onChange={e => { setEmail(e.target.value); setError(''); }}
                                             placeholder="Enter your email"
                                             autoFocus
-                                            style={{
-                                                width: '100%',
-                                                padding: '11px 14px 11px 38px',
-                                                background: 'rgba(255,255,255,0.04)',
-                                                border: `1px solid ${error ? '#ef4444' : '#1e3a5f'}`,
-                                                borderRadius: 12,
-                                                color: '#f1f5f9',
-                                                fontSize: 14,
-                                                outline: 'none',
-                                                boxSizing: 'border-box',
-                                                transition: 'border-color 0.15s',
-                                            }}
-                                            onFocus={e => { if (!error) e.target.style.borderColor = '#3b82f6'; }}
-                                            onBlur={e => { if (!error) e.target.style.borderColor = '#1e3a5f'; }}
+                                            className={`w-full pl-[38px] pr-3.5 py-2.5 bg-primary border rounded-xl text-light-text text-sm outline-none transition-colors ${error ? 'border-red-500' : 'border-[var(--color-border)] focus:border-accent'}`}
                                         />
                                     </div>
                                     {error && (
-                                        <p style={{ color: '#f87171', fontSize: 12, marginTop: 6 }}>{error}</p>
+                                        <p className="text-red-400 text-xs mt-1.5">{error}</p>
                                     )}
                                 </div>
 
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    style={{
-                                        width: '100%',
-                                        padding: '12px',
-                                        borderRadius: 12,
-                                        border: 'none',
-                                        background: loading ? '#1e3a5f' : '#3b82f6',
-                                        color: '#fff',
-                                        fontSize: 14,
-                                        fontWeight: 600,
-                                        cursor: loading ? 'not-allowed' : 'pointer',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        gap: 8,
-                                        transition: 'background 0.15s',
-                                    }}
+                                    className="w-full py-3 rounded-full border-none bg-accent text-white text-sm font-semibold flex items-center justify-center gap-2 transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                                 >
                                     {loading ? <InfinityLoader size={18} /> : 'Send Reset Link'}
                                 </button>
                             </form>
 
-                            <div style={{ textAlign: 'center', marginTop: 20 }}>
-                                <Link to="/login" style={{
-                                    color: '#475569', fontSize: 13, textDecoration: 'none',
-                                    display: 'inline-flex', alignItems: 'center', gap: 6,
-                                }}>
+                            <div className="text-center mt-6">
+                                <Link to="/login" className="text-text-muted text-[13px] inline-flex items-center gap-1.5 hover:text-accent transition">
                                     <ArrowLeft size={14} /> Back to log in
                                 </Link>
                             </div>
@@ -155,24 +105,18 @@ const ForgotPassword = () => {
                         <motion.div key="success"
                             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.25 }}
-                            style={{ textAlign: 'center' }}
+                            className="text-center"
                         >
                             {/* Icon */}
-                            <div style={{
-                                width: 56, height: 56, borderRadius: 16,
-                                background: 'rgba(59,130,246,0.1)',
-                                border: '1px solid rgba(59,130,246,0.2)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                margin: '0 auto 20px',
-                            }}>
-                                <Mail size={24} color="#3b82f6" />
+                            <div className="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-5">
+                                <Mail size={24} className="text-accent" />
                             </div>
 
-                            <h1 style={{ color: '#f1f5f9', fontSize: 20, fontWeight: 700, marginBottom: 12 }}>
+                            <h1 className="text-light-text text-xl font-bold mb-3">
                                 Check your email
                             </h1>
 
-                            <p style={{ color: '#64748b', fontSize: 14, lineHeight: 1.7, marginBottom: 24 }}>
+                            <p className="text-text-secondary text-sm leading-relaxed mb-6">
                                 If an account exists for this email, you'll receive a password reset link shortly.
                             </p>
 
@@ -182,34 +126,20 @@ const ForgotPassword = () => {
                                     href="https://mail.google.com"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    style={{
-                                        display: 'inline-flex', alignItems: 'center', gap: 6,
-                                        padding: '10px 20px', borderRadius: 12,
-                                        background: 'transparent',
-                                        border: '1px solid #1e3a5f',
-                                        color: '#94a3b8',
-                                        fontSize: 13, fontWeight: 500,
-                                        textDecoration: 'none', marginBottom: 20,
-                                        transition: 'border-color 0.15s, color 0.15s',
-                                    }}
-                                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.color = '#f1f5f9'; }}
-                                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#1e3a5f'; e.currentTarget.style.color = '#94a3b8'; }}
+                                    className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl border border-[var(--color-border)] text-text-secondary text-[13px] font-medium mb-5 hover:border-accent hover:text-light-text transition group"
                                 >
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" className="text-text-secondary group-hover:text-light-text transition">
                                         <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
                                     </svg>
                                     Open Gmail
                                 </a>
                             )}
 
-                            <p style={{ color: '#334155', fontSize: 12, marginBottom: 20 }}>
+                            <p className="text-text-muted text-xs mb-5">
                                 Didn't receive it? Check spam or try again in a few seconds.
                             </p>
 
-                            <Link to="/login" style={{
-                                color: '#475569', fontSize: 13, textDecoration: 'none',
-                                display: 'inline-flex', alignItems: 'center', gap: 6,
-                            }}>
+                            <Link to="/login" className="text-text-muted text-[13px] inline-flex items-center gap-1.5 hover:text-accent transition">
                                 <ArrowLeft size={14} /> Back to log in
                             </Link>
                         </motion.div>

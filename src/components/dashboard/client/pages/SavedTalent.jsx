@@ -72,7 +72,7 @@ const SavedTalent = () => {
   };
 
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
       <SectionHeader
         title="Saved Talent"
         subtext={`${freelancers.length} freelancer${freelancers.length !== 1 ? 's' : ''} saved`}
@@ -159,7 +159,7 @@ const SavedTalent = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-wrap gap-2 shrink-0">
+                <div className="flex flex-wrap items-center gap-2 shrink-0 justify-end ml-auto">
                   <Button
                     variant="secondary"
                     size="sm"

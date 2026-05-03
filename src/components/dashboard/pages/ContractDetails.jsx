@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
   ArrowLeft,
   IndianRupee,
@@ -23,7 +24,8 @@ import {
   Cpu,
   Plus,
   Terminal,
-  Box
+  Box,
+  FileText
 } from 'lucide-react';
 import { formatINR } from '../../../utils/currencyUtils';
 import { 
@@ -51,7 +53,7 @@ import InputModal from '../../common/InputModal';
 const ContractDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { role: userRole } = useAuth();
+  const { role: userRole, user, wallet, refreshWallet } = useAuth();
   const isClient = userRole === 'CLIENT';
 
   const [contract, setContract] = useState(null);
@@ -70,7 +72,7 @@ const ContractDetails = () => {
     insights: null,
     loading: true
   });
-  const { wallet, refreshWallet } = useAuth();
+
   const [fakeEscrow, setFakeEscrow] = useState({
     transactions: [],
     loading: true
@@ -187,7 +189,7 @@ const ContractDetails = () => {
   const activity = workspace?.activity || [];
 
   return (
-    <div className="max-w-[1630px] mx-auto space-y-6 pb-10 animate-in ml-10 mr-6 fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight">
+    <div className="max-w-[1630px] mx-auto space-y-6 pb-10 animate-in px-4 md:px-10 fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight">
 
       {/* Header */}
       <button onClick={() => navigate(-1)}
@@ -198,149 +200,77 @@ const ContractDetails = () => {
 
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
         <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-4 mb-2">
-            <span className={`px-2.5 py-1 rounded-lg text-[9px] font-bold tracking-widest border uppercase bg-secondary/60 ${contract.status === 'COMPLETED' ? 'border-blue-500/20 text-blue-400' : 'border-emerald-500/20 text-emerald-400'
+          <div className="flex items-center justify-between sm:justify-start w-full gap-4 mb-2">
+            <span className={`px-2.5 py-1 rounded-lg text-[8px] font-bold tracking-widest border uppercase bg-secondary/60 ${contract.status === 'COMPLETED' ? 'border-blue-500/20 text-blue-400' : 'border-emerald-500/20 text-emerald-400'
               }`}>
               {contract.status === 'IN_PROGRESS' ? 'ACTIVE WORKSPACE' : contract.status}
             </span>
-            <span className="text-light-text/20 text-[10px] font-bold uppercase tracking-[0.2em]">JOB ID: {contract.job_id.split('-')[0].toUpperCase()}</span>
+            <span className="text-light-text/20 text-[9px] font-bold uppercase tracking-[0.2em] flex items-center gap-1.5">
+              <FileText size={11} className="text-accent/30" />
+              ID: {contract.id?.substring(0, 8).toUpperCase() || 'N/A'}
+            </span>
           </div>
-          <h1 className="text-2xl font-semibold text-white tracking-tight leading-tight">{contract.jobs?.title || 'Project Workspace'}</h1>
+          <h1 className="text-2xl font-semibold text-white tracking-tight leading-tight">{contract.job?.title || 'Project Workspace'}</h1>
           
           {/* Team Quick Stats */}
           {isClient && (
-            <div className="flex items-center gap-6 mt-4 pt-4 border-t border-white/5">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-4 pt-4 border-t border-white/5">
                 <div className="flex items-center gap-2">
                     <Users size={14} className="text-accent" />
-                    <span className="text-white text-xs font-semibold">{freelancers.length} / 10 Members</span>
+                    <span className="text-white text-[10px] sm:text-xs font-semibold">{freelancers.length} / 10 Members</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <Activity size={14} className="text-emerald-400" />
-                    <span className="text-white text-xs font-semibold">Team Progress: {analytics.length > 0 ? Math.round(analytics.reduce((acc, curr) => acc + curr.progress, 0) / analytics.length) : 0}%</span>
+                    <span className="text-white text-[10px] sm:text-xs font-semibold">Team Progress: {analytics.length > 0 ? Math.round(analytics.reduce((acc, curr) => acc + curr.progress, 0) / analytics.length) : 0}%</span>
                 </div>
             </div>
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 items-start shrink-0 mt-1">
-          <div className="px-5 py-3 bg-transparent rounded-2xl flex items-center gap-4 backdrop-blur-md border border-white/5">
-            <div className="bg-transparent rounded-xl">
-              <IndianRupee className="w-4 h-4 text-emerald-400" />
-            </div>
-            <div>
-              <p className="text-[9px] text-light-text/20 uppercase tracking-widest font-bold mb-0.5">Budget Allocation</p>
-              <p className="text-xl font-bold text-white tracking-tight leading-none">
-                {formatINR(contract.agreed_rate)} {contract.jobs?.project_type === 'HOURLY' ? '/hr' : ''}
-              </p>
-            </div>
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 shrink-0 mt-1 w-full sm:w-auto">
+          <div className="w-full sm:w-auto px-4 py-2.5 bg-white/5 rounded-full flex items-center gap-2.5 border border-white/10 justify-center group/budget">
+            <IndianRupee className="w-3 h-3 text-emerald-400 shrink-0 group-hover/budget:scale-110 transition-transform" />
+            <span className="text-[9px] text-light-text/30 font-bold uppercase tracking-widest whitespace-nowrap">Budget</span>
+            <span className="text-xs font-black text-white tracking-tight whitespace-nowrap">
+              {formatINR(contract.agreed_rate)}{contract.jobs?.project_type === 'HOURLY' ? '/hr' : ''}
+            </span>
           </div>
 
-          <button
-            onClick={() => navigate('/messages')}
-            className="px-6 py-4.5 bg-transparent border border-white/5 hover:bg-white/5 transition rounded-2xl text-white text-[12px] font-bold uppercase tracking-widest flex items-center gap-2 active:scale-95"
-          >
-            <MessageSquare size={16} className="text-accent" /> Team Chat
-          </button>
-
-          {['IN_PROGRESS', 'ACTIVE'].includes(contract.status) && (
+          <div className="grid grid-cols-2 sm:flex sm:flex-row items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <button
-              onClick={() => navigate(`/meeting/create?projectId=${contract.job_id}&clientId=${contract.client_id}&freelancerId=${contract.freelancer_id}`)}
-              className="px-6 py-4.5 bg-blue-600/10 border border-blue-500/20 hover:bg-blue-600/20 transition rounded-2xl text-blue-400 text-[12px] font-bold uppercase tracking-widest flex items-center gap-2 active:scale-95"
+              onClick={() => navigate('/messages')}
+              className="px-4 sm:px-6 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 transition rounded-full text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-widest flex items-center justify-center gap-2.5 active:scale-95 whitespace-nowrap"
             >
-              <Video size={16} /> Start Meeting
+              <MessageSquare size={12} className="text-accent" /> Team Chat
             </button>
-          )}
+
+            {['IN_PROGRESS', 'ACTIVE'].includes(contract.status) && (
+              <button
+                onClick={() => navigate(`/meeting/create?projectId=${contract.job_id}&clientId=${contract.client_id}&freelancerId=${contract.freelancer_id}`)}
+                className="px-4 sm:px-6 py-2.5 bg-accent text-white hover:bg-accent/90 transition rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-widest flex items-center justify-center gap-2.5 active:scale-95 whitespace-nowrap shadow-lg shadow-accent/20"
+              >
+                <Video size={12} /> Start Meeting
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* FAKE ESCROW MANAGEMENT (DEMO MODE) */}
-      {import.meta.env.VITE_ESCROW_MODE === 'FAKE' && (
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-transparent border border-amber-500/20 rounded-[40px] p-8 mb-8 backdrop-blur-2xl relative overflow-hidden group shadow-lg shadow-amber-500/5"
-        >
-          <div className="absolute top-0 right-0 p-8 opacity-[0.05] group-hover:opacity-[0.08] transition-opacity">
-            <ShieldAlert size={100} className="text-amber-500" />
-          </div>
-          
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
-            <div className="flex items-center gap-6">
-              <div className="w-16 h-16 rounded-[24px] bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500">
-                <DollarSign size={32} />
-              </div>
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-bold text-white tracking-tight">Demo Escrow System</h3>
-                  <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 text-[8px] font-black uppercase tracking-widest border border-amber-500/20">Active</span>
-                </div>
-                <p className="text-light-text/40 text-xs font-medium max-w-md leading-relaxed">
-                  This project is protected by Connect's Fake Escrow. Funds are held in a virtual vault and released upon task completion. No real payments are processed.
-                </p>
-              </div>
-            </div>
 
-            <div className="flex items-center gap-12 shrink-0">
-              <div className="flex flex-col items-center">
-                <span className="text-[9px] font-bold text-white/20 uppercase tracking-widest mb-1">Funded Amount</span>
-                <span className="text-3xl font-black text-white tracking-tighter">
-                  {formatINR(fakeEscrow.transactions.reduce((acc, t) => t.status === 'FUNDED' ? acc + parseFloat(t.amount) : acc, 0))}
-                </span>
-                <span className="text-[10px] text-white/20 font-bold uppercase mt-1">Held in Escrow</span>
-              </div>
-
-              <div className="flex flex-col items-center">
-                <span className="text-[9px] font-bold text-white/20 uppercase tracking-widest mb-1">Released Amount</span>
-                <span className="text-3xl font-black text-emerald-400 tracking-tighter">
-                  {formatINR(fakeEscrow.transactions.reduce((acc, t) => t.status === 'RELEASED' ? acc + parseFloat(t.amount) : acc, 0))}
-                </span>
-                <span className="text-[10px] text-white/20 font-bold uppercase mt-1">Paid to Freelancer</span>
-              </div>
-
-              <div className="flex flex-col gap-3">
-                {isClient ? (
-                  <>
-                    <button 
-                      onClick={() => setFundModal({ isOpen: true })}
-                      className="px-6 h-11 bg-amber-500 text-black font-black text-[11px] uppercase tracking-widest rounded-xl hover:scale-105 transition-all shadow-lg active:scale-95 flex items-center gap-2"
-                    >
-                      <Plus size={16} /> Fund Escrow
-                    </button>
-                    <button 
-                      disabled={!fakeEscrow.transactions.some(t => t.status === 'FUNDED')}
-                      onClick={() => {
-                        const fundedTx = fakeEscrow.transactions.find(t => t.status === 'FUNDED');
-                        if (fundedTx) setReleaseModal({ isOpen: true, tx: fundedTx });
-                      }}
-                      className="px-6 h-11 bg-white/5 border border-white/10 text-white font-black text-[11px] uppercase tracking-widest rounded-xl hover:bg-white/10 hover:border-accent transition-all disabled:opacity-30 disabled:hover:scale-100 active:scale-95 flex items-center gap-2"
-                    >
-                      <CheckCircle size={16} /> Release Payment
-                    </button>
-                  </>
-                ) : (
-                  <div className="flex items-center gap-3 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 italic text-[11px] text-white/50">
-                    <Clock size={16} /> Waiting for client action
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
 
       {/* SKIMMER CO-PILOT ELITE DASHBOARD */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
 
         
         {/* Health & Probability Card */}
-        <div className="xl:col-span-2 bg-transparent border border-white/5 rounded-[40px] p-8 backdrop-blur-3xl relative overflow-hidden group">
+        <div className="xl:col-span-2 bg-transparent border border-white/5 rounded-[30px] md:rounded-[40px] p-6 md:p-8 backdrop-blur-3xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-accent/5 rounded-full blur-[100px] -mr-48 -mt-48 transition-all group-hover:bg-accent/10" />
             
             <div className="relative flex flex-col md:flex-row items-center gap-12">
                 {/* Health Ring */}
                 <div className="relative w-48 h-48 shrink-0">
                     <svg className="w-full h-full -rotate-90 transform">
-                        <circle cx="96" cy="96" r="88" fill="transparent" stroke="currentColor" strokeWidth="12" className="text-white/5" />
+                        <circle cx="96" cy="96" r="88" fill="transparent" stroke="currentColor" strokeWidth="12" className="text-black/10 dark:text-white/5" />
                         <circle cx="96" cy="96" r="88" fill="transparent" stroke="currentColor" strokeWidth="12" strokeDasharray={552} strokeDashoffset={552 - (552 * (skimmer.overview?.health_score || 0)) / 100} strokeLinecap="round" className="text-accent transition-all duration-1000 ease-out" />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -356,9 +286,9 @@ const ContractDetails = () => {
 
                 {/* Metrics Breakdown */}
                 <div className="flex-1 w-full space-y-8">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h2 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
+                        <div className="text-center sm:text-left">
+                            <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight flex items-center justify-center sm:justify-start gap-2">
                                 <Cpu size={24} className="text-accent" /> Skimmer Co-Pilot
                             </h2>
                             <p className="text-[10px] text-light-text/30 font-bold uppercase tracking-[0.2em] mt-1">Autonomous Execution Analytics Engine</p>
@@ -373,20 +303,27 @@ const ContractDetails = () => {
                                     toast.success("AI Mission Plan Regenerated");
                                 }}
                                 disabled={refreshing}
-                                className="px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-white border border-white/10 transition flex items-center gap-2"
+                                className="px-4 py-2 bg-accent text-white hover:bg-accent/90 rounded-full text-[9px] font-black uppercase tracking-widest transition flex items-center gap-2"
                             >
-                                <Terminal size={14} /> {refreshing ? 'Regenerating...' : 'Regenerate Plan'}
+                                <Terminal size={14} /> {refreshing ? 'Generating...' : skimmer.overview?.health_score ? 'Regenerate Plan' : 'Generate AI Plan'}
                             </button>
                         )}
                     </div>
 
+                    {!skimmer.overview?.health_score && !skimmer.loading ? (
+                        <div className="py-6 text-center border border-dashed border-white/5 rounded-2xl">
+                            <Cpu size={28} className="text-white/10 mx-auto mb-3" />
+                            <p className="text-white/20 text-xs font-bold uppercase tracking-widest">No AI data yet</p>
+                            <p className="text-white/10 text-[10px] mt-1">Click "Generate AI Plan" to initialize</p>
+                        </div>
+                    ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="space-y-3">
                             <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
                                 <span className="text-light-text/40">Success Probability</span>
                                 <span className="text-white">{Math.round((skimmer.overview?.success_probability || 0) * 100)}%</span>
                             </div>
-                            <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                            <div className="h-2 bg-black/10 dark:bg-white/5 rounded-full overflow-hidden">
                                 <div className="h-full bg-emerald-500 transition-all duration-1000" style={{ width: `${(skimmer.overview?.success_probability || 0) * 100}%` }} />
                             </div>
                         </div>
@@ -395,17 +332,18 @@ const ContractDetails = () => {
                                 <span className="text-light-text/40">Resource Efficiency</span>
                                 <span className="text-white">{Math.round((skimmer.overview?.team_efficiency || 0) * 100)}%</span>
                             </div>
-                            <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                            <div className="h-2 bg-black/10 dark:bg-white/5 rounded-full overflow-hidden">
                                 <div className="h-full bg-blue-500 transition-all duration-1000" style={{ width: `${(skimmer.overview?.team_efficiency || 0) * 100}%` }} />
                             </div>
                         </div>
                     </div>
+                    )}
                 </div>
             </div>
         </div>
 
         {/* AI Suggestions Card */}
-        <div className="bg-transparent border border-white/5 rounded-[40px] p-8 relative overflow-hidden flex flex-col justify-between">
+        <div className="bg-transparent border border-white/5 rounded-[30px] md:rounded-[40px] p-6 md:p-8 relative overflow-hidden flex flex-col justify-between">
             <div className="mb-6">
                 <div className="flex items-center gap-3 mb-4">
                     <div className="bg-transparent rounded-lg">
@@ -430,15 +368,15 @@ const ContractDetails = () => {
       </div>
 
       {/* Team Mission Progress (Weighted) */}
-      <div className="bg-transparent border border-white/5 rounded-[40px] p-8 mb-8 backdrop-blur-2xl">
-           <div className="flex items-center justify-between mb-10">
-                <div>
+      <div className="bg-transparent border border-white/5 rounded-[30px] md:rounded-[40px] p-6 md:p-8 mb-8 backdrop-blur-2xl">
+           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-10">
+                <div className="text-center sm:text-left">
                     <h3 className="text-lg font-bold text-white tracking-tight">Mission Breakdown & Weights</h3>
                     <p className="text-[10px] text-light-text/30 font-bold uppercase tracking-[0.2em] mt-1">Autonomous Role-Based Task Evaluation</p>
                 </div>
                 <div className="px-4 py-2 bg-accent/10 rounded-full flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                    <span className="text-[10px] font-black text-accent uppercase tracking-widest">Live Sync v{skimmer.tasks[0]?.version || 1}</span>
+                    <span className="text-[10px] font-black text-accent uppercase tracking-widest whitespace-nowrap">Live Sync v{skimmer.tasks[0]?.version || 1}</span>
                 </div>
            </div>
 
@@ -473,7 +411,7 @@ const ContractDetails = () => {
                 {skimmer.tasks.length === 0 && (
                     <div className="col-span-full py-12 flex flex-col items-center justify-center border-2 border-dashed border-white/5 rounded-3xl">
                         <Box size={32} className="text-white/10 mb-4" />
-                        <p className="text-light-text/20 text-xs font-black uppercase tracking-widest">Initializing AI Planning Phase...</p>
+                        <p className="text-light-text/20 text-xs font-black uppercase tracking-widest text-center px-4">No tasks yet — AI plan will generate once work begins</p>
                     </div>
                 )}
            </div>
@@ -571,7 +509,7 @@ const ContractDetails = () => {
                         </div>
 
                         {/* Mission Scope (Client Only / Visible for Self) */}
-                        {(isClient || member.user_id === useAuth().user?.id) && member.scope && (
+                        {(isClient || member.user_id === user?.id) && member.scope && (
                             <div className="mb-4 p-3 bg-transparent rounded-xl border border-white/5">
                                 <div className="flex items-center justify-between mb-2">
                                     <span className="text-[8px] font-black uppercase tracking-widest text-white/20">Assigned Mission</span>
@@ -615,17 +553,25 @@ const ContractDetails = () => {
 
           <div className="border border-white/5 rounded-2xl p-6 bg-transparent">
             <h3 className="text-[10px] font-bold text-light-text/40 uppercase tracking-[0.3em] mb-8 pb-4 border-b border-white/5">Project Info</h3>
-            <div className="space-y-6">
+            <div className="flex flex-wrap items-center gap-x-12 gap-y-6">
               {isClient && contract.status === 'IN_PROGRESS' && (
-                <DeadlineRiskCard contractId={id} />
+                <div className="w-full">
+                  <DeadlineRiskCard contractId={id} />
+                </div>
               )}
-              <div>
-                <p className="text-[10px] text-light-text/20 font-bold uppercase tracking-[0.2em] mb-1.5">Established</p>
-                <p className="text-white font-bold text-[14px] tracking-tight">{new Date(contract.start_date || contract.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+              <div className="flex flex-col">
+                <p className="text-[9px] text-light-text/20 font-bold uppercase tracking-[0.2em] mb-1.5">Established</p>
+                <div className="flex items-center gap-2">
+                  <Clock size={12} className="text-white/20" />
+                  <p className="text-white font-bold text-xs tracking-tight">{new Date(contract.start_date || contract.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-[10px] text-light-text/20 font-bold uppercase tracking-[0.2em] mb-1.5">Collaboration Type</p>
-                <p className="text-white font-bold text-[14px] tracking-tight capitalize">Team {contract.jobs?.project_type?.toLowerCase() || 'fixed'}</p>
+              <div className="flex flex-col">
+                <p className="text-[9px] text-light-text/20 font-bold uppercase tracking-[0.2em] mb-1.5">Collaboration Type</p>
+                <div className="flex items-center gap-2">
+                  <Layers size={12} className="text-white/20" />
+                  <p className="text-white font-bold text-xs tracking-tight capitalize">Team {contract.jobs?.project_type?.toLowerCase() || 'fixed'}</p>
+                </div>
               </div>
             </div>
           </div>

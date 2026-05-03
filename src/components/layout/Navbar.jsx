@@ -32,9 +32,9 @@ const Navbar = ({
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-primary/80 backdrop-blur-md border-b border-border transition-all duration-300">
+      <nav className="sticky top-0 z-[50] bg-primary/80 backdrop-blur-md border-b border-border transition-all duration-300">
 
-        <div className="relative max-w-[1630px] mx-auto h-14 md:h-20 px-4 md:px-6 lg:px-10 flex items-center justify-between">
+        <div className="relative max-w-[1630px] mx-auto h-14 md:h-20 px-2 md:px-6 lg:px-10 flex items-center justify-between">
 
           {/* LEFT: LOGO + DESKTOP NAV */}
           <div className="flex items-center gap-8">
@@ -42,12 +42,12 @@ const Navbar = ({
               <img
                 src="/Logo-LightMode-trimmed.png"
                 alt="Connect"
-                className="h-7 md:h-10 lg:h-12 object-contain block dark:hidden"
+                className="h-9 md:h-10 lg:h-12 object-contain block dark:hidden"
               />
               <img
                 src="/Logo2.png"
                 alt="Connect"
-                className="h-6 md:h-8 lg:h-10 object-contain hidden dark:block"
+                className="h-8 md:h-8 lg:h-10 object-contain hidden dark:block"
               />
             </Link>
 
@@ -157,14 +157,14 @@ const Navbar = ({
       {/* Mobile nav overlay */}
       {mobileNavOpen && (
         <div
-          className="fixed inset-0 z-[600] bg-black/50 md:hidden"
+          className="fixed inset-0 z-[9998] bg-black/50 md:hidden"
           onClick={() => setMobileNavOpen(false)}
         />
       )}
 
       {/* Mobile nav drawer — slides from right */}
       <div
-        className={`fixed top-0 right-0 h-full z-[700] w-[75vw] max-w-[300px] md:hidden flex flex-col shadow-2xl transition-transform duration-300 ease-in-out ${mobileNavOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed inset-y-0 right-0 h-[100dvh] z-[9999] w-[80vw] max-w-[300px] md:hidden flex flex-col shadow-2xl transition-transform duration-300 ease-in-out ${mobileNavOpen ? 'translate-x-0' : 'translate-x-full'}`}
         style={{ backgroundColor: 'var(--color-primary)' }}
       >
         {/* Drawer header */}

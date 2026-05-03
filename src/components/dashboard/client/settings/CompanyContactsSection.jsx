@@ -90,7 +90,7 @@ const CompanyContactsSection = () => {
 
   return (
 
-    <div className="glass-card rounded-2xl p-5 sm:p-8 lg:p-10 relative overflow-hidden group">
+    <div className="glass-card rounded-[2rem] p-5 sm:p-8 lg:p-10 relative overflow-hidden group">
       {/* Decorative Gradient Background */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
       
@@ -107,7 +107,7 @@ const CompanyContactsSection = () => {
           {!edit && (
             <button
               onClick={() => setEdit(true)}
-              className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2 text-sm font-semibold shadow-sm"
+              className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2 text-sm font-semibold shadow-sm"
             >
               <Pencil size={14} />
               Edit Contacts
@@ -178,7 +178,7 @@ const CompanyContactsSection = () => {
                   value={form.phone}
                   onChange={handleChange}
                   placeholder="+1 Enter number"
-                  className="w-full px-5 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"
+                  className="w-full px-5 py-3.5 rounded-full bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"
                 />
               </div>
 
@@ -204,7 +204,7 @@ const CompanyContactsSection = () => {
                   value={form.email}
                   onChange={handleChange}
                   placeholder="contact@company.com"
-                  className="w-full px-5 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"
+                  className="w-full px-5 py-3.5 rounded-full bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"
                 />
               </div>
 
@@ -215,7 +215,7 @@ const CompanyContactsSection = () => {
                   value={form.location}
                   onChange={handleChange}
                   placeholder="City, Country"
-                  className="w-full px-5 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"
+                  className="w-full px-5 py-3.5 rounded-full bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"
                 />
               </div>
             </div>
@@ -224,7 +224,7 @@ const CompanyContactsSection = () => {
             <div className="flex items-center gap-6 mt-10 pt-6 border-t border-white/5">
               <button
                 onClick={handleSave}
-                className="h-12 px-8 rounded-xl bg-accent text-white font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20"
+                className="h-12 px-8 rounded-full bg-accent text-white font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20"
               >
                 Save Contacts
               </button>

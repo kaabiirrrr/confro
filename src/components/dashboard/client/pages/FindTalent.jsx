@@ -96,7 +96,7 @@ const FindTalent = () => {
   };
 
   return (
-    <div className="max-w-[1630px] mx-auto py-6 sm:py-8 text-light-text font-sans tracking-tight animate-in fade-in duration-700">
+    <div className="max-w-[1500px] mx-auto py-6 sm:py-8 text-light-text font-sans tracking-tight animate-in fade-in duration-700">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
         <div className="space-y-1">
           <h1 className="text-lg sm:text-2xl font-semibold text-white tracking-tight">Find Talent</h1>
@@ -130,14 +130,14 @@ const FindTalent = () => {
             className="flex-1 bg-transparent text-sm text-white placeholder:text-white/20 outline-none font-medium"
           />
           {skillInput && (
-            <button type="button" onClick={handleClearSkill} className="text-white/20 hover:text-white transition-colors p-1 hover:bg-white/5 rounded-lg">
+            <button type="button" onClick={handleClearSkill} className="text-white/20 hover:text-white transition-colors p-1 hover:bg-white/5 rounded-full">
               <X size={16} />
             </button>
           )}
         </form>
         <Button 
           onClick={handleSkillSearch} 
-          className="rounded-2xl px-8 h-[52px] text-sm font-bold uppercase tracking-widest shadow-lg shadow-accent/20 hover:scale-[1.02] transition-all"
+          className="rounded-full px-8 h-[52px] text-sm font-bold uppercase tracking-widest shadow-lg shadow-accent/20 hover:scale-[1.02] transition-all"
           icon={Search}
         >
           Search Talent

@@ -14,9 +14,9 @@ const AboutPage = () => {
   return (
     <>
       <SEO
-        title="About Connectt – Freelance Marketplace for Hiring & Finding Work"
-        description="Learn about Connectt, the freelance marketplace that connects businesses with skilled freelancers across India and worldwide. Hire talent or find freelance jobs today."
-        keywords="about connectt, freelance marketplace India, hire freelancers online, find freelance work, freelancer platform"
+        title="About Connect Freelance – Freelance Marketplace for Hiring & Finding Work"
+        description="Learn about Connect Freelance, the freelance marketplace that connects businesses with skilled freelancers across India and worldwide. Hire talent or find freelance jobs today."
+        keywords="about connect freelance, freelance marketplace India, hire freelancers online, find freelance work, freelancer platform"
       />
       <Navbar />
 
@@ -50,7 +50,7 @@ const AboutPage = () => {
             </h2>
             <div className="space-y-4 text-white/60 text-base leading-relaxed">
               <p>
-                Connectt is a dual-model freelance platform. Clients can post jobs and receive
+                Connect Freelance is a dual-model freelance platform. Clients can post jobs and receive
                 proposals from verified freelancers, or browse and purchase pre-packaged service
                 listings instantly. Freelancers can apply to jobs, showcase their portfolio, and
                 sell services directly to clients worldwide.
@@ -70,7 +70,7 @@ const AboutPage = () => {
             className="bg-transparent p-8 rounded-2xl border border-white/10 hover:border-accent transition-colors duration-300"
           >
             <h2 className="text-xl font-semibold text-accent mb-3">
-              Why Choose Connectt?
+              Why Choose Connect Freelance?
             </h2>
             <ul className="space-y-4 text-white/60 text-base">
               <li className="flex items-start gap-3">
@@ -107,14 +107,14 @@ const AboutPage = () => {
             </h2>
             <div className="space-y-4 text-white/60 text-base leading-relaxed">
               <p>
-                Connectt was founded by a team of developers and entrepreneurs from Nashik, Maharashtra,
+                Connect Freelance was founded by a team of developers and entrepreneurs from Nashik, Maharashtra,
                 who experienced firsthand the frustrations of traditional freelance hiring — unreliable
                 talent, unclear pricing, and zero accountability.
               </p>
               <p>
-                We built Connectt to solve these problems: a platform where trust is built into every
+                We built Connect Freelance to solve these problems: a platform where trust is built into every
                 transaction, where freelancers are rewarded for quality work, and where clients can hire
-                with confidence. Today, Connectt serves hundreds of professionals across India and beyond.
+                with confidence. Today, Connect Freelance serves hundreds of professionals across India and beyond.
               </p>
             </div>
           </motion.div>
@@ -122,7 +122,7 @@ const AboutPage = () => {
           {/* CTA SECTION */}
           <motion.div variants={fadeUp} className="text-center pt-6">
             <h2 className="text-xl font-semibold text-white mb-4">Ready to Get Started?</h2>
-            <p className="text-white/60 mb-8 text-base">Join thousands of freelancers and businesses already on Connectt.</p>
+            <p className="text-white/60 mb-8 text-base">Join thousands of freelancers and businesses already on Connect Freelance.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/find-freelancers" className="bg-accent text-white px-8 py-3 rounded-full font-semibold hover:opacity-90 transition">
                 Hire a Freelancer

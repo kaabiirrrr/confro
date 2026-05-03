@@ -9,7 +9,7 @@ return(
 
 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
 
-<div className="bg-white rounded-xl w-[650px] p-10 relative">
+<div className="bg-white rounded-[2rem] w-[650px] p-10 relative">
 
 <button
 onClick={()=>close(false)}
@@ -71,7 +71,7 @@ className="text-green-600"
 Cancel
 </button>
 
-<button className="bg-green-600 text-white px-6 py-2 rounded-lg">
+<button className="bg-green-600 text-white px-6 py-2 rounded-full">
 Close account
 </button>
 

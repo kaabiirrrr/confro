@@ -30,8 +30,8 @@ export const connectsApi = {
         return response.data;
     },
 
-    confirmPayment: async (paymentIntentId) => {
-        const response = await api.post(`/api/connects/confirm-payment`, { paymentIntentId });
+    confirmPayment: async (data) => {
+        const response = await api.post(`/api/connects/confirm-payment`, data);
         return response.data;
     },
 

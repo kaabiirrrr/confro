@@ -6,8 +6,9 @@ import { useAuth } from '../../../context/AuthContext';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
+import InfinityLoader from '../../common/InfinityLoader';
 import { getApiUrl } from '../../../utils/authUtils';
- 
+
 const API_URL = getApiUrl();
 
 const MembershipPage = () => {
@@ -149,8 +150,8 @@ const MembershipPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 text-accent animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+        <InfinityLoader size={40} />
       </div>
     );
   }
@@ -161,7 +162,7 @@ const MembershipPage = () => {
       {/* Header Section (Match Account Health) */}
       <div className="text-left space-y-4">
         <div className="flex flex-col items-start relative">
-          <div className="absolute -top-6 left-0 flex items-center gap-2">
+          <div className="absolute -top-6 left-0 flex items-center gap-3">
             <span className="bg-white/5 border border-white/10 text-white/40 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
               Live Systems Check
             </span>
@@ -263,11 +264,11 @@ const MembershipPage = () => {
                 <button
                   onClick={() => isActive && plan.price > 0 && !isActivePlanInDb && handleUpgrade(plan)}
                   disabled={purchasingPlanId === plan.id || (isActive && isActivePlanInDb)}
-                  className={`w-full py-4 rounded-2xl font-bold text-xs transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2 ${isActive
+                  className={`w-full py-4 rounded-full font-bold text-xs transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2 ${isActive
                     ? isActivePlanInDb
-                      ? 'bg-white/10 text-white/40 cursor-default border border-white/5'
-                      : 'bg-accent text-primary hover:bg-white shadow-accent/20 disabled:opacity-60'
-                    : 'bg-white/5 text-white/20 border border-white/5 group-hover:bg-white/10'
+                      ? 'bg-slate-100 dark:bg-white/10 text-slate-400 dark:text-white/40 cursor-default border border-slate-200 dark:border-white/5'
+                      : 'bg-accent text-slate-900 dark:text-white hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-slate-900 shadow-accent/20 disabled:opacity-60'
+                    : 'bg-slate-50 dark:bg-white/5 text-slate-400 dark:text-white/20 border border-slate-200 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-600 dark:hover:text-white/40'
                     }`}
                 >
                   {purchasingPlanId === plan.id

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Calendar, Clock, CheckCircle, ChevronLeft, ChevronRight, Plus, Trash2,
-  TrendingUp, Wallet, IndianRupee, ArrowUpRight, AlertCircle, CheckCircle2, History
+  TrendingUp, Wallet, IndianRupee, ArrowUpRight, AlertCircle, CheckCircle2, History, Filter
 } from 'lucide-react';
 import { formatINR } from '../../../utils/currencyUtils';
 import { getMyContracts, getWorkDiary, logWorkDiary, deleteWorkDiaryEntry } from '../../../services/apiService';
@@ -179,7 +179,7 @@ const WorkDiary = () => {
         </div>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="px-6 sm:px-8 h-10 sm:h-12 bg-accent hover:bg-accent/90 text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] rounded-xl sm:rounded-2xl transition shadow-xl shadow-accent/20 active:scale-[0.98]"
+          className="w-full sm:w-auto px-6 sm:px-8 h-10 sm:h-12 bg-accent hover:bg-accent/90 text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] rounded-full transition active:scale-[0.98]"
         >
           {showAddForm ? 'View Summary' : 'Log Hours'}
         </button>
@@ -194,7 +194,7 @@ const WorkDiary = () => {
           { label: 'Logged Entries', value: entries.length }
         ].map((stat, i) => (
           <div key={i} className="bg-transparent border border-white/5 p-4 sm:p-8 rounded-[16px] sm:rounded-[24px] space-y-3 sm:space-y-6 hover:border-accent/30 transition-all group">
-            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center p-2 sm:p-2.5 group-hover:scale-110 transition-transform">
+            <div className="w-15 h-15 sm:w-15 sm:h-15 rounded-xl flex items-center justify-center p-2 sm:p-2.5 group-hover:scale-110 transition-transform">
               <img src="/Icons/credit.png" alt="icon" className="w-full h-full object-contain filter invert opacity-80" />
             </div>
             <div>
@@ -207,55 +207,77 @@ const WorkDiary = () => {
 
       {/* Recent Activity Section */}
       <div className="space-y-4 sm:space-y-6">
-        <div className="flex items-center justify-between gap-3">
-          <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/40">Recent Activity</h3>
-          <div className="flex items-center gap-2 sm:gap-3 min-w-[180px] sm:min-w-[240px]">
-            <span className="text-[10px] uppercase font-bold text-white/20 tracking-widest hidden sm:block">Filter by</span>
-            <CustomDropdown
-              options={contracts.map(c => ({
-                label: c.jobs?.title || 'Unknown Contract',
-                value: c.id
-              }))}
-              value={selectedContract?.id || ''}
-              onChange={(val) => {
-                const c = contracts.find(cn => cn.id === val);
-                if (c) setSelectedContract(c);
-              }}
-              placeholder="All Contracts"
-              className="w-full"
-            />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
+          <div className="flex items-center gap-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_10px_rgba(var(--accent-rgb),0.5)]" />
+            <h3 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-white/40">Recent Activity</h3>
+          </div>
+          <div className="flex items-center w-full sm:w-auto">
+            <div className="flex-1 sm:flex-none sm:min-w-[280px]">
+              <CustomDropdown
+                options={contracts.map(c => ({
+                  label: c.job?.title || 'Unknown Contract',
+                  value: c.id
+                }))}
+                value={selectedContract?.id || ''}
+                onChange={(val) => {
+                  const c = contracts.find(cn => cn.id === val);
+                  if (c) setSelectedContract(c);
+                }}
+                placeholder="All Contracts"
+                className="w-full"
+              />
+            </div>
           </div>
         </div>
 
         {showAddForm ? (
-          <div className="border border-white/5 rounded-[24px] sm:rounded-[40px] p-5 sm:p-10 animate-in zoom-in-95 duration-500 bg-white/[0.01] shadow-sm">
+          <div className="border border-light-text/10 dark:border-white/5 rounded-[24px] sm:rounded-[40px] p-5 sm:p-10 animate-in zoom-in-95 duration-500 bg-white/[0.01] shadow-sm">
             <h3 className="text-[12px] sm:text-[14px] font-bold text-white mb-6 sm:mb-10 tracking-tight uppercase tracking-[0.2em] opacity-40">Log New Work Entry</h3>
-            <form onSubmit={handleAddEntry} className="space-y-5 sm:space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-10">
+            <form onSubmit={handleAddEntry} className="space-y-6 sm:space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
                 <div className="space-y-2 sm:space-y-3">
-                  <label className="text-[10px] font-bold text-light-text/20 uppercase tracking-[0.2em] ml-1">Work Date</label>
-                  <input type="date" value={workDate} onChange={(e) => setWorkDate(e.target.value)} max={new Date().toISOString().split('T')[0]}
-                    className="w-full bg-secondary/50 border border-white/5 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-white focus:outline-none focus:border-accent/40 transition-all font-medium text-xs sm:text-sm" />
+                  <label className="text-[10px] font-bold text-light-text/30 uppercase tracking-[0.2em] ml-1">Work Date</label>
+                  <input
+                    type="date"
+                    value={workDate}
+                    onChange={(e) => setWorkDate(e.target.value)}
+                    max={new Date().toISOString().split('T')[0]}
+                    className="w-full bg-secondary/30 dark:bg-secondary/50 border border-light-text/10 dark:border-white/5 rounded-2xl px-5 sm:px-6 py-3.5 sm:py-4 text-light-text dark:text-white focus:outline-none focus:border-accent/40 focus:ring-1 focus:ring-accent/20 transition-all font-medium text-sm"
+                  />
                 </div>
                 <div className="space-y-2 sm:space-y-3">
-                  <label className="text-[10px] font-bold text-light-text/20 uppercase tracking-[0.2em] ml-1">Hours Worked</label>
-                  <input type="number" step="0.1" placeholder="0.0" value={hours} onChange={(e) => setHours(e.target.value)}
-                    className="w-full bg-secondary/50 border border-white/5 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-white focus:outline-none focus:border-accent/40 transition-all font-medium text-xs sm:text-sm" />
+                  <label className="text-[10px] font-bold text-light-text/30 uppercase tracking-[0.2em] ml-1">Hours Worked</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    placeholder="0.0"
+                    value={hours}
+                    onChange={(e) => setHours(e.target.value)}
+                    className="w-full bg-secondary/30 dark:bg-secondary/50 border border-light-text/10 dark:border-white/5 rounded-2xl px-5 sm:px-6 py-3.5 sm:py-4 text-light-text dark:text-white focus:outline-none focus:border-accent/40 focus:ring-1 focus:ring-accent/20 transition-all font-medium text-sm"
+                  />
                 </div>
               </div>
               <div className="space-y-2 sm:space-y-3">
-                <label className="text-[10px] font-bold text-light-text/20 uppercase tracking-[0.2em] ml-1">Detailed Memo</label>
-                <textarea placeholder="Briefly describe what you accomplished..." rows="4" value={description} onChange={(e) => setDescription(e.target.value)}
-                  className="w-full bg-secondary/50 border border-white/5 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-5 text-white focus:outline-none focus:border-accent/40 transition-all font-medium text-sm sm:text-[15px] resize-none leading-relaxed"></textarea>
+                <label className="text-[10px] font-bold text-light-text/30 uppercase tracking-[0.2em] ml-1">Detailed Memo</label>
+                <textarea
+                  placeholder="Briefly describe what you accomplished..."
+                  rows="4"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full bg-secondary/30 dark:bg-secondary/50 border border-light-text/10 dark:border-white/5 rounded-2xl px-5 sm:px-6 py-4 sm:py-5 text-light-text dark:text-white focus:outline-none focus:border-accent/40 focus:ring-1 focus:ring-accent/20 transition-all font-medium text-sm sm:text-[15px] resize-none leading-relaxed"
+                ></textarea>
               </div>
-              <div className="pt-4 sm:pt-8 flex gap-3 sm:gap-6">
+              <div className="pt-4 sm:pt-6 flex flex-row gap-3 sm:gap-4">
                 <button type="submit" disabled={logging}
-                  className="flex-1 h-11 sm:h-14 bg-accent text-white rounded-xl sm:rounded-2xl text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-accent/90 transition-all shadow-xl shadow-accent/20 flex items-center justify-center gap-2 sm:gap-3 disabled:opacity-50">
+                  className="flex-[2] h-12 sm:h-14 bg-accent text-white rounded-full text-[9px] sm:text-[11px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] hover:bg-accent/90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-accent/20 active:scale-95"
+                >
                   {logging && <InfinityLoader size={16} />}
-                  {logging ? 'Saving...' : 'Submit Work Log'}
+                  <span className="truncate">{logging ? 'Saving...' : 'Submit Log'}</span>
                 </button>
                 <button type="button" onClick={() => setShowAddForm(false)}
-                  className="px-6 sm:px-12 h-11 sm:h-14 bg-transparent text-white border border-white/5 rounded-xl sm:rounded-2xl text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] hover:border-white/20 transition-all">
+                  className="flex-1 h-12 sm:h-14 bg-secondary/30 dark:bg-white/5 text-light-text border border-light-text/10 rounded-full text-[9px] sm:text-[11px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] hover:bg-secondary/50 transition-all active:scale-95"
+                >
                   Cancel
                 </button>
               </div>
@@ -288,7 +310,7 @@ const WorkDiary = () => {
                     <div className="sm:hidden p-4 flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-9 h-9 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent text-sm font-black shrink-0">
-                          {(entry.client_name || selectedContract?.jobs?.title || 'P')[0]?.toUpperCase()}
+                          {(entry.client_name || selectedContract?.job?.title || 'P')[0]?.toUpperCase()}
                         </div>
                         <div className="min-w-0">
                           <p className="text-white font-bold text-xs truncate">{formatDate(entry.work_date)}</p>
@@ -307,7 +329,7 @@ const WorkDiary = () => {
                     <div className="hidden sm:grid grid-cols-[1fr_1fr_120px_130px_100px] gap-4 px-10 py-8 hover:bg-white/[0.02] transition-all items-center">
                       <div className="flex items-center gap-4 min-w-0">
                         <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent text-sm font-black shrink-0 shadow-lg group-hover:scale-110 transition-transform">
-                          {(entry.client_name || selectedContract?.jobs?.title || 'P')[0]?.toUpperCase()}
+                          {(entry.client_name || selectedContract?.job?.title || 'P')[0]?.toUpperCase()}
                         </div>
                         <div className="flex flex-col min-w-0">
                           <span className="text-white font-bold truncate group-hover:text-accent transition-colors leading-none mb-1.5 uppercase tracking-tighter">{formatDate(entry.work_date)}</span>

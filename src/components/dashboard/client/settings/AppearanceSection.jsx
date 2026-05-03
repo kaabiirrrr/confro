@@ -19,30 +19,30 @@ const AppearanceSection = () => {
       icon={Palette}
       iconClassName="w-[30px] h-[30px]"
     >
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
         {options.map((opt) => (
           <button
             key={opt.key}
             onClick={() => setTheme(opt.key)}
-            className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-4 text-center ${theme === opt.key
+            className={`p-3 sm:p-6 rounded-2xl sm:rounded-[2rem] border-2 transition-all flex flex-col items-center gap-2 sm:gap-4 text-center ${theme === opt.key
               ? "bg-accent/10 border-accent shadow-lg shadow-accent/10"
-              : "bg-transparent border-white/5 hover:border-white/20"
+              : "bg-transparent border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/20"
               }`}
           >
-            <div className={`flex items-center justify-center ${typeof opt.icon === 'string' ? '' : `p-3 rounded-xl ${theme === opt.key ? 'bg-accent text-white' : 'bg-white/5 text-white/40'}`}`}>
+            <div className={`flex items-center justify-center ${typeof opt.icon === 'string' ? '' : `p-2 sm:p-3 rounded-full ${theme === opt.key ? 'bg-accent text-white' : 'bg-white/5 text-white/40'}`}`}>
               {typeof opt.icon === 'string' ? (
-                <img src={opt.icon} alt="" className="w-[30px] h-[30px] object-contain" />
+                <img src={opt.icon} alt="" className="w-[22px] h-[22px] sm:w-[30px] sm:h-[30px] object-contain" />
               ) : (
-                <opt.icon size={24} />
+                <opt.icon size={20} />
               )}
             </div>
             <div>
-              <p className={`font-bold text-sm ${theme === opt.key ? 'text-white' : 'text-white/60'}`}>{opt.label}</p>
-              <p className="text-[10px] text-white/30 uppercase font-black tracking-widest mt-1">{opt.desc}</p>
+              <p className={`font-bold text-[10px] sm:text-sm leading-tight ${theme === opt.key ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-white/60'}`}>{opt.label}</p>
+              <p className="hidden sm:block text-[10px] text-slate-400 dark:text-white/30 uppercase font-black tracking-widest mt-1">{opt.desc}</p>
             </div>
             {theme === opt.key && (
-              <div className="mt-2 text-accent">
-                <Check size={16} strokeWidth={3} />
+              <div className="text-accent">
+                <Check size={12} strokeWidth={3} className="sm:w-4 sm:h-4" />
               </div>
             )}
           </button>

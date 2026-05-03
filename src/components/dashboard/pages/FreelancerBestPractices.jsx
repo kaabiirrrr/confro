@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ShieldCheck, CheckCircle, Lightbulb, ChevronLeft, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
-import api from "../../../lib/api";
+import InfinityLoader from "../../common/InfinityLoader";
 
 const getPracticeStyle = (title) => {
     const t = title.toLowerCase();
@@ -43,37 +43,41 @@ const getPracticeStyle = (title) => {
     };
 };
 
+const defaultBestPractices = [
+    { id: '1', title: 'Complete Your Profile 100%', description: 'A complete profile with a professional photo and detailed bio attracts 3x more clients. Verify your credentials to stand out.' },
+    { id: '2', title: 'Build a Strong Portfolio', description: 'Showcase your best work. High-quality portfolio samples are the #1 deciding factor for premium clients when awarding contracts.' },
+    { id: '3', title: 'Write Tailored Proposals', description: 'Avoid generic templates. Address the client\'s specific needs and mention their company name to stand out from the crowd.' },
+    { id: '4', title: 'Respond Quickly', description: 'Freelancers who respond within 1 hour secure 50% more contracts than those who wait a day. Quick communication builds trust.' },
+    { id: '5', title: 'Deliver on Time', description: 'Meeting deadlines consistently builds your reputation on Connect and leads to repeat business and verified 5-star reviews.' },
+    { id: '6', title: 'Verify Your Identity', description: 'Verified identity badges build instant trust, protect you from fraudulent activities, and unlock higher-tier job postings.' }
+];
+
 const FreelancerBestPractices = () => {
     const [bestPractices, setBestPractices] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await api.get('/api/freelancer/best-practices');
-                if (res.data?.success) setBestPractices(res.data.data);
-            } catch (error) {
-                console.error("Failed to load best practices", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
+        // Simulate loading from a network request for the aesthetic effect
+        const timer = setTimeout(() => {
+            setBestPractices(defaultBestPractices);
+            setLoading(false);
+        }, 1200);
+        return () => clearTimeout(timer);
     }, []);
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-full pt-20">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
+            <div className="flex justify-center items-center h-full pt-32 pb-32">
+                <InfinityLoader size={60} />
             </div>
         );
     }
 
     return (
-        <div className="w-full mx-auto px-6 md:px-10 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="w-full lg:max-w-[1400px] mx-auto mt-0 pb-12 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
             {/* Back Button and Header Section */}
-            <div className="space-y-6">
+            <div className="space-y-4">
                 <Link
                     to="/freelancer/account-health"
                     className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm font-medium group"
@@ -82,7 +86,7 @@ const FreelancerBestPractices = () => {
                     Back
                 </Link>
 
-                <div className="relative pt-4 pb-6 border-b border-white/10 mb-8">
+                <div className="relative pt-2 pb-4 border-b border-white/10 mb-6">
                     <div className="relative z-10 max-w-2xl flex flex-col items-start gap-4">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
                             <Lightbulb size={16} />
@@ -115,7 +119,7 @@ const FreelancerBestPractices = () => {
                                     {style.image ? (
                                         <img src={style.image} alt={bp.title} className="w-16 h-16 object-contain" />
                                     ) : (
-                                        <div className="w-14 h-14 rounded-2xl bg-transparent flex items-center justify-center border border-white/10">
+                                        <div className="w-14 h-14 flex items-center justify-center">
                                             {style.icon}
                                         </div>
                                     )}
@@ -158,7 +162,7 @@ const FreelancerBestPractices = () => {
 
                 <Link
                     to="/freelancer/account-health"
-                    className="inline-flex items-center justify-center px-6 py-3 bg-accent text-white text-sm font-bold rounded-xl hover:bg-accent/90 transition-all shadow-lg shadow-accent/20"
+                    className="inline-flex w-full sm:w-auto items-center justify-center px-6 py-3 bg-accent text-white text-sm font-bold rounded-xl hover:bg-accent/90 transition-all shadow-lg shadow-accent/20"
                 >
                     Return to Account Health
                 </Link>

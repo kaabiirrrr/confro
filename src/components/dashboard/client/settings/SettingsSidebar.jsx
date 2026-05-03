@@ -19,7 +19,7 @@ const SettingsSidebar = ({ active, setActive }) => {
           <button
             key={item.id}
             onClick={() => setActive(item.id)}
-            className={`relative shrink-0 px-3 py-2.5 text-xs font-semibold whitespace-nowrap transition-all rounded-lg ${
+            className={`relative shrink-0 px-3 py-2.5 text-xs font-semibold whitespace-nowrap transition-all rounded-full ${
               active === item.id
                 ? "text-white bg-white/5"
                 : "text-white/40 hover:text-white"
@@ -39,7 +39,7 @@ const SettingsSidebar = ({ active, setActive }) => {
           <button
             key={item.id}
             onClick={() => setActive(item.id)}
-            className={`relative text-left pl-6 pr-4 py-3 text-sm transition-all rounded-lg ${
+            className={`relative text-left pl-6 pr-4 py-3 text-sm transition-all rounded-full ${
               active === item.id
                 ? "text-white font-semibold"
                 : "text-white/40 hover:text-white hover:bg-white/5"

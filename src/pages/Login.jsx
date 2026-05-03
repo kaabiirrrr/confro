@@ -84,12 +84,12 @@ const Login = () => {
         toast.success("Welcome back!");
         const { role, user } = response.data;
         logger.log(`[LoginPage] Login success! Role: ${role}`);
-        
+
         // --- CORE REDIRECT LOGIC ---
         // Use the centralized helper which now handles profile completion checks for all roles
         const dashboardRoute = getDashboardRoute(role, user.profile || user);
         const from = location.state?.from?.pathname || dashboardRoute;
-        
+
         logger.log(`[LoginPage] Login success! Role: ${role}. Redirecting to: ${from}`);
         navigate(from, { replace: true });
       }

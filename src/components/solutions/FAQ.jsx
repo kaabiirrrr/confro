@@ -163,7 +163,7 @@ const FAQ = () => {
               whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
               type="submit"
               disabled={isSubmitting}
-              className={`bg-accent px-6 py-3 rounded-[10px] text-sm font-medium transition ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:opacity-90'}`}
+              className={`bg-accent px-6 py-3 rounded-full text-sm font-medium transition ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:opacity-90'}`}
             >
               {isSubmitting ? "Submitting..." : "Submit Question"}
             </motion.button>

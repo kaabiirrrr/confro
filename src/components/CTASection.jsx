@@ -32,7 +32,7 @@ const CTASection = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.97 }}
-                className="w-full sm:w-auto bg-accent text-white px-8 sm:px-10 py-3 sm:py-4 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg transition-all duration-300"
+                className="w-full sm:w-auto bg-accent text-white px-8 sm:px-10 py-3 sm:py-4 rounded-full cursor-pointer text-base sm:text-lg font-medium shadow-lg transition-all duration-300"
               >
                 Explore Freelancers
               </motion.button>

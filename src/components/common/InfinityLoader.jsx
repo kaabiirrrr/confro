@@ -7,7 +7,20 @@ const InfinityLoader = ({ fullScreen = true, size = "lg", text = "Connecting you
         lg: { width: 120, height: 60, strokeWidth: 4, textClass: "text-base mt-4" },
     };
 
-    const s = sizes[size] || sizes.lg;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+    
+    // Scale down string sizes or numeric sizes on mobile
+    let s;
+    if (typeof size === 'string') {
+        const effectiveSize = isMobile && size === "lg" ? "md" : size; // Only downscale lg to md on mobile
+        s = sizes[effectiveSize] || sizes.lg;
+        if (isMobile && size === "lg") {
+            s = { ...s, width: 100, height: 50 }; // Specific mobile-lg size
+        }
+    } else {
+        const numSize = isMobile ? size * 0.9 : size;
+        s = { width: numSize, height: numSize / 2, strokeWidth: Math.max(2, numSize / 25), textClass: isMobile ? "text-xs mt-3" : "text-sm mt-3" };
+    }
 
     return (
         <div

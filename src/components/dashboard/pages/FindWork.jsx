@@ -145,7 +145,7 @@ export default function FreelancerFindWork() {
   const filterCount = [filters.category, filters.expLevel, filters.budgetType, filters.minBudget, filters.maxBudget, ...filters.skills].filter(Boolean).length;
 
   return (
-    <div className="max-w-[1630px] mx-auto space-y-4 sm:space-y-6 pb-10 animate-in ml-0 sm:ml-10 mr-0 sm:mr-6 fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight">
+    <div className="max-w-[1480px] w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6 pb-10 animate-in fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight">
 
       <div className="flex items-start sm:items-center justify-between gap-3">
         <div>
@@ -154,11 +154,14 @@ export default function FreelancerFindWork() {
         </div>
         <button
           onClick={() => setShowFilters(true)}
-          className="flex items-center gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl border border-border text-[10px] font-bold uppercase tracking-[0.2em] text-light-text/60 hover:text-accent hover:border-accent hover:bg-accent/5 transition-all shadow-sm flex-shrink-0"
+          className="relative flex items-center justify-center w-10 h-10 rounded-full text-accent hover:bg-accent/10 transition-all flex-shrink-0"
         >
-          <Filter size={13} className="opacity-60" />
-          <span className="hidden sm:inline">FILTERS{filterCount > 0 ? ` (${filterCount})` : ''}</span>
-          <span className="sm:hidden">{filterCount > 0 ? filterCount : ''}</span>
+          <Filter size={18} className="text-accent" />
+          {filterCount > 0 && (
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent text-white text-[9px] flex items-center justify-center rounded-full border-2 border-secondary font-bold">
+              {filterCount}
+            </span>
+          )}
         </button>
       </div>
 
@@ -174,12 +177,12 @@ export default function FreelancerFindWork() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-5 sm:gap-10 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] border-b border-border overflow-x-auto no-scrollbar">
+      <div className="flex max-sm:justify-between sm:gap-10 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] border-b border-border overflow-x-auto no-scrollbar">
         {TABS.map(t => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`pb-3 sm:pb-4 transition-all relative whitespace-nowrap ${tab === t.key ? 'text-accent' : 'text-light-text/40 hover:text-light-text'}`}
+            className={`flex-1 sm:flex-none pb-3 sm:pb-4 transition-all relative whitespace-nowrap ${tab === t.key ? 'text-accent' : 'text-light-text/40 hover:text-light-text'}`}
           >
             {t.label === 'Best Matches' ? 'BEST MATCHES' : t.label === 'Most Recent' ? 'MOST RECENT' : 'SAVED JOBS'}
             {tab === t.key && (

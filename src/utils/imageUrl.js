@@ -17,6 +17,13 @@ export const cleanImageUrl = (url, name = 'User') => {
     return `/${fileName}`;
   }
 
+  // SUPABASE BUCKET REROUTE: (Disabled as it was breaking valid URLs)
+  // if (url.includes('supabase.co/storage/v1/object/public/')) {
+  //   if (url.includes('/avatars/') || url.includes('/avatars1/')) {
+  //     return url.replace(/\/avatars\d?\//, '/profilephotos/');
+  //   }
+  // }
+
   return url;
 };
 

@@ -40,7 +40,7 @@ const ClientPolicies = () => {
   const isRefundActive = activePolicy.id === 'refund';
 
   return (
-    <div className="min-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* Back Button and Header Section */}
       <div className="space-y-6">
@@ -54,7 +54,7 @@ const ClientPolicies = () => {
 
         <div className="relative pt-4 pb-6 border-b border-white/10 mb-8">
           <div className="relative z-10 max-w-2xl flex flex-col items-start gap-4">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
+            <div className="inline-flex items-center gap-2 text-accent text-xs font-bold uppercase tracking-widest">
               <Lock size={16} />
               <span>Platform Policies</span>
             </div>
@@ -97,7 +97,7 @@ const ClientPolicies = () => {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 bg-transparent border border-white/10 rounded-2xl p-8 md:p-10 min-h-[400px]">
+        <div className="flex-1 bg-transparent border border-white/10 rounded-[2rem] p-8 md:p-10 min-h-[400px]">
           <div className="flex items-center gap-5 mb-8 pb-8 border-b border-white/10">
             <div className="w-16 h-16 flex items-center justify-center">
               {activePolicy.image ? (
@@ -128,7 +128,7 @@ const ClientPolicies = () => {
               <li>Communicate professionally and promptly.</li>
               <li>Report any suspicious activity immediately to our support team.</li>
             </ul>
-            <div className={`mt-10 p-6 bg-transparent rounded-xl border ${isRefundActive ? 'border-red-500/20' : 'border-white/10'}`}>
+            <div className={`mt-10 p-6 bg-transparent rounded-[2rem] border ${isRefundActive ? 'border-red-500/20' : 'border-white/10'}`}>
               <p className={`text-xs uppercase tracking-widest leading-relaxed font-bold ${isRefundActive ? 'text-red-500/60' : 'text-white/40'}`}>
                 Note: These terms are subject to change. As an active user, it is your responsibility to stay up-to-date with our Trust &amp; Safety policies to avoid account restriction.
               </p>

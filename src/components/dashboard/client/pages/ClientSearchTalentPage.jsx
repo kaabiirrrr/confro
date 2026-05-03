@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search, Bookmark, FileSignature, MessageCircle, SlidersHorizontal, X, Star, ShieldCheck,
-  ChevronLeft, ChevronRight,
+  ChevronLeft, ChevronRight, ExternalLink
 } from 'lucide-react';
 import {
   getFreelancers,
@@ -174,7 +174,7 @@ export default function ClientSearchTalentPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search by name, title, or skill..."
-            className="w-full bg-secondary border border-white/10 text-white text-sm rounded-lg pl-9 pr-9 py-2.5 focus:outline-none focus:border-accent/50 placeholder-white/30"
+            className="w-full bg-secondary border border-white/10 text-white text-sm rounded-full pl-10 pr-10 py-2.5 focus:outline-none focus:border-accent/50 placeholder-white/30"
           />
           {search && (
             <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white">
@@ -184,7 +184,7 @@ export default function ClientSearchTalentPage() {
         </div>
         <button
           onClick={() => setShowFilters(p => !p)}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border text-sm transition ${showFilters || hasFilters ? 'border-accent/40 bg-accent/10 text-accent' : 'border-white/10 text-white/60 hover:text-white'}`}
+          className={`flex items-center gap-2 px-6 py-2.5 rounded-full border text-sm transition ${showFilters || hasFilters ? 'border-accent/40 bg-accent/10 text-accent' : 'border-white/10 text-white/60 hover:text-white'}`}
         >
           <SlidersHorizontal size={15} />
           Filters
@@ -275,7 +275,7 @@ export default function ClientSearchTalentPage() {
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <p className="font-semibold text-white truncate">{f.name}</p>
                         {f.has_availability_badge && (
-                          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 shadow-sm shadow-emerald-500/5 animate-pulse">
+                          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 shadow-sm shadow-emerald-500/5 animate-pulse">
                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
                             <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">Available Now</span>
                           </div>
@@ -299,7 +299,7 @@ export default function ClientSearchTalentPage() {
                   {f.skills?.length > 0 && (
                     <div className="flex flex-wrap gap-1.5">
                       {f.skills.slice(0, 5).map((s, i) => (
-                        <span key={i} className="px-2.5 py-0.5 bg-accent/10 text-accent text-xs rounded-full border border-accent/20">{s}</span>
+                        <span key={i} className="px-2.5 py-0.5 bg-accent/10 text-accent text-xs rounded-full">{s}</span>
                       ))}
                       {f.skills.length > 5 && (
                         <span className="px-2.5 py-0.5 bg-white/5 text-white/40 text-xs rounded-full">+{f.skills.length - 5}</span>
@@ -308,14 +308,14 @@ export default function ClientSearchTalentPage() {
                   )}
 
                   {/* Actions */}
-                  <div className="flex gap-2 pt-1 border-t border-white/5">
+                  <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-white/5 justify-end">
                     <button
                       onClick={() => handleToggleSave(f)}
                       disabled={isSaveBusy}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs transition disabled:opacity-50 ${
+                      className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full border text-[10px] font-bold uppercase tracking-widest transition disabled:opacity-50 ${
                         isSaved
                           ? 'bg-accent/10 border-accent/30 text-accent'
-                          : 'border-white/10 text-white/50 hover:text-white hover:border-white/20'
+                          : 'border-white/10 text-white/50 hover:text-white hover:border-white/20 bg-white/5'
                       }`}
                     >
                       {isSaveBusy ? <InfinityLoader size={20} /> : <Bookmark size={12} className={isSaved ? 'fill-current' : ''} />}
@@ -323,17 +323,25 @@ export default function ClientSearchTalentPage() {
                     </button>
 
                     <button
+                      onClick={() => navigate(`/freelancer/${f.id}`)}
+                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-white/20 bg-white/5 text-[10px] font-bold uppercase tracking-widest transition"
+                    >
+                      <ExternalLink size={12} />
+                      Profile
+                    </button>
+
+                    <button
                       onClick={() => navigate(`/client/direct-contracts/new?freelancer_id=${f.id}`)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-white/50 hover:text-white hover:border-white/20 text-xs transition"
+                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-white/20 bg-white/5 text-[10px] font-bold uppercase tracking-widest transition"
                     >
                       <FileSignature size={12} />
-                      Direct Contract
+                      Direct
                     </button>
 
                     <button
                       onClick={() => handleMessage(f)}
                       disabled={isMsgBusy}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-white/50 hover:text-white hover:border-white/20 text-xs transition disabled:opacity-50 ml-auto"
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-accent text-white border border-accent hover:bg-accent/90 text-[10px] font-bold uppercase tracking-widest transition disabled:opacity-50 ml-auto shadow-md shadow-accent/20"
                     >
                       {isMsgBusy ? <InfinityLoader size={20} /> : <MessageCircle size={12} />}
                       Message
@@ -352,7 +360,7 @@ export default function ClientSearchTalentPage() {
                 <button
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page <= 1}
-                  className="p-1.5 rounded-lg border border-white/10 hover:border-white/20 disabled:opacity-30 transition"
+                  className="p-1.5 rounded-full border border-white/10 hover:border-white/20 disabled:opacity-30 transition"
                 >
                   <ChevronLeft size={16} />
                 </button>
@@ -360,7 +368,7 @@ export default function ClientSearchTalentPage() {
                 <button
                   onClick={() => setPage(p => Math.min(pagination.pages, p + 1))}
                   disabled={page >= pagination.pages}
-                  className="p-1.5 rounded-lg border border-white/10 hover:border-white/20 disabled:opacity-30 transition"
+                  className="p-1.5 rounded-full border border-white/10 hover:border-white/20 disabled:opacity-30 transition"
                 >
                   <ChevronRight size={16} />
                 </button>

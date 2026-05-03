@@ -74,20 +74,20 @@ export default function TimesheetsPage() {
   };
 
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-white">Timesheets</h1>
         <p className="text-white/50 text-sm mt-1">Review and approve weekly timesheets from your active freelancers.</p>
       </div>
 
       {/* Filters Interface */}
-      <div className="flex flex-wrap items-end gap-4 mb-8 p-5 bg-transparent border border-white/10 rounded-2xl">
-        <div className="space-y-1.5 flex-1 min-w-[240px]">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-3 sm:gap-4 mb-8 p-4 sm:p-5 bg-transparent border border-white/10 rounded-2xl">
+        <div className="space-y-1.5 w-full sm:flex-1 sm:min-w-[240px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Select Contract</label>
           <CustomDropdown
             options={[
               { label: 'All active contracts', value: '' },
-              ...contracts.map(c => ({ label: c.title || `Contract #${c.id}`, value: c.id }))
+              ...contracts.map(c => ({ label: c.job?.title || c.title || `Contract #${c.id.substring(0, 8)}`, value: c.id }))
             ]}
             value={filters.contract_id}
             onChange={val => setFilters(p => ({ ...p, contract_id: val }))}
@@ -95,17 +95,17 @@ export default function TimesheetsPage() {
           />
         </div>
 
-        <div className="space-y-1.5 min-w-[200px]">
+        <div className="space-y-1.5 w-full sm:min-w-[200px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Week Start Date</label>
           <input
             type="date"
             value={filters.week_start}
             onChange={e => setFilters(p => ({ ...p, week_start: e.target.value }))}
-            className="w-full bg-transparent border border-white/10 text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-accent/50 transition-all"
+            className="w-full bg-transparent border border-white/10 text-white text-xs sm:text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-accent/50 transition-all"
           />
         </div>
 
-        <div className="space-y-1.5 min-w-[180px]">
+        <div className="space-y-1.5 w-full sm:min-w-[180px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Status Protocol</label>
           <CustomDropdown
             options={[
@@ -181,15 +181,15 @@ export default function TimesheetsPage() {
                   </div>
 
                   {/* Status & Protocol Controls */}
-                  <div className="flex items-center gap-4 shrink-0">
+                  <div className="flex items-center justify-between xl:justify-start w-full xl:w-auto gap-4 shrink-0">
                     <StatusBadge status={ts.status} />
 
                     {isPending && (
-                      <div className="flex items-center gap-2 pl-4 border-l border-white/5">
+                      <div className="flex-1 flex items-center gap-2 xl:pl-4 xl:border-l border-white/5">
                         <button
                           onClick={() => handleAction(ts.id, 'APPROVED')}
                           disabled={actionId === ts.id}
-                          className="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 text-green-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-green-500/20 transition-all active:scale-95 disabled:opacity-50"
+                          className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-green-500/10 border border-green-500/20 text-green-400 rounded-xl text-[9px] xl:text-[10px] font-black uppercase tracking-widest hover:bg-green-500/20 transition-all active:scale-95 disabled:opacity-50"
                         >
                           {actionId === ts.id ? <InfinityLoader size={20} /> : <CheckCircle2 size={14} />}
                           Approve
@@ -197,7 +197,7 @@ export default function TimesheetsPage() {
                         <button
                           onClick={() => handleAction(ts.id, 'DISPUTED')}
                           disabled={actionId === ts.id}
-                          className="flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-500/20 transition-all active:scale-95 disabled:opacity-50"
+                          className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-[9px] xl:text-[10px] font-black uppercase tracking-widest hover:bg-red-500/20 transition-all active:scale-95 disabled:opacity-50"
                         >
                           <AlertCircle size={14} />
                           Dispute

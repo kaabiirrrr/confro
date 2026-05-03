@@ -51,7 +51,7 @@ const CompanyDetailsSection = () => {
 
   return (
 
-    <div className="glass-card rounded-2xl p-5 sm:p-8 lg:p-10 relative overflow-hidden group">
+    <div className="glass-card rounded-[2rem] p-5 sm:p-8 lg:p-10 relative overflow-hidden group">
       {/* Decorative Gradient Background */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
       
@@ -68,7 +68,7 @@ const CompanyDetailsSection = () => {
           {!edit && (
             <button
               onClick={() => setEdit(true)}
-              className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2 text-sm font-semibold shadow-sm"
+              className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2 text-sm font-semibold shadow-sm"
             >
               <Pencil size={14} />
               Edit Details
@@ -78,11 +78,8 @@ const CompanyDetailsSection = () => {
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
           {/* Company Icon */}
-          <div className="relative shrink-0 hidden sm:block">
-            <div className="absolute inset-0 bg-accent/20 rounded-2xl blur-xl pointer-events-none" />
-            <div className="w-24 h-24 bg-gradient-to-tr from-white/5 to-accent/5 border border-white/10 rounded-2xl flex items-center justify-center relative z-10 shadow-2xl shadow-black/40">
-              <Building2 size={36} className="text-white/80" />
-            </div>
+          <div className="relative shrink-0 hidden sm:flex items-center justify-center w-24 h-24">
+            <Building2 size={48} className="text-accent" />
           </div>
 
           <div className="flex-1">
@@ -93,7 +90,7 @@ const CompanyDetailsSection = () => {
                     {form.companyName || "No Company Added"}
                   </h3>
                   {form.tagline ? (
-                    <p className="text-accent text-[14px] font-semibold tracking-wide uppercase px-3 py-1 bg-accent/10 border border-accent/20 rounded-md inline-block">
+                    <p className="text-accent text-[14px] font-semibold tracking-wide uppercase inline-block">
                       {form.tagline}
                     </p>
                   ) : (
@@ -129,7 +126,7 @@ const CompanyDetailsSection = () => {
                         value={form.companyName}
                         onChange={handleChange}
                         placeholder="Company Inc."
-                        className="w-full px-5 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"
+                        className="w-full px-5 py-3.5 rounded-full bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"
                       />
                       {form.companyName && (
                         <X
@@ -159,7 +156,7 @@ const CompanyDetailsSection = () => {
                         key={size.value}
                         type="button"
                         onClick={() => setForm({ ...form, size: size.value })}
-                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all border ${
+                        className={`px-4 py-2 rounded-full text-xs font-bold transition-all border ${
                           parseInt(form.size) === size.value
                             ? "bg-accent/20 border-accent text-accent"
                             : "bg-white/5 border-white/10 text-white/40 hover:border-white/20"
@@ -180,7 +177,7 @@ const CompanyDetailsSection = () => {
                     onChange={handleChange}
                     rows={4}
                     placeholder="Tell us about your company..."
-                    className="w-full px-5 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all resize-none"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all resize-none"
                   />
                 </div>
 
@@ -188,7 +185,7 @@ const CompanyDetailsSection = () => {
                 <div className="flex items-center gap-6 mt-10">
                   <button
                     onClick={handleSave}
-                    className="h-12 px-8 rounded-xl bg-accent text-white font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20"
+                    className="h-12 px-8 rounded-full bg-accent text-white font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20"
                   >
                     Save Details
                   </button>

@@ -59,7 +59,7 @@ const HowItWorks = () => {
       <div className="max-w-[1500px] mx-auto">
 
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-10 sm:mb-16">
+        <div className="flex flex-col sm:flex-row justify-between items-center sm:items-center gap-6 sm:gap-0 mb-10 sm:mb-16 text-center sm:text-left">
           <h2 className="text-2xl sm:text-3xl sm:text-4xl font-semibold text-white">
             How it works
           </h2>
@@ -98,7 +98,7 @@ const HowItWorks = () => {
             className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12"
           >
             {data.map((item, index) => (
-              <div key={index} className="group">
+              <div key={index} className="group text-center sm:text-left">
 
                 {/* Image */}
                 <div className="h-[220px] sm:h-[280px] rounded-3xl overflow-hidden mb-6">

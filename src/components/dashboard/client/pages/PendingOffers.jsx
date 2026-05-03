@@ -48,7 +48,7 @@ const PendingOffers = () => {
   };
 
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
       <SectionHeader
         title="Pending Offers"
         subtext="Review and manage proposals from freelancers for your jobs."

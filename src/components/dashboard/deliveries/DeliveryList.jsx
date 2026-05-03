@@ -119,40 +119,42 @@ export default function DeliveryList({ deliveries, isClient, onUpdate }) {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
             {/* Sidebar: Version List */}
-            <div className="lg:col-span-4 space-y-4 max-h-[700px] overflow-y-auto pr-2 custom-scrollbar">
-                <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-white font-bold text-sm uppercase tracking-wider opacity-60">Deliveries History</h3>
-                    <span className="bg-accent/10 text-accent text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
+            <div className="lg:col-span-4 space-y-4 max-h-[400px] lg:max-h-[700px] overflow-y-auto pr-0 lg:pr-2 custom-scrollbar">
+                <div className="flex items-center justify-between mb-2 px-1">
+                    <h3 className="text-white font-bold text-[10px] uppercase tracking-wider opacity-60">Deliveries History</h3>
+                    <span className="bg-accent/10 text-accent text-[9px] font-bold px-2 py-0.5 rounded-full uppercase">
                         {deliveries.length} Versions
                     </span>
                 </div>
-                {deliveries.map((d) => (
-                    <button
-                        key={d.id}
-                        onClick={() => setSelectedId(d.id)}
-                        className={`w-full text-left px-4 py-3 rounded-xl border transition-all ${
-                            selectedId === d.id 
-                            ? 'bg-accent/10 border-accent/20' 
-                            : 'bg-transparent border-transparent hover:bg-white/5'
-                        }`}
-                    >
-                        <div className="flex justify-between items-start mb-2">
-                            <span className="font-bold text-white text-sm">Version {d.version}</span>
-                            <span className={`text-[10px] font-bold uppercase py-0.5 px-2 rounded-md ${
-                                d.status === 'approved' ? 'bg-green-500/10 text-green-400' :
-                                d.status === 'revision_requested' ? 'bg-yellow-500/10 text-yellow-400' :
-                                'bg-blue-500/10 text-blue-400'
-                            }`}>
-                                {d.status}
-                            </span>
-                        </div>
-                        <p className="text-white/40 text-xs truncate mb-2">{d.message}</p>
-                        <div className="flex items-center gap-2 text-[10px] text-white/20">
-                            <Calendar size={10} />
-                            {formatDistanceToNow(new Date(d.created_at), { addSuffix: true })}
-                        </div>
-                    </button>
-                ))}
+                <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0 scrollbar-hide">
+                    {deliveries.map((d) => (
+                        <button
+                            key={d.id}
+                            onClick={() => setSelectedId(d.id)}
+                            className={`flex-shrink-0 lg:flex-shrink w-[260px] lg:w-full text-left px-4 py-3 rounded-xl border transition-all ${
+                                selectedId === d.id 
+                                ? 'bg-accent/10 border-accent/20' 
+                                : 'bg-transparent border-transparent hover:bg-white/5'
+                            }`}
+                        >
+                            <div className="flex justify-between items-start mb-2">
+                                <span className="font-bold text-white text-xs lg:text-sm">Version {d.version}</span>
+                                <span className={`text-[8px] lg:text-[10px] font-bold uppercase py-0.5 px-1.5 lg:px-2 rounded-md ${
+                                    d.status === 'approved' ? 'bg-green-500/10 text-green-400' :
+                                    d.status === 'revision_requested' ? 'bg-yellow-500/10 text-yellow-400' :
+                                    'bg-blue-500/10 text-blue-400'
+                                }`}>
+                                    {d.status}
+                                </span>
+                            </div>
+                            <p className="text-white/40 text-[10px] lg:text-xs truncate mb-2">{d.message}</p>
+                            <div className="flex items-center gap-2 text-[9px] lg:text-[10px] text-white/20">
+                                <Calendar size={10} />
+                                {formatDistanceToNow(new Date(d.created_at), { addSuffix: true })}
+                            </div>
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* Main view: Active Delivery */}
@@ -160,10 +162,10 @@ export default function DeliveryList({ deliveries, isClient, onUpdate }) {
                 {activeDelivery && (
                     <div className="bg-transparent border-none p-0 flex flex-col h-full animate-in fade-in slide-in-from-right-4 duration-500">
                         {/* Header */}
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
                             <div>
-                                <h2 className="text-2xl font-bold text-white tracking-tight leading-none mb-1.5">Delivery Review</h2>
-                                <p className="text-white/20 text-xs font-medium">Submitted {new Date(activeDelivery.created_at).toLocaleString()}</p>
+                                <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight leading-none mb-1.5">Delivery Review</h2>
+                                <p className="text-white/20 text-[10px] md:text-xs font-medium">Submitted {new Date(activeDelivery.created_at).toLocaleString()}</p>
                             </div>
                             {activeDelivery.final_approval_time && (
                                 <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 text-green-400 rounded-xl text-xs font-bold uppercase">

@@ -151,7 +151,7 @@ const PasswordSecuritySection = () => {
     );
 
     return (
-        <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-10 overflow-x-hidden">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-10 overflow-x-hidden">
             {/* HEADER AREA */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-white/5">
                 <div className="space-y-4">
@@ -192,7 +192,7 @@ const PasswordSecuritySection = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12 border-b border-white/5">
                             {/* GOOGLE */}
-                            <div className="flex items-center justify-between gap-4 p-6 bg-white/[0.02] border border-white/5 rounded-[1.5rem] hover:bg-white/[0.04] transition-all group/row">
+                            <div className="flex items-center justify-between gap-4 p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] hover:bg-white/[0.04] transition-all group/row">
                                 <div className="flex items-center gap-5">
                                     <div className="flex items-center justify-center group-hover/row:scale-110 transition-all shrink-0">
                                         <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" className="w-8 h-8" alt="G" />
@@ -211,7 +211,7 @@ const PasswordSecuritySection = () => {
                             </div>
 
                             {/* APPLE */}
-                            <div className="flex items-center justify-between gap-4 p-6 bg-white/[0.02] border border-white/5 rounded-[1.5rem] hover:bg-white/[0.04] transition-all group/row">
+                            <div className="flex items-center justify-between gap-4 p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] hover:bg-white/[0.04] transition-all group/row">
                                 <div className="flex items-center gap-5">
                                     <div className="flex items-center justify-center group-hover/row:scale-110 transition-all shrink-0">
                                         <img src="https://cdn-icons-png.flaticon.com/512/153/153240.png" className="w-8 h-8 brightness-200" alt="A" />
@@ -223,7 +223,7 @@ const PasswordSecuritySection = () => {
                                 </div>
                                 <button 
                                     onClick={() => handleLinkAccount('apple')}
-                                    className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-white/20 hover:text-accent transition-colors shrink-0"
+                                    className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/20 hover:text-accent transition-colors shrink-0"
                                 >
                                     <ChevronRight size={18} />
                                 </button>
@@ -302,7 +302,7 @@ const PasswordSecuritySection = () => {
                                             <p className="text-[10px] text-white/20 font-black uppercase tracking-widest">Recovery Protocol</p>
                                             <h4 className="text-white font-bold text-lg">Security Questions</h4>
                                         </div>
-                                        <div className="p-6 bg-white/[0.02] border border-white/10 rounded-[1.5rem]">
+                                        <div className="p-6 bg-white/[0.02] border border-white/10 rounded-[2rem]">
                                             <p className="text-white/40 text-[13px] italic leading-relaxed">
                                                 {settings.has_security_answer ? `"${settings.security_question}"` : 'Emergency recovery question not yet configured.'}
                                             </p>
@@ -354,7 +354,7 @@ const PasswordSecuritySection = () => {
                                             type={showNew ? "text" : "password"}
                                             value={newPassword}
                                             onChange={e => setNewPassword(e.target.value)}
-                                            className="w-full h-16 px-6 bg-white/[0.03] border border-white/10 rounded-2xl text-white outline-none focus:border-accent focus:bg-white/[0.05] transition-all placeholder:text-white/5"
+                                            className="w-full h-16 px-6 bg-white/[0.03] border border-white/10 rounded-full text-white outline-none focus:border-accent focus:bg-white/[0.05] transition-all placeholder:text-white/5"
                                             placeholder="Enter high-entropy password"
                                         />
                                         <button onClick={() => setShowNew(!showNew)} className="absolute right-5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white">
@@ -369,7 +369,7 @@ const PasswordSecuritySection = () => {
                                         type={showConfirm ? "text" : "password"}
                                         value={confirmNewPassword}
                                         onChange={e => setConfirmNewPassword(e.target.value)}
-                                        className="w-full h-16 px-6 bg-white/[0.03] border border-white/10 rounded-2xl text-white outline-none focus:border-accent focus:bg-white/[0.05] transition-all placeholder:text-white/5"
+                                        className="w-full h-16 px-6 bg-white/[0.03] border border-white/10 rounded-full text-white outline-none focus:border-accent focus:bg-white/[0.05] transition-all placeholder:text-white/5"
                                         placeholder="Repeat for confirmation"
                                     />
                                 </div>
@@ -431,7 +431,7 @@ const PasswordSecuritySection = () => {
                                             type="email"
                                             value={recoveryEmail}
                                             onChange={e => setRecoveryEmail(e.target.value)}
-                                            className="w-full h-16 px-6 bg-white/[0.03] border border-white/10 rounded-2xl text-white outline-none focus:border-accent focus:bg-white/[0.05] transition-all placeholder:text-white/5"
+                                            className="w-full h-16 px-6 bg-white/[0.03] border border-white/10 rounded-full text-white outline-none focus:border-accent focus:bg-white/[0.05] transition-all placeholder:text-white/5"
                                             placeholder={user?.email || "email@example.com"}
                                         />
                                     </div>
@@ -490,7 +490,7 @@ const PasswordSecuritySection = () => {
                                         type="text"
                                         value={newQuestion}
                                         onChange={e => setNewQuestion(e.target.value)}
-                                        className="w-full h-16 px-6 bg-white/[0.03] border border-white/10 rounded-2xl text-white outline-none focus:border-accent focus:bg-white/[0.05] transition-all"
+                                        className="w-full h-16 px-6 bg-white/[0.03] border border-white/10 rounded-full text-white outline-none focus:border-accent focus:bg-white/[0.05] transition-all"
                                         placeholder="e.g. Identity of first construct"
                                     />
                                 </div>
@@ -500,7 +500,7 @@ const PasswordSecuritySection = () => {
                                         type="password"
                                         value={newAnswer}
                                         onChange={e => setNewAnswer(e.target.value)}
-                                        className="w-full h-16 px-6 bg-white/[0.03] border border-white/10 rounded-2xl text-white outline-none focus:border-accent focus:bg-white/[0.05] transition-all"
+                                        className="w-full h-16 px-6 bg-white/[0.03] border border-white/10 rounded-full text-white outline-none focus:border-accent focus:bg-white/[0.05] transition-all"
                                         placeholder="••••••••"
                                     />
                                 </div>

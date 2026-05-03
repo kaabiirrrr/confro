@@ -204,7 +204,7 @@ export default function JobDetail() {
                         {role.status !== 'filled' && (
                           <button 
                             onClick={() => navigate(`/freelancer/jobs/${id}/apply?role=${role.id}`)}
-                            className="bg-white/5 hover:bg-accent hover:text-white text-white/60 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all"
+                            className="bg-white/5 hover:bg-accent hover:text-white text-white/60 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all"
                           >
                              Bid for this role
                           </button>
@@ -268,7 +268,7 @@ export default function JobDetail() {
             <button 
               onClick={() => navigate(`/freelancer/jobs/${id}/apply`)}
               disabled={!job.is_bidding_open || (job.bid_deadline && new Date() > new Date(job.bid_deadline))}
-              className={`w-full flex items-center justify-center gap-3 py-3.5 sm:py-4 rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] transition shadow-lg transform hover:scale-[1.02] active:scale-95 ${
+              className={`w-full flex items-center justify-center gap-3 py-3.5 sm:py-4 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition shadow-lg transform hover:scale-[1.02] active:scale-95 ${
                 (!job.is_bidding_open || (job.bid_deadline && new Date() > new Date(job.bid_deadline)))
                   ? 'bg-white/5 text-white/20 cursor-not-allowed border border-white/10'
                   : 'bg-accent !text-white hover:bg-accent/90 shadow-accent/10'

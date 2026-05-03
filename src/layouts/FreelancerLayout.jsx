@@ -17,7 +17,9 @@ const FreelancerLayout = () => {
 
   const isFullWidth = useMemo(() => {
     const path = location.pathname.replace(/\/$/, '');
-    return path.startsWith('/freelancer/jobs/') ||
+    return path === '/freelancer/jobs' ||
+      path.startsWith('/freelancer/jobs/') ||
+      path === '/freelancer/job' ||
       path.startsWith('/freelancer/job/') ||
       path === '/freelancer/proposals' ||
       path === '/freelancer/my-proposals' ||
@@ -26,6 +28,7 @@ const FreelancerLayout = () => {
       path === '/freelancer/find-work' ||
       path === '/freelancer/saved-jobs' ||
       path === '/freelancer/settings' ||
+      path.startsWith('/freelancer/settings/') ||
       path === '/freelancer/membership' ||
       path.startsWith('/freelancer/direct-contracts') ||
       path.startsWith('/freelancer/contracts') ||
@@ -38,6 +41,7 @@ const FreelancerLayout = () => {
       path === '/freelancer/policies' ||
       path === '/freelancer/best-practices' ||
       path === '/freelancer/work-activity' ||
+      path === '/freelancer/ai' ||
       path === '/freelancer/promote';
   }, [location.pathname]);
 
@@ -94,13 +98,13 @@ const FreelancerLayout = () => {
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-[400] bg-black/40 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-[9998] bg-black/40 backdrop-blur-sm lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Mobile sidebar drawer */}
-      <div className={`fixed top-0 left-0 h-full z-[500] w-[300px] bg-primary border-r border-border transform transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto p-4 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <div className={`fixed inset-y-0 left-0 h-[100dvh] z-[9999] w-[300px] bg-primary border-r border-border transform transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto p-4 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex items-center justify-between mb-4">
           <span className="text-sm font-semibold text-light-text">Dashboard</span>
           <button onClick={() => setSidebarOpen(false)} className="text-text-muted hover:text-accent transition-colors">
@@ -113,12 +117,12 @@ const FreelancerLayout = () => {
       </div>
 
       {isMessages ? (
-        <div className="flex-1 min-h-0 max-w-[1630px] w-full mx-auto px-4 md:px-6 lg:px-10 pt-6">
+        <div className="flex-1 min-h-0 max-w-[1630px] w-full mx-auto px-4 md:px-6 lg:px-10 pt-6 overflow-visible">
           <Outlet />
         </div>
       ) : (
-        <div className="max-w-[1630px] mx-auto px-4 md:px-6 lg:px-10 pt-6 md:pt-8 transition-all duration-500">
-          <div className={isFullWidth ? 'w-full' : 'grid grid-cols-1 lg:grid-cols-[330px_1fr] gap-6 lg:gap-12'}>
+        <div className={`max-w-[1630px] mx-auto ${location.pathname === '/freelancer/ai' ? 'px-6 pt-0' : 'px-4 md:px-6 lg:px-10 pt-1 md:pt-3'} transition-all duration-500 min-w-0 overflow-visible`}>
+          <div className={isFullWidth ? 'w-full min-w-0' : 'grid grid-cols-1 lg:grid-cols-[330px_1fr] gap-6 lg:gap-12 w-full min-w-0'}>
             {!isFullWidth && (
               <div className="hidden lg:block pr-2">
                 <Sidebar />

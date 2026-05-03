@@ -11,6 +11,8 @@ import { getJobDetail, submitProposal } from '../../../services/apiService';
 import { toastApiError } from '../../../utils/apiErrorToast';
 import { toast } from 'react-hot-toast';
 import InfinityLoader from '../../common/InfinityLoader';
+import Avatar from '../../Avatar';
+import { cleanImageUrl } from '../../../utils/imageUrl';
 import analytics from '../../../services/analytics.service';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -237,7 +239,7 @@ export default function SubmitProposal() {
                                                 required
                                                 value={formData.delivery_time}
                                                 onChange={e => setFormData({ ...formData, delivery_time: e.target.value })}
-                                                className="w-full bg-transparent border border-white/10 rounded-xl py-4 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-accent transition-all placeholder:text-white/10"
+                                                className="w-full bg-transparent border border-white/10 rounded-full py-4 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-accent transition-all placeholder:text-light-text/30 dark:placeholder:text-white/10"
                                                 placeholder="e.g. 2 weeks"
                                             />
                                         </div>
@@ -253,7 +255,7 @@ export default function SubmitProposal() {
                                         rows={10}
                                         value={formData.cover_letter}
                                         onChange={e => setFormData({ ...formData, cover_letter: e.target.value })}
-                                        className="w-full bg-transparent border border-white/10 rounded-xl p-5 text-sm text-white focus:outline-none focus:border-accent transition-all placeholder:text-white/10 resize-none leading-relaxed"
+                                        className="w-full bg-transparent border border-white/10 rounded-2xl p-5 text-sm text-white focus:outline-none focus:border-accent transition-all placeholder:text-light-text/30 dark:placeholder:text-white/10 resize-none leading-relaxed"
                                         placeholder="Explain why you are the best fit for this project..."
                                     />
                                     <div className="flex justify-between items-center px-1">
@@ -302,18 +304,18 @@ export default function SubmitProposal() {
                                     </div>
                                 </div>
 
-                                <div className="pt-6 flex gap-4">
+                                <div className="pt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
                                     <button
                                         type="button"
                                         onClick={() => navigate(-1)}
-                                        className="flex-1 py-3 sm:py-4 px-6 rounded-2xl border border-white/10 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 hover:text-white hover:bg-white/5 transition-all"
+                                        className="flex-1 py-3 sm:py-4 px-6 rounded-full border border-white/10 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 hover:text-white hover:bg-white/5 transition-all"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={submitting || job.proposals?.some(p => p.freelancer_id === localStorage.getItem('user_id'))}
-                                        className="flex-[2] py-3 sm:py-4 px-6 rounded-2xl bg-accent !text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-accent/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-accent/10 disabled:opacity-50 disabled:cursor-not-allowed group"
+                                        className="flex-[2] py-3 sm:py-4 px-6 rounded-full bg-accent !text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-accent/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-accent/10 disabled:opacity-50 disabled:cursor-not-allowed group"
                                     >
                                         {submitting ? (
                                             <motion.div 
@@ -401,7 +403,7 @@ export default function SubmitProposal() {
 
                             {job.bid_deadline && (
                                 <div className="flex items-start gap-3">
-                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${new Date() > new Date(job.bid_deadline) ? 'bg-red-500/10 border-red-500/20' : 'bg-accent/10'}`}>
+                                    <div className="w-8 h-8 rounded-lg bg-transparent flex items-center justify-center shrink-0">
                                         <Clock size={14} className={new Date() > new Date(job.bid_deadline) ? 'text-red-400' : 'text-accent'} />
                                     </div>
                                     <div>
@@ -423,14 +425,13 @@ export default function SubmitProposal() {
                         <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-white/40 border-b border-white/10 pb-4">About Client</h3>
 
                         <div className="flex items-center gap-4">
-                            {job.client?.avatar_url ? (
-                                <img src={job.client.avatar_url} alt="" className="w-12 h-12 rounded-full object-cover" />
-                            ) : (
-                                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                                    <span className="text-lg font-bold text-accent">{(job.client?.company_name || job.client?.name || 'C')[0]}</span>
-                                </div>
-                            )}
-                            <div>
+                            <Avatar 
+                                src={job.client?.avatar_url} 
+                                name={job.client?.company_name || job.client?.name} 
+                                size="w-12 h-12" 
+                                className="shrink-0"
+                            />
+                            <div className="flex-1 min-w-0">
                                 <h4 className="text-sm font-bold text-white truncate max-w-[150px]">
                                     {job.client?.company_name || job.client?.name}
                                 </h4>

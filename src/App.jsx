@@ -15,6 +15,7 @@ import { ModerationProvider } from './ModerationContext';
 import { checkProfileCompletion } from './utils/authUtils';
 import { RealtimeProvider } from './context/RealtimeContext';
 import { logger } from './utils/logger';
+import AIAssistant from './components/shared/AIAssistant';
 
 
 /* Landing Components */
@@ -224,7 +225,7 @@ const LotteryAdminPage = lazy(() => import("./admin/pages/LotteryAdminPage"));
 const ConnectsManagementPage = lazy(() => import("./admin/pages/ConnectsManagementPage"));
 
 /* Loading Component */
-const LoadingSpinner = () => <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader size={60} /></div>;
+const LoadingSpinner = () => <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader size="lg" /></div>;
 
 /* Landing Page */
 function LandingPage() {
@@ -370,7 +371,6 @@ function App() {
                     <PremiumToaster />
 
                     <GlobalCallManager />
-                    <DemoBadge />
                     <ScrollToTop />
                     <ScrollToHash />
                     <Suspense fallback={location.pathname === '/' ? null : <LoadingSpinner />}>
@@ -471,8 +471,10 @@ function App() {
                             <Route path="work-diary" element={<WorkDiary />} />
                             <Route path="transactions" element={<TransactionsFreelancer />} />
                             <Route path="withdraw" element={<FreelancerWithdrawals />} />
+                            <Route path="withdrawals" element={<Navigate to="/freelancer/withdraw" replace />} />
                             <Route path="promote" element={<PromotePage />} />
                             <Route path="settings" element={<FreelancerSettings />} />
+                            <Route path="ai" element={<div className="bg-primary min-h-[80vh] flex flex-col pt-4"><AIAssistant userRole="freelancer" externalOpen /></div>} />
                             <Route path="lottery" element={<LotteryPage />} />
                           </Route>
                         </Route>

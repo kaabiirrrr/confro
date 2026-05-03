@@ -13,36 +13,31 @@ const steps = [
     icon: <FileEdit size={24} className="text-blue-400" />,
     title: "Post your project",
     desc: "Describe what you need. A clear job title and detailed description help attract the right talent. You can set a fixed price or hourly rate.",
-    color: "bg-blue-500/10",
-    border: "border-blue-500/20"
+    color: "bg-blue-500/10"
   },
   {
     icon: <Search size={24} className="text-purple-400" />,
     title: "Review proposals",
     desc: "Talented freelancers will submit proposals with their rates and past work samples. Review their profiles, ratings, and portfolios to find a match.",
-    color: "bg-purple-500/10",
-    border: "border-purple-500/20"
+    color: "bg-purple-500/10"
   },
   {
     icon: <UserCheck size={24} className="text-emerald-400" />,
     title: "Hire and fund",
     desc: "Once you find the right freelancer, hire them and fund the secure escrow system. Your payment is held safely until the work is delivered.",
-    color: "bg-emerald-500/10",
-    border: "border-emerald-500/20"
+    color: "bg-emerald-500/10"
   },
   {
     icon: <MessageSquare size={24} className="text-amber-400" />,
     title: "Collaborate",
     desc: "Use our built-in messages and milestone tools to stay in touch. View work in progress and provide feedback directly within the platform.",
-    color: "bg-amber-500/10",
-    border: "border-amber-500/20"
+    color: "bg-amber-500/10"
   },
   {
     icon: <CheckCircle2 size={24} className="text-indigo-400" />,
     title: "Approve and Release",
     desc: "When you're satisfied with the work, approve the milestone to release the funds. Leave a review to help other clients find great talent.",
-    color: "bg-indigo-500/10",
-    border: "border-indigo-500/20"
+    color: "bg-indigo-500/10"
   }
 ];
 
@@ -50,7 +45,7 @@ const GettingStartedGuide = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-[1580px] mx-auto py-6 sm:py-8 text-light-text font-sans tracking-tight animate-in fade-in duration-700">
+    <div className="max-w-[1500px] mx-auto px-6 py-6 sm:py-8 text-light-text font-sans tracking-tight animate-in fade-in duration-700">
       
       {/* HEADER SECTION */}
       <div className="mb-10">
@@ -63,7 +58,7 @@ const GettingStartedGuide = () => {
         </button>
         
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center border border-accent/20">
+          <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center border-0">
             <Rocket className="text-accent" size={24} />
           </div>
           <h1 className="text-3xl font-semibold text-white tracking-tight">
@@ -94,14 +89,14 @@ const GettingStartedGuide = () => {
               )}
               
               {/* Step Number/Icon */}
-              <div className={`w-12 h-12 rounded-2xl ${step.color} border ${step.border} flex items-center justify-center shrink-0 z-10 transition-transform group-hover:scale-110`}>
+              <div className={`w-12 h-12 rounded-2xl ${step.color} flex items-center justify-center shrink-0 z-10 transition-transform group-hover:scale-110 border-0`}>
                 {step.icon}
               </div>
 
               {/* Content */}
               <div className="flex-1 pt-1">
                 <div className="flex items-center gap-4 mb-2">
-                  <span className="text-[10px] font-black uppercase text-accent tracking-tighter bg-accent/5 px-2 py-0.5 rounded border border-accent/10">Step {index + 1}</span>
+                  <span className="text-[10px] font-black uppercase text-accent tracking-tighter bg-accent/5 px-2 py-0.5 rounded border-0">Step {index + 1}</span>
                   <h3 className="text-xl font-semibold text-white">{step.title}</h3>
                 </div>
                 <p className="text-light-text/50 text-[15px] leading-relaxed max-w-3xl">

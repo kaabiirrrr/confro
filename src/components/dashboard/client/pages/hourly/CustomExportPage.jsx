@@ -62,7 +62,7 @@ export default function CustomExportPage() {
   const previewCols = preview?.length > 0 ? Object.keys(preview[0]) : [];
 
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8">
       <div className="mb-10 text-center md:text-left">
         <h1 className="text-2xl font-semibold text-white tracking-tight">Custom Export Console</h1>
         <p className="text-white/40 text-sm mt-1 font-medium">Extract and synthesize operational data into standardized CSV or JSON protocols.</p>

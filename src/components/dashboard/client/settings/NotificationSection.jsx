@@ -35,7 +35,7 @@ const Dropdown = ({ options, value, onChange, onOpenChange }) => {
     <div className="relative w-full sm:w-[420px]">
       <button
         onClick={handleToggle}
-        className="w-full flex items-center justify-between bg-primary border border-white/10 px-5 py-3 rounded-xl text-[16px] text-white"
+        className="w-full flex items-center justify-between bg-primary border border-white/10 px-5 py-3 rounded-full text-[16px] text-white"
       >
         {selected.label}
         <ChevronDown size={18} className={`transition ${open ? "rotate-180" : ""}`} />
@@ -50,7 +50,7 @@ const Dropdown = ({ options, value, onChange, onOpenChange }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.15 }}
-              className="absolute z-[100] mt-2 w-full bg-secondary border border-white/10 rounded-xl shadow-2xl overflow-hidden"
+              className="absolute z-[100] mt-2 w-full bg-secondary border border-white/10 rounded-[2rem] shadow-2xl overflow-hidden"
             >
               {options.map(option => (
                 <button
@@ -155,10 +155,10 @@ const NotificationSection = () => {
   }
 
   return (
-    <div className="max-w-[1000px]">
-      <div className="flex justify-between items-start mb-10">
+    <div className="max-w-[1200px]">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-8">
         <div>
-          <h2 className="text-3xl font-bold text-white tracking-tight leading-none mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-none mb-3">
             Communication Preferences
           </h2>
           <p className="text-white/40 text-sm font-medium">
@@ -166,14 +166,14 @@ const NotificationSection = () => {
           </p>
         </div>
         {saving && (
-           <div className="flex items-center gap-2 text-[10px] text-accent font-black uppercase tracking-widest px-4 py-2 bg-accent/10 rounded-full border border-accent/20">
+           <div className="flex items-center gap-2 text-[10px] text-accent font-black uppercase tracking-widest px-4 py-2 shrink-0">
               <Loader2 className="animate-spin" size={12} />
               Syncing Protocol
            </div>
         )}
       </div>
 
-      <div className="flex gap-6 sm:gap-10 border-b border-white/5 mb-12 overflow-x-auto no-scrollbar whitespace-nowrap">
+      <div className="flex gap-6 sm:gap-10 border-b border-white/5 mb-12 overflow-x-auto no-scrollbar">
         {[
           { id: "messages", label: "Instant Messaging" },
           { id: "email", label: "Email Intelligence" },
@@ -181,7 +181,7 @@ const NotificationSection = () => {
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all relative ${
+            className={`pb-4 text-xs sm:text-sm font-bold uppercase tracking-widest transition-all relative whitespace-nowrap shrink-0 ${
               tab === t.id ? "text-white" : "text-white/30 hover:text-white/60"
             }`}
           >
@@ -199,7 +199,7 @@ const NotificationSection = () => {
       <AnimatePresence mode="wait">
         {tab === "messages" && (
           <motion.div key="messages" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
-            <div className={`glass-card rounded-2xl p-5 sm:p-8 lg:p-10 relative group transition-all duration-300 ${activeCard === 'desktop' ? 'z-50 shadow-2xl' : 'z-10'}`}>
+            <div className={`glass-card rounded-[2rem] p-5 sm:p-8 lg:p-10 relative group transition-all duration-300 ${activeCard === 'desktop' ? 'z-50 shadow-2xl' : 'z-10'}`}>
               <h3 className="text-xl font-bold text-white tracking-tight mb-8 relative z-10 flex items-center gap-3">
                 Desktop Architecture
                 <div className="h-[2px] flex-1 bg-gradient-to-r from-white/10 to-transparent" />
@@ -232,7 +232,7 @@ const NotificationSection = () => {
               </div>
             </div>
 
-            <div className={`glass-card rounded-2xl p-5 sm:p-8 lg:p-10 relative group transition-all duration-300 ${activeCard === 'mobile' ? 'z-50 shadow-2xl' : 'z-10'}`}>
+            <div className={`glass-card rounded-[2rem] p-5 sm:p-8 lg:p-10 relative group transition-all duration-300 ${activeCard === 'mobile' ? 'z-50 shadow-2xl' : 'z-10'}`}>
               <h3 className="text-xl font-bold text-white tracking-tight mb-8 relative z-10 flex items-center gap-3">
                 Mobile Environment
                 <div className="h-[2px] flex-1 bg-gradient-to-r from-white/10 to-transparent" />
@@ -259,7 +259,7 @@ const NotificationSection = () => {
               </div>
             </div>
 
-            <div className={`glass-card rounded-2xl p-5 sm:p-8 lg:p-10 relative group transition-all duration-300 ${activeCard === 'relay' ? 'z-50 shadow-2xl' : 'z-10'}`}>
+            <div className={`glass-card rounded-[2rem] p-5 sm:p-8 lg:p-10 relative group transition-all duration-300 ${activeCard === 'relay' ? 'z-50 shadow-2xl' : 'z-10'}`}>
                <h3 className="text-xl font-bold text-white tracking-tight mb-4 relative z-10">Email Relay</h3>
                <p className="text-white/20 text-xs font-medium mb-8 italic">Configured for synchronization with primary account node</p>
 
@@ -296,7 +296,7 @@ const NotificationSection = () => {
 
         {tab === "email" && (
           <motion.div key="email" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
-            <div className="glass-card rounded-2xl p-5 sm:p-8 lg:p-10 relative">
+            <div className="glass-card rounded-[2rem] p-5 sm:p-8 lg:p-10 relative">
                <div className="flex justify-between items-start mb-10 relative z-10">
                  <div>
                     <h3 className="text-xl font-bold text-white tracking-tight mb-2">Talent Acquisition</h3>

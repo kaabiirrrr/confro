@@ -240,7 +240,9 @@ export default function AIAssistantPanel({ onClose, userRole = 'freelancer' }) {
           <div className="ai-chat-input-row">
             <input className="ai-chat-input" type="text" placeholder="Ask AI anything..." value={chatMsg}
               onChange={e => setChatMsg(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleChat()} />
-            <button className="ai-send-btn" onClick={handleChat} disabled={chatLoading || !chatMsg.trim()}>➤</button>
+            <button className="ai-send-btn" onClick={handleChat} disabled={chatLoading || !chatMsg.trim()}>
+              <img src="/Icons/icons8-send-96.png" alt="Send" className="w-8 h-8 object-contain" />
+            </button>
           </div>
         </div>
       )}

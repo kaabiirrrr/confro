@@ -5,7 +5,7 @@ import { useAuth } from "../../../../context/AuthContext";
 import VerifyEmailCard from "../components/VerifyEmailCard";
 import InterventionBanner from "../../common/InterventionBanner";
 import {
-  Plus, Search, Mail, Shield, LayoutGrid, List, ChevronLeft, ChevronRight, X, ArrowRight,
+  Plus, Search, Mail, Shield, ShieldCheck, LayoutGrid, List, ChevronLeft, ChevronRight, X, ArrowRight,
   Briefcase, FileSignature, Clock, CheckCircle2, AlertCircle, BadgeCheck, CreditCard
 } from "lucide-react";
 import axios from "axios";
@@ -83,7 +83,7 @@ const WorkActivityCard = ({ activity, onAskUpdate, onClick }) => (
   >
     <div className="flex items-start justify-between mb-4">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 flex items-center justify-center text-slate-400 dark:text-white/40 overflow-hidden">
+        <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-400 dark:text-white/40 overflow-hidden">
           {activity.freelancer?.avatar_url ? (
             <img src={cleanImageUrl(activity.freelancer.avatar_url, activity.freelancer.name)} className="w-full h-full object-cover" alt={activity.freelancer.name} />
           ) : (
@@ -136,7 +136,7 @@ const ConnectsActivitySection = memo(() => {
   useEffect(() => {
     api.get('/api/connects/history?dateFilter=30')
       .then(res => { if (res.data.success) setHistory(res.data.data.slice(0, 5)); })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false));
   }, []);
 
@@ -153,9 +153,6 @@ const ConnectsActivitySection = memo(() => {
         {history.map((tx, i) => (
           <div key={tx.id || i} className="px-2 py-3 flex items-center justify-between transition-colors">
             <div className="flex items-center gap-3">
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-black ${tx.amount > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                {tx.amount > 0 ? '+' : '−'}
-              </div>
               <div>
                 <p className="text-sm font-bold text-white">{tx.description}</p>
                 <p className="text-xs text-white/30">{fmtDate(tx.created_at)}</p>
@@ -244,7 +241,7 @@ const AnalyticsGrid = memo(({ stats }) => {
   return (
     <div className="space-y-4 mb-8">
       {/* System Health Guard */}
-      <div className="flex items-center justify-between px-6 py-2.5 bg-white/5 border border-white/5 rounded-2xl">
+      <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between px-6 py-3 sm:py-2.5 bg-white/5 border border-white/5 rounded-2xl gap-2 sm:gap-0">
         <div className="flex items-center gap-3">
           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40">Capital Economy Active</span>
@@ -254,14 +251,14 @@ const AnalyticsGrid = memo(({ stats }) => {
         </Link>
       </div>
 
-      <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-6 sm:gap-4">
+      <div className="grid grid-cols-2 sm:flex sm:flex-nowrap items-center justify-between gap-6 sm:gap-4">
         {items.map((item, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="group transition-all w-[calc(50%-12px)] sm:w-auto"
+            className="group transition-all w-full sm:w-auto text-left"
           >
             <div className="flex items-center gap-2 mb-2">
               <div className="w-10 h-10 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
@@ -447,7 +444,6 @@ const ClientDashboardHome = () => {
         <Button
           onClick={() => navigate('/client/post-job')}
           className="rounded-full px-6 h-10 sm:h-12 text-sm font-semibold shadow-lg shadow-accent/20 hover:scale-105 transition-all w-full sm:w-fit"
-          icon={Plus}
         >
           Post a Job
         </Button>
@@ -477,27 +473,36 @@ const ClientDashboardHome = () => {
               <p className="text-slate-600 dark:text-white/60 text-xs font-medium">Manage your project funding and escrow balance securely.</p>
             </div>
           </div>
+          <Shield className="hidden sm:block absolute top-1/2 -right-8 -translate-y-1/2 w-48 h-48 text-accent/5 -rotate-12" />
 
-          <div className="flex flex-wrap items-center gap-6 sm:gap-10">
-            <div className="flex flex-col">
-              <span className="text-[9px] font-bold text-slate-400 dark:text-white/20 uppercase tracking-widest mb-1">Available Balance</span>
-              <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">
-                {formatINR(wallet?.balance || 0)}
-              </span>
+          <div className="flex flex-col sm:flex-row items-center gap-8 sm:gap-10 w-full sm:w-auto relative z-10">
+            <div className="flex items-center justify-between w-full sm:w-auto sm:gap-10">
+              <div className="flex flex-col">
+                <span className="text-[9px] font-bold text-slate-400 dark:text-white/20 uppercase tracking-widest mb-1">Available Balance</span>
+                <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">
+                  {formatINR(wallet?.balance || 0)}
+                </span>
+              </div>
+              <div className="flex flex-col text-right sm:text-left">
+                <div className="flex items-center gap-1.5 justify-end sm:justify-start mb-1">
+                  <span className="text-[9px] font-bold text-slate-400 dark:text-white/20 uppercase tracking-widest">In Escrow</span>
+                  <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" title="Securely Held" />
+                </div>
+                <div className="flex items-center gap-2 justify-end sm:justify-start">
+                  <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">
+                    {formatINR(wallet?.pending_balance || 0)}
+                  </span>
+                  <ShieldCheck size={14} className="text-emerald-500/40" />
+                </div>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-[9px] font-bold text-slate-400 dark:text-white/20 uppercase tracking-widest mb-1">In Escrow</span>
-              <span className="text-2xl font-black text-accent tracking-tighter">
-                {formatINR(wallet?.pending_balance || 0)}
-              </span>
-            </div>
-            
-            <div className="flex items-center gap-3">
+
+            <div className="flex items-center justify-center w-full sm:w-auto">
               <button
                 onClick={() => setIsTopUpOpen(true)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white text-[10px] font-black uppercase tracking-[0.1em] hover:bg-accent/90 shadow-lg shadow-accent/20 transition-all"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-accent text-white text-[10px] font-black uppercase tracking-[0.1em] hover:bg-accent/90 shadow-lg shadow-accent/20 transition-all"
               >
-                <Plus size={14} /> Add Funds
+                Add Funds
               </button>
             </div>
           </div>
@@ -505,8 +510,8 @@ const ClientDashboardHome = () => {
       </motion.div>
 
       {/* PREMIUM TOP-UP MODAL */}
-      <WalletModal 
-        isOpen={isTopUpOpen} 
+      <WalletModal
+        isOpen={isTopUpOpen}
         onClose={() => setIsTopUpOpen(false)}
         onSuccess={handleTopupSuccess}
       />
@@ -530,9 +535,6 @@ const ClientDashboardHome = () => {
             {walletHistory.slice(0, 5).map((tx, idx) => (
               <div key={tx.id || idx} className="p-4 flex items-center justify-between transition-colors">
                 <div className="flex items-center gap-4">
-                  <div className={`w-8 h-8 flex items-center justify-center ${tx.type === 'deposit' ? 'text-emerald-500' : 'text-rose-500'}`}>
-                    {tx.type === 'deposit' ? <Plus size={16} /> : <ArrowRight size={16} className="rotate-45" />}
-                  </div>
                   <div>
                     <p className="text-sm font-bold text-white uppercase tracking-wider">{tx.description || 'Wallet Transaction'}</p>
                     <p className="text-xs text-white/30 font-medium">{fmtDate(tx.created_at)} • {tx.status || 'completed'}</p>
@@ -714,7 +716,6 @@ const ClientDashboardHome = () => {
             <Button
               onClick={() => navigate("/client/post-job")}
               className="rounded-full px-8"
-              icon={Plus}
             >
               Post a Job
             </Button>
@@ -783,7 +784,7 @@ const ClientDashboardHome = () => {
               </h3>
               <button
                 onClick={() => navigate("/client/consultations")}
-                className="bg-white text-blue-600 px-5 py-2 rounded-lg w-fit text-sm font-bold shadow-lg hover:bg-gray-100 transition"
+                className="bg-white text-blue-600 px-6 py-2 rounded-full w-fit text-sm font-bold shadow-lg hover:bg-gray-100 transition"
               >
                 Learn more
               </button>
@@ -818,16 +819,13 @@ const ClientDashboardHome = () => {
 
       {/* SERVICE MARKETPLACE */}
       <div className="mb-16 sm:mb-24">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-          <div className="flex items-center gap-4">
-
-            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Project Marketplace</h2>
-          </div>
+        <div className="flex items-center justify-between mb-6 sm:mb-8 gap-4">
+          <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white">Project Marketplace</h2>
           <button
             onClick={() => navigate("/services")}
-            className="text-accent flex items-center gap-2 hover:underline text-xs font-bold uppercase tracking-widest"
+            className="text-accent flex items-center gap-1.5 hover:underline text-xs font-bold uppercase tracking-widest shrink-0"
           >
-            Browse all <ArrowRight size={18} />
+            Browse all <ArrowRight size={14} />
           </button>
         </div>
 
@@ -851,13 +849,13 @@ const ClientDashboardHome = () => {
               services.map((svc) => (
                 <div
                   key={svc.id}
-                  className="min-w-[280px] sm:min-w-[320px] h-[340px] bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex flex-col hover:border-accent/40 transition-all cursor-pointer group shrink-0 backdrop-blur-sm shadow-sm"
+                  className="min-w-[280px] sm:min-w-[320px] h-[340px] bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex flex-col hover:border-accent transition-all duration-300 cursor-pointer group shrink-0 backdrop-blur-sm shadow-sm"
                   onClick={() => navigate(`/client/service/${svc.id}`)}
                 >
                   <div className="h-40 w-full rounded-xl overflow-hidden mb-4 border border-white/5 relative">
                     <img
                       src={cleanImageUrl(svc.images?.[0], svc.title) || '/service1.jpeg'}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      className="w-full h-full object-cover"
                       alt={svc.title}
                     />
                     <div className="absolute top-3 right-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded-lg text-[10px] font-black text-accent uppercase tracking-tighter border border-white/10">
@@ -880,7 +878,7 @@ const ClientDashboardHome = () => {
                         <p className="text-slate-400 dark:text-white/20 text-[8px] uppercase font-bold tracking-widest leading-none mb-1">Starting at</p>
                         <p className="text-xl font-black text-slate-900 dark:text-white leading-none">{formatINR(svc.price)}</p>
                       </div>
-                      <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center group-hover:bg-accent group-hover:text-white dark:group-hover:text-primary group-hover:border-accent group-hover:rotate-45 transition-all duration-500 shadow-lg">
+                      <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center group-hover:bg-accent group-hover:text-white dark:group-hover:text-primary group-hover:border-accent transition-all duration-300 shadow-lg">
                         <ArrowRight size={16} />
                       </div>
                     </div>
@@ -889,7 +887,7 @@ const ClientDashboardHome = () => {
               ))
             ) : (
               <div className="w-full py-20 text-center bg-transparent rounded-[40px] border border-dashed border-white/10">
-                <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/5">
+                <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <LayoutGrid className="text-white/10" size={32} />
                 </div>
                 <h3 className="text-white/30 font-bold text-lg mb-1 uppercase tracking-tighter">Marketplace is growing</h3>
@@ -910,39 +908,39 @@ const ClientDashboardHome = () => {
 
       {/* HELP AND RESOURCES */}
       <section className="mt-12">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-          <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Help and resources</h2>
+        <div className="flex items-center justify-between mb-6 sm:mb-8 gap-4">
+          <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white">Help and resources</h2>
           <button
             onClick={() => navigate("/client/getting-started")}
-            className="flex items-center gap-2 text-accent hover:underline text-xs font-bold uppercase tracking-widest"
+            className="flex items-center gap-1.5 text-accent hover:underline text-xs font-bold uppercase tracking-widest shrink-0"
           >
-            View all resources <ArrowRight size={18} />
+            View all <ArrowRight size={14} />
           </button>
         </div>
-        <div className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-8 sm:p-10 flex flex-col lg:flex-row items-center justify-between mb-8 gap-8 hover:border-accent/40 transition shadow-sm backdrop-blur-sm">
-          <div className="text-center lg:text-left">
+        <div className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 sm:p-10 flex flex-col lg:flex-row items-center justify-between mb-8 gap-6 hover:border-accent/40 transition shadow-sm backdrop-blur-sm">
+          <div className="text-center lg:text-left w-full lg:w-auto">
             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2">Get started</p>
-            <h3 className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white mb-6 max-w-[520px] leading-tight">
+            <h3 className="text-lg sm:text-2xl font-semibold text-slate-900 dark:text-white mb-5 max-w-[520px] leading-tight">
               Get started and connect with talent to get work done
             </h3>
-            <Button onClick={() => navigate("/client/getting-started")} variant="secondary" className="rounded-full px-8">
+            <Button onClick={() => navigate("/client/getting-started")} variant="secondary" className="rounded-full px-8 w-full sm:w-fit">
               Learn more
             </Button>
           </div>
-          <img src="/start.png" alt="start" className="w-48 sm:w-60 lg:w-70 opacity-90 object-contain" />
+          <img src="/start.png" alt="start" className="w-40 sm:w-60 lg:w-70 opacity-90 object-contain" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {[
             { tag: "Payments", title: "Everything you need to know about payments", img: "/payment.png" },
             { tag: "Billing", title: "How to set up your preferred billing method", img: "/billing.png" },
             { tag: "Trust & safety", title: "Keep yourself and others safe on Connect", img: "/safety.png" },
           ].map((item, i) => (
-            <div key={i} className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 sm:p-8 flex justify-between items-center hover:border-accent/40 transition shadow-sm backdrop-blur-sm group cursor-pointer">
+            <div key={i} className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 sm:p-8 flex justify-between items-center hover:border-accent/40 transition shadow-sm backdrop-blur-sm group cursor-pointer">
               <div className="flex-1 pr-4">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2">{item.tag}</p>
-                <h3 className="text-base sm:text-lg font-semibold text-slate-700 dark:text-white/70 line-clamp-2 leading-snug">{item.title}</h3>
+                <h3 className="text-sm sm:text-base font-semibold text-slate-700 dark:text-white/70 line-clamp-2 leading-snug">{item.title}</h3>
               </div>
-              <img src={item.img} className="w-24 sm:w-32 object-contain group-hover:scale-110 transition duration-500" alt={item.tag} />
+              <img src={item.img} className="w-20 sm:w-28 object-contain shrink-0" alt={item.tag} />
             </div>
           ))}
         </div>

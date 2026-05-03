@@ -52,7 +52,7 @@ export default function DirectContractsPage() {
   };
 
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -96,7 +96,7 @@ export default function DirectContractsPage() {
           <div className="hidden md:grid grid-cols-[1fr_2fr_100px_120px_100px] gap-4 px-6 py-4 border-b border-white/5 text-[9px] text-white/20 font-black uppercase tracking-widest">
             <span>Freelancer</span>
             <span>Contract Area</span>
-            <span className="text-right">Rate</span>
+            <span className="text-right md:text-left">Rate</span>
             <span className="text-right">Status</span>
             <span className="text-right">Start Date</span>
           </div>
@@ -136,7 +136,7 @@ export default function DirectContractsPage() {
                       {c.project_type === 'HOURLY' ? 'Hourly' : 'Fixed Price'}
                     </p>
                   </div>
-                  <div className="text-right text-accent font-black text-sm">{rate}</div>
+                  <div className="text-right md:text-left text-accent font-black text-sm">{rate}</div>
                   <div className="flex justify-end"><StatusBadge status={c.status} /></div>
                   <div className="text-right text-white/50 text-sm">{startDate}</div>
                 </div>

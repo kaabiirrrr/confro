@@ -33,7 +33,7 @@ const API_URL = getApiUrl();
 // Memoized Promo Slider to prevent unnecessary re-animations
 const PromoSlider = memo(({ ads, currentAd, setCurrentAd }) => {
   return (
-    <div className="relative group rounded-[24px] sm:rounded-[32px] border border-white/10 overflow-hidden bg-primary/20 backdrop-blur-xl h-[180px] sm:h-[300px] flex items-center">
+    <div className="relative group rounded-xl sm:rounded-2xl border border-white/10 overflow-hidden bg-primary/20 backdrop-blur-xl h-[180px] sm:h-[300px] flex items-center">
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.img
@@ -152,43 +152,39 @@ const AnalyticsGrid = memo(({ freelancerStats, reliability }) => {
   return (
     <div className="space-y-4 mb-4">
       {/* System Health Guard */}
-      <div className="flex items-center justify-between px-6 py-2.5 bg-white/5 border border-white/5 rounded-2xl">
-        <div className="flex items-center gap-3">
-          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40">Connect Economy Active</span>
+      <div className="flex items-center justify-between px-4 sm:px-6 py-2 bg-white/5 border border-white/5 rounded-xl">
+        <div className="flex items-center gap-2">
+          <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white/40 whitespace-nowrap">Connect Economy Active</span>
         </div>
-        <Link to={`${basePath}/buy-connects`} className="text-[9px] font-black uppercase tracking-[0.2em] text-accent hover:text-white transition-colors">
+        <Link to={`${basePath}/buy-connects`} className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] text-accent hover:text-white transition-colors whitespace-nowrap">
           Refill Connects
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-y-6 sm:gap-0 -mx-3 sm:mx-0">
         {items.map((item, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="group transition-all"
+            className="group transition-all px-3 sm:px-4 w-1/2 sm:w-auto flex-shrink-0"
           >
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-10 h-10 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+            <div className="flex flex-col sm:flex-row items-center gap-2 mb-2">
+              <div className="w-7 h-7 sm:w-10 sm:h-10 flex items-center justify-center shrink-0 transition-transform duration-500 group-hover:scale-110">
                 {typeof item.icon === 'string' ? ICON_MAP[item.icon] : item.icon}
               </div>
-              <h3 className="text-white/30 text-[9px] font-black uppercase tracking-[0.3em]">{item.label}</h3>
+              <h3 className="text-white/30 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] leading-tight text-center sm:text-left">{item.label}</h3>
             </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className={`text-xl font-black tracking-tight ${item.badge ? 'text-accent' : 'text-white'}`}>
-                  {item.value}
-                </p>
-                {item.subValue && (
-                  <p className="text-[9px] font-medium text-white/20 uppercase tracking-widest mt-0.5">
-                    {item.subValue}
-                  </p>
-                )}
-              </div>
-            </div>
+            <p className={`text-center sm:text-left text-lg sm:text-xl font-black tracking-tight ${item.badge ? 'text-accent' : 'text-white'}`}>
+              {item.value}
+            </p>
+            {item.subValue && (
+              <p className="text-center sm:text-left text-[8px] font-medium text-white/20 uppercase tracking-widest mt-0.5">
+                {item.subValue}
+              </p>
+            )}
           </motion.div>
         ))}
       </div>
@@ -420,21 +416,21 @@ function DashboardHome() {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="pb-8 border-b border-white/5 flex items-center justify-between gap-4 mt-2 group"
+          className="pb-8 border-b border-white/5 flex items-start sm:items-center justify-between gap-3 sm:gap-4 mt-2 group"
         >
-          <div className="flex items-center gap-3">
-            <div className="w-5 h-5 shrink-0 flex items-center justify-center">
+          <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
+            <div className="w-5 h-5 shrink-0 flex items-center justify-center mt-1 sm:mt-0">
               <img src="/Icons/White-AI-Connect.png" alt="Connect AI" className="w-full h-full object-contain dark:hidden brightness-0" />
               <img src="/Icons/White-AI-Connect.png" alt="Connect AI" className="w-full h-full object-contain hidden dark:block grayscale opacity-70" />
             </div>
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black text-accent uppercase tracking-widest">Connect AI Performance</span>
-                <span className="w-1 h-1 bg-slate-900/20 dark:bg-white/20 rounded-full" />
-                <span className={`text-[10px] font-black uppercase tracking-widest ${reliability.insight.risk === 'low' ? 'text-emerald-500' : 'text-amber-500'
+            <div className="space-y-1 sm:space-y-0.5 flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <span className="text-[9px] sm:text-[10px] font-black text-accent uppercase tracking-widest shrink-0">Connect AI Performance</span>
+                <span className="w-1 h-1 bg-slate-900/20 dark:bg-white/20 rounded-full shrink-0" />
+                <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-widest shrink-0 ${reliability.insight.risk === 'low' ? 'text-emerald-500' : 'text-amber-500'
                   }`}>{reliability.insight.risk} Risk</span>
               </div>
-              <p className="text-slate-900/60 dark:text-white/80 text-sm font-medium leading-relaxed italic">
+              <p className="text-slate-900/60 dark:text-white/80 text-[13px] sm:text-sm font-medium leading-relaxed italic break-words text-justify">
                 "{reliability.insight.summary}"
               </p>
             </div>
@@ -442,7 +438,7 @@ function DashboardHome() {
 
           <button
             onClick={() => setShowInsight(false)}
-            className="text-white/20 hover:text-white transition-all p-1"
+            className="text-slate-400 dark:text-white/20 hover:text-accent transition-all p-1 shrink-0 mt-0.5 sm:mt-0"
           >
             <X size={14} />
           </button>
@@ -459,62 +455,76 @@ function DashboardHome() {
 
       {/* FEED CONTROLS */}
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-8 border-b border-white/5 pb-6">
+        <div className="flex items-start sm:items-center justify-between gap-4 sm:gap-8 border-b border-white/5 pb-6">
           <div className="space-y-1 sm:space-y-2">
             <h2 className="text-lg sm:text-2xl font-black text-white tracking-tight">Active Market</h2>
             <p className="text-[12px] sm:text-lg text-white/40 font-medium">Real-time opportunities matched to your profile.</p>
           </div>
-          <div className="flex items-center gap-2 sm:gap-6">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             <button
               onClick={handleManualRefresh}
-              className="flex items-center gap-1.5 sm:gap-3 px-3 sm:px-6 h-9 sm:h-11 rounded-xl text-[9px] font-black tracking-[0.1em] sm:tracking-[0.2em] text-white/40 hover:text-accent border border-white/10 hover:border-accent uppercase transition-all"
+              className="flex items-center justify-center gap-1.5 sm:gap-2 px-0 sm:px-6 w-10 h-10 sm:w-auto sm:h-11 rounded-full text-[9px] sm:text-[10px] font-black tracking-[0.1em] sm:tracking-[0.2em] text-accent sm:text-white/60 sm:border sm:border-white/10 hover:text-accent hover:border-accent uppercase transition-all group"
             >
-              <RefreshCw size={12} className={loading ? 'animate-spin text-accent' : ''} /> SYNC
+              <RefreshCw size={18} className={`sm:w-3.5 sm:h-3.5 sm:text-accent ${loading ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">SYNC</span>
             </button>
             <button
               onClick={() => setIsFilterModalOpen(true)}
-              className="flex items-center gap-1.5 sm:gap-3 px-3 sm:px-8 h-9 sm:h-11 rounded-xl text-[9px] font-black tracking-[0.1em] sm:tracking-[0.2em] text-white/40 hover:text-accent border border-white/10 hover:border-accent uppercase transition-all group"
+              className="relative flex items-center justify-center gap-1.5 sm:gap-2 px-0 sm:px-6 w-10 h-10 sm:w-auto sm:h-11 rounded-full text-[9px] sm:text-[10px] font-black tracking-[0.1em] sm:tracking-[0.2em] bg-transparent sm:bg-accent text-accent sm:text-white hover:bg-white/5 sm:hover:bg-accent/80 uppercase transition-all sm:shadow-lg sm:shadow-accent/20 group"
             >
-              <Filter size={12} className="group-hover:text-accent transition-colors" /> {Object.values(filters).flat().length > 0 ? `FILT (${Object.values(filters).flat().length})` : 'FILTER'}
-            </button>
-          </div>
-        </div>
-
-        <div className="relative group">
-          <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center justify-center">
-            {loading ? (
-              <RefreshCw size={18} className="text-accent animate-spin" />
-            ) : (
-              <Search size={18} className="text-white/10 group-focus-within:text-accent transition-colors" />
-            )}
-          </div>
-          <input
-            type="text"
-            placeholder="Search keywords, roles, or stack..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-11 bg-white/[0.03] border border-white/10 rounded-xl pl-16 pr-16 text-white text-sm font-medium placeholder:text-white/10 focus:outline-none focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all"
-          />
-          {searchQuery && (
-            <button onClick={() => setSearchQuery("")} className="absolute right-6 top-1/2 -translate-y-1/2 h-8 w-8 flex items-center justify-center rounded-xl bg-white/5 text-white/40 hover:text-white transition-all">
-              <X size={16} />
-            </button>
-          )}
-        </div>
-
-        <div className="flex items-center gap-4 sm:gap-16 border-b border-white/5 overflow-x-auto no-scrollbar">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`pb-4 sm:pb-6 text-[9px] sm:text-[10px] font-black tracking-[0.2em] sm:tracking-[0.3em] transition-all relative uppercase shrink-0 ${activeTab === tab ? "text-accent" : "text-white/20 hover:text-white"}`}
-            >
-              {tab}
-              {activeTab === tab && (
-                <motion.div layoutId="tabLine" className="absolute bottom-[-1px] left-0 right-0 h-1 bg-accent rounded-full" />
+              <Filter size={18} className="sm:w-3.5 sm:h-3.5 text-accent sm:text-white" />
+              <span className="hidden sm:inline">
+                {Object.values(filters).flat().length > 0 ? `FILT (${Object.values(filters).flat().length})` : 'FILTER'}
+              </span>
+              {Object.values(filters).flat().length > 0 && (
+                <span className="sm:hidden absolute top-0 right-0 w-4 h-4 bg-accent text-white text-[9px] flex items-center justify-center rounded-full border border-primary font-bold">
+                  {Object.values(filters).flat().length}
+                </span>
               )}
             </button>
-          ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-6 mb-6">
+          {/* SEARCH BAR */}
+          <div className="relative group w-full">
+            <div className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center justify-center">
+              {loading ? (
+                <RefreshCw size={18} className="text-accent animate-spin" />
+              ) : (
+                <Search size={18} className="text-white/20 group-focus-within:text-accent transition-colors" />
+              )}
+            </div>
+            <input
+              type="text"
+              placeholder="Search for jobs, skills, or keywords"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-12 sm:h-14 pl-12 pr-6 bg-white/[0.02] border border-white/10 rounded-xl text-xs sm:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-accent/50 focus:bg-white/[0.05] transition-all"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 h-6 w-6 flex items-center justify-center rounded-lg bg-white/5 text-white/40 hover:text-white transition-all active:scale-90">
+                <X size={12} />
+              </button>
+            )}
+          </div>
+
+          {/* TABS */}
+          <div className="flex items-center w-full justify-between border-b border-white/5">
+            {tabs.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`pb-4 sm:pb-6 text-[8px] sm:text-[10px] font-black tracking-wider sm:tracking-[0.3em] transition-all relative uppercase flex-1 text-center ${activeTab === tab ? "text-accent" : "text-white/20 hover:text-white"
+                  }`}
+              >
+                {tab}
+                {activeTab === tab && (
+                  <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-1 bg-accent" />
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* FEED GRID */}

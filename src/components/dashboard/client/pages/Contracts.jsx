@@ -52,7 +52,7 @@ const Contracts = () => {
   const formatAmount = a => a ? formatINR(a) : '—';
 
   return (
-    <div className="max-w-[1480px] mx-auto py-6 sm:py-8 text-light-text font-sans tracking-tight animate-in fade-in duration-700">
+    <div className="max-w-[1500px] mx-auto py-6 sm:py-8 text-light-text font-sans tracking-tight animate-in fade-in duration-700">
       <div className="space-y-1 mb-6 sm:mb-8">
         <h1 className="text-lg sm:text-xl font-semibold text-white tracking-tight">Contracts</h1>
         <p className="text-[13px] text-light-text/70">{contracts.length} contract{contracts.length !== 1 ? 's' : ''} active or historical</p>
@@ -108,17 +108,22 @@ const Contracts = () => {
                       className="ring-2 ring-border group-hover:ring-accent/40 group-active:ring-accent transition-all duration-300" 
                     />
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-white font-semibold text-base truncate group-hover:text-accent transition-colors tracking-tight">
-                        {contractTitle}
-                      </h3>
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="text-white font-semibold text-base truncate group-hover:text-accent transition-colors tracking-tight">
+                          {contractTitle}
+                        </h3>
+                        <span className={`md:hidden px-2 py-0.5 rounded-full text-[8px] font-bold border uppercase tracking-widest shrink-0 ${badge}`}>
+                          {contract.status || 'Active'}
+                        </span>
+                      </div>
                       <div className="flex flex-wrap items-center gap-2 mt-1">
-                        <span className="text-light-text/60 text-sm font-medium">{freelancer?.name || 'Unknown Freelancer'}</span>
+                        <span className="text-light-text/60 text-sm font-medium">{freelancerName}</span>
                         <span className="w-1 h-1 rounded-full bg-white/10" />
                         <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-light-text/30">ID: {contract.id.substring(0, 8)}</span>
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 self-end md:self-auto">
+                  <div className="hidden md:flex items-center gap-4 self-end md:self-auto">
                     <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-widest shrink-0 ${badge}`}>
                       {contract.status || 'Active'}
                     </span>
@@ -126,7 +131,7 @@ const Contracts = () => {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6 p-5 border border-white/10 rounded-xl bg-white/[0.01]">
-                  <div className="flex flex-col">
+                  <div className="flex flex-col items-end md:items-start text-right md:text-left">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-1">Contract Value</span>
                     <span className="text-sm font-semibold text-white">{formatAmount(contract.amount || contract.agreed_rate)}</span>
                   </div>
@@ -144,26 +149,19 @@ const Contracts = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between mt-6">
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => navigate('/client/messages')}
-                      className="flex items-center gap-2 px-4 h-9 bg-white/[0.02] text-white/70 border border-white/10 rounded-xl text-[11px] font-bold uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all shadow-sm"
-                    >
-                      <MessageCircle size={14} /> Message
-                    </button>
-                    <button
-                      onClick={() => navigate(`/client/contracts/${contract.id}`)}
-                      className="flex items-center gap-2 px-4 h-9 bg-white/[0.02] text-white/70 border border-white/10 rounded-xl text-[11px] font-bold uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all shadow-sm"
-                    >
-                      View Details
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button className="p-2 text-white/20 hover:text-white transition-colors">
-                      <Clock size={16} />
-                    </button>
-                  </div>
+                <div className="flex items-center justify-between mt-6 gap-3">
+                  <button
+                    onClick={() => navigate('/client/messages')}
+                    className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 h-9 bg-white/[0.02] text-white/70 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all shadow-sm"
+                  >
+                    <MessageCircle size={14} /> Message
+                  </button>
+                  <button
+                    onClick={() => navigate(`/client/contracts/${contract.id}`)}
+                    className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 h-9 bg-accent text-white border border-accent rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-accent/90 transition-all shadow-lg shadow-accent/20"
+                  >
+                    View Details
+                  </button>
                 </div>
               </div>
             );

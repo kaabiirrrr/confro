@@ -35,7 +35,7 @@ const practices = [
 
 const BestPractices = () => {
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-2 lg:px-2 mt-6 pb-12 space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* Back Button and Header Section */}
       <div className="space-y-6">
@@ -50,7 +50,7 @@ const BestPractices = () => {
         {/* Header Banner (No Card Style) */}
         <div className="relative pt-4 pb-6 border-b border-white/10 mb-8">
           <div className="relative z-10 max-w-2xl flex flex-col items-start gap-4">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
+            <div className="inline-flex items-center gap-2 text-accent text-xs font-bold uppercase tracking-widest">
               <Lightbulb size={16} />
               <span>Success Guide</span>
             </div>
@@ -69,7 +69,7 @@ const BestPractices = () => {
         {practices.map((practice, index) => (
           <div
             key={index}
-            className={`group relative bg-transparent border border-white/10 rounded-2xl p-8 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-1 ${practice.border}`}
+            className={`group relative bg-transparent border border-white/10 rounded-[2rem] p-8 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-1 ${practice.border}`}
           >
             {/* Background Gradient */}
             <div className={`absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none ${practice.color}`} />
@@ -79,7 +79,7 @@ const BestPractices = () => {
                 {practice.image ? (
                   <img src={practice.image} alt={practice.title} className="w-16 h-16 object-contain" />
                 ) : (
-                  <div className="w-14 h-14 rounded-2xl bg-transparent flex items-center justify-center border border-white/10">
+                  <div className="w-14 h-14 rounded-full bg-transparent flex items-center justify-center border border-white/10">
                     {practice.icon}
                   </div>
                 )}
@@ -100,10 +100,10 @@ const BestPractices = () => {
       </div>
 
       {/* CTA Footer */}
-      <div className="bg-transparent border border-white/10 rounded-2xl px-10 py-10 flex flex-col md:flex-row gap-8 items-center justify-between mt-12">
+      <div className="bg-transparent border border-white/10 rounded-[2rem] px-10 py-10 flex flex-col md:flex-row gap-8 items-center justify-between mt-12">
         <div className="flex items-center gap-6">
-          <div className="w-16 h-16 rounded-full bg-accent/10 border border-accent/20 flex flex-col items-center justify-center relative shadow-[0_0_30px_rgba(77,199,255,0.1)]">
-            <ShieldCheck size={32} className="text-accent" />
+          <div className="flex flex-col items-center justify-center relative">
+            <ShieldCheck size={36} className="text-accent" />
           </div>
           <div>
             <h3 className="text-xl font-bold text-white mb-2">Stay Protected</h3>
@@ -115,7 +115,7 @@ const BestPractices = () => {
 
         <Link
           to="/client/account-health"
-          className="inline-flex items-center justify-center px-6 py-3 bg-accent text-white text-sm font-bold rounded-xl hover:bg-accent/90 transition-all shadow-lg shadow-accent/20"
+          className="inline-flex items-center justify-center px-8 py-3 bg-accent text-white text-sm font-bold rounded-full hover:bg-accent/90 transition-all shadow-lg shadow-accent/20"
         >
           Return to Account Health
         </Link>

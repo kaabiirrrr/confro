@@ -18,6 +18,7 @@ import {
 import { useAuth } from "../../context/AuthContext";
 import { useProfile } from "../../context/ProfileContext";
 import { getIdentityStatus } from "../../services/apiService";
+import Avatar from "../../components/Avatar";
 
 const Sidebar = () => {
   const { status, balance, loading } = useProfile();
@@ -50,14 +51,12 @@ const Sidebar = () => {
         className="border border-white/5 bg-transparent p-4 rounded-2xl cursor-pointer group hover:border-white/10 transition-all"
       >
         <div className="flex items-center gap-3 mb-3">
-          {avatarUrl ? (
-            <img src={avatarUrl} alt={name}
-              className="w-12 h-12 rounded-full object-cover transition-all shrink-0" />
-          ) : (
-            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center shrink-0 transition-all">
-              <UserCircle2 size={24} strokeWidth={1.2} className="text-white/20" />
-            </div>
-          )}
+          <Avatar 
+            src={avatarUrl} 
+            name={name} 
+            size="w-12 h-12" 
+            className="shrink-0 transition-all" 
+          />
           <div className="flex-1 min-w-0">
             <p className="font-bold text-white text-[13px] truncate group-hover:text-accent transition-colors">{name}</p>
             <p className="text-white/40 text-[10px] truncate mt-0.5 uppercase tracking-wider">{title}</p>
@@ -102,7 +101,7 @@ const Sidebar = () => {
           <span className="text-xl font-bold text-light-text">{loading ? "—" : balance}</span>
         </div>
         <Link to={`${basePath}/buy-connects`}
-          className="btn-outline block text-center w-full py-2.5 rounded-xl text-sm transition text-white hover:bg-accent hover:border-accent">
+          className="btn-outline block text-center w-full py-2.5 rounded-full text-sm transition text-white hover:bg-accent hover:border-accent">
           {isClient ? "Buy Post Credits" : "Buy Connects"}
         </Link>
         <Link to={`${basePath}/connects`} className="block text-center text-text-muted hover:text-light-text text-xs mt-2.5 transition">

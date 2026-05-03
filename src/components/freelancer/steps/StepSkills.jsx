@@ -30,22 +30,26 @@ export default function StepSkills({ next, back, wizardData = {} }) {
                 <p className="text-white/40 text-sm">List the skills that help you stand out. Separate them with commas.</p>
             </div>
 
-            <div className="space-y-2">
-                <div className="flex items-center justify-between mb-1">
-                    <label className="text-sm font-medium text-white/50">Skills</label>
-                    <AIRewriteButton
-                        field="skills"
+            <div className="space-y-3 pt-2">
+                <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between px-1">
+                        <label className="text-sm font-medium text-white/50">Skills</label>
+                        <div className="w-auto">
+                            <AIRewriteButton
+                                field="skills"
+                                value={skills}
+                                context={{ title: wizardData.title || '', bio: wizardData.bio || '' }}
+                                onApply={(val) => setSkills(val)}
+                            />
+                        </div>
+                    </div>
+                    <input
                         value={skills}
-                        context={{ title: wizardData.title || '', bio: wizardData.bio || '' }}
-                        onApply={(val) => setSkills(val)}
+                        onChange={(e) => setSkills(e.target.value)}
+                        className="w-full bg-secondary/20 border border-white/10 p-4 rounded-2xl focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-base shadow-inner shadow-black/5"
+                        placeholder="e.g. React, Node.js, UI Design, Python"
                     />
                 </div>
-                <input
-                    value={skills}
-                    onChange={(e) => setSkills(e.target.value)}
-                    className="w-full bg-transparent border border-white/10 p-4 rounded-xl focus:border-accent outline-none transition-all text-white placeholder:text-white/20 text-base shadow-inner shadow-black/20"
-                    placeholder="e.g. React, Node.js, UI Design, Python"
-                />
             </div>
 
             <div className="flex justify-end gap-5 pt-4">

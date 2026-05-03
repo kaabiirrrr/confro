@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../../../../context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { CreditCard, Wallet, Calendar, DollarSign, CheckCircle2, AlertCircle, Plus, ChevronDown, Clock } from "lucide-react";
+import { CreditCard, Wallet, Calendar, DollarSign, CheckCircle2, AlertCircle, Plus, ChevronDown, Clock, X } from "lucide-react";
 
 const BillingPaymentsSection = () => {
   const { profile } = useAuth();
@@ -20,9 +20,9 @@ const BillingPaymentsSection = () => {
 return (
 
     <div className="space-y-10">
-      <div className="mb-10">
-        <h2 className="text-3xl font-bold text-white tracking-tight leading-none mb-4">
-          Billing & Payments
+      <div className="mb-8 sm:mb-10">
+        <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-none mb-3">
+          Billing &amp; Payments
         </h2>
         <p className="text-white/40 text-sm font-medium">
           Manage your billing cycle, outstanding balances, and active payment instruments.
@@ -37,8 +37,8 @@ return (
         <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-[40px] pointer-events-none" />
         <div className="flex items-start justify-between relative z-10">
           <div className="flex gap-4">
-            <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent/20 transition-colors shadow-lg shadow-accent/5">
-              <Calendar size={20} className="text-accent" />
+            <div className="flex items-center justify-center shrink-0">
+              <Calendar size={24} className="text-accent" />
             </div>
             <div>
               <h3 className="text-xl font-bold text-white tracking-tight mb-1">Company billing cycle</h3>
@@ -89,20 +89,20 @@ return (
 
       {/* BALANCE CARD */}
       <div className="glass-card rounded-2xl p-5 sm:p-8 group hover:border-white/10 transition-all relative overflow-hidden">
-        <div className="flex items-center justify-between relative z-10">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 relative z-10">
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-[50px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
           <div className="flex gap-4 relative z-10">
-            <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
-              <DollarSign size={20} className="text-accent" />
+            <div className="flex items-center justify-center shrink-0">
+              <DollarSign size={24} className="text-accent" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white tracking-tight mb-1">Outstanding balance</h3>
-              <p className="text-4xl font-black text-white">₹0.00</p>
+              <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight mb-1">Outstanding balance</h3>
+              <p className="text-3xl sm:text-4xl font-black text-white">₹0.00</p>
             </div>
           </div>
           <button
             onClick={() => setShowPaymentConf(!showPaymentConf)}
-            className={`px-8 h-12 rounded-xl font-bold text-sm transition-all relative z-10 border shadow-lg ${
+            className={`max-sm:w-full h-12 px-8 rounded-full font-bold text-sm transition-all relative z-10 border shadow-lg ${
               showPaymentConf
                 ? 'bg-accent/10 border-accent/20 text-accent shadow-accent/10'
                 : 'bg-accent text-white border-transparent hover:scale-[1.02] shadow-accent/20'
@@ -120,19 +120,19 @@ return (
               exit={{ opacity: 0, height: 0 }}
               className="overflow-hidden relative z-10"
             >
-              <div className="pt-8 mt-8 border-t border-white/5 flex items-center justify-between">
+              <div className="pt-8 mt-8 border-t border-white/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-400 shrink-0">
                     <CheckCircle2 size={20} />
                   </div>
                   <div>
-                    <p className="text-white font-bold text-lg">Fully Settled</p>
-                    <p className="text-white/40 text-[13px] font-medium">No outstanding invoices or escrow deposits require funding at this time.</p>
+                    <p className="text-white font-bold text-base sm:text-lg">Fully Settled</p>
+                    <p className="text-white/40 text-xs sm:text-[13px] font-medium">No outstanding invoices or escrow deposits require funding at this time.</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setShowPaymentConf(false)}
-                  className="text-white/20 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest"
+                  className="max-sm:w-full max-sm:py-2 max-sm:border max-sm:border-white/10 max-sm:rounded-full text-white/40 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest"
                 >
                   Dismiss
                 </button>
@@ -156,30 +156,30 @@ return (
             {!showAdd && (
               <button
                 onClick={() => setShowAdd(true)}
-                className="flex items-center gap-2 bg-accent text-white font-bold h-12 px-8 rounded-xl hover:scale-[1.02] transition-all shadow-lg shadow-accent/20"
+                className="flex items-center gap-2 bg-accent text-white font-bold h-12 px-8 rounded-full hover:scale-[1.02] transition-all shadow-lg shadow-accent/20"
               >
                 <Plus size={18} /> Add Method
               </button>
             )}
           </div>
         ) : (
-          <div className="bg-white/5 border border-white/10 rounded-xl p-6 flex items-center justify-between relative overflow-hidden group">
+          <div className="bg-white/5 border border-white/10 rounded-xl p-4 sm:p-6 flex items-center justify-between relative overflow-hidden group">
             <div className="absolute inset-0 bg-accent/5 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="flex items-center gap-5 relative z-10">
-              <div className="w-14 h-14 rounded-xl bg-accent/10 flex items-center justify-center text-accent border border-accent/20">
+            <div className="flex items-center gap-3 sm:gap-5 relative z-10">
+              <div className="flex items-center justify-center text-accent shrink-0">
                 {savedMethod === 'card' ? <CreditCard size={28} /> : <Wallet size={28} />}
               </div>
               <div>
-                <h4 className="text-lg font-bold text-white flex items-center gap-3">
+                <h4 className="text-sm sm:text-lg font-bold text-white flex items-center gap-2">
                   {savedMethod === 'card' ? 'Visa ending in 3456' : 'PayPal Account'}
-                  <CheckCircle2 size={16} className="text-green-400" />
+                  <CheckCircle2 size={14} className="text-green-400 shrink-0" />
                 </h4>
                 <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Primary Payment Method</p>
               </div>
             </div>
             <button
               onClick={() => { setShowAdd(true); setSavedMethod(null); }}
-              className="relative z-10 text-accent text-sm font-bold hover:underline"
+              className="relative z-10 text-accent text-sm font-bold hover:underline shrink-0 ml-3"
             >
               Modify
             </button>
@@ -272,18 +272,18 @@ return (
                         <input
                           required
                           placeholder="1234 5678 9012 3456"
-                          className="w-full h-14 px-5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/10 font-mono tracking-wider"
+                          className="w-full h-14 px-5 bg-white/5 border border-white/10 rounded-full text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/10 font-mono tracking-wider"
                         />
                       </div>
 
-                      <div className="grid grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                         <div className="space-y-2">
                           <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] pl-1">First name</label>
                           <input
                             required
                             placeholder="Owner Given Name"
                             defaultValue={profile?.name?.split(' ')[0]}
-                            className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"
+                            className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-full text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"
                           />
                         </div>
                         <div className="space-y-2">
@@ -292,7 +292,7 @@ return (
                             required
                             placeholder="Owner Surname"
                             defaultValue={profile?.name?.split(' ').slice(1).join(' ')}
-                            className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"
+                            className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-full text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"
                           />
                         </div>
                       </div>
@@ -300,15 +300,15 @@ return (
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                         <div className="space-y-2">
                           <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] pl-1">Expiry MM</label>
-                          <input required placeholder="01" className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all text-center" />
+                          <input required placeholder="01" className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-full text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all text-center" />
                         </div>
                         <div className="space-y-2">
                           <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] pl-1">Expiry YY</label>
-                          <input required placeholder="28" className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all text-center" />
+                          <input required placeholder="28" className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-full text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all text-center" />
                         </div>
                         <div className="space-y-2">
                           <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] pl-1">Security Code</label>
-                          <input required placeholder="•••" type="password" maxLength={4} className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all text-center" />
+                          <input required placeholder="•••" type="password" maxLength={4} className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-full text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all text-center" />
                         </div>
                       </div>
 
@@ -317,21 +317,21 @@ return (
                         <div className="space-y-4">
                           <div className="space-y-2">
                             <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] pl-1">Address 1</label>
-                            <input required placeholder="Corporate Address" className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all" />
+                            <input required placeholder="Corporate Address" className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-full text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all" />
                           </div>
                           <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                               <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] pl-1">City</label>
-                              <input required className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"/>
+                              <input required className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-full text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"/>
                             </div>
                             <div className="space-y-2">
                               <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] pl-1">Postal Code</label>
-                              <input required className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"/>
+                              <input required className="w-full h-12 px-5 bg-white/5 border border-white/10 rounded-full text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all"/>
                             </div>
                           </div>
                         </div>
 
-                        <button type="submit" className="w-full h-14 rounded-xl bg-accent text-white font-bold text-sm uppercase tracking-widest mt-10 hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-accent/20">
+                        <button type="submit" className="w-full h-14 rounded-full bg-accent text-white font-bold text-sm uppercase tracking-widest mt-10 hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-accent/20">
                           Securely Save Method
                         </button>
                       </div>
@@ -357,7 +357,7 @@ return (
                       <p className="text-white/40 text-sm max-w-sm mx-auto mb-10">
                         You'll be temporarily redirected to PayPal to complete secure verification of your account.
                       </p>
-                      <button type="submit" className="h-14 px-12 rounded-xl bg-[#0070BA] text-white font-bold hover:bg-[#003087] transition-all shadow-lg shadow-[#0070BA]/20">
+                      <button type="submit" className="h-14 px-12 rounded-full bg-[#0070BA] text-white font-bold hover:bg-[#003087] transition-all shadow-lg shadow-[#0070BA]/20">
                         Continue to PayPal
                       </button>
                     </div>

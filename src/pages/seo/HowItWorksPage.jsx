@@ -99,7 +99,7 @@ const HowItWorksPage = () => {
                 Post jobs for free, receive proposals within hours, and hire verified freelancers
                 with confidence. Pay only when you're satisfied with the work.
               </p>
-              <Link to="/for-clients" className="bg-accent text-white px-8 py-3 rounded-full font-semibold hover:opacity-90 inline-block transition">
+              <Link to="/for-clients" className="bg-accent text-white px-8 py-3 rounded-full font-semibold hover:opacity-90 block w-full sm:inline-block sm:w-auto text-center transition">
                 Learn more
               </Link>
             </div>
@@ -109,7 +109,7 @@ const HowItWorksPage = () => {
                 Create a profile, apply to jobs, or sell your services directly. Get paid securely
                 and build your reputation with every completed project.
               </p>
-              <Link to="/for-freelancers" className="bg-accent text-white px-8 py-3 rounded-full font-semibold hover:opacity-90 inline-block transition">
+              <Link to="/for-freelancers" className="bg-accent text-white px-8 py-3 rounded-full font-semibold hover:opacity-90 block w-full sm:inline-block sm:w-auto text-center transition">
                 Learn more
               </Link>
             </div>

@@ -103,37 +103,42 @@ const Proposals = () => {
           const jobTitle = job?.title || 'Project';
           const isTeam = job?.job_mode === 'team';
 
-          try {
-            const contractRes = await api.get(`/api/contracts/by-job/${hired?.job_id}`);
-            const contract = contractRes.data?.data || contractRes.data;
+          const isFakeMode = import.meta.env.VITE_ESCROW_MODE === 'FAKE';
+          if (!isFakeMode) {
+            try {
+              const contractRes = await api.get(`/api/contracts/by-job/${hired?.job_id}`);
+              const contract = contractRes.data?.data || contractRes.data;
 
-            if (isTeam) {
-              // For team jobs: collect all accepted proposals for this job
-              const acceptedProposals = proposals
-                .filter(p => p.job_id === hired?.job_id && (p.id === proposalId || p.status === 'ACCEPTED'))
-                .map(p => ({ name: p.freelancer?.name || 'Freelancer', amount: p.proposed_rate || 0, role: p.role?.title || 'Team Member' }));
-              setEscrowModal({
-                open: true,
-                contractId: contract?.id || null,
-                jobTitle,
-                amount: acceptedProposals.reduce((sum, p) => sum + p.amount, 0),
-                freelancerName: null,
-                isTeam: true,
-                teamMembers: acceptedProposals,
-              });
-            } else {
-              setEscrowModal({
-                open: true,
-                contractId: contract?.id || null,
-                jobTitle,
-                amount: hired?.proposed_rate || 0,
-                freelancerName: hired?.freelancer?.name || 'Freelancer',
-                isTeam: false,
-                teamMembers: [],
-              });
+              if (isTeam) {
+                // For team jobs: collect all accepted proposals for this job
+                const acceptedProposals = proposals
+                  .filter(p => p.job_id === hired?.job_id && (p.id === proposalId || p.status === 'ACCEPTED'))
+                  .map(p => ({ name: p.freelancer?.name || 'Freelancer', amount: p.proposed_rate || 0, role: p.role?.title || 'Team Member' }));
+                setEscrowModal({
+                  open: true,
+                  contractId: contract?.id || null,
+                  jobTitle,
+                  amount: acceptedProposals.reduce((sum, p) => sum + p.amount, 0),
+                  freelancerName: null,
+                  isTeam: true,
+                  teamMembers: acceptedProposals,
+                });
+              } else {
+                setEscrowModal({
+                  open: true,
+                  contractId: contract?.id || null,
+                  jobTitle,
+                  amount: hired?.proposed_rate || 0,
+                  freelancerName: hired?.freelancer?.name || 'Freelancer',
+                  isTeam: false,
+                  teamMembers: [],
+                });
+              }
+            } catch {
+              // non-critical — just skip the modal
             }
-          } catch {
-            // non-critical — just skip the modal
+          } else {
+            logger.log('[Proposals] Skipping escrow modal — Auto-funding handled by backend in FAKE mode');
           }
         }
 
@@ -247,28 +252,22 @@ const Proposals = () => {
   };
 
   const ProposalBadges = ({ match }) => {
+    if (!match) return null;
     return (
       <div className="flex flex-wrap gap-2">
         {match?.match_score >= 90 && (
-          <span className="flex items-center gap-1 px-2 py-1 bg-yellow-500/20 text-yellow-500 rounded-lg text-[10px] font-bold">
-            <Star size={10} strokeWidth={3} /> BEST MATCH
+          <span className="flex items-center gap-1 px-2 py-0.5 bg-amber-500/10 text-amber-500 rounded-full text-[9px] font-black uppercase tracking-wider">
+            <Star size={10} className="fill-amber-500" /> BEST MATCH
           </span>
         )}
         {match?.price_score >= 95 && (
-          <span className="flex items-center gap-1 px-2 py-1 bg-green-500/20 text-green-500 rounded-lg text-[10px] font-bold">
-            <IndianRupee size={10} strokeWidth={3} /> BEST PRICE
+          <span className="flex items-center gap-1 px-2 py-0.5 bg-emerald-500/10 text-emerald-500 rounded-full text-[9px] font-black uppercase tracking-wider">
+            <IndianRupee size={10} /> BEST PRICE
           </span>
         )}
         {match?.reliability_score >= 80 && (
-          <span className="flex items-center gap-1.5 px-2.5 py-1 bg-blue-500/10 text-blue-500 dark:text-blue-400 rounded-xl text-[10px] font-black tracking-widest">
-            <img src="/Icons/White-AI-Connect.png" alt="" className="w-3.5 h-3.5 object-contain dark:hidden brightness-0" />
-            <img src="/Icons/White-AI-Connect.png" alt="" className="w-3.5 h-3.5 object-contain hidden dark:block grayscale opacity-70" />
-            CONNECT AI
-          </span>
-        )}
-        {match?.risk_score > 40 && (
-          <span className="flex items-center gap-1 px-2 py-1 bg-red-500/20 text-red-500 rounded-lg text-[10px] font-bold">
-            <AlertTriangle size={10} strokeWidth={3} /> RISKY
+          <span className="flex items-center gap-1.5 px-2.5 py-0.5 bg-blue-500/10 text-blue-500 rounded-full text-[9px] font-black tracking-widest uppercase">
+            <Zap size={10} className="fill-blue-500" /> CONNECT AI
           </span>
         )}
       </div>
@@ -281,10 +280,10 @@ const Proposals = () => {
 
     return (
       <div className="relative group/score">
-        <div className="w-14 h-14 rounded-full bg-accent/10 border border-accent/20 flex flex-col items-center justify-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-transparent" />
-          <span className="text-xl font-black text-accent relative z-10">{match.match_score}%</span>
-          <span className="text-[8px] text-accent/50 font-bold uppercase relative z-10">Match</span>
+        <div className="w-12 h-12 rounded-full bg-accent/5 flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm">
+          <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent" />
+          <span className="text-lg font-black text-accent relative z-10 leading-none">{match.match_score}%</span>
+          <span className="text-[7px] text-accent/40 font-bold uppercase tracking-tighter relative z-10 mt-0.5">Match</span>
         </div>
 
         {/* Tooltip breakdown */}
@@ -325,13 +324,13 @@ const Proposals = () => {
 
 
   const STATUS_CONFIG = {
-    PENDING: { icon: <Clock size={14} />, cls: 'bg-yellow-500/10 text-yellow-400' },
-    ACCEPTED: { icon: <CheckCircle size={14} />, cls: 'bg-green-500/10 text-green-400' },
-    REJECTED: { icon: <XCircle size={14} />, cls: 'bg-red-500/10 text-red-400' },
+    PENDING: { icon: <Clock size={12} />, cls: 'bg-amber-500/10 text-amber-500' },
+    ACCEPTED: { icon: <CheckCircle size={12} />, cls: 'bg-emerald-500/10 text-emerald-500' },
+    REJECTED: { icon: <XCircle size={12} />, cls: 'bg-rose-500/10 text-rose-500' },
   };
 
   return (
-    <div className="max-w-[1630px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
       <SectionHeader
         title="Proposals"
         subtext={`${proposals.length} proposal${proposals.length !== 1 ? 's' : ''} received`}
@@ -348,7 +347,7 @@ const Proposals = () => {
       />
 
       {isLoading ? (
-        <div className="flex items-center justify-center h-48"><InfinityLoader size={20} /></div>
+        <div className="flex items-center justify-center h-64"><InfinityLoader size="lg" /></div>
       ) : jobs.length === 0 ? (
         <EmptyState
           icon={FileText}
@@ -369,12 +368,12 @@ const Proposals = () => {
               return (
                 <Card key={job.id} padding="p-0" className="bg-transparent overflow-hidden">
                   <button onClick={() => setExpandedJob(isExpanded ? null : job.id)}
-                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-accent/5 transition">
-                    <div className="flex items-center gap-3">
-                      <p className="text-slate-950 dark:text-white font-medium">{job?.title || 'Job'}</p>
-                      <span className="bg-accent/10 text-accent border border-accent/20 rounded-full px-2 py-0.5 text-xs">{jobProposals.length} proposals</span>
+                    className="w-full flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-5 py-4 hover:bg-accent/5 transition gap-4">
+                    <div className="flex items-center justify-between w-full sm:w-auto gap-3">
+                      <p className="text-slate-950 dark:text-white font-medium truncate max-w-[300px] sm:max-w-none">{job?.title || 'Job'}</p>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4">
+                      <span className="shrink-0 bg-accent/10 text-accent border border-accent/20 rounded-full px-3 py-1 text-[10px] sm:text-xs font-bold order-2 sm:order-none">{jobProposals.length} proposals</span>
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] text-slate-900/40 dark:text-white/30 font-bold uppercase tracking-wider">Sort:</span>
                         <select
@@ -384,14 +383,16 @@ const Proposals = () => {
                             setSortBy(e.target.value);
                           }}
                           onClick={(e) => e.stopPropagation()}
-                          className="bg-slate-100 dark:bg-white/5 text-slate-900 dark:text-white text-sm font-bold rounded-full px-4 py-2 outline-none cursor-pointer hover:bg-slate-200 dark:hover:bg-white/10 transition min-w-[140px]"
+                          className="bg-slate-100 dark:bg-white/5 text-slate-900 dark:text-white text-[10px] sm:text-sm font-bold rounded-full px-3 sm:px-4 py-1.5 sm:py-2 outline-none cursor-pointer hover:bg-slate-200 dark:hover:bg-white/10 transition min-w-[110px] sm:min-w-[140px]"
                         >
                           <option value="match" className="bg-white dark:bg-secondary text-slate-900 dark:text-white">Best Match</option>
                           <option value="price" className="bg-white dark:bg-secondary text-slate-900 dark:text-white">Price</option>
                           <option value="date" className="bg-white dark:bg-secondary text-slate-900 dark:text-white">Recent</option>
                         </select>
                       </div>
-                      {isExpanded ? <ChevronUp size={18} className="text-slate-900/40 dark:text-white/40" /> : <ChevronDown size={18} className="text-slate-900/40 dark:text-white/40" />}
+                      <div className="shrink-0">
+                        {isExpanded ? <ChevronUp size={18} className="text-slate-900/40 dark:text-white/40" /> : <ChevronDown size={18} className="text-slate-900/40 dark:text-white/40" />}
+                      </div>
                     </div>
                   </button>
 
@@ -413,26 +414,24 @@ const Proposals = () => {
 
                             return (
                               <div key={roleId} className="border-b border-white/5 last:border-0">
-                                {/* Role Header / Analytics */}
-                                <div className="bg-white/[0.01] px-6 py-3 flex flex-wrap items-center justify-between gap-4">
-                                  <div className="flex items-center gap-3">
-                                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">{roleInfo.title}</h4>
-                                    <span className="bg-slate-900/5 dark:bg-white/5 px-2 py-0.5 rounded-full text-[8px] font-bold text-slate-900/40 dark:text-white/40 uppercase tracking-widest">
-                                      {roleInfo.filled_positions || 0} / {roleInfo.positions || 1} Hired
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center gap-6">
-                                    <div className="text-right">
-                                      <span className="text-[8px] font-black uppercase tracking-widest text-slate-900/30 dark:text-white/20 block">Best Offer</span>
-                                      <span className="text-xs font-bold text-green-500 dark:text-green-400">₹{formatINR(bestBid).replace('₹', '')}</span>
-                                    </div>
-                                    <div className="text-right">
-                                      <span className="text-[8px] font-black uppercase tracking-widest text-slate-900/30 dark:text-white/20 block">Avg. Bid</span>
-                                      <span className="text-xs font-bold text-slate-950/60 dark:text-white/60">₹{formatINR(avgBid).replace('₹', '')}</span>
-                                    </div>
-
-                                  </div>
-                                </div>
+                                 <div className="bg-white/[0.01] px-4 sm:px-6 py-2 sm:py-3 flex flex-row items-center justify-between gap-2 sm:gap-4">
+                                   <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-3 min-w-0">
+                                     <h4 className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-accent truncate">{roleInfo.title}</h4>
+                                     <span className="w-fit bg-slate-900/5 dark:bg-white/5 px-1.5 sm:px-2 py-0.5 rounded-full text-[6px] sm:text-[8px] font-bold text-slate-900/40 dark:text-white/40 uppercase tracking-widest whitespace-nowrap">
+                                       {roleInfo.filled_positions || 0} / {roleInfo.positions || 1} Hired
+                                     </span>
+                                   </div>
+                                   <div className="flex items-center gap-2 sm:gap-6 shrink-0">
+                                     <div className="text-right">
+                                       <span className="text-[6px] sm:text-[8px] font-black uppercase tracking-widest text-slate-900/30 dark:text-white/20 block">Best Offer</span>
+                                       <span className="text-[9px] sm:text-xs font-bold text-green-500 dark:text-green-400">₹{formatINR(bestBid).replace('₹', '')}</span>
+                                     </div>
+                                     <div className="text-right">
+                                       <span className="text-[6px] sm:text-[8px] font-black uppercase tracking-widest text-slate-900/30 dark:text-white/20 block">Avg. Bid</span>
+                                       <span className="text-[9px] sm:text-xs font-bold text-slate-950/60 dark:text-white/60">₹{formatINR(avgBid).replace('₹', '')}</span>
+                                     </div>
+                                   </div>
+                                 </div>
 
                                 {/* Role Proposals */}
                                 <div className="divide-y divide-white/5">
@@ -441,92 +440,109 @@ const Proposals = () => {
                                     const risk = getRiskLabel(proposal, roleInfo.budget);
 
                                     return (
-                                      <div key={proposal.id} className="group/card px-6 py-6 flex flex-col md:flex-row items-start gap-6 transition-all duration-300 hover:bg-slate-50 dark:hover:bg-white/[0.03] relative overflow-hidden">
-                                        <div className="flex gap-6 min-w-0 flex-1">
-                                          <div className="shrink-0 flex flex-col items-center gap-3">
-                                            <div className="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center text-accent text-xl font-black overflow-hidden relative">
-                                              {proposal.freelancer?.avatar_url ? (
-                                                <img src={proposal.freelancer.avatar_url} alt="" className="w-full h-full object-cover" />
-                                              ) : (
-                                                (proposal.freelancer?.name || '?')[0]
-                                              )}
-                                              {proposal.freelancer?.is_verified && (
-                                                <div className="absolute -bottom-1 -right-1 p-0.5 bg-accent rounded-full">
-                                                  <ShieldCheck size={10} className="text-white" />
-                                                </div>
-                                              )}
+                                      <div key={proposal.id} className="group/card px-6 py-6 flex flex-col gap-6 transition-all duration-300 hover:bg-slate-50 dark:hover:bg-white/[0.03] relative overflow-hidden">
+                                        
+                                        {/* TOP SECTION: Freelancer Profile & Match */}
+                                        <div className="flex items-center justify-between gap-6">
+                                          <div className="flex items-center gap-4 min-w-0">
+                                            <div className="shrink-0 relative group/avatar">
+                                              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent text-lg font-black overflow-hidden relative">
+                                                {proposal.freelancer?.avatar_url ? (
+                                                  <img src={proposal.freelancer.avatar_url} alt="" className="w-full h-full object-cover" />
+                                                ) : (
+                                                  (proposal.freelancer?.name || '?')[0]
+                                                )}
+                                                {proposal.freelancer?.is_verified && (
+                                                  <div className="absolute -bottom-1 -right-1 p-1 bg-accent rounded-full ring-2 ring-primary shadow-lg">
+                                                    <ShieldCheck size={11} className="text-white fill-white/10" />
+                                                  </div>
+                                                )}
+                                              </div>
                                             </div>
 
-                                            <MatchScoreDisplay proposalId={proposal.id} />
+                                            <div className="min-w-0">
+                                              <div className="flex flex-wrap items-center gap-3 mb-1">
+                                                <p onClick={() => navigate(`/freelancer/${proposal.freelancer_id}`)} className="text-slate-950 dark:text-white font-black text-lg hover:text-accent cursor-pointer transition-colors truncate tracking-tight">
+                                                  {proposal.freelancer?.name || 'Freelancer'}
+                                                </p>
+                                                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${sc.cls}`}>
+                                                  {sc.icon} {proposal.status}
+                                                </span>
+                                              </div>
+                                              <ProposalBadges match={matchData[proposal.id]} />
+                                            </div>
                                           </div>
 
-                                          <div className="min-w-0 flex-1">
-                                            <div className="flex flex-wrap items-center gap-2 mb-2">
-                                              <p onClick={() => navigate(`/freelancer/${proposal.freelancer_id}`)} className="text-slate-950 dark:text-white font-black text-lg hover:text-accent cursor-pointer transition-colors truncate tracking-tight">
-                                                {proposal.freelancer?.name || 'Freelancer'}
-                                              </p>
+                                          <MatchScoreDisplay proposalId={proposal.id} />
+                                        </div>
 
-                                              <ProposalBadges match={matchData[proposal.id]} />
+                                        {/* MIDDLE SECTION: Cover Letter (Full Width) */}
+                                        <div className="rounded-[18px] border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.04] overflow-hidden">
+                                          <div className="flex items-center gap-2 px-5 py-2 border-b border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/[0.03]">
+                                            <MessageCircle size={12} className="text-accent shrink-0" />
+                                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-white/40">Cover Letter</span>
+                                          </div>
+                                          <div className="px-5 py-5 max-h-64 overflow-y-auto scrollbar-none">
+                                            <p className="text-slate-800 dark:text-white/90 text-sm leading-7 whitespace-pre-wrap">
+                                              {proposal.cover_letter || <span className="text-slate-400 dark:text-white/30 italic">No message provided.</span>}
+                                            </p>
+                                          </div>
+                                        </div>
 
-                                              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${sc.cls}`}>
-                                                {sc.icon} {proposal.status}
-                                              </span>
-                                            </div>
-
-                                            {/* Cover Letter — scrollable */}
-                                            <div className="mt-3 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.04] overflow-hidden">
-                                              <div className="flex items-center gap-2 px-4 py-2 border-b border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/[0.03]">
-                                                <MessageCircle size={13} className="text-accent shrink-0" />
-                                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-white/40">Cover Letter</span>
-                                              </div>
-                                              <div className="px-4 py-4 max-h-56 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-white/10 scrollbar-track-transparent">
-                                                <p className="text-slate-800 dark:text-white/90 text-[15px] leading-7 whitespace-pre-wrap">
-                                                  {proposal.cover_letter || <span className="text-slate-400 dark:text-white/30 italic">No message provided.</span>}
-                                                </p>
-                                              </div>
-                                            </div>
-
-                                            {/* AI Summary (Lazy Load) */}
+                                        {/* BOTTOM SECTION: AI Insights & Bid Actions */}
+                                        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pt-1">
+                                          <div className="flex-1 w-full lg:w-auto">
                                             {matchData[proposal.id]?.ai_summary && (
-                                              <div className="mt-3 flex items-start gap-3 p-3 bg-accent/5 rounded-2xl animate-in slide-in-from-top-2 duration-500">
+                                              <div className="flex items-start gap-3 p-3 bg-accent/5 rounded-xl animate-in slide-in-from-left-2 duration-500 max-w-2xl">
                                                 <div className="p-1.5 bg-accent/10 rounded-full shrink-0">
-                                                  <Zap size={14} className="text-accent" />
+                                                  <Zap size={14} className="text-accent fill-accent/20" />
                                                 </div>
                                                 <div>
-                                                  <p className="text-xs text-slate-700 dark:text-white/70 leading-relaxed">
+                                                  <p className="text-[13px] text-slate-700 dark:text-white/70 leading-relaxed font-medium">
                                                     {matchData[proposal.id].ai_summary}
                                                   </p>
-                                                  <div className="flex items-center gap-1 mt-1.5">
+                                                  <div className="flex items-center gap-2 mt-1.5">
                                                     <TrendingUp size={10} className="text-accent" />
-                                                    <span className="text-[9px] font-black text-accent uppercase tracking-tighter">AI VERDICT: {matchData[proposal.id].ai_verdict}</span>
+                                                    <span className="text-[9px] font-black text-accent uppercase tracking-widest">AI VERDICT: {matchData[proposal.id].ai_verdict}</span>
                                                   </div>
                                                 </div>
                                               </div>
                                             )}
                                           </div>
-                                        </div>
 
-
-                                        <div className="flex flex-col md:flex-row items-end md:items-center gap-6 w-full md:w-auto">
-                                          <div className="text-right">
-                                            <p className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-black tracking-[0.2em] mb-1">Proposed Bid</p>
-                                            <span className="text-2xl font-black text-slate-950 dark:text-white tracking-tighter">
-                                              ₹{formatINR(proposal.proposed_rate).replace('₹', '')}
-                                            </span>
-                                          </div>
-                                          {proposal.status === 'PENDING' && (
-                                            <div className="flex gap-2">
-                                              <button onClick={() => handleStatusUpdate(proposal.id, 'REJECTED')} className="p-3 rounded-full text-slate-900/20 dark:text-white/20 hover:text-red-400 hover:bg-red-400/5 transition-all">
-                                                <X size={18} />
-                                              </button>
-                                              <Button
-                                                onClick={() => setRoleModal({ isOpen: true, proposal: proposal, role: roleInfo.title, scope: '' })}
-                                                disabled={updatingId === proposal.id}
-                                                className="!rounded-full px-6 py-3 bg-green-500 text-black hover:bg-green-400 font-black text-[10px] uppercase tracking-widest"
-                                              > Fund Now </Button>
-
-                                            </div>
-                                          )}
+                                          <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 w-full lg:w-auto justify-between lg:justify-end">
+                                             <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-2 border-b sm:border-0 border-white/5 pb-2 sm:pb-0">
+                                               <span className="text-[8px] sm:text-[10px] text-slate-900/40 dark:text-white/30 uppercase font-black tracking-widest">Proposed Bid:</span>
+                                               <span className="text-lg sm:text-xl font-black text-slate-950 dark:text-white tracking-tighter">
+                                                 ₹{formatINR(proposal.proposed_rate).replace('₹', '')}
+                                               </span>
+                                             </div>
+                                             
+                                             {proposal.status === 'PENDING' && (
+                                               <div className="flex items-center justify-end w-full sm:w-auto gap-2 sm:gap-3">
+                                                 <button 
+                                                   onClick={() => handleStatusUpdate(proposal.id, 'REJECTED')} 
+                                                   className="p-2 text-slate-400 dark:text-white/20 hover:text-red-500 hover:bg-red-500/5 rounded-full transition-all duration-200"
+                                                   title="Reject Proposal"
+                                                 >
+                                                   <X size={18} />
+                                                 </button>
+                                                 <button
+                                                   onClick={() => navigate(`/client/messages?userId=${proposal.freelancer_id}`)}
+                                                   className="px-4 sm:px-5 py-2 bg-accent text-white border border-accent rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition-all shadow-md shadow-accent/20"
+                                                 >
+                                                   Message
+                                                 </button>
+                                                 <Button
+                                                   onClick={() => setRoleModal({ isOpen: true, proposal: proposal, role: roleInfo.title, scope: '' })}
+                                                   disabled={updatingId === proposal.id}
+                                                   className="!rounded-full px-5 sm:px-6 py-2 bg-green-500 text-white hover:bg-green-600 font-black text-[9px] sm:text-[10px] uppercase tracking-widest shadow-lg shadow-green-500/20 transition-all hover:scale-105 active:scale-95"
+                                                 >
+                                                   Fund Now
+                                                 </Button>
+                                               </div>
+                                             )}
+                                           </div>
                                         </div>
                                       </div>
                                     );

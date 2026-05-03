@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Shield, Lock, ChevronLeft, BookOpen } from "lucide-react";
-import api from "../../../lib/api";
+import InfinityLoader from "../../common/InfinityLoader";
 
 const getPolicyDetails = (slug) => {
     const s = slug?.toLowerCase() || '';
@@ -68,33 +68,35 @@ const getPolicyDetails = (slug) => {
     ];
 };
 
+const defaultPolicies = [
+    { id: '1', slug: 'communication', title: 'Communication Guidelines', updated_at: new Date().toISOString() },
+    { id: '2', slug: 'privacy', title: 'Privacy Policy', updated_at: new Date().toISOString() },
+    { id: '3', slug: 'legal', title: 'Legal Agreement', updated_at: new Date().toISOString() },
+    { id: '4', slug: 'terms', title: 'Terms of Service', updated_at: new Date().toISOString() },
+    { id: '5', slug: 'proposal', title: 'Proposal Standards', updated_at: new Date().toISOString() },
+    { id: '6', slug: 'cookie', title: 'Cookie Policy', updated_at: new Date().toISOString() },
+    { id: '7', slug: 'withdrawal', title: 'Withdrawal Limits', updated_at: new Date().toISOString() },
+];
+
 const FreelancerPolicies = () => {
     const [policies, setPolicies] = useState([]);
     const [activePolicy, setActivePolicy] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchPolicies = async () => {
-            try {
-                const res = await api.get('/api/freelancer/policies');
-
-                if (res.data?.success && res.data.data.length > 0) {
-                    setPolicies(res.data.data);
-                    setActivePolicy(res.data.data[0]);
-                }
-            } catch (error) {
-                console.error("Failed to load policy data", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchPolicies();
+        // Simulate loading from a network request for the aesthetic effect
+        const timer = setTimeout(() => {
+            setPolicies(defaultPolicies);
+            setActivePolicy(defaultPolicies[0]);
+            setLoading(false);
+        }, 1200);
+        return () => clearTimeout(timer);
     }, []);
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-full pt-20">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
+            <div className="flex justify-center items-center h-full pt-32 pb-32">
+                <InfinityLoader size={60} />
             </div>
         );
     }
@@ -108,10 +110,10 @@ const FreelancerPolicies = () => {
     }
 
     return (
-        <div className="w-full mx-auto px-6 md:px-10 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="w-full lg:max-w-[1400px] mx-auto mt-0 pb-12 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
             {/* Back Button and Header Section */}
-            <div className="space-y-6">
+            <div className="space-y-4">
                 <Link
                     to="/freelancer/account-health"
                     className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm font-medium group"
@@ -120,7 +122,7 @@ const FreelancerPolicies = () => {
                     Back
                 </Link>
 
-                <div className="relative pt-4 pb-6 border-b border-white/10 mb-8">
+                <div className="relative pt-2 pb-4 border-b border-white/10 mb-6">
                     <div className="relative z-10 max-w-2xl flex flex-col items-start gap-4">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
                             <Lock size={16} />
@@ -166,8 +168,8 @@ const FreelancerPolicies = () => {
 
                 {/* Main Content Area */}
                 <div className="flex-1 bg-transparent border border-white/10 rounded-2xl p-5 sm:p-8 md:p-10 min-h-[300px] sm:min-h-[500px] shadow-2xl backdrop-blur-sm">
-                    <div className="flex items-center gap-5 mb-8 pb-8 border-b border-white/10">
-                        <div className="w-16 h-16 flex items-center justify-center shrink-0">
+                    <div className="flex items-center gap-3 sm:gap-5 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-white/10">
+                        <div className="w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center shrink-0">
                             {activePolicy.slug?.includes('privacy') || activePolicy.title?.toLowerCase().includes('privacy') ? (
                                 <img src="/Icons/icons8-privacy-policy-100.png" alt="Privacy" className="w-16 h-16 object-contain" />
                             ) : activePolicy.slug?.includes('communication') || activePolicy.title?.toLowerCase().includes('communication') ? (
@@ -185,7 +187,7 @@ const FreelancerPolicies = () => {
                             )}
                         </div>
                         <div>
-                            <h2 className={`text-2xl font-bold mb-1 ${activePolicy.slug?.includes('withdrawal') || activePolicy.title?.toLowerCase().includes('withdrawal') ? 'text-red-500' : 'text-white'}`}>
+                            <h2 className={`text-lg sm:text-2xl font-bold mb-1 ${activePolicy.slug?.includes('withdrawal') || activePolicy.title?.toLowerCase().includes('withdrawal') ? 'text-red-500' : 'text-white'}`}>
                                 {activePolicy.title}
                             </h2>
                             <p className="text-white/30 text-xs font-bold uppercase tracking-widest">

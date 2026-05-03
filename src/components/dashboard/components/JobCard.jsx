@@ -90,14 +90,16 @@ function JobCard({ job, isSaved = false, onToggleSave, searchQuery = "" }) {
         <HighlightedText text={job.title} query={searchQuery} />
       </h3>
 
-      <div className="flex flex-wrap gap-3 sm:gap-5 text-[11px] sm:text-[12px] mb-3 sm:mb-5 items-center">
-        <span className="flex items-center gap-1.5 font-semibold text-light-text/60">
-           <IndianRupee size={12} className="text-accent/60" /> {formatBudget()}
-        </span>
-        <span className="flex items-center gap-1.5 font-semibold text-light-text/60">
-           <Clock size={12} className="text-accent/60" /> {job.experience_level || "Intermediate"}
-        </span>
-        <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:flex-wrap gap-2 sm:gap-5 text-[11px] sm:text-[12px] mb-3 sm:mb-5">
+        <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-3 sm:gap-5">
+          <span className="flex items-center gap-1.5 font-semibold text-light-text/60">
+             <IndianRupee size={12} className="text-accent/60" /> {formatBudget()}
+          </span>
+          <span className="flex items-center gap-1.5 font-semibold text-light-text/60">
+             <Clock size={12} className="text-accent/60" /> {job.experience_level || "Intermediate"}
+          </span>
+        </div>
+        <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mt-0.5 sm:mt-0">
           Est. Time: {job.duration}
         </span>
       </div>
@@ -116,17 +118,19 @@ function JobCard({ job, isSaved = false, onToggleSave, searchQuery = "" }) {
       </div>
 
       {/* Client Info */}
-      <div className="flex items-center gap-3 sm:gap-6 pt-3 sm:pt-4 border-t border-white/5 text-[10px] font-bold uppercase tracking-widest text-light-text/20">
-        <div className="flex items-center gap-1.5">
-          <Star size={12} className="text-yellow-500/80 fill-yellow-500/20" />
+      <div className="flex justify-between items-start sm:items-center pt-3 sm:pt-4 border-t border-white/5 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-light-text/20">
+        <div className="flex items-center gap-1.5 mt-0.5 sm:mt-0">
+          <Star size={11} className="text-yellow-500/80 fill-yellow-500/20" />
           <span className="text-light-text/30 whitespace-nowrap">
             {job.client?.rating ? `${job.client.rating} (${job.client.reviews_count || 0})` : "NEW CLIENT"}
           </span>
         </div>
-        <span className="truncate max-w-[80px] sm:max-w-[150px]">{job.client?.location || job.client?.country || "INTL"}</span>
-        <span className="ml-auto flex items-center gap-1 text-accent/40 font-extrabold">
-          PROPOSALS: <span className="text-light-text/40">{job.proposal_count ?? job.proposals?.length ?? 0}</span>
-        </span>
+        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1 sm:gap-4 text-right">
+          <span className="opacity-80 break-words text-right max-w-[150px] sm:max-w-none">{job.client?.location || job.client?.country || "INTL"}</span>
+          <span className="flex items-center gap-1 text-accent/40 font-extrabold whitespace-nowrap">
+            PROPOSALS: <span className="text-light-text/40">{job.proposal_count ?? job.proposals?.length ?? 0}</span>
+          </span>
+        </div>
       </div>
     </div>
   );

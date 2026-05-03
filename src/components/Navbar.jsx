@@ -20,54 +20,54 @@ const Navbar = () => {
 
   return (
     <>
-    <nav className="sticky top-0 z-50 bg-primary/80 backdrop-blur-md border-b border-white/5">
-      <div className="max-w-[1630px] mx-auto h-14 md:h-20 px-4 md:px-8 flex items-center justify-between">
+      <nav className="sticky top-0 z-[50] bg-primary/80 backdrop-blur-md transition-all duration-300">
+        <div className="max-w-[1630px] mx-auto h-14 md:h-20 px-4 md:px-8 flex items-center justify-between">
 
-        {/* Logo */}
-        <div className="flex items-center md:flex-1">
-          <Link to="/" className="flex items-center group" aria-label="Connect Home">
-            <img
-              src="/Logo-LightMode-trimmed.png"
-              alt="Connect - Freelance Marketplace Logo"
-              className="h-7 md:h-12 object-contain block dark:hidden transition-all duration-300"
-            />
-            <img
-              src="/Logo2.png"
-              alt="Connect - Freelance Marketplace Logo"
-              className="h-6 md:h-10 object-contain hidden dark:block transition-all duration-300"
-            />
-          </Link>
-        </div>
-
-        {/* Desktop Nav Links */}
-        <div className="hidden md:flex items-center justify-center gap-6 lg:gap-8 flex-none">
-          <Link
-            to="/find-freelancers"
-            className="text-light-text/70 hover:text-accent transition-colors duration-300 text-sm font-medium"
-            aria-label="Find and hire freelancers"
-          >
-            Find Freelancers
-          </Link>
-
-          <Link
-            to="/find-work"
-            className="text-light-text/70 hover:text-accent transition-colors duration-300 text-sm font-medium"
-            aria-label="Find freelance jobs and work"
-          >
-            Find Jobs
-          </Link>
-
-          {/* About Dropdown */}
-          <div className="relative group">
-            <button className="flex items-center gap-1 text-light-text/70 hover:text-accent transition-colors duration-300 text-sm font-medium">
-              About
-              <ChevronDown
-                size={14}
-                className="transition-transform duration-300 group-hover:rotate-180"
+          {/* Logo */}
+          <div className="flex items-center md:flex-1">
+            <Link to="/" className="flex items-center group" aria-label="Connect Home">
+              <img
+                src="/Logo-LightMode-trimmed.png"
+                alt="Connect - Freelance Marketplace Logo"
+                className="h-7 md:h-12 object-contain block dark:hidden transition-all duration-300"
               />
-            </button>
+              <img
+                src="/Logo2.png"
+                alt="Connect - Freelance Marketplace Logo"
+                className="h-6 md:h-10 object-contain hidden dark:block transition-all duration-300"
+              />
+            </Link>
+          </div>
 
-            <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 
+          {/* Desktop Nav Links */}
+          <div className="hidden md:flex items-center justify-center gap-6 lg:gap-8 flex-none">
+            <Link
+              to="/find-freelancers"
+              className="text-light-text/70 hover:text-accent transition-colors duration-300 text-sm font-medium"
+              aria-label="Find and hire freelancers"
+            >
+              Find Freelancers
+            </Link>
+
+            <Link
+              to="/find-work"
+              className="text-light-text/70 hover:text-accent transition-colors duration-300 text-sm font-medium"
+              aria-label="Find freelance jobs and work"
+            >
+              Find Jobs
+            </Link>
+
+            {/* About Dropdown */}
+            <div className="relative group">
+              <button className="flex items-center gap-1 text-light-text/70 hover:text-accent transition-colors duration-300 text-sm font-medium">
+                About
+                <ChevronDown
+                  size={14}
+                  className="transition-transform duration-300 group-hover:rotate-180"
+                />
+              </button>
+
+              <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 
                             bg-secondary rounded-xl shadow-2xl 
                             border border-white/10 
                             opacity-0 invisible translate-y-4
@@ -77,114 +77,113 @@ const Navbar = () => {
                             transition-all duration-300 ease-out
                             w-56 overflow-hidden">
 
-              <Link
-                to="/about"
-                className="block px-5 py-3 text-sm hover:bg-primary transition"
-              >
-                About Us
-              </Link>
+                <Link
+                  to="/about"
+                  className="block px-5 py-3 text-sm hover:bg-primary transition"
+                >
+                  About Us
+                </Link>
 
-              <Link
-                to="/how-it-works"
-                className="block px-5 py-3 text-sm hover:bg-primary transition"
-              >
-                How It Works
-              </Link>
+                <Link
+                  to="/how-it-works"
+                  className="block px-5 py-3 text-sm hover:bg-primary transition"
+                >
+                  How It Works
+                </Link>
 
-              <Link
-                to="/for-freelancers"
-                className="block px-5 py-3 text-sm hover:bg-primary transition"
-              >
-                For Freelancers
-              </Link>
+                <Link
+                  to="/for-freelancers"
+                  className="block px-5 py-3 text-sm hover:bg-primary transition"
+                >
+                  For Freelancers
+                </Link>
 
-              <Link
-                to="/for-clients"
-                className="block px-5 py-3 text-sm hover:bg-primary transition"
-              >
-                For Clients
-              </Link>
+                <Link
+                  to="/for-clients"
+                  className="block px-5 py-3 text-sm hover:bg-primary transition"
+                >
+                  For Clients
+                </Link>
 
-              <Link
-                to="/about/mission"
-                className="block px-5 py-3 text-sm hover:bg-primary transition"
-              >
-                Mission & Vision
-              </Link>
+                <Link
+                  to="/about/mission"
+                  className="block px-5 py-3 text-sm hover:bg-primary transition"
+                >
+                  Mission & Vision
+                </Link>
 
-              <Link
-                to="/about/team"
-                className="block px-5 py-3 text-sm hover:bg-primary transition"
-              >
-                Our Team
-              </Link>
+                <Link
+                  to="/about/team"
+                  className="block px-5 py-3 text-sm hover:bg-primary transition"
+                >
+                  Our Team
+                </Link>
+              </div>
             </div>
+
+            <Link
+              to="/solutions"
+              className="text-light-text/70 hover:text-accent transition-colors duration-300 text-sm font-medium"
+            >
+              Solutions
+            </Link>
+
+            <Link
+              to="/solutions#contact-cta"
+              className="text-light-text/70 hover:text-accent transition-colors duration-300 text-sm font-medium"
+            >
+              Contact
+            </Link>
           </div>
 
-          <Link
-            to="/solutions"
-            className="text-light-text/70 hover:text-accent transition-colors duration-300 text-sm font-medium"
-          >
-            Solutions
-          </Link>
+          {/* Auth Buttons & Theme - Desktop */}
+          <div className="hidden md:flex items-center justify-end gap-4 flex-1">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full text-light-text/70 hover:text-accent transition-colors cursor-pointer"
+              title="Toggle Theme"
+            >
+              {isDark ? <Sun size={24} /> : <Moon size={24} />}
+            </button>
+            <Link
+              to="/login"
+              className="text-light-text border border-white/20 hover:border-accent hover:text-accent px-6 py-2 rounded-full text-sm font-medium transition-all duration-300"
+            >
+              Log in
+            </Link>
 
-          <Link
-            to="/solutions#contact-cta"
-            className="text-light-text/70 hover:text-accent transition-colors duration-300 text-sm font-medium"
-          >
-            Contact
-          </Link>
+            <Link
+              to="/signup"
+              className="bg-accent hover:scale-105 text-white px-6 py-2 rounded-full text-sm font-medium transition-all duration-300"
+            >
+              Join Us
+            </Link>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={toggleMenu}
+              className="text-light-text hover:text-accent transition-colors focus:outline-none"
+            >
+              {isOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
         </div>
-
-        {/* Auth Buttons & Theme - Desktop */}
-        <div className="hidden md:flex items-center justify-end gap-4 flex-1">
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full text-light-text/70 hover:text-accent transition-colors cursor-pointer"
-            title="Toggle Theme"
-          >
-            {isDark ? <Sun size={24} /> : <Moon size={24} />}
-          </button>
-          <Link
-            to="/login"
-            className="text-light-text border border-white/20 hover:border-accent hover:text-accent px-6 py-2 rounded-full text-sm font-medium transition-all duration-300"
-          >
-            Log in
-          </Link>
-
-          <Link
-            to="/signup"
-            className="bg-accent hover:scale-105 text-white px-6 py-2 rounded-full text-sm font-medium transition-all duration-300"
-          >
-            Join Us
-          </Link>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center">
-          <button
-            onClick={toggleMenu}
-            className="text-light-text hover:text-accent transition-colors focus:outline-none"
-          >
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
-        </div>
-      </div>
-    </nav>
+      </nav>
 
       {/* Mobile Overlay — outside nav so no backdrop bleed */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-[999] bg-black/50 md:hidden"
+          className="fixed inset-0 z-[9998] bg-black/50 md:hidden"
           onClick={toggleMenu}
         />
       )}
 
       {/* Mobile Menu Drawer — outside nav, fully isolated */}
       <div
-        className={`fixed top-0 right-0 h-full z-[1000] w-[75vw] max-w-[300px] border-l transform ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out md:hidden flex flex-col shadow-2xl`}
+        className={`fixed inset-y-0 right-0 z-[9999] w-[80vw] max-w-[300px] border-l transform ${isOpen ? "translate-x-0" : "translate-x-full"
+          } transition-transform duration-300 ease-in-out md:hidden flex flex-col shadow-2xl`}
         style={{
           backgroundColor: isDark ? '#0F172A' : '#ffffff',
           borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',

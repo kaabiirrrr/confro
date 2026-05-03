@@ -132,7 +132,7 @@ export default function FreelancerDirectContracts() {
                 </div>
 
                 {/* Rate */}
-                <div className="flex flex-col text-right min-w-[120px]">
+                <div className="flex flex-col text-right md:text-left min-w-[120px] ml-auto md:ml-0">
                   <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-light-text/20 mb-1">Budget</span>
                   <div className="text-white font-bold text-[16px] tracking-tight group-hover:text-accent transition">{rate}</div>
                 </div>

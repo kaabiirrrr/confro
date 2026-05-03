@@ -94,13 +94,13 @@ const Reviews = () => {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="flex items-center gap-6 mb-14"
+        className="flex items-center gap-3 sm:gap-6 mb-14"
       >
-        <span className="text-5xl font-bold text-white">
-          {avgRating > 0 ? avgRating.toFixed(1) : "â€”"}
+        <span className="text-3xl sm:text-5xl font-bold text-white">
+          {avgRating > 0 ? avgRating.toFixed(1) : "—"}
         </span>
 
-        <div className="flex text-accent text-4xl gap-2">
+        <div className="flex text-accent text-2xl sm:text-4xl gap-1 sm:gap-2">
           {[1, 2, 3, 4, 5].map((star) => (
             <FaStar
               key={star}
@@ -113,7 +113,7 @@ const Reviews = () => {
           ))}
         </div>
 
-        <span className="text-white/60 text-2xl">
+        <span className="text-white/60 text-base sm:text-2xl">
           ({totalReviews} {totalReviews === 1 ? "review" : "reviews"})
         </span>
       </motion.div>
@@ -233,7 +233,7 @@ const Reviews = () => {
               whileTap={{ scale: 0.95 }}
               type="submit"
               disabled={submitting}
-              className="bg-accent px-7 py-3 rounded-lg cursor-pointer font-medium hover:opacity-90 transition disabled:opacity-50 flex items-center gap-2"
+              className="bg-accent px-7 py-3 rounded-full cursor-pointer font-medium hover:opacity-90 transition disabled:opacity-50 flex items-center gap-2"
             >
               {submitting ? (
                 <>

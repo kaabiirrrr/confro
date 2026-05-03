@@ -72,7 +72,7 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
     return (
         <div className="space-y-6">
             {/* Main intelligence Card */}
-            <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-3xl p-6 relative overflow-hidden group">
+            <div className="md:bg-slate-900/40 md:backdrop-blur-md md:border md:border-slate-800 md:rounded-3xl p-0 md:p-6 relative overflow-hidden group bg-transparent border-none">
                 {/* Background Glow */}
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-accent/5 blur-[100px] pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
                 
