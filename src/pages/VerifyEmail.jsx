@@ -111,7 +111,7 @@ export default function VerifyEmail() {
         {/* Loading state */}
         {!status && (
           <div style={{ textAlign: 'center', padding: '24px 0' }}>
-            <InfinityLoader size={60} />
+            <InfinityLoader/>
             <p style={{ color: '#94a3b8', fontSize: '15px', marginTop: '16px', fontWeight: '500' }}>Verifying your email...</p>
           </div>
         )}
@@ -189,7 +189,7 @@ export default function VerifyEmail() {
                   boxShadow: state.primaryAction !== 'resend' ? '0 10px 20px -5px rgba(59,130,246,0.3)' : 'none',
                 }}
               >
-                {resending && <InfinityLoader size={20} />}
+                {resending && <InfinityLoader/>}
                 {resending ? 'Sending...' : state.primaryLabel}
               </button>
             )}

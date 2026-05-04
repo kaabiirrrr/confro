@@ -59,7 +59,7 @@ const ConfirmDialog = ({ message, onConfirm, onCancel, loading }) => (
           disabled={loading}
           className="flex-1 py-2.5 rounded-lg bg-red-500/80 hover:bg-red-500 text-white text-sm font-medium transition disabled:opacity-50 flex items-center justify-center gap-2"
         >
-          {loading && <InfinityLoader size={20} />}
+          {loading && <InfinityLoader/>}
           Confirm
         </button>
       </div>
@@ -125,7 +125,7 @@ export default function DirectContractDetailPage() {
   if (loading) {
     return (
       <div className="max-w-[1500px] mx-auto p-12 flex justify-center">
-        <InfinityLoader size={40} />
+        <InfinityLoader/>
       </div>
     );
   }
@@ -194,7 +194,7 @@ export default function DirectContractDetailPage() {
                 disabled={messaging}
                 className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-accent text-white font-bold text-xs uppercase tracking-widest hover:bg-accent/90 transition-all active:scale-95 disabled:opacity-50"
               >
-                {messaging ? <InfinityLoader size={20} /> : <MessageCircle size={16} />}
+                {messaging ? <InfinityLoader/> : <MessageCircle size={16} />}
                 Message Freelancer
               </button>
 
@@ -257,7 +257,7 @@ export default function DirectContractDetailPage() {
                     disabled={!!updating}
                     className="flex items-center justify-center gap-2 px-4 py-3.5 bg-green-500/10 border border-green-500/20 text-green-400 font-bold text-[11px] uppercase tracking-widest rounded-full hover:bg-green-500/20 transition-all disabled:opacity-50 active:scale-95"
                   >
-                    {updating === 'COMPLETED' ? <InfinityLoader size={20} /> : <CheckCircle2 size={16} />}
+                    {updating === 'COMPLETED' ? <InfinityLoader/> : <CheckCircle2 size={16} />}
                     Complete Contract
                   </button>
                 )}
@@ -266,7 +266,7 @@ export default function DirectContractDetailPage() {
                   disabled={!!updating}
                   className="flex items-center justify-center gap-2 px-4 py-3.5 bg-red-500/10 border border-red-500/20 text-red-500 font-bold text-[11px] uppercase tracking-widest rounded-full hover:bg-red-500/20 transition-all disabled:opacity-50 active:scale-95"
                 >
-                  {updating === 'CANCELLED' ? <InfinityLoader size={20} /> : <XCircle size={16} />}
+                  {updating === 'CANCELLED' ? <InfinityLoader/> : <XCircle size={16} />}
                   Terminate Contract
                 </button>
               </div>

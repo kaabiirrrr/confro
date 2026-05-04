@@ -115,7 +115,7 @@ export default function InputModal({
                     className="flex-[1.5] bg-accent hover:bg-accent/90 disabled:opacity-50 text-white py-3 rounded-full font-black text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2"
                   >
                     {loading ? (
-                      <InfinityLoader size={18} />
+                      <InfinityLoader/>
                     ) : (
                       <>
                         {confirmLabel} <ArrowRight size={14} />

@@ -530,7 +530,7 @@ const NotificationDropdown = ({ role }) => {
                     <div className="nd-scroll">
                         {loading ? (
                             <div className="nd-loading">
-                                <InfinityLoader size="sm" fullScreen={false} text="" />
+                                <InfinityLoader fullScreen={false} text=""/>
                                 <span>Loading activity…</span>
                             </div>
                         ) : displayed.length === 0 ? (

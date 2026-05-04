@@ -25,7 +25,7 @@ const TYPE_CONFIG = {
     cardShadow: '0 8px 32px rgba(15,23,42,0.55), 0 0 0 1px rgba(239,68,68,0.05)',
   },
   loading: {
-    Icon: (props) => <InfinityLoader size={props.size || 24} />,
+    Icon: (props) => <InfinityLoader/>,
     iconColor: '#93c5fd',          // blue-300
     iconGlow: 'rgba(59,130,246,0.15)',
     iconBg: 'rgba(37,99,235,0.1)',

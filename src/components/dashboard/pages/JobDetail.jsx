@@ -136,7 +136,7 @@ export default function JobDetail() {
                   } ${saving ? "opacity-50 cursor-wait" : ""}`}
                 >
                   {saving ? (
-                    <InfinityLoader size={20} />
+                    <InfinityLoader/>
                   ) : (
                     <Bookmark 
                       size={18} 

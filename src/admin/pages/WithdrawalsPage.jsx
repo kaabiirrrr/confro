@@ -119,7 +119,7 @@ const WithdrawalsPage = () => {
                         <tbody className="divide-y divide-white/5">
                             {loading ? (
                                 <tr><td colSpan="6" className="px-6 py-12 text-center text-white/40">
-                                    <InfinityLoader fullScreen={false} size="md" text="Loading withdrawals..." />
+                                    <InfinityLoader fullScreen={false} text="Loading withdrawals..."/>
                                 </td></tr>
                             ) : filteredWithdrawals.length === 0 ? (
                                 <tr><td colSpan="6" className="px-6 py-12 text-center text-white/40">No results found matching your search</td></tr>

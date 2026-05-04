@@ -116,7 +116,7 @@ const WeeklySummary = () => {
                                 <tr>
                                     <td colSpan="4" className="py-32 text-center">
                                         <div className="flex flex-col items-center gap-4">
-                                            <InfinityLoader size={40} />
+                                            <InfinityLoader/>
                                             <p className="text-[10px] text-white/20 font-black uppercase tracking-widest">Querying Temporal Records...</p>
                                         </div>
                                     </td>

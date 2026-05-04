@@ -81,7 +81,7 @@ export default function ProfileWizard() {
     }
 
     if (loading || finishing) {
-        return <InfinityLoader text={finishing ? "Completing your profile..." : "Loading profile setup..."} />;
+        return <InfinityLoader text={finishing ? "Completing your profile..." : "Loading profile setup..."}/>;
     }
 
     return (

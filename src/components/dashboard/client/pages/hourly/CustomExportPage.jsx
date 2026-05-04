@@ -141,7 +141,7 @@ export default function CustomExportPage() {
                 className="w-full flex items-center justify-center gap-3 py-4 bg-accent text-white rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition-all active:scale-95 disabled:opacity-50"
               >
                 {loading ? (
-                  <><InfinityLoader size={20} /> Synthesizing Data Stream...</>
+                  <><InfinityLoader/> Synthesizing Data Stream...</>
                 ) : (
                   <>{form.format === 'csv' ? 'Execute CSV Extraction' : 'Initialize Data Preview'}</>
                 )}

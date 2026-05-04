@@ -38,7 +38,7 @@ const ServiceDetailPage = () => {
 
   if (loading) return (
     <div className="min-h-screen bg-primary flex items-center justify-center">
-      <InfinityLoader size={20} />
+      <InfinityLoader/>
     </div>
   );
 

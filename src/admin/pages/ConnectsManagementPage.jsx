@@ -62,7 +62,7 @@ const ConnectsManagementPage = () => {
     };
 
     if (loading || !settings) {
-        return <InfinityLoader text="Initializing Economy Engine..." />;
+        return <InfinityLoader text="Initializing Economy Engine..."/>;
     }
 
     return (

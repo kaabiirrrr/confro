@@ -124,7 +124,7 @@ const ServicesMarketplace = () => {
         {/* SERVICES GRID */}
         {loading ? (
           <div className="py-40">
-            <InfinityLoader />
+            <InfinityLoader/>
           </div>
         ) : services.length === 0 ? (
           <motion.div

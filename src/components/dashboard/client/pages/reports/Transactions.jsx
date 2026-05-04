@@ -121,7 +121,7 @@ const Transactions = () => {
                                 <tr>
                                     <td colSpan="6" className="py-24 text-center">
                                         <div className="flex flex-col items-center gap-4">
-                                            <InfinityLoader size={40} />
+                                            <InfinityLoader/>
                                             <p className="text-[10px] text-white/20 font-black uppercase tracking-widest">Synchronizing Ledger...</p>
                                         </div>
                                     </td>

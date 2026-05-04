@@ -111,7 +111,7 @@ const FreelancerAccountActionsSection = () => {
                     disabled={deleting}
                     className="flex-1 h-12 rounded-full bg-red-600 text-white font-bold text-[13px] sm:text-sm hover:bg-red-500 transition-all shadow-lg shadow-red-600/20 disabled:opacity-50 flex items-center justify-center gap-2"
                   >
-                    {deleting && <InfinityLoader size={20} />}
+                    {deleting && <InfinityLoader/>}
                     Delete Account
                   </button>
                   <button

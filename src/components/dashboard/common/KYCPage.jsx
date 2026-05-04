@@ -317,7 +317,7 @@ export default function KYCPage() {
 
   if (pageLoading) return (
     <div className="w-full flex items-center justify-center py-32">
-      <InfinityLoader size={24} />
+      <InfinityLoader/>
     </div>
   );
 

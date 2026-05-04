@@ -296,7 +296,7 @@ const MyJobs = () => {
                         className="p-2 text-white/40 hover:text-red-400 transition-all rounded-full"
                         title="Delete"
                       >
-                        {deletingId === job.id ? <InfinityLoader size={16} /> : <Trash2 size={16} />}
+                        {deletingId === job.id ? <InfinityLoader/> : <Trash2 size={16} />}
                       </button>
                     </div>
                   </div>

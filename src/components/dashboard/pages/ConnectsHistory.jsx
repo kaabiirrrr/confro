@@ -71,7 +71,7 @@ export default function ConnectsHistory() {
         updateFilters({ dateFilter: date.value });
     };
 
-    if (loading && history.length === 0) return <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader size={60} /></div>;
+    if (loading && history.length === 0) return <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader/></div>;
 
     return (
         <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 font-sans tracking-tight animate-in fade-in duration-500">
@@ -155,7 +155,7 @@ export default function ConnectsHistory() {
             <div className="w-full overflow-hidden">
                 {loading && history.length > 0 && (
                     <div className="p-4 bg-accent/5 flex items-center gap-3 border-b border-white/5">
-                        <InfinityLoader size={20} />
+                        <InfinityLoader/>
                         <span className="text-xs text-accent font-bold uppercase tracking-[0.2em]">Refreshing Data...</span>
                     </div>
                 )}

@@ -155,7 +155,7 @@ const JobsPage = () => {
                         <tbody className="divide-y divide-white/5">
                             {isLoading ? (
                                 <tr><td colSpan="5" className="px-6 py-12 text-center text-white/40">
-                                    <InfinityLoader fullScreen={false} size="md" text="Loading jobs..." />
+                                    <InfinityLoader fullScreen={false} text="Loading jobs..."/>
                                 </td></tr>
                             ) : filteredJobs.length === 0 ? (
                                 <tr><td colSpan="5" className="px-6 py-8 text-center text-white/50">No jobs found.</td></tr>

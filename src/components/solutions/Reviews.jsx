@@ -122,7 +122,7 @@ const Reviews = () => {
       <div className="space-y-6 mb-16">
         {loading ? (
           <div className="flex justify-center items-center h-40">
-            <InfinityLoader size={30} />
+            <InfinityLoader/>
           </div>
         ) : reviews.length > 0 ? (
           reviews.map((review, index) => (

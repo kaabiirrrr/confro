@@ -202,7 +202,7 @@ export default function WalletModal({ isOpen, onClose, onSuccess }) {
                   className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white py-3.5 rounded-full font-black text-[9px] uppercase tracking-[0.25em] shadow-lg shadow-accent/20 transition-all flex items-center justify-center gap-2 active:scale-95"
                 >
                   {loading ? (
-                    <InfinityLoader size={18} />
+                    <InfinityLoader/>
                   ) : (
                     <>
                       Verify & Pay <ArrowRight size={12} />

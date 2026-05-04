@@ -83,7 +83,7 @@ export default function ClientProfileWizard() {
     };
 
     if (loading || finishing) {
-        return <InfinityLoader text={finishing ? "Completing your setup..." : "Loading client setup..."} />;
+        return <InfinityLoader text={finishing ? "Completing your setup..." : "Loading client setup..."}/>;
     }
 
     return (

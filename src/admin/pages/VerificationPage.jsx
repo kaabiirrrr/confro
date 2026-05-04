@@ -160,7 +160,7 @@ const VerificationPage = () => {
                         <tbody className="divide-y divide-white/5">
                             {loading ? (
                                 <tr><td colSpan="6" className="px-6 py-12 text-center text-white/40">
-                                    <InfinityLoader fullScreen={false} size="md" text="Loading requests..." />
+                                    <InfinityLoader fullScreen={false} text="Loading requests..."/>
                                 </td></tr>
                             ) : filteredRequests.length === 0 ? (
                                 <tr><td colSpan="6" className="px-6 py-16 text-center text-white/40">

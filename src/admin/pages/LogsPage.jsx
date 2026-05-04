@@ -128,7 +128,7 @@ const LogsPage = () => {
                         <tbody className="divide-y divide-white/5">
                             {loading ? (
                                 <tr><td colSpan="5" className="px-6 py-12 text-center text-white/40">
-                                    <InfinityLoader fullScreen={false} size="md" text="Loading history..." />
+                                    <InfinityLoader fullScreen={false} text="Loading history..."/>
                                 </td></tr>
                             ) : logs.length === 0 ? (
                                 <tr><td colSpan="5" className="px-6 py-12 text-center text-white/40">No activity logged yet</td></tr>

@@ -134,7 +134,7 @@ const SkillsPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {loading ? (
                     <div className="col-span-full py-12 flex justify-center">
-                        <InfinityLoader fullScreen={false} size="md" text="Loading catalog..." />
+                        <InfinityLoader fullScreen={false} text="Loading catalog..."/>
                     </div>
                 ) : filteredSkills.length === 0 ? (
                     <div className="col-span-full py-12 text-center text-white/40">No skills found matching your search</div>

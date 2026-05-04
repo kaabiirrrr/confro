@@ -41,7 +41,7 @@ export default function KYCStatus() {
 
   if (loading) return (
     <div style={{ minHeight: '100vh', background: '#0a0f1e', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <InfinityLoader size={32} />
+      <InfinityLoader/>
     </div>
   );
 

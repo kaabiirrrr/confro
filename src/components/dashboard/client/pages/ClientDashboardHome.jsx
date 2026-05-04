@@ -569,7 +569,7 @@ const ClientDashboardHome = () => {
               </div>
               <div className="absolute top-5 right-5 sm:relative sm:top-auto sm:right-auto">
                 {sendingVerification
-                  ? <InfinityLoader size={20} />
+                  ? <InfinityLoader/>
                   : <Mail className="text-light-text/40 shrink-0" size={20} />
                 }
               </div>

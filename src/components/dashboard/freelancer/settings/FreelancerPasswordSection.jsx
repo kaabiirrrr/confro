@@ -91,7 +91,7 @@ const FreelancerPasswordSection = () => {
             disabled={saving || !passwords.current || !passwords.new}
             className="w-full sm:w-auto h-10 sm:h-12 px-6 sm:px-10 rounded-full bg-accent text-white font-bold text-xs sm:text-sm uppercase tracking-widest hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 shadow-lg shadow-accent/20 flex items-center justify-center gap-2"
           >
-            {saving ? <InfinityLoader size={16} /> : null}
+            {saving ? <InfinityLoader/> : null}
             {saving ? 'Processing...' : 'Apply Password Change'}
           </button>
 
@@ -99,7 +99,7 @@ const FreelancerPasswordSection = () => {
             onClick={handleForgotPassword}
             disabled={sendingReset}
           >
-            {sendingReset ? <InfinityLoader size={12} /> : null}
+            {sendingReset ? <InfinityLoader/> : null}
             {sendingReset ? 'Sending…' : 'Forgot Credentials?'}
           </button>
         </div>

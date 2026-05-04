@@ -91,7 +91,7 @@ const ForgotPassword = () => {
                                     disabled={loading}
                                     className="w-full py-3 rounded-full border-none bg-accent text-white text-sm font-semibold flex items-center justify-center gap-2 transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                                 >
-                                    {loading ? <InfinityLoader size={18} /> : 'Send Reset Link'}
+                                    {loading ? <InfinityLoader/> : 'Send Reset Link'}
                                 </button>
                             </form>
 

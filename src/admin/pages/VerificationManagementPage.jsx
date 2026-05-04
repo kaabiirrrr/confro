@@ -212,7 +212,7 @@ export default function VerificationManagementPage({ role }) {
                         <tbody className="divide-y divide-white/[0.04]">
                             {loading ? (
                                 <tr><td colSpan="6" className="py-16 text-center">
-                                    <InfinityLoader fullScreen={false} size="md" />
+                                    <InfinityLoader fullScreen={false}/>
                                 </td></tr>
                             ) : filtered.length === 0 ? (
                                 <tr><td colSpan="6" className="py-16 text-center">

@@ -49,7 +49,7 @@ const ConfirmDialog = ({ message, onConfirm, onCancel, loading }) => (
         </button>
         <button onClick={onConfirm} disabled={loading}
           className="flex-1 py-2.5 rounded-lg bg-red-500/80 hover:bg-red-500 text-white text-sm font-medium transition disabled:opacity-50 flex items-center justify-center gap-2">
-          {loading && <InfinityLoader size={20} />}
+          {loading && <InfinityLoader/>}
           Confirm
         </button>
       </div>
@@ -186,7 +186,7 @@ export default function FreelancerDirectContractDetail() {
                     disabled={!!updating}
                     className="flex items-center gap-2 px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl text-[12px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50"
                   >
-                    {updating === 'ACTIVE' ? <InfinityLoader size={20} /> : <CheckCircle2 size={16} className="text-emerald-400" />}
+                    {updating === 'ACTIVE' ? <InfinityLoader/> : <CheckCircle2 size={16} className="text-emerald-400" />}
                     Accept Contract
                   </button>
                   <button
@@ -194,7 +194,7 @@ export default function FreelancerDirectContractDetail() {
                     disabled={!!updating}
                     className="flex items-center gap-2 px-8 py-4 bg-white/5 border border-white/10 text-light-text/40 rounded-2xl text-[12px] font-bold uppercase tracking-widest hover:text-red-400 hover:border-red-500/30 transition-all active:scale-[0.98] disabled:opacity-50"
                   >
-                    {updating === 'CANCELLED' ? <InfinityLoader size={20} /> : <XCircle size={16} />}
+                    {updating === 'CANCELLED' ? <InfinityLoader/> : <XCircle size={16} />}
                     Decline
                   </button>
                 </>
@@ -206,7 +206,7 @@ export default function FreelancerDirectContractDetail() {
                   disabled={!!updating}
                   className="flex items-center gap-2 px-8 py-4 bg-white/5 border border-white/10 text-red-400/80 rounded-2xl text-[12px] font-bold uppercase tracking-widest hover:bg-red-500/10 hover:border-red-500/30 transition-all active:scale-[0.98] disabled:opacity-50"
                 >
-                  {updating === 'CANCELLED' ? <InfinityLoader size={20} /> : <XCircle size={16} />}
+                  {updating === 'CANCELLED' ? <InfinityLoader/> : <XCircle size={16} />}
                   Terminate Contract
                 </button>
               )}
@@ -231,7 +231,7 @@ export default function FreelancerDirectContractDetail() {
             
             <button onClick={handleMessage} disabled={messaging}
               className="w-full flex items-center justify-center gap-2 px-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white font-bold text-[11px] uppercase tracking-widest hover:bg-white/10 active:scale-[0.98] transition-all disabled:opacity-50 shadow-xl">
-              {messaging ? <InfinityLoader size={20} /> : <MessageCircle size={14} className="text-accent" />}
+              {messaging ? <InfinityLoader/> : <MessageCircle size={14} className="text-accent" />}
               Send Message
             </button>
 

@@ -50,7 +50,7 @@ function EscrowCheckoutForm({ amount, onSuccess, onCancel }) {
         </button>
         <button type="submit" disabled={processing || !stripe}
           className="flex-1 py-3.5 rounded-2xl bg-accent hover:bg-accent/90 disabled:opacity-50 text-white text-[11px] font-bold uppercase tracking-widest transition flex items-center justify-center gap-2 shadow-lg shadow-accent/20">
-          {processing ? <InfinityLoader size={18} /> : <><Lock size={14} /> Fund {formatINR(amount)}</>}
+          {processing ? <InfinityLoader/> : <><Lock size={14} /> Fund {formatINR(amount)}</>}
         </button>
       </div>
     </form>
@@ -232,7 +232,7 @@ export default function EscrowFundingModal({ isOpen, onClose, contractId, jobTit
                 </div>
               ) : loading ? (
                 <div className="flex items-center justify-center py-10">
-                  <InfinityLoader size={32} />
+                  <InfinityLoader/>
                 </div>
               ) : error ? (
                 <div className="space-y-4">
@@ -298,7 +298,7 @@ export default function EscrowFundingModal({ isOpen, onClose, contractId, jobTit
                     disabled={loading}
                     className="w-full py-4 rounded-2xl bg-accent text-white font-black text-[11px] uppercase tracking-widest hover:bg-accent/90 transition-all flex items-center justify-center gap-2 shadow-xl shadow-accent/20"
                   >
-                    {loading ? <InfinityLoader size={18} /> : <><Lock size={14} /> Fund with Razorpay</>}
+                    {loading ? <InfinityLoader/> : <><Lock size={14} /> Fund with Razorpay</>}
                   </button>
                   <p className="text-center text-[9px] text-white/20 uppercase tracking-widest font-bold">Secure INR Transaction via Razorpay</p>
                 </div>

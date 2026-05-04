@@ -365,7 +365,7 @@ const Proposals = () => {
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center h-64"><InfinityLoader size="lg" /></div>
+        <div className="flex items-center justify-center h-64"><InfinityLoader/></div>
       ) : jobs.length === 0 ? (
         <EmptyState
           icon={FileText}
@@ -740,7 +740,7 @@ const RoleAssignmentModal = ({
                 disabled={isValidatingAI}
                 className="text-[9px] font-black text-accent uppercase tracking-[0.2em] flex items-center gap-2 bg-accent/5 hover:bg-accent/10 sm:px-3 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95"
               >
-                {isValidatingAI ? <InfinityLoader size={8} /> : <Zap size={10} className="fill-accent" />}
+                {isValidatingAI ? <InfinityLoader/> : <Zap size={10} className="fill-accent" />}
                 AI Optimize
               </button>
             </div>

@@ -266,7 +266,7 @@ const FindFreelancers = () => {
         {/* Cards */}
         <div className={`flex-1 min-w-0 transition-opacity duration-300 ${searching ? 'opacity-60' : 'opacity-100'}`}>
           {loading ? (
-            <InfinityLoader size={40} />
+            <InfinityLoader/>
           ) : freelancers.length > 0 ? (
             <motion.div
               variants={containerVariants}

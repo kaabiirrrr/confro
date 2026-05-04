@@ -184,7 +184,7 @@ export default function BillingPage() {
                       className="p-2 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-white/20 transition disabled:opacity-40"
                       title="Set as default"
                     >
-                      {isSettingDefault ? <InfinityLoader size={20} /> : <Star size={13} />}
+                      {isSettingDefault ? <InfinityLoader/> : <Star size={13} />}
                     </button>
                   )}
                   <button
@@ -193,7 +193,7 @@ export default function BillingPage() {
                     className="p-2 text-white/30 hover:text-red-400 hover:bg-red-500/10 rounded-full transition disabled:opacity-40"
                     title="Remove card"
                   >
-                    {isRemoving ? <InfinityLoader size={20} /> : <Trash2 size={14} />}
+                    {isRemoving ? <InfinityLoader/> : <Trash2 size={14} />}
                   </button>
                 </div>
               </Card>

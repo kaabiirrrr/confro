@@ -329,7 +329,7 @@ const PostJob = () => {
   if (isFetching) {
     return (
       <div className="flex items-center justify-center h-64">
-        <InfinityLoader size={40} />
+        <InfinityLoader/>
       </div>
     );
   }
@@ -734,7 +734,7 @@ const PostJob = () => {
               disabled={isLoading}
               className="w-full sm:w-auto py-4 px-8 rounded-full bg-white/[0.04] border border-white/5 text-[10px] font-bold uppercase tracking-[0.2em] text-white hover:bg-white/[0.08] transition-all flex items-center justify-center gap-2"
             >
-              {isLoading ? <InfinityLoader size={20} /> : <Save size={16} />}
+              {isLoading ? <InfinityLoader/> : <Save size={16} />}
               Save as Draft
             </button>
             <button
@@ -742,7 +742,7 @@ const PostJob = () => {
               disabled={isLoading}
               className="w-full sm:w-auto py-4 px-10 rounded-full bg-accent text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-accent/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-accent/10"
             >
-              {isLoading ? <InfinityLoader size={20} /> : <Send size={16} />}
+              {isLoading ? <InfinityLoader/> : <Send size={16} />}
               {editJobId ? 'Update Job' : 'Launch Project'}
             </button>
           </div>

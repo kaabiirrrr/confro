@@ -152,7 +152,7 @@ const WorkActivity = () => {
     };
 
     if (loading) {
-        return <InfinityLoader fullScreen={false} size="md" text="Loading Your Activity..." />;
+        return <InfinityLoader fullScreen={false} text="Loading Your Activity..."/>;
     }
 
     if (contracts.length === 0) {

@@ -64,7 +64,7 @@ const VerifyEmailCard = () => {
                         className="flex items-center gap-2 text-xs font-medium text-amber-400 hover:text-amber-300 border border-amber-500/30 hover:border-amber-400/60 px-3 py-1.5 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {sending ? (
-                            <InfinityLoader size={20} />
+                            <InfinityLoader/>
                         ) : (
                             <RefreshCw size={13} />
                         )}

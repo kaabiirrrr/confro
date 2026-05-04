@@ -187,7 +187,7 @@ const ModerationPage = () => {
                             <tbody className="divide-y divide-white/5">
                                 {isLoading ? (
                                     <tr><td colSpan="5" className="px-6 py-20 text-center text-white/40">
-                                        <InfinityLoader fullScreen={false} size="md" text="Loading data..." />
+                                        <InfinityLoader fullScreen={false} text="Loading data..."/>
                                     </td></tr>
                                 ) : (activeTab === 'reports' ? reports : activeTab === 'violations' ? violations : offenders).length === 0 ? (
                                     <tr><td colSpan="5" className="px-6 py-20 text-center text-white/20 text-[11px] italic">No {activeTab} found.</td></tr>

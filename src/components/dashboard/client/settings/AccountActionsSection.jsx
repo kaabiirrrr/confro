@@ -256,7 +256,7 @@ const AccountActionsSection = () => {
                         disabled={isDeleting}
                         className="flex-1 h-12 rounded-full bg-red-600 text-white font-black text-[11px] uppercase tracking-widest hover:bg-red-500 transition-all shadow-lg shadow-red-600/20 disabled:opacity-50 flex items-center justify-center gap-2"
                       >
-                        {isDeleting ? <><InfinityLoader size={14} /> Closing...</> : "Permanently Close"}
+                        {isDeleting ? <><InfinityLoader/> Closing...</> : "Permanently Close"}
                       </button>
                     </div>
                   </div>

@@ -46,7 +46,7 @@ const ClientServiceDetailPage = () => {
   if (loading) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-20">
-        <InfinityLoader size={60} />
+        <InfinityLoader/>
         <p className="text-white/40 font-medium">Fetching service details...</p>
       </div>
     );

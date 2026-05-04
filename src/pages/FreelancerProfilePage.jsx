@@ -229,7 +229,7 @@ const FreelancerProfilePage = () => {
 
         return (
             <div className="min-h-screen bg-primary flex flex-col items-center justify-center gap-4">
-                <InfinityLoader size={60} />
+                <InfinityLoader/>
                 <p className="text-slate-900/60 dark:text-white/60 font-medium animate-pulse">Fetching premium profile...</p>
             </div>
         );

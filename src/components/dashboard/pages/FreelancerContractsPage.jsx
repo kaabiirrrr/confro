@@ -242,7 +242,7 @@ export default function FreelancerContractsPage() {
                       className="flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-white/20 text-xs transition disabled:opacity-50"
                     >
                       {messagingId === contract.client?.id
-                        ? <InfinityLoader size={20} />
+                        ? <InfinityLoader/>
                         : <MessageCircle size={13} />
                       }
                       Message

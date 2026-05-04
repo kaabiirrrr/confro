@@ -151,7 +151,7 @@ const MembershipPage = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
-        <InfinityLoader size={40} />
+        <InfinityLoader/>
       </div>
     );
   }

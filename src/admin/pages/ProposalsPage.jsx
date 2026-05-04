@@ -117,7 +117,7 @@ const ProposalsPage = () => {
                         <tbody className="divide-y divide-white/5">
                             {isLoading ? (
                                 <tr><td colSpan="6" className="px-6 py-12 text-center text-white/40">
-                                    <InfinityLoader fullScreen={false} size="md" text="Loading proposals..." />
+                                    <InfinityLoader fullScreen={false} text="Loading proposals..."/>
                                 </td></tr>
                             ) : filteredProposals.length === 0 ? (
                                 <tr><td colSpan="6" className="px-6 py-8 text-center text-white/50">No proposals found.</td></tr>

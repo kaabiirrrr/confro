@@ -150,7 +150,7 @@ const NotificationSection = () => {
   if (loading) {
     return (
       <div className="min-h-[400px] flex items-center justify-center">
-        <InfinityLoader text="Initializing Intelligence..." />
+        <InfinityLoader text="Initializing Intelligence..."/>
       </div>
     );
   }

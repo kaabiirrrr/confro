@@ -626,7 +626,7 @@ const Messages = () => {
                                     <input autoFocus value={userSearch} onChange={e => handleUserSearch(e.target.value)}
                                         placeholder="Search by name..." className="w-full bg-transparent pl-9 pr-4 py-2.5 text-xs text-light-text placeholder-text-muted focus:outline-none" />
                                 </div>
-                                {searchingUsers && <div className="flex items-center justify-center py-4"><InfinityLoader size={20} /></div>}
+                                {searchingUsers && <div className="flex items-center justify-center py-4"><InfinityLoader/></div>}
                                 {!searchingUsers && userResults.length > 0 && (
                                     <div className="max-h-44 overflow-y-auto" style={{ borderTop: '1px solid rgba(59,130,246,0.08)' }}>
                                         {userResults.map(u => {
@@ -642,7 +642,7 @@ const Messages = () => {
                                                         <p className="text-light-text text-xs font-semibold truncate">{u.name}</p>
                                                         {u.title && <p className="text-text-muted text-[10px] truncate">{u.title}</p>}
                                                     </div>
-                                                    {startingConv === uid ? <InfinityLoader size={20} /> : <Plus size={12} className="text-accent shrink-0" />}
+                                                    {startingConv === uid ? <InfinityLoader/> : <Plus size={12} className="text-accent shrink-0" />}
                                                 </button>
                                             );
                                         })}
@@ -657,7 +657,7 @@ const Messages = () => {
                     <div className="flex-1 overflow-y-auto scrollbar-hide p-2 space-y-0.5">
                         {sidebarTab === 'requests' ? (requestsLoading ? (
                             <div className="flex flex-col items-center justify-center h-48 gap-3">
-                                <InfinityLoader size={20} />
+                                <InfinityLoader/>
                                 <p className="text-xs text-white/20">Loading requests...</p>
                             </div>
                         ) : requests.length === 0 ? (
@@ -703,7 +703,7 @@ const Messages = () => {
                         ) : sidebarTab === 'blocked' ? (
                             blockedLoading ? (
                                 <div className="flex flex-col items-center justify-center h-48 gap-3">
-                                    <InfinityLoader size={20} />
+                                    <InfinityLoader/>
                                     <p className="text-xs text-text-muted">Loading...</p>
                                 </div>
                             ) : blockedUsers.length === 0 ? (
@@ -735,7 +735,7 @@ const Messages = () => {
                         ) : sidebarTab === 'calls' ? (
                             callLogsLoading ? (
                                 <div className="flex flex-col items-center justify-center h-48 gap-3">
-                                    <InfinityLoader size={20} />
+                                    <InfinityLoader/>
                                     <p className="text-xs text-text-muted">Loading...</p>
                                 </div>
                             ) : callLogs.length === 0 ? (
@@ -782,7 +782,7 @@ const Messages = () => {
                             <>
                                 {isLoading ? (
                                     <div className="flex flex-col items-center justify-center h-48 gap-3">
-                                        <InfinityLoader size={20} />
+                                        <InfinityLoader/>
                                         <p className="text-xs text-text-muted">Loading...</p>
                                     </div>
                                 ) : filteredConvs.length === 0 ? (
@@ -1147,7 +1147,7 @@ const Messages = () => {
                                         style={{ color: text.trim() && !chatGating.isBlocked ? 'var(--color-accent)' : 'var(--color-text-muted)' }}
                                         onMouseEnter={e => { if (text.trim() && !isSending && !chatGating.isBlocked) e.currentTarget.style.color = 'var(--color-accent)'; }}
                                         onMouseLeave={e => { if (text.trim() && !isSending && !chatGating.isBlocked) e.currentTarget.style.color = 'var(--color-accent)'; }}>
-                                        {isSending ? <InfinityLoader size={20} /> : <Send size={22} strokeWidth={1.5} />}
+                                        {isSending ? <InfinityLoader/> : <Send size={22} strokeWidth={1.5} />}
                                     </button>
                                 </div>
                             </div>
@@ -1168,7 +1168,7 @@ const Messages = () => {
                                 </button>
                             </div>
                             {blockedLoading ? (
-                                <div className="flex items-center justify-center py-12"><InfinityLoader size={24} /></div>
+                                <div className="flex items-center justify-center py-12"><InfinityLoader/></div>
                             ) : blockedUsers.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-12 opacity-40 gap-3">
                                     <Ban size={40} strokeWidth={1} />

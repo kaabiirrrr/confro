@@ -185,7 +185,7 @@ export default function WorkDiariesPage() {
           <div className="flex gap-4 pt-2">
             <button type="button" onClick={() => setShowForm(false)} className="flex-1 py-3 rounded-full border border-white/5 bg-white/5 text-white/40 hover:text-white font-bold text-xs uppercase tracking-widest transition-all active:scale-95">Discard</button>
             <button type="submit" disabled={submitting} className="flex-1 py-3 rounded-full bg-accent text-white text-xs font-bold uppercase tracking-widest shadow-lg shadow-accent/20 hover:bg-accent/90 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2">
-              {submitting ? <InfinityLoader size={20} /> : 'Confirm Log Entry'}
+              {submitting ? <InfinityLoader/> : 'Confirm Log Entry'}
             </button>
           </div>
         </form>
@@ -242,7 +242,7 @@ export default function WorkDiariesPage() {
                   className="p-3 text-white/10 hover:text-red-500 hover:bg-red-500/5 rounded-full transition-all disabled:opacity-50 shrink-0 active:scale-90"
                   title="Dispose Log Entry"
                 >
-                  {deletingId === entry.id ? <InfinityLoader size={20} /> : <Trash2 size={18} />}
+                  {deletingId === entry.id ? <InfinityLoader/> : <Trash2 size={18} />}
                 </button>
               )}
             </div>

@@ -225,7 +225,7 @@ const LotteryAdminPage = lazy(() => import("./admin/pages/LotteryAdminPage"));
 const ConnectsManagementPage = lazy(() => import("./admin/pages/ConnectsManagementPage"));
 
 /* Loading Component */
-const LoadingSpinner = () => <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader size="lg" /></div>;
+const LoadingSpinner = () => <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader/></div>;
 
 /* Landing Page */
 function LandingPage() {
@@ -411,8 +411,8 @@ function App() {
                         {/* Marketplace */}
                         <Route path="/find-freelancers" element={<FindFreelancers />} />
                         <Route path="/find-work" element={<FindWork />} />
-                        <Route path="/services" element={<Suspense fallback={<InfinityLoader />}><ServicesMarketplace /></Suspense>} />
-                        <Route path="/service/:id" element={<Suspense fallback={<InfinityLoader />}><ServiceDetailPage /></Suspense>} />
+                        <Route path="/services" element={<Suspense fallback={<InfinityLoader/>}><ServicesMarketplace /></Suspense>} />
+                        <Route path="/service/:id" element={<Suspense fallback={<InfinityLoader/>}><ServiceDetailPage /></Suspense>} />
 
                         <Route path="/find-talent" element={<Navigate to="/find-work" replace />} />
 

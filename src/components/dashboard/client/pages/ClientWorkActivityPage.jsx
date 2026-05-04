@@ -99,7 +99,7 @@ const ClientWorkActivityPage = () => {
     const hasLogToday = logs.some(l => l.date === todayStr);
 
     if (loading) {
-        return <InfinityLoader fullScreen={false} size="md" text="Loading Project Activity..." />;
+        return <InfinityLoader fullScreen={false} text="Loading Project Activity..."/>;
     }
 
     if (activeJobs.length === 0) {

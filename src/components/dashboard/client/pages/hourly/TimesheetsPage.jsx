@@ -187,7 +187,7 @@ export default function TimesheetsPage() {
                           disabled={actionId === ts.id}
                           className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-green-500/10 border border-green-500/20 text-green-400 rounded-xl text-[9px] xl:text-[10px] font-black uppercase tracking-widest hover:bg-green-500/20 transition-all active:scale-95 disabled:opacity-50"
                         >
-                          {actionId === ts.id ? <InfinityLoader size={20} /> : <CheckCircle2 size={14} />}
+                          {actionId === ts.id ? <InfinityLoader/> : <CheckCircle2 size={14} />}
                           Approve
                         </button>
                         <button
@@ -253,7 +253,7 @@ export default function TimesheetsPage() {
                 disabled={!!actionId}
                 className="flex-1 py-3 rounded-xl bg-red-500 text-white text-[10px] font-black uppercase tracking-widest shadow-xl shadow-red-500/20 hover:bg-red-400 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                {actionId && <InfinityLoader size={20} />}
+                {actionId && <InfinityLoader/>}
                 Confirm Dispute
               </button>
             </div>

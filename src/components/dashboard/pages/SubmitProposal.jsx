@@ -135,7 +135,7 @@ export default function SubmitProposal() {
     };
 
     if (loading) {
-        return <InfinityLoader size="lg" text="Loading Job Details..." />;
+        return <InfinityLoader text="Loading Job Details..."/>;
     }
 
     if (!job) {

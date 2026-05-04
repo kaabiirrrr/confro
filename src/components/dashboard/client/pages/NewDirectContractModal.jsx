@@ -197,7 +197,7 @@ export default function NewDirectContractModal({ isOpen, onClose, onCreated, pre
               disabled={submitting}
               className="flex-1 py-2.5 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent/90 transition disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {submitting && <InfinityLoader size={20} />}
+              {submitting && <InfinityLoader/>}
               Create Contract
             </button>
           </div>

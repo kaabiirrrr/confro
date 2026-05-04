@@ -126,7 +126,7 @@ const FAQManagementPage = () => {
             <div className="sm:hidden space-y-4">
                 {loading ? (
                     <div className="py-12 text-center">
-                        <InfinityLoader fullScreen={false} size="md" text="Loading FAQs..." />
+                        <InfinityLoader fullScreen={false} text="Loading FAQs..."/>
                     </div>
                 ) : faqs.length === 0 ? (
                     <div className="py-12 text-center text-white/40 border border-white/10 rounded-2xl">
@@ -202,7 +202,7 @@ const FAQManagementPage = () => {
                                 {loading ? (
                                     <tr key="loading">
                                         <td colSpan="5" className="px-6 py-12 text-center text-white/40">
-                                            <InfinityLoader fullScreen={false} size="md" text="Loading FAQs..." />
+                                            <InfinityLoader fullScreen={false} text="Loading FAQs..."/>
                                         </td>
                                     </tr>
                                 ) : faqs.length === 0 ? (

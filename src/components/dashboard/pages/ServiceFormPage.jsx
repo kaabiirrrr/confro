@@ -100,7 +100,7 @@ function ImageSlot({ url, onUrl }) {
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2 py-6">
             {uploading
-              ? <InfinityLoader size={20} />
+              ? <InfinityLoader/>
               : <><Upload size={22} className="text-white/20" /><span className="text-white/20 text-xs">Click to upload</span></>
             }
           </div>
@@ -207,7 +207,7 @@ export default function ServiceFormPage() {
   };
   if (loading) return (
     <div className="w-full mx-auto flex items-center justify-center py-32">
-      <InfinityLoader size={20} />
+      <InfinityLoader/>
     </div>
   );
 
@@ -233,7 +233,7 @@ export default function ServiceFormPage() {
           </button>
           <button onClick={handleSubmit} disabled={saving}
             className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 h-9 sm:h-10 bg-accent text-white rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition disabled:opacity-50 shadow-lg shadow-accent/10">
-            {saving && <InfinityLoader size={18} />}
+            {saving && <InfinityLoader/>}
             {isEdit ? 'Save Changes' : 'Publish Service'}
           </button>
         </div>
@@ -400,7 +400,7 @@ export default function ServiceFormPage() {
           <div className="lg:sticky lg:top-24">
             <button onClick={handleSubmit} disabled={saving}
               className="w-full flex items-center justify-center gap-2 h-11 bg-accent text-white rounded-full text-[11px] font-black uppercase tracking-widest hover:bg-accent/90 transition disabled:opacity-50">
-              {saving && <InfinityLoader size={20} />}
+              {saving && <InfinityLoader/>}
               {isEdit ? 'Save Changes' : 'Publish Service'}
             </button>
             <button type="button" onClick={() => navigate('/freelancer/services')}

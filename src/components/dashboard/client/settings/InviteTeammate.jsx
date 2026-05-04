@@ -251,7 +251,7 @@ const InviteTeammate = () => {
               }`}
           >
             {inviteStatus === "idle" && <><Send size={16} /> Send invites</>}
-            {inviteStatus === "sending" && <><InfinityLoader size={18} /> Sending...</>}
+            {inviteStatus === "sending" && <><InfinityLoader/> Sending...</>}
             {inviteStatus === "sent" && <><CheckCircle2 size={16} /> Invites Sent!</>}
           </button>
         </div>

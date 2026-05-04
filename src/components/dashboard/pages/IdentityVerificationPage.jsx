@@ -64,7 +64,7 @@ function UploadZone({ label, url, onUpload, uploading }) {
         ) : (
           <div className="flex flex-col items-center justify-center gap-2 py-10 px-4 text-center">
             {uploading
-              ? <InfinityLoader size={20} />
+              ? <InfinityLoader/>
               : <><Upload size={24} className="text-white/20" /><p className="text-white/30 text-xs">Click or drag & drop</p></>
             }
           </div>
@@ -192,7 +192,7 @@ export default function IdentityVerificationPage() {
 
   if (loading) return (
     <div className="w-full mx-auto flex items-center justify-center py-32">
-      <InfinityLoader size={20} />
+      <InfinityLoader/>
     </div>
   );
 
@@ -355,7 +355,7 @@ export default function IdentityVerificationPage() {
       {/* ── STEP 4: EXTRACTING ── */}
       {step === 4 && (
         <div className="border border-white/10 rounded-[2rem] p-16 flex flex-col items-center justify-center text-center bg-white/[0.01]">
-            <InfinityLoader size={48} className="mb-4" />
+            <InfinityLoader className="mb-4"/>
             <h2 className="text-xl font-bold text-white mb-2">Analyzing Document</h2>
             <p className="text-white/50 text-sm">Our AI is extracting data from your document using OCR...</p>
         </div>
@@ -443,7 +443,7 @@ export default function IdentityVerificationPage() {
                   disabled={submitting}
                   className={`flex items-center gap-2 px-8 py-3 bg-accent hover:bg-accent/80 text-white rounded-full text-sm font-bold uppercase tracking-widest transition shadow-xl disabled:opacity-50`}
               >
-                  {submitting && <InfinityLoader size={16} />}
+                  {submitting && <InfinityLoader/>}
                   Confirm & Submit
               </button>
           </div>

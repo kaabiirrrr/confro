@@ -86,7 +86,7 @@ function TimelineModal({ user, onClose }) {
                 <div className="overflow-y-auto p-4 space-y-4 flex-1">
                     {loading ? (
                         <div className="flex items-center justify-center py-12">
-                            <InfinityLoader fullScreen={false} size="sm" text="Loading timeline..." />
+                            <InfinityLoader fullScreen={false} text="Loading timeline..."/>
                         </div>
                     ) : events.length === 0 ? (
                         <div className="text-center py-12 text-white/30 text-sm">No events found</div>

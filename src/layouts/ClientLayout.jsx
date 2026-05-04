@@ -12,7 +12,7 @@ const ClientLayout = () => {
   const isMessages = location.pathname === '/client/messages';
 
   if (loading) {
-    return <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader size={60} /></div>;
+    return <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader/></div>;
   }
 
   if (!user) {

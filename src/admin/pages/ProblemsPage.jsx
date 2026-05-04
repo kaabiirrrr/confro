@@ -119,7 +119,7 @@ const ProblemsPage = () => {
                                 {loading ? (
                                     <tr>
                                         <td colSpan="5" className="px-6 py-12 text-center text-white/40">
-                                            <InfinityLoader fullScreen={false} size="md" text="Loading problems..." />
+                                            <InfinityLoader fullScreen={false} text="Loading problems..."/>
                                         </td>
                                     </tr>
                                 ) : problems.length === 0 ? (

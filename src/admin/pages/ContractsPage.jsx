@@ -146,7 +146,7 @@ const ContractsPage = () => {
                         <tbody className="divide-y divide-white/5">
                             {isLoading ? (
                                 <tr><td colSpan="6" className="px-6 py-12 text-center text-white/40 font-medium">
-                                    <InfinityLoader fullScreen={false} size="md" text="Loading contracts..." />
+                                    <InfinityLoader fullScreen={false} text="Loading contracts..."/>
                                 </td></tr>
                             ) : filteredContracts.length === 0 ? (
                                 <tr><td colSpan="6" className="px-6 py-12 text-center text-white/40">No contracts found.</td></tr>

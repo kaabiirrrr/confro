@@ -109,7 +109,7 @@ const Settings = () => {
         toast.error('Please contact support to deactivate your account');
     };
 
-    if (isLoading) return <div className="flex items-center justify-center h-64"><InfinityLoader size={20} /></div>;
+    if (isLoading) return <div className="flex items-center justify-center h-64"><InfinityLoader/></div>;
 
     return (
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pb-12 space-y-6">

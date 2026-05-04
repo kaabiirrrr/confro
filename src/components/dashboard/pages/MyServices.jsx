@@ -209,7 +209,7 @@ export default function MyServices() {
                           </button>
                           <button onClick={() => handleDelete(svc.id)} disabled={deletingId === svc.id}
                             className="text-light-text/20 hover:text-red-400 transition-colors transform hover:scale-110 active:scale-95">
-                            {deletingId === svc.id ? <InfinityLoader size={20} /> : <Trash2 size={16} />}
+                            {deletingId === svc.id ? <InfinityLoader/> : <Trash2 size={16} />}
                           </button>
                         </div>
                         <p className="sm:hidden text-[9px] font-bold uppercase tracking-[0.1em] text-light-text/20">
@@ -343,13 +343,13 @@ export default function MyServices() {
                       {order.status === 'PENDING' && (
                         <button onClick={() => handleOrderStatus(order, 'IN_PROGRESS')} disabled={isUpdating}
                           className="h-9 px-5 bg-accent text-white rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-accent/90 transition disabled:opacity-50">
-                          {isUpdating ? <InfinityLoader size={18} /> : 'Start Order'}
+                          {isUpdating ? <InfinityLoader/> : 'Start Order'}
                         </button>
                       )}
                       {(order.status === 'IN_PROGRESS' || order.status === 'REVISION') && (
                         <button onClick={() => handleOrderStatus(order, 'DELIVERED')} disabled={isUpdating}
                           className="h-9 px-5 bg-purple-500/10 border border-purple-500/20 text-purple-400 rounded-xl text-[10px] font-bold uppercase tracking-wider hover:bg-purple-500/20 transition disabled:opacity-50">
-                          {isUpdating ? <InfinityLoader size={18} /> : 'Deliver Work'}
+                          {isUpdating ? <InfinityLoader/> : 'Deliver Work'}
                         </button>
                       )}
                     </div>

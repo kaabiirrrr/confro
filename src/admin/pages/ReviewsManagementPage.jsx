@@ -171,7 +171,7 @@ const ReviewsManagementPage = () => {
                                 {loading ? (
                                     <tr key="loading">
                                         <td colSpan="6" className="px-6 py-12 text-center text-white/40">
-                                            <InfinityLoader fullScreen={false} size="md" text="Loading reviews..." />
+                                            <InfinityLoader fullScreen={false} text="Loading reviews..."/>
                                         </td>
                                     </tr>
                                 ) : filteredReviews.length === 0 ? (

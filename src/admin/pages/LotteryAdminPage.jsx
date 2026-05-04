@@ -257,7 +257,7 @@ function WinnersModal({ drawId, onClose }) {
 
         <div className="p-6">
           {loading ? (
-            <div className="flex justify-center py-8"><InfinityLoader size={24} /></div>
+            <div className="flex justify-center py-8"><InfinityLoader/></div>
           ) : winners.length === 0 ? (
             <p className="text-white/40 text-sm text-center py-8">No winners found</p>
           ) : (
@@ -366,7 +366,7 @@ export default function LotteryAdminPage() {
         <div className="space-y-4">
           <h2 className="text-white font-semibold text-sm">All Draws</h2>
           {loading ? (
-            <div className="flex justify-center py-16"><InfinityLoader size={24} /></div>
+            <div className="flex justify-center py-16"><InfinityLoader/></div>
           ) : draws.length === 0 ? (
             <div className="border border-dashed border-white/10 rounded-2xl py-16 text-center">
               <Ticket size={28} className="text-white/10 mx-auto mb-3" />

@@ -66,7 +66,7 @@ function CheckoutForm({ clientSecret, onSuccess, onCancel, amount, connects }) {
                     disabled={isProcessing || !stripe}
                     className="flex-1 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-xl transition-all shadow-[0_0_20px_rgba(56,189,248,0.3)] flex items-center justify-center gap-2"
                 >
-                    {isProcessing ? <InfinityLoader size={20} /> : `Pay $${amount.toFixed(2)}`}
+                    {isProcessing ? <InfinityLoader/> : `Pay $${amount.toFixed(2)}`}
                 </button>
             </div>
         </form>
@@ -134,7 +134,7 @@ export default function PaymentModal({ isOpen, onClose, clientSecret, amount, co
                             </Elements>
                         ) : (
                             <div className="flex flex-col items-center justify-center py-12 gap-4">
-                                <InfinityLoader size={40} />
+                                <InfinityLoader/>
                                 <p className="text-light-text/50">Initializing secure checkout...</p>
                             </div>
                         )}

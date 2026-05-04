@@ -146,7 +146,7 @@ const PasswordSecuritySection = () => {
 
     if (loadingSettings) return (
        <div className="flex items-center justify-center min-h-[400px]">
-           <InfinityLoader />
+           <InfinityLoader/>
        </div>
     );
 

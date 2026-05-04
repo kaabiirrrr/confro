@@ -187,7 +187,7 @@ function AddBankModal({ onClose, onSuccess }) {
             </button>
             <button type="submit" disabled={submitting}
               className="flex-1 py-3.5 rounded-full bg-accent hover:bg-accent/90 text-white text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">
-              {submitting ? <InfinityLoader size={16} /> : 'Save Account'}
+              {submitting ? <InfinityLoader/> : 'Save Account'}
             </button>
           </div>
         </form>
@@ -352,7 +352,7 @@ function WithdrawalModal({ available, onClose, onSuccess }) {
             </button>
             <button type="submit" disabled={submitting}
               className="flex-1 py-4 rounded-full bg-accent hover:bg-accent/90 text-white text-[10px] font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">
-              {submitting ? <InfinityLoader size={16} /> : amtNum >= 500 ? `Withdraw Now` : 'Continue'}
+              {submitting ? <InfinityLoader/> : amtNum >= 500 ? `Withdraw Now` : 'Continue'}
             </button>
           </div>
         </form>
@@ -612,7 +612,7 @@ export default function WithdrawalsPage() {
                         {w.status === 'PENDING' && (
                           <button onClick={() => handleCancel(w.id)} disabled={cancellingId === w.id}
                             className="bg-red-500/10 hover:bg-red-500/20 text-red-400 p-2 sm:p-2 rounded-lg transition-all border border-red-500/10 sm:opacity-0 group-hover:opacity-100 flex items-center gap-2 sm:gap-0 font-bold text-[10px] sm:text-inherit">
-                            {cancellingId === w.id ? <InfinityLoader size={12} /> : <><X size={14} /><span className="sm:hidden uppercase tracking-widest">Cancel Request</span></>}
+                            {cancellingId === w.id ? <InfinityLoader/> : <><X size={14} /><span className="sm:hidden uppercase tracking-widest">Cancel Request</span></>}
                           </button>
                         )}
                       </div>
@@ -668,7 +668,7 @@ export default function WithdrawalsPage() {
                         )}
                         <button onClick={() => handleDeleteBank(b.id)} disabled={deletingBankId === b.id}
                           className="text-[9px] font-bold uppercase tracking-widest text-red-400/40 hover:text-red-400 transition-colors">
-                          {deletingBankId === b.id ? <InfinityLoader size={10} /> : 'Delete'}
+                          {deletingBankId === b.id ? <InfinityLoader/> : 'Delete'}
                         </button>
                       </div>
                     </div>

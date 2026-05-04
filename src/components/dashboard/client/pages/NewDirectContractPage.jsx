@@ -129,7 +129,7 @@ export default function NewDirectContractPage() {
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider mb-2 ml-1">Freelancer</label>
           {prefillId && loadingFreelancer ? (
             <div className="flex items-center gap-2 text-white/40 text-xs py-3">
-              <InfinityLoader size={20} /> Loading freelancer info...
+              <InfinityLoader/> Loading freelancer info...
             </div>
           ) : prefillId && freelancerName ? (
             <div className="flex items-center gap-3 bg-secondary border border-white/10 rounded-full px-6 py-4">
@@ -264,7 +264,7 @@ export default function NewDirectContractPage() {
             disabled={submitting}
             className="flex-1 py-3 sm:py-3.5 rounded-full bg-accent text-white text-xs sm:text-sm font-bold uppercase tracking-widest hover:bg-accent/90 transition shadow-lg shadow-accent/20 disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            {submitting && <InfinityLoader size={20} />}
+            {submitting && <InfinityLoader/>}
             Create Contract
           </button>
         </div>

@@ -103,7 +103,7 @@ const SupportTicketsPage = () => {
             <div className="sm:hidden space-y-2">
                 {loading ? (
                     <div className="py-12 flex justify-center">
-                        <InfinityLoader fullScreen={false} size="md" text="Loading tickets..." />
+                        <InfinityLoader fullScreen={false} text="Loading tickets..."/>
                     </div>
                 ) : tickets.length === 0 ? (
                     <p className="text-center text-white/40 py-12 font-medium">No support tickets found.</p>
@@ -192,7 +192,7 @@ const SupportTicketsPage = () => {
                                 {loading ? (
                                     <tr>
                                         <td colSpan="6" className="px-6 py-12 text-center text-white/40">
-                                            <InfinityLoader fullScreen={false} size="md" text="Loading tickets..." />
+                                            <InfinityLoader fullScreen={false} text="Loading tickets..."/>
                                         </td>
                                     </tr>
                                 ) : tickets.length === 0 ? (

@@ -191,7 +191,7 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
                     </button>
                     <button onClick={handleCropDone} disabled={uploading}
                       className="flex-1 h-11 rounded-full bg-accent text-white font-bold text-sm shadow-lg shadow-accent/20 disabled:opacity-50 flex items-center justify-center gap-2 transition-all">
-                      {uploading ? <InfinityLoader size={18} /> : <Check size={15} />}
+                      {uploading ? <InfinityLoader/> : <Check size={15} />}
                       {uploading ? "Uploading..." : "Apply"}
                     </button>
                   </div>

@@ -530,7 +530,7 @@ function DashboardHome() {
         {/* FEED GRID */}
         <div className="space-y-10 min-h-[500px]">
           {loading ? (
-            <InfinityLoader fullScreen={false} size="md" text="Syncing Network..." />
+            <InfinityLoader fullScreen={false} text="Syncing Network..."/>
           ) : displayedJobs.length === 0 ? (
             <div className="text-center py-20">
               <Search size={48} className="text-white/5 mx-auto mb-6" />

@@ -142,7 +142,7 @@ const EditMemberModal = ({ isOpen, onClose, member, jobId, onUpdate }) => {
                                         disabled={isOptimizing}
                                         className="text-[9px] font-bold text-accent uppercase tracking-widest flex items-center gap-1.5 hover:bg-accent/10 py-1.5 px-3 rounded-lg transition-all border border-accent/20"
                                     >
-                                        {isOptimizing ? <InfinityLoader size={8} /> : <Zap size={10} fill="currentColor" />}
+                                        {isOptimizing ? <InfinityLoader/> : <Zap size={10} fill="currentColor" />}
                                         AI Optimize
                                     </button>
                                 </div>

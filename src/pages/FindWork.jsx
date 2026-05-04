@@ -168,7 +168,7 @@ const FindWork = () => {
         <div className="flex-1 min-w-0">
           {loading ? (
              <div className="flex justify-center items-center h-64">
-                <InfinityLoader size={40} />
+                <InfinityLoader/>
              </div>
           ) : jobs.length > 0 ? (
             <motion.div

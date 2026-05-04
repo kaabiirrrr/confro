@@ -47,7 +47,7 @@ const AdminActivityInsights = () => {
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)]">
-                <InfinityLoader fullScreen={false} size="lg" text="Aggregating Network Insights..." />
+                <InfinityLoader fullScreen={false} text="Aggregating Network Insights..."/>
             </div>
         );
     }

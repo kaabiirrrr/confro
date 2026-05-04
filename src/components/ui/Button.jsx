@@ -39,7 +39,7 @@ const Button = ({
       {...props}
     >
       {showSpinner ? (
-        <InfinityLoader size={20} />
+        <InfinityLoader/>
       ) : (
         <>
           {Icon && iconPosition === 'left' && <Icon className="w-4 h-4" />}

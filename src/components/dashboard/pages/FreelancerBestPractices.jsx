@@ -68,7 +68,7 @@ const FreelancerBestPractices = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-full pt-32 pb-32">
-                <InfinityLoader size={60} />
+                <InfinityLoader/>
             </div>
         );
     }

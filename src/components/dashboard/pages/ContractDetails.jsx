@@ -176,7 +176,7 @@ const ContractDetails = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-        <InfinityLoader size={20} />
+        <InfinityLoader/>
         <p className="text-light-text/60 animate-pulse">Initializing workspace...</p>
       </div>
     );

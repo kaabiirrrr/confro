@@ -318,7 +318,7 @@ export default function ClientSearchTalentPage() {
                           : 'border-white/10 text-white/50 hover:text-white hover:border-white/20 bg-white/5'
                       }`}
                     >
-                      {isSaveBusy ? <InfinityLoader size={20} /> : <Bookmark size={12} className={isSaved ? 'fill-current' : ''} />}
+                      {isSaveBusy ? <InfinityLoader/> : <Bookmark size={12} className={isSaved ? 'fill-current' : ''} />}
                       {isSaved ? 'Saved' : 'Save'}
                     </button>
 
@@ -343,7 +343,7 @@ export default function ClientSearchTalentPage() {
                       disabled={isMsgBusy}
                       className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-accent text-white border border-accent hover:bg-accent/90 text-[10px] font-bold uppercase tracking-widest transition disabled:opacity-50 ml-auto shadow-md shadow-accent/20"
                     >
-                      {isMsgBusy ? <InfinityLoader size={20} /> : <MessageCircle size={12} />}
+                      {isMsgBusy ? <InfinityLoader/> : <MessageCircle size={12} />}
                       Message
                     </button>
                   </div>

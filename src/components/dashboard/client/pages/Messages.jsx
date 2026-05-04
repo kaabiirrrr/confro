@@ -234,7 +234,7 @@ const Messages = () => {
                     <div className="flex-1 overflow-y-auto custom-scrollbar">
                         {isLoading ? (
                             <div className="flex flex-col items-center justify-center h-full gap-4">
-                                <InfinityLoader size={40} />
+                                <InfinityLoader/>
                                 <p className="text-[10px] text-white/10 font-black uppercase tracking-widest">Synchronizing Channels...</p>
                             </div>
                         ) : filteredConvs.length === 0 ? (
@@ -487,7 +487,7 @@ const Messages = () => {
                                         disabled={!text.trim() || isSending}
                                         className="mb-1 w-12 h-12 rounded-full bg-accent text-white flex items-center justify-center shadow-xl shadow-accent/20 hover:bg-accent/90 transition-all active:scale-95 disabled:opacity-20 disabled:grayscale disabled:shadow-none shrink-0"
                                     >
-                                        {isSending ? <InfinityLoader size={20} /> : <Send size={20} strokeWidth={2.5} />}
+                                        {isSending ? <InfinityLoader/> : <Send size={20} strokeWidth={2.5} />}
                                     </button>
                                 </div>
                                 <div className="mt-4 flex justify-center gap-10">

@@ -126,7 +126,7 @@ function BookModal({ expert, onClose, onBooked }) {
             </button>
             <button type="submit" disabled={submitting}
               className="flex-1 py-2.5 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent/90 transition disabled:opacity-50 flex items-center justify-center gap-2">
-              {submitting && <InfinityLoader size={20} />}
+              {submitting && <InfinityLoader/>}
               Book Consultation
             </button>
           </div>
@@ -324,7 +324,7 @@ export default function ConsultationsPage() {
                       disabled={isUpdating}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-500/20 text-red-400 text-xs hover:bg-red-500/10 transition disabled:opacity-50 shrink-0"
                     >
-                      {isUpdating ? <InfinityLoader size={20} /> : <XCircle size={12} />}
+                      {isUpdating ? <InfinityLoader/> : <XCircle size={12} />}
                       Cancel
                     </button>
                   )}

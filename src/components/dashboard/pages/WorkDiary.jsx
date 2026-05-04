@@ -159,7 +159,7 @@ const WorkDiary = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-        <InfinityLoader size={20} />
+        <InfinityLoader/>
         <p className="text-light-text/60 animate-pulse">Loading work diary...</p>
       </div>
     );
@@ -272,7 +272,7 @@ const WorkDiary = () => {
                 <button type="submit" disabled={logging}
                   className="flex-[2] h-12 sm:h-14 bg-accent text-white rounded-full text-[9px] sm:text-[11px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] hover:bg-accent/90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-accent/20 active:scale-95"
                 >
-                  {logging && <InfinityLoader size={16} />}
+                  {logging && <InfinityLoader/>}
                   <span className="truncate">{logging ? 'Saving...' : 'Submit Log'}</span>
                 </button>
                 <button type="button" onClick={() => setShowAddForm(false)}
