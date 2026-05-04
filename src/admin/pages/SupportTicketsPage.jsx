@@ -71,14 +71,14 @@ const SupportTicketsPage = () => {
             {/* Header section */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-6">
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-                    <h1 className="text-lg sm:text-3xl font-bold text-white mb-1 sm:mb-2 flex items-center gap-2 sm:gap-3">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
                         <img src="/Icons/icons8-question-mark-100.png" alt="Support Tickets" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
                         Support Tickets
                     </h1>
-                    <p className="text-white/50 text-xs sm:text-sm">Manage and resolve user-submitted help and support requests.</p>
+                    <p className="text-white/40 text-xs mt-1">Manage and resolve user-submitted help and support requests.</p>
                 </motion.div>
 
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                     <CustomDropdown
                         options={[
                             { label: 'All Status', value: 'all' },
@@ -90,21 +90,90 @@ const SupportTicketsPage = () => {
                         value={statusFilter}
                         onChange={(val) => setStatusFilter(val)}
                         variant="transparent"
-                        className="min-w-[120px] sm:min-w-[140px]"
+                        className="w-full sm:w-44"
                     />
-                    <button className="flex items-center gap-1.5 sm:gap-2 bg-white/5 hover:bg-white/10 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-full border border-white/10 transition-all text-xs sm:text-sm font-bold active:scale-95">
+                    <button className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white px-5 py-2.5 rounded-full border border-white/10 transition-all text-xs sm:text-sm font-bold active:scale-95">
                         <Download size={14} />
                         Export
                     </button>
                 </div>
             </div>
 
-            {/* Tickets Table */}
+            {/* Mobile Card List — only visible on mobile */}
+            <div className="sm:hidden space-y-2">
+                {loading ? (
+                    <div className="py-12 flex justify-center">
+                        <InfinityLoader fullScreen={false} size="md" text="Loading tickets..." />
+                    </div>
+                ) : tickets.length === 0 ? (
+                    <p className="text-center text-white/40 py-12 font-medium">No support tickets found.</p>
+                ) : (
+                    tickets.map((ticket) => (
+                        <motion.div
+                            key={ticket.id}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => navigate(`/admin/support-tickets/${ticket.id}`)}
+                            className="flex items-center gap-3 px-4 py-3 border border-white/10 rounded-xl bg-white/[0.02] active:bg-white/[0.05] transition-colors cursor-pointer"
+                        >
+                            {/* Avatar */}
+                            {ticket.profiles?.avatar_url ? (
+                                <img
+                                    src={ticket.profiles.avatar_url}
+                                    alt={ticket.profiles.name}
+                                    className="w-8 h-8 rounded-full object-cover border border-white/10 flex-shrink-0"
+                                />
+                            ) : (
+                                <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 flex-shrink-0">
+                                    <User size={14} />
+                                </div>
+                            )}
+
+                            {/* Name + Subject */}
+                            <div className="flex-1 min-w-0">
+                                <p className="text-white text-xs font-semibold truncate leading-tight">
+                                    {ticket.profiles?.name || 'Unknown User'}
+                                </p>
+                                <p className="text-white/40 text-[10px] truncate leading-tight">
+                                    {ticket.subject}
+                                </p>
+                            </div>
+
+                            {/* Priority */}
+                            <span className={`flex-shrink-0 text-[9px] font-black uppercase tracking-widest ${
+                                ticket.priority === 'high' ? 'text-red-400' : 'text-blue-400'
+                            }`}>
+                                {ticket.priority}
+                            </span>
+
+                            {/* Status badge */}
+                            <span className={`flex-shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase border ${
+                                ticket.status === 'resolved'
+                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                    : ticket.status === 'in_progress'
+                                    ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                                    : ticket.status === 'rejected'
+                                    ? 'bg-red-500/10 text-red-400 border-red-500/20'
+                                    : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                            }`}>
+                                {ticket.status === 'resolved' ? <CheckCircle size={8} /> : <Clock size={8} />}
+                                {ticket.status.replace('_', ' ')}
+                            </span>
+
+                            {/* View arrow */}
+                            <Eye size={14} className="flex-shrink-0 text-white/30" />
+                        </motion.div>
+                    ))
+                )}
+            </div>
+
+            {/* Desktop Table — hidden on mobile */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="bg-transparent border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+                className="hidden sm:block bg-transparent border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
             >
                 <div className="overflow-x-auto admin-table-wrap">
                     <table className="w-full text-left">
@@ -180,7 +249,7 @@ const SupportTicketsPage = () => {
                                                     {ticket.escalated && (
                                                         <span className="text-[9px] text-red-500/80 font-bold flex items-center gap-1">
                                                             <AlertCircle size={10} />
-                                                            ESCALATED ({'>'}48h)
+                                                            ESCALATED (&gt;48h)
                                                         </span>
                                                     )}
                                                 </div>

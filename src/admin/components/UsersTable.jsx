@@ -75,7 +75,7 @@ const UsersTable = ({
         <div className="bg-transparent border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
             {/* Table Header / Filters */}
             <div className="p-4 sm:p-6 border-b border-white/10 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-between gap-3 sm:gap-4">
-                <div className="relative flex-1 w-full sm:min-w-[200px]">
+                <div className="relative w-full sm:w-96">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" size={16} />
                     <input
                         type="text"
@@ -196,15 +196,14 @@ const UsersTable = ({
                                                                 className={`h-full rounded-full ${barColor}`}
                                                             />
                                                         </div>
-                                                        <span className={`text-xs font-bold tabular-nums ${
-                                                            pct >= 100 ? 'text-green-400' :
-                                                            pct >= 50  ? 'text-accent'     :
-                                                                         'text-amber-400'
-                                                        }`}>
+                                                        <span className={`text-xs font-bold tabular-nums ${pct >= 100 ? 'text-green-400' :
+                                                            pct >= 50 ? 'text-accent' :
+                                                                'text-amber-400'
+                                                            }`}>
                                                             {pct}%
                                                         </span>
                                                     </div>
-                                                    {isComplete ? (
+                                                    {(isComplete || pct >= 100) ? (
                                                         <span className="text-[10px] font-semibold text-green-400/80 flex items-center gap-1">
                                                             <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400"></span>
                                                             Complete
@@ -218,10 +217,10 @@ const UsersTable = ({
                                             );
                                         })()}
                                     </td>
-                                    <td className="px-6 py-4 text-xs font-medium text-white/60">
+                                    <td className="px-6 py-4 text-xs font-medium text-white/60 whitespace-nowrap">
                                         {formatDate(user.created_at)}
                                     </td>
-                                    <td className="px-6 py-4 text-xs font-medium text-white/60">
+                                    <td className="px-6 py-4 text-xs font-medium text-white/60 whitespace-nowrap">
                                         {formatDate(user.last_login)}
                                     </td>
                                     <td className="px-6 py-4 text-right">

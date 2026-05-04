@@ -93,38 +93,98 @@ const FAQManagementPage = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                 >
-                    <h1 className="text-lg sm:text-3xl font-bold text-white mb-2 flex items-center gap-3">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
                         <img src="/Icons/icons8-faq-80.png" alt="FAQ Management" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
                         FAQ Management
                     </h1>
-                    <p className="text-white/50 text-sm">Manage Frequently Asked Questions and answer user-submitted inquiries.</p>
+                    <p className="text-white/40 text-xs mt-1">Manage Frequently Asked Questions and answer user-submitted inquiries.</p>
                 </motion.div>
 
-                <div className="flex items-center gap-3">
-                    <CustomDropdown
-                        options={[
-                            { label: 'All Status', value: '' },
-                            { label: 'Pending', value: 'pending' },
-                            { label: 'Published', value: 'published' }
-                        ]}
-                        value={statusFilter}
-                        onChange={(val) => setStatusFilter(val)}
-                        variant="accent"
-                        className="min-w-[140px] !rounded-full h-[42px]"
-                        fullWidth={false}
-                    />
-                    <button className="flex items-center gap-2 bg-accent/10 border border-accent/20 text-accent hover:bg-accent hover:text-white px-5 py-2.5 rounded-full transition-all text-[10px] font-black uppercase tracking-widest active:scale-95 h-[42px]">
+                <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                    <div className="w-full sm:w-40">
+                        <CustomDropdown
+                            options={[
+                                { label: 'All Status', value: '' },
+                                { label: 'Pending', value: 'pending' },
+                                { label: 'Published', value: 'published' }
+                            ]}
+                            value={statusFilter}
+                            onChange={(val) => setStatusFilter(val)}
+                            variant="accent"
+                            className="!rounded-full h-[42px]"
+                            fullWidth={true}
+                        />
+                    </div>
+                    <button className="w-full sm:w-auto flex items-center justify-center gap-2 bg-accent text-white px-5 py-2.5 rounded-full transition-all text-[10px] font-black uppercase tracking-widest active:scale-95 h-[42px] hover:opacity-90">
                         <Download size={14} />
                         Export Data
                     </button>
                 </div>
             </div>
 
+            {/* Mobile Card View */}
+            <div className="sm:hidden space-y-4">
+                {loading ? (
+                    <div className="py-12 text-center">
+                        <InfinityLoader fullScreen={false} size="md" text="Loading FAQs..." />
+                    </div>
+                ) : faqs.length === 0 ? (
+                    <div className="py-12 text-center text-white/40 border border-white/10 rounded-2xl">
+                        No FAQ entries found.
+                    </div>
+                ) : (
+                    faqs.map((faq) => (
+                        <motion.div
+                            key={faq.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-white/[0.03] border border-white/10 rounded-2xl p-5 space-y-4"
+                        >
+                            <div className="flex items-center justify-between">
+                                <span className={`inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest ${faq.status === 'published'
+                                    ? 'text-emerald-400'
+                                    : 'text-orange-400'
+                                }`}>
+                                    {faq.status === 'published' ? <CheckCircle size={10} /> : <Clock size={10} />}
+                                    {faq.status}
+                                </span>
+                                <span className="text-white/20 text-[10px] font-medium uppercase tracking-tighter">{formatDate(faq.created_at)}</span>
+                            </div>
+
+                            <div>
+                                <p className="text-white font-bold text-sm leading-tight mb-2">{faq.question}</p>
+                                <p className="text-white/60 text-xs leading-relaxed italic line-clamp-3">
+                                    {faq.answer || <span className="text-white/20 text-[10px]">Awaiting response...</span>}
+                                </p>
+                            </div>
+
+                            <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/5">
+                                <button
+                                    onClick={() => handleOpenEdit(faq)}
+                                    className="flex items-center gap-2 text-white/40 hover:text-white text-[10px] font-bold uppercase tracking-widest"
+                                >
+                                    <Edit3 size={14} />
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => setConfirmModal({ isOpen: true, id: faq.id })}
+                                    className="flex items-center gap-2 text-white/40 hover:text-rose-400 text-[10px] font-bold uppercase tracking-widest"
+                                >
+                                    <Trash2 size={14} />
+                                    Delete
+                                </button>
+                            </div>
+                        </motion.div>
+                    ))
+                )}
+            </div>
+
+            {/* Desktop Table View */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="bg-transparent border border-white/10 rounded-2xl overflow-hidden"
+                className="hidden sm:block bg-transparent border border-white/10 rounded-2xl overflow-hidden"
             >
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">

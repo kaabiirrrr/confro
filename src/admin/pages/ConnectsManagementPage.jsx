@@ -73,19 +73,14 @@ const ConnectsManagementPage = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                 >
-                    <div className="flex items-center gap-3 mb-2">
-                        <HandCoins size={24} className="text-accent" />
-                        <h1 className="text-xl font-black text-white tracking-tighter uppercase">Connect Economy</h1>
-                    </div>
-                    <p className="text-white/40 text-[11px] font-black uppercase tracking-[0.2em]">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                        <HandCoins size={24} className="text-accent" /> Connect economy
+                    </h1>
+                    <p className="text-white/40 text-xs mt-1">
                         Manage platform currency, deduction costs, and monthly distribution logic
                     </p>
                 </motion.div>
                 
-                <div className="flex items-center gap-2 group cursor-pointer">
-                    <TrendingUp size={14} className="group-hover:scale-110 transition-transform text-accent" />
-                    <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Protocol Intelligence</span>
-                </div>
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-[1fr_400px] gap-8">
@@ -98,37 +93,37 @@ const ConnectsManagementPage = () => {
                     <form onSubmit={handleSave} className="space-y-10 relative z-10">
                         {/* Status Guard / Audience Toggle Style */}
                         <div className="space-y-4">
-                            <label className="text-white/20 text-[9px] font-black uppercase tracking-[0.3em] pl-1">System Governance Mode</label>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <label className="text-white/20 text-[10px] font-bold pl-1">System governance mode</label>
+                            <div className="grid grid-cols-2 gap-3">
                                 <button
                                     type="button"
                                     onClick={() => setSettings(prev => ({ ...prev, is_connect_system_enabled: true }))}
-                                    className={`flex items-center justify-center gap-3 py-4 rounded-full border transition-all duration-300 ${settings.is_connect_system_enabled
+                                    className={`flex items-center justify-center gap-2 py-2.5 rounded-full border transition-all duration-300 ${settings.is_connect_system_enabled
                                         ? 'bg-[#38BDF8] border-[#38BDF8] text-white shadow-lg shadow-sky-500/10'
                                         : 'bg-white/[0.03] border-white/5 text-white/40 hover:border-white/20 hover:bg-white/[0.05]'
                                         }`}
                                 >
-                                    <ShieldCheck size={18} className={settings.is_connect_system_enabled ? 'text-white' : 'text-[#38BDF8]'} />
-                                    <span className="font-bold text-[11px] tracking-widest uppercase">Monetization Active</span>
+                                    <ShieldCheck size={14} className={settings.is_connect_system_enabled ? 'text-white' : 'text-[#38BDF8]'} />
+                                    <span className="font-bold text-[10px]">Monetization</span>
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setSettings(prev => ({ ...prev, is_connect_system_enabled: false }))}
-                                    className={`flex items-center justify-center gap-3 py-4 rounded-full border transition-all duration-300 ${!settings.is_connect_system_enabled
+                                    className={`flex items-center justify-center gap-2 py-2.5 rounded-full border transition-all duration-300 ${!settings.is_connect_system_enabled
                                         ? 'bg-amber-500 border-amber-500 text-white shadow-lg shadow-amber-500/10'
                                         : 'bg-white/[0.03] border-white/5 text-white/40 hover:border-white/20 hover:bg-white/[0.05]'
                                         }`}
                                 >
-                                    <Zap size={18} className={!settings.is_connect_system_enabled ? 'text-white' : 'text-amber-500'} />
-                                    <span className="font-bold text-[11px] tracking-widest uppercase">Free Mode (Bypass)</span>
+                                    <Zap size={14} className={!settings.is_connect_system_enabled ? 'text-white' : 'text-amber-500'} />
+                                    <span className="font-bold text-[10px]">Free mode</span>
                                 </button>
                             </div>
                         </div>
 
                         {/* Cost Architecture Grid */}
                         <div className="space-y-6">
-                            <label className="text-white/20 text-[9px] font-black uppercase tracking-[0.3em] pl-1">Dynamic Cost Architecture</label>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <label className="text-white/20 text-[10px] font-bold pl-1">Dynamic cost architecture</label>
+                            <div className="grid grid-cols-2 gap-3 sm:gap-4">
                                 <FormInput 
                                     label="Job Posting Unit" 
                                     value={settings.job_post_cost} 
@@ -162,15 +157,13 @@ const ConnectsManagementPage = () => {
 
                         {/* Monthly Distro Section */}
                         <div className="space-y-4">
-                            <label className="text-white/20 text-[9px] font-black uppercase tracking-[0.3em] pl-1">Protocol Distribution Logic</label>
-                            <div className="p-8 bg-white/[0.02] border border-white/5 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 group">
-                                <div className="flex items-center gap-4">
-                                    <div className="p-3 bg-accent/10 rounded-xl text-accent group-hover:scale-110 transition-transform">
-                                        <RefreshCw size={20} className="animate-spin-slow" />
-                                    </div>
+                            <label className="text-white/20 text-[10px] font-bold pl-1">Protocol distribution logic</label>
+                            <div className="p-0 bg-transparent flex flex-row items-center justify-between gap-6 group">
+                                <div className="flex items-center gap-3">
+                                    <RefreshCw size={22} className="text-accent animate-spin-slow group-hover:scale-110 transition-transform" />
                                     <div>
-                                        <h4 className="text-white font-bold text-sm tracking-tight mb-1">Monthly Free Refills</h4>
-                                        <p className="text-white/20 text-[9px] font-black uppercase tracking-widest">Global Freelancer Baseline</p>
+                                        <h4 className="text-white font-bold text-[11px] tracking-tight">Monthly free refills</h4>
+                                        <p className="text-white/20 text-[8px] font-bold">Global baseline</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-4">
@@ -178,7 +171,7 @@ const ConnectsManagementPage = () => {
                                         type="number" 
                                         value={settings.monthly_free_connects ?? 20}
                                         onChange={(e) => setSettings(p => ({...p, monthly_free_connects: parseInt(e.target.value) || 0}))}
-                                        className="w-24 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-center font-black text-lg focus:outline-none focus:border-accent/50 transition-all [appearance:textfield]"
+                                        className="w-20 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-center font-black text-sm focus:outline-none focus:border-accent/50 transition-all [appearance:textfield]"
                                     />
                                 </div>
                             </div>
@@ -187,14 +180,14 @@ const ConnectsManagementPage = () => {
                         <button
                             type="submit"
                             disabled={saving}
-                            className="w-full py-4 bg-[#38BDF8] hover:bg-[#0EA5E9] text-white font-black rounded-xl transition-all flex items-center justify-center gap-3 text-[11px] uppercase tracking-[0.3em] disabled:opacity-50 shadow-lg shadow-sky-500/10 hover:-translate-y-0.5"
+                            className="w-full py-2.5 bg-[#38BDF8] hover:bg-[#0EA5E9] text-white font-bold rounded-xl transition-all flex items-center justify-center gap-3 text-[11px] disabled:opacity-50 shadow-lg shadow-sky-500/10 hover:-translate-y-0.5"
                         >
                             {saving ? (
                                 <RefreshCw className="animate-spin" size={16} />
                             ) : (
                                 <>
                                     <Send size={14} />
-                                    Commit Protocol Changes
+                                    Commit protocol changes
                                 </>
                             )}
                         </button>
@@ -341,10 +334,10 @@ const ConnectsManagementPage = () => {
 
 // Helper Components - Matched to Offers aesthetics
 const FormInput = ({ label, value, onChange, icon, placeholder }) => (
-    <div className="space-y-4">
-        <label className="text-white/20 text-[10px] font-black uppercase tracking-[0.3em] pl-1">{label}</label>
-        <div className="relative group">
-            <div className="absolute left-6 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-accent transition-colors">
+    <div className="flex flex-col gap-1.5">
+        <label className="text-white/20 text-[8px] font-bold pl-1">{label}</label>
+        <div className="relative group flex items-center bg-white/[0.03] border border-white/5 rounded-xl px-3 py-1.5 hover:border-white/10 transition-all">
+            <div className="text-white/20 group-focus-within:text-accent transition-colors flex-shrink-0">
                 {icon}
             </div>
             <input
@@ -353,11 +346,8 @@ const FormInput = ({ label, value, onChange, icon, placeholder }) => (
                 value={value ?? 0}
                 onChange={(e) => onChange(parseInt(e.target.value) || 0)}
                 placeholder={placeholder}
-                className="w-full bg-white/[0.03] border border-white/5 rounded-xl px-14 py-4 text-white text-sm focus:outline-none focus:border-accent/40 transition-all font-black group-hover:border-white/10 [appearance:textfield]"
+                className="w-full bg-transparent border-none text-white text-xs focus:outline-none transition-all font-bold text-center [appearance:textfield] px-2"
             />
-            <div className="absolute right-6 top-1/2 -translate-y-1/2 text-[9px] font-black text-white/10 uppercase tracking-widest">
-                Protocol
-            </div>
         </div>
     </div>
 );

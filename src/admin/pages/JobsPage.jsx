@@ -80,18 +80,21 @@ const JobsPage = () => {
         (j.client?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const Modal = ({ isOpen, onClose, title, children }) => {
+    const Modal = ({ isOpen, onClose, title, children, icon }) => {
         if (!isOpen) return null;
         return (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm transition-all animate-in fade-in duration-200">
-                <div className="bg-primary border border-white/10 w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-3xl shadow-2xl flex flex-col">
-                    <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
-                        <h3 className="text-lg font-bold text-white">{title}</h3>
+            <div className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm pt-8 sm:pt-12 overflow-y-auto no-scrollbar">
+                <div className="bg-primary border border-white/10 w-full max-w-2xl overflow-hidden rounded-2xl shadow-2xl flex flex-col my-auto sm:my-0">
+                    <div className="px-6 py-4 flex items-center justify-between">
+                        <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                            {icon && <img src={icon} alt="" className="w-5 h-5 object-contain" />}
+                            {title}
+                        </h3>
                         <button onClick={onClose} className="p-2 text-white/40 hover:text-accent transition-colors">
                             <X size={20} />
                         </button>
                     </div>
-                    <div className="p-6 overflow-y-auto custom-scrollbar">
+                    <div className="p-6 pt-0 overflow-y-auto custom-scrollbar">
                         {children}
                     </div>
                 </div>
@@ -102,20 +105,23 @@ const JobsPage = () => {
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-                <h1 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2">
-                    <img src="/Icons/icons8-bag-100.png" alt="Jobs" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
-                    Job Posts Moderation
-                </h1>
+                <div>
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                        <img src="/Icons/icons8-bag-100.png" alt="Jobs" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
+                        Job Posts Moderation
+                    </h1>
+                    <p className="text-white/40 text-xs mt-1">Review and manage all job postings across the platform</p>
+                </div>
 
-                <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-                    <div className="relative flex-1 sm:w-64">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                    <div className="relative w-full sm:w-80">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
                         <input
                             type="text"
                             placeholder="Search jobs..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-transparent border border-white/10 rounded-lg pl-9 pr-4 py-2 text-white text-xs sm:text-sm focus:outline-none focus:border-accent"
+                            className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white text-xs focus:outline-none focus:border-accent transition-all shadow-inner"
                         />
                     </div>
                     <CustomDropdown
@@ -129,7 +135,7 @@ const JobsPage = () => {
                         value={statusFilter}
                         onChange={(val) => setStatusFilter(val)}
                         variant="transparent"
-                        className="w-40"
+                        className="w-full sm:w-40"
                     />
                 </div>
             </div>
@@ -164,7 +170,7 @@ const JobsPage = () => {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center overflow-hidden border border-white/10 shadow-sm shadow-black/20">
+                                                <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center overflow-hidden shadow-sm shadow-black/20">
                                                     {job.client?.profiles?.avatar_url ? (
                                                         <img src={job.client.profiles.avatar_url} alt="" className="w-full h-full object-cover" />
                                                     ) : (
@@ -224,41 +230,47 @@ const JobsPage = () => {
                 isOpen={!!selectedJob}
                 onClose={() => setSelectedJob(null)}
                 title="Job Details"
+                icon="/Icons/icons8-bag-100.png"
             >
                 {selectedJob && (
                     <div className="space-y-6">
+                        {selectedJob.image_url && (
+                            <div className="w-full aspect-video rounded-xl overflow-hidden border border-white/5 bg-white/5 mb-4">
+                                <img src={selectedJob.image_url} alt="" className="w-full h-full object-cover" />
+                            </div>
+                        )}
                         <div>
                             <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">Job Title</h4>
-                            <p className="text-xl font-bold text-white leading-tight">{selectedJob.title}</p>
+                            <p className="text-base sm:text-xl font-bold text-white leading-tight">{selectedJob.title}</p>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-transparent border border-white/10 p-3 rounded-2xl">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="border border-white/10 p-3 rounded-2xl">
                                 <p className="text-[10px] text-white/30 uppercase font-bold tracking-wider mb-1">Budget</p>
-                                <div className="flex items-center gap-2 text-white font-semibold">
+                                <div className="flex items-center gap-2 text-white font-semibold text-xs sm:text-base">
                                     <IndianRupee size={14} className="text-white/40" />
                                     <span>{formatINR(selectedJob.budget_amount || selectedJob.budget || '0').replace('₹', '')}</span>
                                     <span className="text-[10px] text-white/30 font-normal capitalize">({selectedJob.budget_type || 'Fixed'})</span>
                                 </div>
                             </div>
-                            <div className="bg-transparent border border-white/10 p-4 rounded-2xl">
+                            <div className="border border-white/10 p-4 rounded-2xl">
                                 <p className="text-[10px] text-white/30 uppercase font-bold tracking-wider mb-1">Category</p>
-                                <div className="flex items-center gap-2 text-white font-semibold capitalize">
+                                <div className="flex items-center gap-2 text-white font-semibold capitalize text-xs sm:text-base">
                                     <Briefcase size={14} className="text-accent" />
                                     <span>{selectedJob.category || 'General'}</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-transparent border border-white/10 p-3 rounded-2xl flex items-center gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="border border-white/10 p-3 rounded-2xl flex items-center gap-3">
                                 <Clock size={16} className="text-accent" />
                                 <div>
                                     <p className="text-[10px] text-white/30 uppercase font-bold tracking-wider">Experience</p>
                                     <p className="text-white font-medium text-sm capitalize">{selectedJob.experience_level || 'All'}</p>
                                 </div>
                             </div>
-                            <div className="bg-transparent border border-white/10 p-3 rounded-2xl flex items-center gap-3">
+                            <div className="border border-white/10 p-3 rounded-2xl flex items-center gap-3">
                                 <Calendar size={16} className="text-accent" />
                                 <div>
                                     <p className="text-[10px] text-white/30 uppercase font-bold tracking-wider">Duration</p>
@@ -269,8 +281,8 @@ const JobsPage = () => {
 
                         <div>
                             <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">Description</h4>
-                            <div className="bg-transparent border border-white/10 p-4 rounded-2xl">
-                                <p className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">{selectedJob.description}</p>
+                            <div className="border border-white/10 p-4 rounded-2xl">
+                                <p className="text-white/70 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{selectedJob.description}</p>
                             </div>
                         </div>
 
@@ -279,7 +291,7 @@ const JobsPage = () => {
                                 <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">Required Skills</h4>
                                 <div className="flex flex-wrap gap-2">
                                     {selectedJob.skills.map(skill => (
-                                        <span key={skill} className="px-3 py-1 bg-accent/10 text-accent border border-accent/20 rounded-full text-xs font-medium">
+                                        <span key={skill} className="px-3 py-1 bg-accent/10 text-accent rounded-full text-xs font-medium border border-accent/10">
                                             {skill}
                                         </span>
                                     ))}
@@ -287,10 +299,10 @@ const JobsPage = () => {
                             </div>
                         )}
 
-                        <div className="pt-4 border-t border-white/10">
+                        <div className="pt-4">
                             <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-3">Client Information</h4>
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-full overflow-hidden bg-accent/20 flex items-center justify-center text-accent shadow-sm border border-white/10">
+                                <div className="w-12 h-12 rounded-full overflow-hidden bg-accent/20 flex items-center justify-center text-accent shadow-sm">
                                     {selectedJob.client?.profiles?.avatar_url ? (
                                         <img
                                             src={selectedJob.client.profiles.avatar_url}
@@ -302,8 +314,8 @@ const JobsPage = () => {
                                     )}
                                 </div>
                                 <div>
-                                    <p className="text-white font-bold">{selectedJob.client?.profiles?.name || selectedJob.client?.name || 'Unknown Client'}</p>
-                                    <p className="text-white/40 text-xs flex items-center gap-1.5 mt-0.5">
+                                    <p className="text-white font-bold text-xs sm:text-base">{selectedJob.client?.profiles?.name || selectedJob.client?.name || 'Unknown Client'}</p>
+                                    <p className="text-white/40 text-[10px] flex items-center gap-1.5 mt-0.5">
                                         <Mail size={12} /> {selectedJob.client?.email}
                                     </p>
                                 </div>

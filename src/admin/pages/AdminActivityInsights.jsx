@@ -8,6 +8,7 @@ import { fetchAdminActivityStats, fetchAdminLogs } from '../../services/adminSer
 import ChartCard from '../components/dashboard/ChartCard';
 import StatCard from '../components/dashboard/StatCard';
 import DashboardGrid from '../components/dashboard/DashboardGrid';
+import InfinityLoader from '../../components/common/InfinityLoader';
 
 const AdminActivityInsights = () => {
     const [stats, setStats] = useState(null);
@@ -45,11 +46,8 @@ const AdminActivityInsights = () => {
 
     if (isLoading) {
         return (
-            <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] space-y-4">
-                <div className="w-12 h-12 border-4 border-accent/20 border-t-accent rounded-full animate-spin"></div>
-                <p className="text-slate-900/40 dark:text-white/40 text-sm font-black uppercase tracking-widest animate-pulse">
-                    Aggregating Network Insights...
-                </p>
+            <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)]">
+                <InfinityLoader fullScreen={false} size="lg" text="Aggregating Network Insights..." />
             </div>
         );
     }
@@ -65,32 +63,32 @@ const AdminActivityInsights = () => {
     }
 
     return (
-        <div className="space-y-10 pb-10">
+        <div className="space-y-6 sm:space-y-10 pb-10">
             {/* Header Section */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6">
                 <div>
-                    <div className="flex items-center gap-3 mb-2">
-                        <Activity className="text-accent" size={32} />
-                        <h1 className="text-3xl font-black text-slate-950 dark:text-white tracking-tighter">Admin Insights</h1>
-                    </div>
-                    <p className="text-slate-900/40 dark:text-white/40 text-[11px] font-black uppercase tracking-[0.2em]">
-                        Performance Tracking & Feature Engagement Analysis
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                        <Activity className="text-accent" size={24} />
+                        Admin Insights
+                    </h1>
+                    <p className="text-white/40 text-xs mt-1">
+                        Performance tracking and feature engagement analysis
                     </p>
                 </div>
 
-                <div className="flex items-center gap-4 bg-transparent border border-white/5 px-6 py-4 rounded-[24px]">
-                    <div className="flex flex-col items-end">
-                        <span className="text-[10px] text-slate-900/30 dark:text-white/30 font-black uppercase tracking-widest leading-none mb-1">Status</span>
-                        <span className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">Active Monitoring</span>
+                <div className="flex items-center gap-4 bg-white/5 border border-white/5 px-5 py-3 sm:px-6 sm:py-4 rounded-[20px] sm:rounded-[24px] w-full md:w-auto justify-between md:justify-end">
+                    <div className="flex flex-col items-start md:items-end">
+                        <span className="text-[9px] sm:text-[10px] text-slate-900/30 dark:text-white/30 font-black uppercase tracking-widest leading-none mb-1">Status</span>
+                        <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white tracking-tight">Active Monitoring</span>
                     </div>
-                    <div className="w-3 h-3 bg-accent rounded-full animate-pulse shadow-[0_0_12px_rgba(59,130,246,0.6)]"></div>
+                    <div className="w-2.5 h-2.5 bg-accent rounded-full animate-pulse shadow-[0_0_12px_rgba(59,130,246,0.6)]"></div>
                 </div>
             </div>
 
             {/* Top Stats Overview */}
-            <section className="space-y-4">
-                <h2 className="text-slate-900/20 dark:text-white/20 text-[10px] font-black uppercase tracking-[0.3em] pl-1">Operational Velocity</h2>
-                <DashboardGrid>
+            <section className="space-y-3 sm:space-y-4">
+                <h2 className="text-slate-900/20 dark:text-white/20 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] pl-1">Operational Velocity</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     <StatCard
                         title="Total Admin Actions"
                         value={stats.actionDistribution.reduce((acc, curr) => acc + curr.value, 0)}
@@ -117,45 +115,46 @@ const AdminActivityInsights = () => {
                         icon="/Icons/icons8-system-100.png"
                         trendType="none"
                     />
-                </DashboardGrid>
+                </div>
             </section>
 
             {/* Recent Detailed Activity Table */}
-            <div className="bg-transparent border border-white/5 rounded-[40px] p-10 backdrop-blur-xl mb-8">
-                <div className="flex items-center justify-between mb-8">
+            <div className="bg-transparent border border-white/10 rounded-[24px] sm:rounded-[40px] p-5 sm:p-10 backdrop-blur-xl mb-8 overflow-hidden">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
                     <div>
-                        <h3 className="text-xl font-black text-slate-950 dark:text-white tracking-tight flex items-center gap-2">
+                        <h3 className="text-lg sm:text-xl font-black text-slate-950 dark:text-white tracking-tight flex items-center gap-2">
                             Recent Administrative Actions
                         </h3>
-                        <p className="text-slate-900/40 dark:text-white/40 text-xs mt-1 italic">Detailed log of the 5 most recent actions taken by administrators</p>
+                        <p className="text-slate-900/40 dark:text-white/40 text-[11px] sm:text-xs mt-1 italic">Detailed log of the 5 most recent actions taken by administrators</p>
                     </div>
-                    <Link to="/admin/logs" className="px-6 py-2.5 rounded-full border border-white/10 text-white/60 text-[11px] font-bold uppercase tracking-wider hover:bg-white/5 hover:text-white transition-all">
+                    <Link to="/admin/logs" className="w-full sm:w-auto text-center px-6 py-2.5 rounded-full border border-white/10 text-white/60 text-[10px] sm:text-[11px] font-black uppercase tracking-wider hover:bg-white/5 hover:text-white transition-all">
                         View All Logs
                     </Link>
                 </div>
 
-                <div className="overflow-x-auto">
+                {/* Desktop Table */}
+                <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-transparent text-white/60 text-[10px] uppercase tracking-[0.2em] font-semibold border-b border-white/10">
-                                <th className="px-6 py-4 rounded-tl-2xl text-slate-950/60 dark:text-white/60">Time</th>
+                            <tr className="bg-transparent text-white/60 text-[10px] uppercase tracking-[0.2em] font-black border-b border-white/10">
+                                <th className="px-6 py-4">Time</th>
                                 <th className="px-6 py-4">Administrator</th>
                                 <th className="px-6 py-4">Action Taken</th>
                                 <th className="px-6 py-4">Feature / Target</th>
-                                <th className="px-6 py-4 rounded-tr-2xl">Description</th>
+                                <th className="px-6 py-4">Description</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
                             {recentLogs.length === 0 ? (
-                                <tr><td colSpan="5" className="px-6 py-12 text-center text-white/40 text-sm">No recent activity found</td></tr>
+                                <tr><td colSpan="5" className="px-6 py-12 text-center text-white/40 text-sm font-bold">No recent activity found</td></tr>
                             ) : recentLogs.map((log) => (
                                 <tr key={log.id} className="hover:bg-white/[0.02] transition-colors group">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex flex-col">
-                                            <span className="text-slate-950 dark:text-white text-xs font-bold">
+                                            <span className="text-slate-950 dark:text-white text-xs font-black">
                                                 {log.timestamp ? new Date(log.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'N/A'}
                                             </span>
-                                            <span className="text-slate-900/40 dark:text-white/40 text-[10px] font-medium mt-0.5">
+                                            <span className="text-slate-900/40 dark:text-white/40 text-[10px] font-bold mt-0.5">
                                                 {log.timestamp ? new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                                             </span>
                                         </div>
@@ -172,35 +171,76 @@ const AdminActivityInsights = () => {
                                                 )}
                                             </div>
                                             <div className="flex flex-col">
-                                                <span className="text-slate-950 dark:text-white text-[13px] font-bold">{log.admin?.name || 'Admin'}</span>
+                                                <span className="text-slate-950 dark:text-white text-[13px] font-bold leading-tight">{log.admin?.name || 'Admin'}</span>
                                                 <span className="text-slate-900/40 dark:text-white/40 text-[11px] font-medium mt-0.5">{log.admin?.email || log.admin_email}</span>
                                             </div>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex flex-col">
-                                            <span className={`text-[11px] font-black uppercase tracking-wider ${log.action_type?.includes('DELETE') || log.action_type?.includes('REMOVE') ? 'text-rose-400' :
-                                                    log.action_type?.includes('UPDATE') || log.action_type?.includes('CHANGE') ? 'text-amber-400' :
-                                                        log.action_type?.includes('CREATE') || log.action_type?.includes('ADD') ? 'text-emerald-400' :
-                                                            'text-blue-400'
-                                                }`}>
-                                                {log.action_type?.replace(/_/g, ' ') || 'ACTION'}
-                                            </span>
-                                        </div>
+                                        <span className={`text-[10px] font-black uppercase tracking-wider ${log.action_type?.includes('DELETE') || log.action_type?.includes('REMOVE') ? 'text-rose-500' :
+                                                log.action_type?.includes('UPDATE') || log.action_type?.includes('CHANGE') ? 'text-amber-500' :
+                                                    log.action_type?.includes('CREATE') || log.action_type?.includes('ADD') ? 'text-emerald-500' :
+                                                        'text-accent'
+                                            }`}>
+                                            {log.action_type?.replace(/_/g, ' ') || 'ACTION'}
+                                        </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex flex-col">
-                                            <span className="text-slate-900/80 dark:text-white/80 text-xs font-bold uppercase tracking-wider">{log.target_type || 'System Feature'}</span>
-                                            <span className="text-slate-900/40 dark:text-white/40 text-[10px] font-mono mt-0.5">{log.target_id || 'ID N/A'}</span>
+                                            <span className="text-slate-900/80 dark:text-white/80 text-[11px] font-black uppercase tracking-widest leading-tight">{log.target_type || 'System Feature'}</span>
+                                            <span className="text-slate-900/40 dark:text-white/40 text-[9px] font-mono mt-0.5">{log.target_id?.slice(0, 8) || 'ID N/A'}</span>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <p className="text-slate-950/60 dark:text-white/60 text-[13px] font-medium max-w-md line-clamp-2 leading-relaxed">{log.description}</p>
+                                        <p className="text-slate-950/60 dark:text-white/60 text-xs font-medium max-w-xs line-clamp-2 leading-relaxed">{log.description}</p>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Mobile Cards */}
+                <div className="md:hidden divide-y divide-white/5">
+                    {recentLogs.length === 0 ? (
+                        <div className="py-12 text-center text-white/40 text-sm font-bold">No recent activity found</div>
+                    ) : recentLogs.map((log) => (
+                        <div key={log.id} className="py-5 space-y-4">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center border border-white/10 shrink-0">
+                                        {log.admin?.photo_url ? (
+                                            <img src={log.admin.photo_url} alt="" className="w-full h-full object-cover rounded-full" />
+                                        ) : (
+                                            <span className="text-xs text-accent font-black">{(log.admin?.name || log.admin_email || 'S').charAt(0).toUpperCase()}</span>
+                                        )}
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-white font-bold text-sm truncate">{log.admin?.name || 'Admin'}</p>
+                                        <p className="text-white/40 text-[10px] truncate">{log.admin?.email || log.admin_email}</p>
+                                    </div>
+                                </div>
+                                <div className="text-right shrink-0">
+                                    <p className="text-white text-[10px] font-black">{log.timestamp ? new Date(log.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'N/A'}</p>
+                                    <p className="text-white/30 text-[9px] font-bold">{log.timestamp ? new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between gap-4">
+                                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/5 border border-white/10 ${log.action_type?.includes('DELETE') || log.action_type?.includes('REMOVE') ? 'text-rose-500' :
+                                        log.action_type?.includes('UPDATE') || log.action_type?.includes('CHANGE') ? 'text-amber-500' :
+                                            log.action_type?.includes('CREATE') || log.action_type?.includes('ADD') ? 'text-emerald-500' :
+                                                'text-accent'
+                                    }`}>
+                                    {log.action_type?.replace(/_/g, ' ')}
+                                </span>
+                                <span className="text-white/40 text-[9px] font-black uppercase tracking-tighter truncate max-w-[150px]">{log.target_type}</span>
+                            </div>
+                            <p className="text-white/60 text-xs leading-relaxed line-clamp-2 bg-white/[0.02] p-3 rounded-xl border border-white/5 italic">
+                                "{log.description}"
+                            </p>
+                        </div>
+                    ))}
                 </div>
             </div>
 

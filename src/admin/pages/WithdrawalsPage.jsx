@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { HandCoins, CheckCircle, XCircle, Clock, Search, Filter, IndianRupee } from 'lucide-react';
+import { HandCoins, CheckCircle, XCircle, Clock, Search, Filter, IndianRupee, RefreshCw } from 'lucide-react';
 import { formatINR } from '../../utils/currencyUtils';
 import { fetchWithdrawalRequests, processWithdrawal } from '../../services/adminService';
 import toast from 'react-hot-toast';
@@ -60,40 +60,46 @@ const WithdrawalsPage = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
                 <div>
-                    <h1 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
                         <img src="/Icons/icons8-withdrawal-80.png" alt="Withdrawals" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
                         Withdrawal Requests
                     </h1>
-                    <p className="text-white/60 text-xs sm:text-sm mt-1">Manage and process freelancer payment withdrawals</p>
+                    <p className="text-white/40 text-xs mt-1">Manage and process freelancer payment withdrawals</p>
                 </div>
-
-                <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-                    <div className="relative flex-1 sm:w-64">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                    <div className="relative w-full sm:w-64">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
                         <input
                             type="text"
                             placeholder="Search by name or email..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2 text-white text-xs sm:text-sm focus:outline-none focus:border-accent transition-all"
+                            className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white text-xs sm:text-sm focus:outline-none focus:border-accent transition-all shadow-inner"
                         />
                     </div>
-                    <CustomDropdown
-                        options={[
-                            { label: 'All Status', value: '' },
-                            { label: 'Pending', value: 'PENDING' },
-                            { label: 'Approved', value: 'APPROVED' },
-                            { label: 'Rejected', value: 'REJECTED' }
-                        ]}
-                        value={statusFilter}
-                        onChange={(val) => setStatusFilter(val)}
-                        className="min-w-[110px] sm:min-w-[140px]"
-                    />
-                    <button onClick={loadWithdrawals} className="p-2 bg-transparent border border-white/10 rounded-xl text-white/60 hover:text-white transition flex-shrink-0">
-                        <Clock size={16} />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <CustomDropdown
+                            options={[
+                                { label: 'All Status', value: '' },
+                                { label: 'Pending', value: 'PENDING' },
+                                { label: 'Approved', value: 'APPROVED' },
+                                { label: 'Rejected', value: 'REJECTED' }
+                            ]}
+                            value={statusFilter}
+                            onChange={(val) => setStatusFilter(val)}
+                            variant="transparent"
+                            className="flex-1 sm:min-w-[140px]"
+                        />
+                        <button
+                            onClick={loadWithdrawals}
+                            className="w-10 h-10 flex items-center justify-center hover:bg-white/5 rounded-xl text-white/60 transition group flex-shrink-0"
+                            title="Refresh"
+                        >
+                            <RefreshCw size={16} className={loading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -130,10 +136,8 @@ const WithdrawalsPage = () => {
                                         {formatINR(w.amount).replace('₹', '')}
                                     </td>
                                     <td className="px-6 py-4">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
-                                                <CreditCard size={14} />
-                                            </div>
+                                        <div className="flex items-center gap-3">
+                                            <CreditCard size={20} className="text-accent" />
                                             <span className="text-white/60 text-sm capitalize">{w.payment_method?.type || 'Bank Transfer'}</span>
                                         </div>
                                     </td>
@@ -148,14 +152,14 @@ const WithdrawalsPage = () => {
                                             <div className="flex items-center justify-end gap-2">
                                                 <button
                                                     onClick={() => handleAction(w.id, 'REJECTED')}
-                                                    className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition"
+                                                    className="text-red-500 hover:text-red-400 transition"
                                                     title="Reject"
                                                 >
                                                     <XCircle size={20} />
                                                 </button>
                                                 <button
                                                     onClick={() => handleAction(w.id, 'APPROVED')}
-                                                    className="p-2 text-green-500 hover:bg-green-500/10 rounded-lg transition"
+                                                    className="text-green-500 hover:text-green-400 transition"
                                                     title="Approve"
                                                 >
                                                     <CheckCircle size={20} />
@@ -177,8 +181,8 @@ const WithdrawalsPage = () => {
 };
 
 // Internal CreditCard icon for method column
-const CreditCard = ({ size }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" /></svg>
+const CreditCard = ({ size, className }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" /></svg>
 );
 
 export default WithdrawalsPage;

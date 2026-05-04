@@ -71,18 +71,21 @@ const ContractsPage = () => {
         (c.freelancer?.profiles?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const Modal = ({ isOpen, onClose, title, children }) => {
+    const Modal = ({ isOpen, onClose, title, children, icon }) => {
         if (!isOpen) return null;
         return (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm transition-all animate-in fade-in duration-200">
-                <div className="bg-primary border border-white/10 w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-3xl shadow-2xl flex flex-col">
-                    <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
-                        <h3 className="text-lg font-bold text-white">{title}</h3>
+            <div className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm pt-8 sm:pt-12 overflow-y-auto no-scrollbar">
+                <div className="bg-primary border border-white/10 w-full max-w-2xl overflow-hidden rounded-2xl shadow-2xl flex flex-col my-auto sm:my-0">
+                    <div className="px-6 py-4 flex items-center justify-between">
+                        <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                            {icon && <img src={icon} alt="" className="w-5 h-5 object-contain" />}
+                            {title}
+                        </h3>
                         <button onClick={onClose} className="p-2 text-white/40 hover:text-accent transition-colors">
                             <X size={20} />
                         </button>
                     </div>
-                    <div className="p-6 overflow-y-auto custom-scrollbar">
+                    <div className="p-6 pt-0 overflow-y-auto custom-scrollbar">
                         {children}
                     </div>
                 </div>
@@ -92,20 +95,23 @@ const ContractsPage = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-                <h1 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2">
-                    <img src="/Icons/icons8-contract-60.png" alt="Contracts" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
-                    Active Contracts
-                </h1>
-                <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-                    <div className="relative flex-1 sm:w-64">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
+                <div>
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                        <img src="/Icons/icons8-contract-60.png" alt="Contracts" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
+                        Active Contracts
+                    </h1>
+                    <p className="text-white/40 text-xs mt-1">Monitor and manage all ongoing agreements between clients and freelancers</p>
+                </div>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                    <div className="relative w-full sm:w-80">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
                         <input
                             type="text"
                             placeholder="Search contracts..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-transparent border border-white/10 rounded-lg pl-9 pr-4 py-2 text-white text-xs sm:text-sm focus:outline-none focus:border-accent"
+                            className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white text-xs focus:outline-none focus:border-accent transition-all shadow-inner"
                         />
                     </div>
                     <CustomDropdown
@@ -119,7 +125,7 @@ const ContractsPage = () => {
                         value={statusFilter}
                         onChange={(val) => setStatusFilter(val)}
                         variant="transparent"
-                        className="w-44"
+                        className="w-full sm:w-44"
                     />
                 </div>
             </div>
@@ -198,7 +204,7 @@ const ContractsPage = () => {
                                             <div className="flex items-center justify-end gap-2">
                                                 <button
                                                     onClick={() => setSelectedContract(contract)}
-                                                    className="p-1.5 hover:bg-white/5 rounded-lg text-white/40 hover:text-accent transition-colors"
+                                                    className="p-1.5 text-white/40 hover:text-accent transition-colors"
                                                     title="View Details"
                                                 >
                                                     <Eye size={16} />
@@ -207,7 +213,7 @@ const ContractsPage = () => {
                                                     <button
                                                         onClick={() => handleCancel(contract.id)}
                                                         disabled={isCancelling}
-                                                        className="p-1.5 hover:bg-white/5 rounded-lg text-white/40 hover:text-red-400 transition-colors disabled:opacity-50"
+                                                        className="p-1.5 text-white/40 hover:text-red-400 transition-colors disabled:opacity-50"
                                                         title="Cancel Contract"
                                                     >
                                                         <XCircle size={16} />
@@ -216,7 +222,7 @@ const ContractsPage = () => {
                                                 {contract.status === 'DISPUTED' && (
                                                     <button
                                                         onClick={() => {/* Link to disputes page or handle */ }}
-                                                        className="p-1.5 hover:bg-white/5 rounded-lg text-yellow-400/60 hover:text-yellow-400 transition-colors"
+                                                        className="p-1.5 text-yellow-400/60 hover:text-yellow-400 transition-colors"
                                                         title="View Dispute"
                                                     >
                                                         <AlertTriangle size={16} />
@@ -237,6 +243,7 @@ const ContractsPage = () => {
                 isOpen={!!selectedContract}
                 onClose={() => setSelectedContract(null)}
                 title="Contract Details"
+                icon="/Icons/icons8-contract-60.png"
             >
                 {selectedContract && (
                     <div className="space-y-6">
@@ -258,19 +265,19 @@ const ContractsPage = () => {
 
                         <div>
                             <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">Project Title</h4>
-                            <p className="text-xl font-bold text-white leading-tight">{selectedContract.job?.title || 'Deleted Job'}</p>
+                            <p className="text-base sm:text-xl font-bold text-white leading-tight">{selectedContract.job?.title || 'Deleted Job'}</p>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-transparent border border-white/10 p-4 rounded-2xl">
+                            <div className="py-4">
                                 <p className="text-[10px] text-white/30 uppercase font-bold tracking-wider mb-1">Agreed Rate</p>
-                                <div className="flex items-center gap-2 text-white font-semibold">
-                                    <span className="text-accent text-lg">{formatINR(selectedContract.agreed_rate)}</span>
+                                <div className="flex items-center gap-2 text-white font-semibold text-xs sm:text-base">
+                                    <span className="text-accent text-lg sm:text-xl font-black">{formatINR(selectedContract.agreed_rate)}</span>
                                 </div>
                             </div>
-                            <div className="bg-transparent border border-white/10 p-4 rounded-2xl">
+                            <div className="py-4">
                                 <p className="text-[10px] text-white/30 uppercase font-bold tracking-wider mb-1">Agreement Date</p>
-                                <div className="flex items-center gap-2 text-white font-semibold">
+                                <div className="flex items-center gap-2 text-white font-semibold text-xs sm:text-base">
                                     <Calendar size={14} className="text-accent" />
                                     <span className="text-sm">{new Date(selectedContract.created_at).toLocaleDateString()}</span>
                                 </div>
@@ -281,7 +288,7 @@ const ContractsPage = () => {
                             <div>
                                 <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-3">Client</h4>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full overflow-hidden bg-accent/10 flex items-center justify-center text-accent border border-white/10">
+                                    <div className="w-10 h-10 rounded-full overflow-hidden bg-accent/10 flex items-center justify-center text-accent border border-white/10 shrink-0">
                                         {selectedContract.client?.profiles?.avatar_url ? (
                                             <img
                                                 src={selectedContract.client.profiles.avatar_url}
@@ -292,18 +299,18 @@ const ContractsPage = () => {
                                             <User size={20} />
                                         )}
                                     </div>
-                                    <div>
-                                        <p className="text-white font-bold text-sm leading-tight text-ellipsis overflow-hidden whitespace-nowrap max-w-[140px]">
+                                    <div className="min-w-0">
+                                        <p className="text-white font-bold text-xs sm:text-sm leading-tight truncate">
                                             {selectedContract.client?.profiles?.name || selectedContract.client?.name || 'Client'}
                                         </p>
-                                        <p className="text-white/40 text-[10px] truncate max-w-[140px] mt-0.5">{selectedContract.client?.email}</p>
+                                        <p className="text-white/40 text-[10px] truncate mt-0.5">{selectedContract.client?.email}</p>
                                     </div>
                                 </div>
                             </div>
                             <div>
                                 <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-3">Freelancer</h4>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full overflow-hidden bg-accent/10 flex items-center justify-center text-accent border border-white/10">
+                                    <div className="w-10 h-10 rounded-full overflow-hidden bg-accent/10 flex items-center justify-center text-accent border border-white/10 shrink-0">
                                         {selectedContract.freelancer?.profiles?.avatar_url ? (
                                             <img
                                                 src={selectedContract.freelancer.profiles.avatar_url}
@@ -314,18 +321,18 @@ const ContractsPage = () => {
                                             <User size={20} />
                                         )}
                                     </div>
-                                    <div>
-                                        <p className="text-white font-bold text-sm leading-tight text-ellipsis overflow-hidden whitespace-nowrap max-w-[140px]">
+                                    <div className="min-w-0">
+                                        <p className="text-white font-bold text-xs sm:text-sm leading-tight truncate">
                                             {selectedContract.freelancer?.profiles?.name || selectedContract.freelancer?.name || 'Freelancer'}
                                         </p>
-                                        <p className="text-white/40 text-[10px] truncate max-w-[140px] mt-0.5">{selectedContract.freelancer?.email}</p>
+                                        <p className="text-white/40 text-[10px] truncate mt-0.5">{selectedContract.freelancer?.email}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Admin Relationship Intelligence View (Trust Graph v2) */}
-                        <div className="pt-6 border-t border-white/10">
+                        <div className="pt-6">
                             <RelationshipIntelligence 
                                 freelancerId={selectedContract.freelancer_id}
                                 clientId={selectedContract.client_id}
@@ -333,7 +340,7 @@ const ContractsPage = () => {
                             />
                         </div>
 
-                        <div className={`bg-transparent border border-white/10 rounded-2xl transition-all duration-300 overflow-hidden ${showRequirements ? 'bg-white/[0.03] ring-1 ring-accent/20' : 'hover:bg-white/[0.02]'}`}>
+                        <div className="bg-transparent rounded-2xl transition-all duration-300 overflow-hidden hover:bg-white/[0.02]">
                             <div className="p-4 cursor-pointer group" onClick={() => setShowRequirements(!showRequirements)}>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
@@ -355,11 +362,11 @@ const ContractsPage = () => {
                             {showRequirements && (
                                 <div className="px-5 pb-5 space-y-5 animate-in slide-in-from-top-2 duration-300">
                                     <div className="grid grid-cols-2 gap-4">
-                                        <div className="bg-white/5 p-3 rounded-xl border border-white/5">
+                                        <div>
                                             <p className="text-[10px] text-white/30 uppercase font-bold tracking-wider mb-1">Category</p>
                                             <p className="text-white text-sm font-medium">{selectedContract.job?.category || 'General'}</p>
                                         </div>
-                                        <div className="bg-white/5 p-3 rounded-xl border border-white/5">
+                                        <div>
                                             <p className="text-[10px] text-white/30 uppercase font-bold tracking-wider mb-1">Original Budget</p>
                                             <p className="text-white text-sm font-medium">
                                                 {formatINR(selectedContract.job?.budget_amount || selectedContract.job?.budget || 0)}
@@ -370,7 +377,7 @@ const ContractsPage = () => {
 
                                     <div>
                                         <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">Detailed Description</h4>
-                                        <div className="bg-black/20 p-4 rounded-xl border border-white/5 max-h-[200px] overflow-y-auto custom-scrollbar">
+                                        <div className="border border-white/10 p-4 rounded-xl max-h-[200px] overflow-y-auto custom-scrollbar">
                                             <p className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">
                                                 {selectedContract.job?.description || 'No description provided.'}
                                             </p>

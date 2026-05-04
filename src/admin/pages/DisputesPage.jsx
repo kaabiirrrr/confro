@@ -54,19 +54,22 @@ const DisputesPage = () => {
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-                <h1 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2">
-                    <img src="/Icons/icons8-disputes-100.png" alt="Disputes" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
-                    Dispute Resolution Desk
-                </h1>
-                <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-                    <div className="relative flex-1 sm:w-64">
+                <div>
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                        <img src="/Icons/icons8-disputes-100.png" alt="Disputes" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
+                        Dispute Resolution Desk
+                    </h1>
+                    <p className="text-white/40 text-xs mt-1">Mediate and resolve conflicts between clients and freelancers</p>
+                </div>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                    <div className="relative w-full sm:w-80">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
                         <input
                             type="text"
                             placeholder="Search disputes..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-transparent border border-white/10 rounded-lg pl-9 pr-4 py-2 text-white text-xs sm:text-sm focus:outline-none focus:border-accent"
+                            className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white text-xs focus:outline-none focus:border-accent transition-all shadow-inner"
                         />
                     </div>
                     <CustomDropdown
@@ -80,7 +83,7 @@ const DisputesPage = () => {
                         value={statusFilter}
                         onChange={(val) => setStatusFilter(val)}
                         variant="transparent"
-                        className="w-44"
+                        className="w-full sm:w-44"
                     />
                 </div>
             </div>

@@ -29,6 +29,11 @@ export const deleteUser = async (userId) => {
     return response.data;
 };
 
+export const addUser = async (userData) => {
+    const response = await api.post(`/api/admin/users`, userData);
+    return response.data;
+};
+
 // --- Verification System ---
 export const fetchVerificationRequests = async (params = {}) => {
     const response = await api.get(`/api/identity/admin/pending`, {
@@ -200,6 +205,11 @@ export const fetchDashboardStats = async () => {
     return response.data;
 };
 
+export const fetchPlatformActivity = async (params = {}) => {
+    const response = await api.get(`/api/admin/analytics/activity`, { params });
+    return response.data;
+};
+
 // --- Moderation (v1 & v2) ---
 export const fetchModerationReports = async (params = {}) => {
     const response = await api.get(`/api/admin/reports`, {
@@ -282,7 +292,7 @@ export const setupProfileSchema = async () => {
 };
 
 export const fetchAdminActivityStats = async () => {
-    const response = await api.get(`/api/admin/analytics/activity`);
+    const response = await api.get(`/api/admin/analytics/stats`);
     return response.data;
 };
 

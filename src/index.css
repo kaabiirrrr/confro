@@ -307,10 +307,10 @@ input, textarea {
 /* ─────────────────────────────────────────────
    Utility overrides
 ───────────────────────────────────────────── */
-.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar::-webkit-scrollbar { display: none !important; }
 .no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
 a:focus, button:focus { outline: none; }
@@ -651,6 +651,15 @@ html:not(.dark) .bg-blue-500 {
     font-size: 10px !important;
     white-space: nowrap;
   }
+}
+
+/* Hide scrollbars for admin tables */
+.admin-table-wrap {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+.admin-table-wrap::-webkit-scrollbar {
+  display: none !important;
 }
 
 

@@ -8,8 +8,8 @@ import InfinityLoader from '../../components/common/InfinityLoader';
 const LogsPage = () => {
     const [logs, setLogs] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState({ 
-        action_type: '', 
+    const [filter, setFilter] = useState({
+        action_type: '',
         admin_email: '',
         start_date: '',
         end_date: ''
@@ -44,59 +44,71 @@ const LogsPage = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2">
-                        <img src="/Icons/icons8-logs-64.png" alt="Admin Logs" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
-                        Admin Activity Logs
-                    </h1>
-                    <p className="text-white/60 text-sm mt-1">A transparent audit trail of all administrative actions</p>
+            <div className="flex flex-col gap-8">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-3 sm:gap-4 tracking-tight">
+                            <img src="/Icons/icons8-logs-64.png" alt="Admin Logs" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
+                            Admin Activity Logs
+                        </h1>
+                        <p className="text-white/40 text-xs sm:text-sm mt-1 font-medium">A transparent audit trail of all administrative actions across the network</p>
+                    </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
+                {/* Filter Bar */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 bg-white/[0.02] border border-white/5 p-4 sm:p-6 rounded-[24px] backdrop-blur-md">
                     {/* Admin Email Search */}
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
+                    <div className="relative group">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-accent transition-colors" size={18} />
                         <input
                             type="text"
-                            placeholder="Filter by admin email..."
+                            placeholder="Search by admin email..."
                             value={filter.admin_email}
                             onChange={(e) => setFilter({ ...filter, admin_email: e.target.value })}
-                            className="pl-10 pr-4 py-2 bg-transparent border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-accent w-full sm:w-64"
+                            className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm text-white focus:outline-none focus:border-accent focus:bg-white/[0.08] transition-all placeholder:text-white/20"
                         />
                     </div>
 
                     {/* Action Type Filter */}
-                    <CustomDropdown
-                        options={[
-                            { label: 'All Actions', value: '' },
-                            { label: 'Manage Admins', value: 'ADMIN_ADD' },
-                            { label: 'Verification', value: 'VERIFICATION_UPDATE' },
-                            { label: 'Withdrawals', value: 'WITHDRAWAL_PROCESS' },
-                            { label: 'Settings', value: 'SETTINGS_UPDATE' },
-                            { label: 'Job Deletions', value: 'JOB_DELETE' }
-                        ]}
-                        value={filter.action_type}
-                        onChange={(val) => setFilter({ ...filter, action_type: val })}
-                        variant="transparent"
-                        className="min-w-[160px]"
-                    />
+                    <div className="w-full">
+                        <CustomDropdown
+                            options={[
+                                { label: 'All Actions', value: '' },
+                                { label: 'Manage Admins', value: 'ADMIN_ADD' },
+                                { label: 'Verification', value: 'VERIFICATION_UPDATE' },
+                                { label: 'Withdrawals', value: 'WITHDRAWAL_PROCESS' },
+                                { label: 'Settings', value: 'SETTINGS_UPDATE' },
+                                { label: 'Job Deletions', value: 'JOB_DELETE' }
+                            ]}
+                            value={filter.action_type}
+                            onChange={(val) => setFilter({ ...filter, action_type: val })}
+                            variant="transparent"
+                            className="w-full"
+                        />
+                    </div>
 
                     {/* Date Filters */}
-                    <div className="flex items-center gap-2">
-                        <input
-                            type="date"
-                            value={filter.start_date}
-                            onChange={(e) => setFilter({ ...filter, start_date: e.target.value })}
-                            className="px-3 py-2 bg-transparent border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-accent"
-                        />
-                        <span className="text-white/40">-</span>
-                        <input
-                            type="date"
-                            value={filter.end_date}
-                            onChange={(e) => setFilter({ ...filter, end_date: e.target.value })}
-                            className="px-3 py-2 bg-transparent border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-accent"
-                        />
+                    <div className="md:col-span-2 grid grid-cols-2 gap-3">
+                        <div className="relative group">
+                            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={16} />
+                            <input
+                                type="date"
+                                value={filter.start_date}
+                                onChange={(e) => setFilter({ ...filter, start_date: e.target.value })}
+                                className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-[11px] font-bold uppercase tracking-wider text-white focus:outline-none focus:border-accent transition-all [color-scheme:dark]"
+                            />
+                            <span className="absolute -top-2 left-4 px-1 bg-[#0A0F1E] text-[9px] font-black text-white/30 uppercase tracking-widest">From</span>
+                        </div>
+                        <div className="relative group">
+                            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={16} />
+                            <input
+                                type="date"
+                                value={filter.end_date}
+                                onChange={(e) => setFilter({ ...filter, end_date: e.target.value })}
+                                className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-[11px] font-bold uppercase tracking-wider text-white focus:outline-none focus:border-accent transition-all [color-scheme:dark]"
+                            />
+                            <span className="absolute -top-2 left-4 px-1 bg-[#0A0F1E] text-[9px] font-black text-white/30 uppercase tracking-widest">To</span>
+                        </div>
                     </div>
                 </div>
             </div>

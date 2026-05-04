@@ -126,11 +126,11 @@ const AdminProfilePage = () => {
             {/* Header */}
             <div className="flex items-start sm:items-center justify-between gap-3">
                 <div>
-                    <h1 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
                         <img src="/Icons/icons8-account-male-96.png" alt="Profile" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
                         My Profile
                     </h1>
-                    <p className="text-white/50 text-xs sm:text-sm mt-1">Manage your admin account settings and preferences</p>
+                    <p className="text-white/40 text-xs mt-1">Manage your admin account settings and preferences</p>
                 </div>
                 {!editMode ? (
                     <button

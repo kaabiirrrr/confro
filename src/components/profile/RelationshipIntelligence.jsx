@@ -72,7 +72,7 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
     return (
         <div className="space-y-6">
             {/* Main intelligence Card */}
-            <div className="md:bg-slate-900/40 md:backdrop-blur-md md:border md:border-slate-800 md:rounded-3xl p-0 md:p-6 relative overflow-hidden group bg-transparent border-none">
+            <div className="border border-white/10 rounded-3xl p-6 relative overflow-hidden group bg-transparent">
                 {/* Background Glow */}
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-accent/5 blur-[100px] pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
                 
@@ -111,7 +111,7 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
 
                         {!has_history ? (
                             /* Polish Point #7: First Project Boost */
-                            <div className="flex flex-col items-center justify-center py-10 bg-accent/5 rounded-2xl border border-dashed border-accent/20">
+                            <div className="flex flex-col items-center justify-center py-10 bg-transparent rounded-2xl">
                                 <Sparkles className="w-10 h-10 text-accent mb-3 opacity-80" />
                                 <p className="text-white font-semibold text-lg">New Collaboration Potential</p>
                                 <p className="text-slate-400 text-sm mt-1 max-w-sm text-center">
@@ -148,7 +148,7 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
                         )}
 
                         {has_history && relationship.last_project_name && (
-                            <div className="mt-4 p-4 bg-slate-800/30 rounded-2xl border border-slate-700/50 flex items-center justify-between">
+                            <div className="mt-4 py-4 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-accent/10 rounded-lg">
                                         <Calendar className="w-4 h-4 text-accent" />
@@ -170,7 +170,7 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
 
                     {/* Trust radial - Polish Point #2: Rounded Integer */}
                     {has_history && (
-                        <div className="md:w-64 flex flex-col justify-center items-center p-8 bg-accent/5 rounded-3xl border border-accent/10">
+                        <div className="md:w-64 flex flex-col justify-center items-center p-8 bg-transparent">
                             <div className="relative mb-4">
                                 <svg className="w-28 h-28 transform -rotate-90">
                                     <circle
@@ -203,7 +203,7 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
 
                 {/* AI Relationship Summary - Gated by threshold Polish Point #5 */}
                 {has_history && ai?.summary && (
-                    <div className="mt-8 flex gap-4 p-5 bg-accent/10 border border-accent/20 rounded-3xl">
+                    <div className="mt-8 flex gap-4 py-5 bg-transparent border-t border-white/5">
                         <div className="flex-shrink-0">
                             <div className="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
                                 <Sparkles className="w-5 h-5 text-accent" />
@@ -258,7 +258,7 @@ const Badge = ({ icon, label, color }) => (
 );
 
 const StatCard = ({ label, value, icon, sub }) => (
-    <div className="p-4 bg-slate-800/40 rounded-2xl border border-slate-700/50 hover:border-slate-600 transition-all hover:bg-slate-800/60">
+    <div className="p-4 bg-transparent">
         <div className="flex items-center gap-2 mb-2 opacity-60">
             {icon}
             <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400">{label}</span>
@@ -271,10 +271,10 @@ const StatCard = ({ label, value, icon, sub }) => (
 );
 
 const BehaviorCard = ({ title, value, description, icon }) => (
-    <div className="bg-slate-900/40 backdrop-blur-sm border border-slate-800 p-5 rounded-3xl hover:border-accent/30 transition-all duration-300 group">
+    <div className="bg-transparent p-5 border border-white/10 rounded-2xl transition-all duration-300 group">
         <div className="flex justify-between items-start mb-3">
             <div className="flex items-center gap-2">
-                <div className="p-2 bg-slate-800 rounded-lg text-slate-400 group-hover:text-accent transition-colors">
+                <div className="p-2 bg-transparent text-slate-400 group-hover:text-accent transition-colors">
                     {icon}
                 </div>
                 <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">{title}</h4>

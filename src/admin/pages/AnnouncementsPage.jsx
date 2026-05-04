@@ -74,18 +74,17 @@ const AnnouncementsPage = () => {
             {/* Header Section */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div>
-                    <div className="flex items-center gap-3 mb-2">
-                        <Megaphone size={18} className="text-[#38BDF8]" />
-                        <h1 className="text-xl font-bold text-white tracking-tight">Platform Announcements</h1>
-                    </div>
-                    <p className="text-white/40 text-xs">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                        <Megaphone size={24} className="text-[#38BDF8]" /> Platform Announcements
+                    </h1>
+                    <p className="text-white/40 text-xs mt-1">
                         Broadcast general updates, news, and platform changes to users
                     </p>
                 </div>
                 
                 <button
                     onClick={toggleHistory}
-                    className="flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white px-5 py-2.5 rounded-full border border-white/10 transition-all text-xs font-semibold"
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white px-5 py-2.5 rounded-full border border-white/10 transition-all text-xs font-semibold"
                 >
                     <History size={14} />
                     View History

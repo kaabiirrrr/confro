@@ -346,10 +346,10 @@ export default function LotteryAdminPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2">
-            <Ticket size={22} className="text-accent" /> Lottery Management
+          <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+            <Ticket size={24} className="text-accent" /> Lottery Management
           </h1>
-          <p className="text-white/40 text-xs sm:text-sm mt-1">Create and manage monthly lottery draws</p>
+          <p className="text-white/40 text-xs mt-1">Create and manage monthly lottery draws</p>
         </div>
         <button onClick={loadDraws}
           className="p-2 rounded-xl text-white/40 hover:text-white transition">

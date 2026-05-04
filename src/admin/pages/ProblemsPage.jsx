@@ -71,14 +71,14 @@ const ProblemsPage = () => {
         <div className="space-y-8 animate-in fade-in duration-500">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-6">
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-                    <h1 className="text-lg sm:text-3xl font-bold text-white mb-1 sm:mb-2 flex items-center gap-2 sm:gap-3">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
                         <img src="/Icons/icons8-problem-solution-66.png" alt="User Problems" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
                         User Problems
                     </h1>
-                    <p className="text-white/50 text-xs sm:text-sm">Review challenges and issues reported by users via the Solutions page.</p>
+                    <p className="text-white/40 text-xs mt-1">Review challenges and issues reported by users via the Solutions page.</p>
                 </motion.div>
 
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
                     <CustomDropdown
                         options={[
                             { label: 'All Status', value: '' },
@@ -88,9 +88,9 @@ const ProblemsPage = () => {
                         value={statusFilter}
                         onChange={(val) => setStatusFilter(val)}
                         variant="transparent"
-                        className="min-w-[120px] sm:min-w-[140px]"
+                        className="w-full sm:min-w-[140px]"
                     />
-                    <button className="flex items-center gap-1.5 sm:gap-2 bg-white/5 hover:bg-white/10 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl border border-white/10 transition-all text-xs sm:text-sm font-bold active:scale-95">
+                    <button className="w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2 bg-white/5 hover:bg-white/10 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl border border-white/10 transition-all text-xs sm:text-sm font-bold active:scale-95 whitespace-nowrap">
                         <Download size={14} />
                         Export Data
                     </button>

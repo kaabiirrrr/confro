@@ -151,7 +151,7 @@ const AdminLayout = () => {
                     )}
                 </div>
 
-                <nav className="flex-1 overflow-y-auto py-4 custom-scrollbar">
+                <nav className="flex-1 overflow-y-auto py-4 no-scrollbar">
                     <ul className="space-y-1 px-4">
                         {navItems.map((item) => (
                             <li key={item.path}>
@@ -347,7 +347,7 @@ const AdminLayout = () => {
                 )}
 
                 {/* Page Content */}
-                <main className="flex-1 overflow-auto p-4 md:p-6 bg-primary custom-scrollbar admin-panel">
+                <main className="flex-1 overflow-auto px-4 md:px-6 py-4 md:py-8 bg-primary custom-scrollbar admin-panel">
                     <Outlet />
                 </main>
             </div>

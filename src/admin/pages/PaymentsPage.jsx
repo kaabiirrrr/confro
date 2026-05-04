@@ -21,16 +21,11 @@ const fmtCommission = (v) => {
 // ── Revenue stat card ─────────────────────────────────────────
 function RevenueCard({ label, value, icon: Icon, highlight, sub }) {
     return (
-        <div className={`rounded-xl p-5 border flex flex-col gap-3 ${
-            highlight ? 'bg-accent/5 border-accent/20' : 'bg-transparent border-white/10'
-        }`}>
+        <div className={`rounded-xl p-5 border flex flex-col gap-3 ${highlight ? 'bg-accent/5 border-accent/20' : 'bg-transparent border-white/10'
+            }`}>
             <div className="flex items-center justify-between">
                 <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">{label}</p>
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                    highlight ? 'bg-accent/10' : 'bg-white/5'
-                }`}>
-                    <Icon size={15} className={highlight ? 'text-accent' : 'text-white/40'} />
-                </div>
+                <Icon size={20} className={highlight ? 'text-accent' : 'text-white/40'} />
             </div>
             <p className={`text-2xl font-bold tracking-tight ${highlight ? 'text-accent' : 'text-white'}`}>
                 {value}
@@ -91,18 +86,18 @@ const PaymentsPage = () => {
         .reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
 
     const contractCommission = revenue?.contract_commission ?? revenue?.total_commission ?? (releasedTotal * COMMISSION_RATE);
-    const membershipRevenue  = revenue?.membership_revenue  ?? 0;
-    const connectsRevenue    = revenue?.connects_revenue    ?? 0;
-    const withdrawalFees     = revenue?.withdrawal_fees     ?? 0;
-    const totalRevenue       = contractCommission + membershipRevenue + connectsRevenue + withdrawalFees;
+    const membershipRevenue = revenue?.membership_revenue ?? 0;
+    const connectsRevenue = revenue?.connects_revenue ?? 0;
+    const withdrawalFees = revenue?.withdrawal_fees ?? 0;
+    const totalRevenue = contractCommission + membershipRevenue + connectsRevenue + withdrawalFees;
 
     const fmt = (v) => formatINR(parseFloat(v || 0));
 
     const breakdown = [
         { source: 'Contract Commission (3%)', amount: contractCommission },
-        { source: 'Membership Plans',          amount: membershipRevenue },
-        { source: 'Connects Purchases',        amount: connectsRevenue },
-        { source: 'Withdrawal Fees (3%)',       amount: withdrawalFees },
+        { source: 'Membership Plans', amount: membershipRevenue },
+        { source: 'Connects Purchases', amount: connectsRevenue },
+        { source: 'Withdrawal Fees (3%)', amount: withdrawalFees },
     ];
 
     return (
@@ -111,9 +106,9 @@ const PaymentsPage = () => {
             {/* ── Header ── */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
-                    <h1 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2">
-                        <img src="/Icons/icons8-payments-64.png" alt="Revenue" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
-                        Revenue Overview
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                        <img src="/Icons/icons8-payments-64.png" alt="Revenue" className="w-6 h-6 sm:w-7 sm:h-7 object-contain" />
+                        Revenue & Payments
                     </h1>
                     <p className="text-white/40 text-xs mt-1">Platform earnings across all revenue streams · 3% commission</p>
                 </div>
@@ -126,7 +121,7 @@ const PaymentsPage = () => {
             {/* ── 4 Stat Cards ── */}
             {revenueLoading ? (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {[1,2,3,4].map(i => <div key={i} className="h-28 rounded-xl bg-white/5 animate-pulse" />)}
+                    {[1, 2, 3, 4].map(i => <div key={i} className="h-28 rounded-xl bg-white/5 animate-pulse" />)}
                 </div>
             ) : (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -197,32 +192,37 @@ const PaymentsPage = () => {
                 </div>
             )}
 
-            {/* ── Transactions ── */}
             <div>
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                    <h2 className="text-white font-semibold text-sm">Transaction History</h2>
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <div className="relative flex-1 sm:w-64">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div>
+                        <h2 className="text-white font-bold text-base sm:text-lg flex items-center gap-2">
+                            <Banknote className="text-accent" size={20} />
+                            Transaction History
+                        </h2>
+                        <p className="text-white/40 text-[10px] uppercase tracking-widest mt-0.5">Protocol Audit Log · All Financial Movements</p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                        <div className="relative w-full sm:w-80">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
                             <input
                                 type="text"
                                 placeholder="Search by ID or email..."
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
-                                className="w-full bg-transparent border border-white/10 rounded-lg pl-9 pr-4 py-2 text-white text-xs focus:outline-none focus:border-accent transition-all"
+                                className="w-full bg-transparent border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-xs focus:outline-none focus:border-accent transition-all shadow-inner"
                             />
                         </div>
                         <CustomDropdown
                             options={[
                                 { label: 'All Statuses', value: '' },
-                                { label: 'In Escrow',    value: 'escrow' },
-                                { label: 'Released',     value: 'released' },
-                                { label: 'Refunded',     value: 'refunded' },
+                                { label: 'In Escrow', value: 'escrow' },
+                                { label: 'Released', value: 'released' },
+                                { label: 'Refunded', value: 'refunded' },
                             ]}
                             value={statusFilter}
                             onChange={val => setStatusFilter(val)}
                             variant="transparent"
-                            className="w-40"
+                            className="w-full sm:w-44"
                         />
                     </div>
                 </div>
@@ -254,7 +254,7 @@ const PaymentsPage = () => {
                                     return (
                                         <tr key={payment.id} className="hover:bg-white/[0.02] transition-colors">
                                             <td className="px-6 py-4">
-                                                <span className="text-white font-mono text-[11px] truncate block w-24">{payment.id?.slice(0,8).toUpperCase()}</span>
+                                                <span className="text-white font-mono text-[11px] truncate block w-24">{payment.id?.slice(0, 8).toUpperCase()}</span>
                                                 <span className="text-white/40 text-[10px]">{new Date(payment.created_at).toLocaleDateString()}</span>
                                             </td>
                                             <td className="px-6 py-4 text-sm">{payment.payer?.email || 'N/A'}</td>
@@ -264,12 +264,11 @@ const PaymentsPage = () => {
                                                 <span className="text-accent font-semibold text-sm">{fmtCommission(commission)}</span>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                    payment.status === 'escrow'   ? 'bg-blue-500/10 text-blue-400' :
+                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${payment.status === 'escrow' ? 'bg-blue-500/10 text-blue-400' :
                                                     payment.status === 'released' ? 'bg-green-500/10 text-green-400' :
-                                                    payment.status === 'refunded' ? 'bg-red-500/10 text-red-400' :
-                                                    'bg-white/10 text-white/60'
-                                                }`}>
+                                                        payment.status === 'refunded' ? 'bg-red-500/10 text-red-400' :
+                                                            'bg-white/10 text-white/60'
+                                                    }`}>
                                                     {payment.status?.toUpperCase()}
                                                 </span>
                                             </td>

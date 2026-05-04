@@ -90,20 +90,19 @@ const ReviewsManagementPage = () => {
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8 sm:mb-12">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                 >
-                    <h1 className="text-lg sm:text-3xl font-bold text-white mb-2 flex items-center gap-3">
-                        <img src="/Icons/icons8-review-100.png" alt="Reviews" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
-                        Reviews Management
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                        <Star className="text-accent" size={24} /> Reviews Management
                     </h1>
-                    <p className="text-white/50 text-sm">Monitor and moderate platform and project-based user reviews.</p>
+                    <p className="text-white/40 text-xs mt-1">Monitor and moderate platform reviews to ensure community standards and quality.</p>
                 </motion.div>
 
-                <div className="flex items-center gap-4">
-                    <div className="relative group min-w-[300px]">
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                    <div className="relative group w-full md:w-80 lg:w-96">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-accent transition-colors" size={18} />
                         <input
                             type="text"
@@ -129,7 +128,7 @@ const ReviewsManagementPage = () => {
                     >
                         {label}
                         {activeTab === key && (
-                            <motion.div 
+                            <motion.div
                                 layoutId="activeTabUnderline"
                                 className="absolute bottom-[-1px] left-0 right-0 h-0.5 bg-accent"
                             />
@@ -152,13 +151,15 @@ const ReviewsManagementPage = () => {
                                     <>
                                         <th className="px-6 py-4">Reviewer / Contract</th>
                                         <th className="px-6 py-4">Reviewee</th>
-                                        <th className="px-6 py-4">Rating & Feedback</th>
+                                        <th className="px-6 py-4">Rating</th>
+                                        <th className="px-6 py-4">Feedback</th>
                                         <th className="px-6 py-4">Date</th>
                                     </>
                                 ) : (
                                     <>
                                         <th className="px-6 py-4">Reviewer Profile</th>
-                                        <th className="px-6 py-4">Rating & Feedback</th>
+                                        <th className="px-6 py-4">Rating</th>
+                                        <th className="px-6 py-4">Feedback</th>
                                         <th className="px-6 py-4">Date</th>
                                     </>
                                 )}
@@ -169,13 +170,13 @@ const ReviewsManagementPage = () => {
                             <AnimatePresence mode="wait">
                                 {loading ? (
                                     <tr key="loading">
-                                        <td colSpan="5" className="px-6 py-12 text-center text-white/40">
+                                        <td colSpan="6" className="px-6 py-12 text-center text-white/40">
                                             <InfinityLoader fullScreen={false} size="md" text="Loading reviews..." />
                                         </td>
                                     </tr>
                                 ) : filteredReviews.length === 0 ? (
                                     <tr key="empty">
-                                        <td colSpan="5" className="px-6 py-12 text-center text-white/40">
+                                        <td colSpan="6" className="px-6 py-12 text-center text-white/40">
                                             <div className="flex flex-col items-center gap-2">
                                                 <Info size={24} className="text-white/20" />
                                                 <span>No reviews found matching your search.</span>
@@ -227,16 +228,16 @@ const ReviewsManagementPage = () => {
                                                             <span className="text-white font-medium text-xs">{review.reviewee_profile?.name || 'Unknown'}</span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-4">
-                                                        <div className="flex flex-col gap-1.5">
-                                                            {renderStars(review.rating)}
-                                                            <p className="text-sm text-white/60 line-clamp-2 max-w-md">{review.comment}</p>
-                                                        </div>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        {renderStars(review.rating)}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <p className="text-sm text-white/60 truncate max-w-[250px]">{review.comment}</p>
                                                     </td>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <td className="px-6 py-4">
+                                                    <td className="px-6 py-4 whitespace-nowrap">
                                                         <div className="flex items-center gap-2">
                                                             <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
                                                                 <User size={14} className="text-accent" />
@@ -244,24 +245,24 @@ const ReviewsManagementPage = () => {
                                                             <span className="text-white font-medium">{review.name}</span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-4">
-                                                        <div className="flex flex-col gap-1.5">
-                                                            {renderStars(review.rating)}
-                                                            <p className="text-sm text-white/60 line-clamp-2 max-w-md">{review.comment}</p>
-                                                        </div>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        {renderStars(review.rating)}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <p className="text-sm text-white/60 truncate max-w-[250px]">{review.comment}</p>
                                                     </td>
                                                 </>
                                             )}
-                                            <td className="px-6 py-4">
+                                            <td className="px-6 py-4 whitespace-nowrap">
                                                 <span className="text-white/40 text-xs font-semibold tracking-tighter uppercase opacity-80">{formatDate(review.created_at)}</span>
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <button
                                                     onClick={() => setConfirmModal({ isOpen: true, id: review.id })}
-                                                    className="p-2.5 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all active:scale-90"
+                                                    className="p-2 text-white/20 hover:text-rose-500 transition-all active:scale-90 group/del"
                                                     title="Delete Review"
                                                 >
-                                                    <Trash2 size={16} />
+                                                    <Trash2 size={18} className="group-hover/del:scale-110 transition-transform" />
                                                 </button>
                                             </td>
                                         </motion.tr>

@@ -34,7 +34,7 @@ const BADGE_STYLES = {
 };
 
 const StatusBadge = ({ status }) => (
-    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border uppercase tracking-wider ${BADGE_STYLES[status] || BADGE_STYLES.PENDING}`}>
+    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border uppercase tracking-wider whitespace-nowrap ${BADGE_STYLES[status] || BADGE_STYLES.PENDING}`}>
         {TAB_LABELS[status] || status}
     </span>
 );
@@ -135,53 +135,56 @@ export default function VerificationManagementPage({ role }) {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className={`text-xl sm:text-2xl font-bold text-white flex items-center gap-2`}>
-                        <ShieldCheck className={accentColor} size={26} />
+                    <h1 className={`text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3`}>
+                        <ShieldCheck className={accentColor} size={24} />
                         {isClient ? 'Client' : 'Freelancer'} Verification
                     </h1>
                     <p className="text-white/40 text-xs mt-1">
                         Manage identity verification for all {role.toLowerCase()}s
                     </p>
                 </div>
-                <div className="flex items-center gap-2">
-                    <div className="relative">
+                <div className="flex items-center gap-3 w-full sm:w-auto">
+                    <div className="relative flex-1 sm:w-80">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" size={14} />
                         <input
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                             placeholder="Search name or email..."
-                            className="bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-white text-xs w-56 focus:outline-none focus:border-accent transition-all"
+                            className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white text-xs focus:outline-none focus:border-accent transition-all shadow-inner"
                         />
                     </div>
-                    <button onClick={load} className="p-2 hover:bg-white/5 rounded-lg text-white/40 transition">
-                        <RefreshCw size={16} className={loading ? 'animate-spin text-accent' : ''} />
+                    <button
+                        onClick={load}
+                        className="p-2 flex items-center justify-center text-white/40 hover:text-accent transition-all group flex-shrink-0"
+                        title="Refresh"
+                    >
+                        <RefreshCw size={18} className={loading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
                     </button>
                 </div>
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="flex items-center justify-between gap-3 sm:gap-4 w-full">
                 {[
-                    { key: 'not_submitted', label: 'Not Submitted', color: 'text-slate-400', bg: '' },
-                    { key: 'pending', label: 'Pending', color: 'text-yellow-400', bg: '' },
-                    { key: 'approved', label: 'Approved', color: 'text-emerald-400', bg: '' },
-                    { key: 'rejected', label: 'Rejected', color: 'text-red-400', bg: '' },
+                    { key: 'not_submitted', label: 'Not Submitted', color: 'text-slate-400' },
+                    { key: 'pending', label: 'Pending', color: 'text-yellow-400' },
+                    { key: 'approved', label: 'Approved', color: 'text-emerald-400' },
+                    { key: 'rejected', label: 'Rejected', color: 'text-red-400' },
                 ].map(s => (
-                    <div key={s.key} className="p-4 rounded-2xl cursor-pointer"
-                        onClick={() => setTab(s.key.toUpperCase().replace('_', '_'))}>
-                        <p className={`text-2xl font-black ${s.color}`}>{stats[s.key] ?? '—'}</p>
-                        <p className="text-white/40 text-xs font-medium mt-1">{s.label}</p>
+                    <div key={s.key} className="flex-1 min-w-0 cursor-pointer"
+                        onClick={() => setTab(s.key.toUpperCase())}>
+                        <p className={`text-xl sm:text-2xl font-black ${s.color} truncate`}>{stats[s.key] ?? '—'}</p>
+                        <p className="text-white/40 text-[10px] sm:text-xs font-medium mt-0.5 truncate">{s.label}</p>
                     </div>
                 ))}
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-6 border-b border-white/5 overflow-x-auto">
+            <div className="flex items-center gap-8 border-b border-white/5 overflow-x-auto no-scrollbar">
                 {TABS.map(t => (
                     <button key={t} onClick={() => setTab(t)}
-                        className={`relative pb-3 text-[11px] font-bold uppercase tracking-widest whitespace-nowrap transition-all ${
-                            tab === t ? TAB_COLORS[t] : 'text-white/30 hover:text-white/50'
-                        }`}>
+                        className={`relative pb-3 text-[11px] font-bold uppercase tracking-widest whitespace-nowrap transition-all ${tab === t ? TAB_COLORS[t] : 'text-white/30 hover:text-white/50'
+                            }`}>
                         {TAB_LABELS[t]}
                         <span className="ml-1.5 text-[10px] opacity-60">
                             ({allData.filter(u => u.status === t).length})
@@ -236,10 +239,10 @@ export default function VerificationManagementPage({ role }) {
                                         </td>
                                     )}
                                     {tab !== 'NOT_SUBMITTED' && (
-                                        <td className="px-5 py-4 text-white/40 text-xs">{formatDate(u.submitted_at)}</td>
+                                        <td className="px-5 py-4 text-white/40 text-xs whitespace-nowrap">{formatDate(u.submitted_at)}</td>
                                     )}
                                     {tab === 'NOT_SUBMITTED' && (
-                                        <td className="px-5 py-4 text-white/40 text-xs">
+                                        <td className="px-5 py-4 text-white/40 text-xs whitespace-nowrap">
                                             {u.last_reminder_sent_at ? (
                                                 <span className="flex items-center gap-1">
                                                     <Clock size={11} />
@@ -271,7 +274,7 @@ export default function VerificationManagementPage({ role }) {
                                                 <>
                                                     <button
                                                         onClick={() => { setSelected(u); setRejectNotes(''); }}
-                                                        className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 text-white/60 hover:bg-white/10 rounded-lg text-xs font-bold transition"
+                                                        className="flex items-center gap-1.5 px-3 py-1.5 text-white/40 hover:text-blue-500 rounded-full text-xs font-bold transition-all"
                                                     >
                                                         <Eye size={11} /> Review
                                                     </button>
@@ -287,7 +290,7 @@ export default function VerificationManagementPage({ role }) {
                                             {tab === 'APPROVED' && (
                                                 <button
                                                     onClick={() => setSelected(u)}
-                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 text-white/50 hover:bg-white/10 rounded-lg text-xs font-bold transition"
+                                                    className="flex items-center gap-1.5 px-3 py-1.5 text-white/40 hover:text-blue-500 rounded-full text-xs font-bold transition-all"
                                                 >
                                                     <Eye size={11} /> View
                                                 </button>
@@ -303,8 +306,8 @@ export default function VerificationManagementPage({ role }) {
 
             {/* Review Modal */}
             {selected && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-                    <div className="bg-secondary border border-white/10 rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl">
+                <div className="fixed inset-0 z-50 flex justify-center items-start pt-8 sm:pt-12 p-4 bg-black/80 overflow-y-auto no-scrollbar">
+                    <div className="bg-secondary border border-white/10 rounded-2xl w-full max-w-2xl flex flex-col shadow-2xl my-auto sm:my-0">
                         {/* Modal Header */}
                         <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
                             <div className="flex items-center gap-3">
@@ -316,7 +319,7 @@ export default function VerificationManagementPage({ role }) {
                             </div>
                             <div className="flex items-center gap-3">
                                 <StatusBadge status={selected.status} />
-                                <button onClick={() => setSelected(null)} className="text-white/30 hover:text-white transition">
+                                <button onClick={() => setSelected(null)} className="text-white/30 hover:text-blue-500 transition">
                                     <X size={20} />
                                 </button>
                             </div>
@@ -326,16 +329,15 @@ export default function VerificationManagementPage({ role }) {
                         <div className="flex-1 overflow-y-auto p-6 space-y-5">
                             {/* Document Images */}
                             <div className="space-y-2">
-                                <p className="text-white/40 text-[10px] uppercase font-bold tracking-widest">Documents</p>
-                                <div className="grid grid-cols-3 gap-3">
+                                <div className="flex items-center justify-between gap-4">
                                     {[
                                         { url: selected.document_front_url, label: 'Front' },
                                         { url: selected.document_back_url, label: 'Back' },
                                         { url: selected.selfie_url, label: 'Selfie' },
                                     ].filter(d => d.url).map((doc, i) => (
                                         <a key={i} href={doc.url} target="_blank" rel="noreferrer"
-                                            className="block rounded-xl overflow-hidden border border-white/10 hover:border-accent/40 transition group relative">
-                                            <div className="aspect-[4/3] bg-white/5">
+                                            className={`block flex-1 rounded-xl overflow-hidden transition group relative ${i === 2 ? '' : 'border border-white/10 hover:border-accent/40 bg-white/5'}`}>
+                                            <div className="aspect-[4/3]">
                                                 {doc.url.toLowerCase().endsWith('.pdf') ? (
                                                     <div className="w-full h-full flex flex-col items-center justify-center gap-1 text-white/30">
                                                         <FileText size={24} />
@@ -377,7 +379,7 @@ export default function VerificationManagementPage({ role }) {
                                             { label: 'Gender', value: selected.extracted_gender },
                                             { label: 'ID Number', value: selected.extracted_id_number },
                                         ].filter(f => f.value).map(f => (
-                                            <div key={f.label} className="bg-accent/5 border border-accent/10 rounded-xl p-3">
+                                            <div key={f.label} className="py-1">
                                                 <p className="text-white/30 text-[10px] uppercase font-bold tracking-widest mb-1">{f.label}</p>
                                                 <p className="text-white text-sm font-medium">{f.value}</p>
                                             </div>
@@ -398,7 +400,7 @@ export default function VerificationManagementPage({ role }) {
                                     { label: 'PAN', value: selected.pan_number ? `${selected.pan_number.slice(0, 2)}XXXX${selected.pan_number.slice(-2)}` : null },
                                     { label: 'Driving License', value: selected.driving_license_number },
                                 ].filter(f => f.value).map(f => (
-                                    <div key={f.label} className="bg-white/[0.03] border border-white/5 rounded-xl p-3">
+                                    <div key={f.label} className="py-2">
                                         <p className="text-white/30 text-[10px] uppercase font-bold tracking-widest mb-1">{f.label}</p>
                                         <p className="text-white text-sm font-medium">{f.value}</p>
                                     </div>

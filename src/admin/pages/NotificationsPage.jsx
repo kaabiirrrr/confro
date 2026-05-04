@@ -37,7 +37,13 @@ const NotificationsPage = () => {
 
     return (
         <div className="max-w-4xl mx-auto space-y-6">
-            <h1 className="text-lg sm:text-2xl font-bold text-white mb-8">Broadcast Notifications</h1>
+            <div className="mb-8">
+                <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                    <Send size={22} className="text-accent" />
+                    Broadcast Notifications
+                </h1>
+                <p className="text-white/40 text-xs mt-1">Send platform-wide announcements to all users or specific roles</p>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 

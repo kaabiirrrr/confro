@@ -97,29 +97,26 @@ const OffersPage = () => {
     return (
         <div className="space-y-10 pb-10">
             {/* Header Section */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6">
                 <div>
-                    <div className="flex items-center gap-3 mb-2">
-                        <img src="/Icons/icons8-offer-100.png" alt="Offers" className="w-6 h-6 object-contain" />
-                        <h1 className="text-xl font-black text-white tracking-tighter uppercase">Platform Offers</h1>
-                    </div>
-                    <p className="text-white/40 text-[11px] font-black uppercase tracking-[0.2em]">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                        <img src="/Icons/icons8-offer-100.png" alt="Offers" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
+                        Platform Offers
+                    </h1>
+                    <p className="text-white/40 text-xs mt-1">
                         Manage premium promotional banners and limited-time deals
                     </p>
                 </div>
-                
-                    <TrendingUp size={14} className="group-hover:scale-110 transition-transform text-accent" />
-                    <span className="text-[10px]">Performance</span>
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-[1fr_400px] gap-8">
                 {/* Form Section */}
-                <div className="bg-transparent border border-white/10 rounded-[32px] p-10 relative overflow-hidden backdrop-blur-sm shadow-2xl shadow-black/20">
+                <div className="bg-transparent border border-white/10 rounded-[20px] sm:rounded-[32px] p-5 sm:p-10 relative overflow-hidden backdrop-blur-sm shadow-2xl shadow-black/20">
                     <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none">
                         <Tag size={300} />
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
+                    <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-8 relative z-10">
                         {/* Target Audience */}
                         <div className="space-y-4">
                             <label className="text-white/20 text-[9px] font-black uppercase tracking-[0.3em] pl-1">Target Audience</label>
@@ -133,7 +130,7 @@ const OffersPage = () => {
                                         key={role.id}
                                         type="button"
                                         onClick={() => setOffer({ ...offer, target_role: role.id })}
-                                        className={`flex items-center justify-center gap-2 py-3 rounded-xl border transition-all duration-300 ${offer.target_role === role.id
+                                        className={`flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-3 rounded-xl border transition-all duration-300 ${offer.target_role === role.id
                                             ? 'bg-[#38BDF8] border-[#38BDF8] text-white shadow-lg shadow-sky-500/10'
                                             : 'bg-white/[0.03] border-white/5 text-white/40 hover:border-white/20 hover:bg-white/[0.05]'
                                             }`}
@@ -145,7 +142,7 @@ const OffersPage = () => {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
                             <div className="space-y-4">
                                 <label className="text-white/20 text-[10px] font-black uppercase tracking-[0.3em] pl-1">Promotion Name (Internal)</label>
                                 <div className="relative group">
@@ -155,7 +152,7 @@ const OffersPage = () => {
                                         value={offer.offer_name}
                                         onChange={(e) => setOffer({ ...offer, offer_name: e.target.value })}
                                         placeholder="e.g. Easter Special 2024"
-                                        className="w-full bg-white/[0.03] border border-white/5 rounded-xl px-6 py-4 text-white text-sm focus:outline-none focus:border-accent/50 transition-all font-medium group-hover:border-white/10"
+                                        className="w-full bg-white/[0.03] border border-white/5 rounded-xl px-3 py-2.5 sm:px-6 sm:py-4 text-white text-xs sm:text-sm focus:outline-none focus:border-accent/50 transition-all font-medium group-hover:border-white/10"
                                     />
                                 </div>
                             </div>
@@ -169,7 +166,7 @@ const OffersPage = () => {
                                         value={offer.title}
                                         onChange={(e) => setOffer({ ...offer, title: e.target.value })}
                                         placeholder="E.G. LIMITED FLASH SALE!"
-                                        className="w-full bg-white/[0.03] border border-white/5 rounded-xl px-6 py-4 text-white text-sm focus:outline-none focus:border-accent/50 transition-all font-medium group-hover:border-white/10"
+                                        className="w-full bg-white/[0.03] border border-white/5 rounded-xl px-3 py-2.5 sm:px-6 sm:py-4 text-white text-xs sm:text-sm focus:outline-none focus:border-accent/50 transition-all font-medium group-hover:border-white/10"
                                     />
                                 </div>
                             </div>
@@ -183,7 +180,7 @@ const OffersPage = () => {
                                     type="datetime-local"
                                     value={offer.end_time}
                                     onChange={(e) => setOffer({ ...offer, end_time: e.target.value })}
-                                    className="w-full bg-white/[0.03] border border-white/5 rounded-xl px-6 py-4 text-white text-sm focus:outline-none focus:border-accent/50 transition-all font-medium group-hover:border-white/10 [color-scheme:dark]"
+                                    className="w-full bg-white/[0.03] border border-white/5 rounded-xl px-3 py-2.5 sm:px-6 sm:py-4 text-white text-xs sm:text-sm focus:outline-none focus:border-accent/50 transition-all font-medium group-hover:border-white/10 [color-scheme:dark]"
                                 />
                             </div>
 
@@ -210,7 +207,7 @@ const OffersPage = () => {
                                     value={offer.message}
                                     onChange={(e) => setOffer({ ...offer, message: e.target.value })}
                                     placeholder="Get 40% off your next transaction. Hurry!"
-                                    className="w-full bg-white/[0.03] border border-white/5 rounded-xl px-6 py-5 text-white text-sm focus:outline-none focus:border-accent/50 transition-all resize-none placeholder:text-white/10 font-medium leading-relaxed group-hover:border-white/10"
+                                    className="w-full bg-white/[0.03] border border-white/5 rounded-xl px-3 py-3 sm:px-6 sm:py-5 text-white text-xs sm:text-sm focus:outline-none focus:border-accent/50 transition-all resize-none placeholder:text-white/10 font-medium leading-relaxed group-hover:border-white/10"
                                 ></textarea>
                             </div>
                         </div>
@@ -218,7 +215,7 @@ const OffersPage = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full py-3 bg-[#38BDF8] hover:bg-[#0EA5E9] text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-xs disabled:opacity-50 shadow-lg shadow-sky-500/10"
+                            className="w-full py-2 sm:py-3 bg-[#38BDF8] hover:bg-[#0EA5E9] text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-[10px] sm:text-xs disabled:opacity-50 shadow-lg shadow-sky-500/10"
                         >
                             {loading ? (
                                 <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>

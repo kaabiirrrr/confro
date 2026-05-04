@@ -80,80 +80,76 @@ const ModerationPage = () => {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
-                        <ShieldAlert className="text-accent w-8 h-8" />
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                        <ShieldAlert className="text-accent w-6 h-6 sm:w-8 sm:h-8" />
                         Revenue Protection & Moderation
                     </h1>
-                    <p className="text-white/40 text-[11px] font-medium mt-1 uppercase tracking-widest">
+                    <p className="text-white/40 text-xs mt-1">
                         Track and enforce platform trust, safety, and communication policies
                     </p>
                 </div>
 
-                
-                {/* Underline Tabs (Modern Style) */}
-                <div className="flex items-center border-b border-white/10 w-full sm:w-auto">
+                <div className="flex items-center border-b border-white/10 w-full sm:w-auto overflow-x-auto no-scrollbar">
                     {[
-                        { id: 'reports', label: 'USER REPORTS', icon: Info },
-                        { id: 'violations', label: 'AI VIOLATIONS', icon: AlertTriangle },
-                        { id: 'offenders', label: 'OFFENDERS LIST', icon: UserX },
+                        { id: 'reports', label: 'User Reports', icon: Info },
+                        { id: 'violations', label: 'AI Violations', icon: AlertTriangle },
+                        { id: 'offenders', label: 'Offenders List', icon: UserX },
                     ].map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-2 px-6 py-4 text-xs font-bold tracking-widest transition-all relative ${
-                                activeTab === tab.id ? 'text-accent' : 'text-white/40 hover:text-white/70'
-                            }`}
+                            className={`flex items-center gap-2 px-3 py-3 sm:px-6 sm:py-4 text-[10px] sm:text-xs font-medium transition-all relative whitespace-nowrap uppercase tracking-widest ${activeTab === tab.id ? 'text-accent' : 'text-white/30 hover:text-white/60'
+                                }`}
                         >
                             {tab.label}
                             {activeTab === tab.id && (
-                                <motion.div 
+                                <motion.div
                                     layoutId="activeTabUnderline"
-                                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent shadow-[0_0_10px_rgba(122,167,255,0.8)]" 
+                                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent"
                                 />
                             )}
                         </button>
                     ))}
                 </div>
-
             </div>
 
-            {/* Sub-Header / Filters */}
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-                <div className="relative w-full sm:w-80">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
+            <div className="flex flex-row gap-2 items-center justify-between">
+                <div className="relative flex-1 sm:w-80">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={14} />
                     <input
                         type="text"
                         placeholder={`Search ${activeTab}...`}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-accent"
+                        className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2 text-white text-[11px] font-medium focus:outline-none focus:border-accent transition-all shadow-inner"
                     />
                 </div>
                 {activeTab !== 'offenders' && (
-                    <CustomDropdown
-                        options={activeTab === 'reports' ? [
-                            { label: 'All Statuses', value: '' },
-                            { label: 'Pending', value: 'PENDING' },
-                            { label: 'Investigating', value: 'INVESTIGATING' },
-                            { label: 'Action Taken', value: 'ACTION_TAKEN' }
-                        ] : [
-                            { label: 'All Severity', value: '' },
-                            { label: 'High Severity', value: 'HIGH' },
-                            { label: 'Medium Severity', value: 'MEDIUM' }
-                        ]}
-                        value={statusFilter}
-                        onChange={(val) => setStatusFilter(val)}
-                        variant="transparent"
-                        className="w-full sm:w-48"
-                    />
+                    <div className="w-32 sm:w-48">
+                        <CustomDropdown
+                            options={activeTab === 'reports' ? [
+                                { label: 'All Statuses', value: '' },
+                                { label: 'Pending', value: 'PENDING' },
+                                { label: 'Investigating', value: 'INVESTIGATING' },
+                                { label: 'Action Taken', value: 'ACTION_TAKEN' }
+                            ] : [
+                                { label: 'All Severity', value: '' },
+                                { label: 'High Severity', value: 'HIGH' },
+                                { label: 'Medium Severity', value: 'MEDIUM' }
+                            ]}
+                            value={statusFilter}
+                            onChange={(val) => setStatusFilter(val)}
+                            variant="transparent"
+                            className="w-full"
+                        />
+                    </div>
                 )}
             </div>
 
-            {/* Content Display */}
             <div className="border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
                 <div className="overflow-x-auto min-h-[400px]">
                     <AnimatePresence mode="wait">
-                        <motion.table 
+                        <motion.table
                             key={activeTab}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -194,30 +190,28 @@ const ModerationPage = () => {
                                         <InfinityLoader fullScreen={false} size="md" text="Loading data..." />
                                     </td></tr>
                                 ) : (activeTab === 'reports' ? reports : activeTab === 'violations' ? violations : offenders).length === 0 ? (
-                                    <tr><td colSpan="5" className="px-6 py-20 text-center text-white/30 italic">No {activeTab} found.</td></tr>
+                                    <tr><td colSpan="5" className="px-6 py-20 text-center text-white/20 text-[11px] italic">No {activeTab} found.</td></tr>
                                 ) : (
                                     (activeTab === 'reports' ? reports : activeTab === 'violations' ? violations : offenders).map(item => (
                                         <tr key={item.id || item.user_id} className="hover:bg-white/[0.02] transition-colors group">
-                                            {/* --- USER REPORTS TAB --- */}
                                             {activeTab === 'reports' && (
                                                 <>
-                                                    <td className="px-6 py-5">
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5">
                                                         <div className="flex flex-col">
                                                             <span className="text-white font-medium">{item.reported?.profiles?.name || 'Unknown User'}</span>
                                                             <span className="text-[10px] text-white/40 uppercase font-black mt-0.5 tracking-tighter">{item.item_type}</span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-5 text-white/60">{item.reporter?.profiles?.name || 'Anonymous'}</td>
-                                                    <td className="px-6 py-5 max-w-xs truncate text-white/50">{item.reason}</td>
-                                                    <td className="px-6 py-5">
-                                                        <span className={`px-2 py-1 rounded-md text-[10px] font-black uppercase ${
-                                                            item.status === 'PENDING' ? 'bg-red-500/10 text-red-500' : 
-                                                            item.status === 'INVESTIGATING' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-green-500/10 text-green-500'
-                                                        }`}>
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5 text-white/60">{item.reporter?.profiles?.name || 'Anonymous'}</td>
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5 max-w-xs truncate text-white/50">{item.reason}</td>
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5">
+                                                        <span className={`px-2 py-1 rounded-md text-[10px] font-black uppercase ${item.status === 'PENDING' ? 'bg-red-500/10 text-red-500' :
+                                                                item.status === 'INVESTIGATING' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-green-500/10 text-green-500'
+                                                            }`}>
                                                             {item.status}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-5 text-right">
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5 text-right">
                                                         <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                             <button onClick={() => handleResolve(item, 'ACTION_TAKEN')} className="p-2 hover:bg-red-500/10 text-red-400 rounded-lg" title="Ban / Remove"><XCircle size={18} /></button>
                                                             <button onClick={() => handleResolve(item, 'DISMISSED')} className="p-2 hover:bg-white/10 text-white/40 rounded-lg" title="Dismiss"><Trash2 size={18} /></button>
@@ -226,66 +220,62 @@ const ModerationPage = () => {
                                                 </>
                                             )}
 
-                                            {/* --- AI VIOLATIONS TAB --- */}
                                             {activeTab === 'violations' && (
                                                 <>
-                                                    <td className="px-6 py-5">
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5">
                                                         <div className="flex items-center gap-3">
                                                             <img src={item.user?.avatar_url || '/placeholder.png'} className="w-8 h-8 rounded-full border border-white/10" />
                                                             <span className="text-white font-medium">{item.user?.name || 'System User'}</span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-5">
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5">
                                                         <code className="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 font-mono text-xs">
                                                             {item.message || 'Blocked Attempt'}
                                                         </code>
                                                     </td>
-                                                    <td className="px-6 py-5">
-                                                        <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase ${
-                                                            item.severity === 'HIGH' ? 'bg-red-500/20 text-red-500' : 'bg-orange-500/20 text-orange-500'
-                                                        }`}>
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5">
+                                                        <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase ${item.severity === 'HIGH' ? 'bg-red-500/20 text-red-500' : 'bg-orange-500/20 text-orange-500'
+                                                            }`}>
                                                             {item.severity}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-5 text-white/40 text-xs">
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5 text-white/40 text-xs">
                                                         {new Date(item.created_at).toLocaleString()}
                                                     </td>
-                                                    <td className="px-6 py-5 text-right">
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5 text-right">
                                                         <span className="text-[10px] font-bold text-white/20 uppercase">AI-MOD-LAMA3</span>
                                                     </td>
                                                 </>
                                             )}
 
-                                            {/* --- REPEAT OFFENDERS TAB --- */}
                                             {activeTab === 'offenders' && (
                                                 <>
-                                                    <td className="px-6 py-5">
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5">
                                                         <div className="flex items-center gap-3">
                                                             <img src={item.avatar_url || '/placeholder.png'} className="w-8 h-8 rounded-full border border-white/10" />
                                                             <span className="text-white font-medium">{item.name}</span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-5">
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5">
                                                         <div className="flex items-center gap-2">
                                                             <span className={`text-sm font-black ${item.warning_count >= 3 ? 'text-red-500' : 'text-amber-500'}`}>
                                                                 {item.warning_count} / 5
                                                             </span>
                                                             <div className="flex gap-0.5">
-                                                                {[1,2,3,4,5].map(s => (
+                                                                {[1, 2, 3, 4, 5].map(s => (
                                                                     <div key={s} className={`w-1 h-3 rounded-full ${s <= item.warning_count ? (s >= 5 ? 'bg-red-500' : 'bg-amber-500') : 'bg-white/10'}`} />
                                                                 ))}
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-5">
-                                                        <span className={`px-2 py-1 rounded-md text-[10px] font-black uppercase ${
-                                                            item.is_banned ? 'bg-red-500 text-white' : 
-                                                            item.is_restricted ? 'bg-orange-500/20 text-orange-500' : 'bg-green-500/10 text-green-500'
-                                                        }`}>
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5">
+                                                        <span className={`px-2 py-1 rounded-md text-[10px] font-black uppercase ${item.is_banned ? 'bg-red-500 text-white' :
+                                                                item.is_restricted ? 'bg-orange-500/20 text-orange-500' : 'bg-green-500/10 text-green-500'
+                                                            }`}>
                                                             {item.is_banned ? 'BANNED' : item.is_restricted ? 'RESTRICTED' : 'ACTIVE'}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-5 text-right">
+                                                    <td className="px-4 py-4 sm:px-6 sm:py-5 text-right">
                                                         <div className="flex items-center justify-end gap-2">
                                                             {item.is_banned ? (
                                                                 <button onClick={() => handleManualAction(item.user_id, 'UNBAN')} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-500/10 text-green-500 text-[10px] font-bold hover:bg-green-500/20 transition-all uppercase">

@@ -90,32 +90,32 @@ const AdminManagementPage = () => {
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                 >
-                    <h1 className="text-lg sm:text-3xl font-bold text-white mb-2 flex items-center gap-3">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
                         <img src="/Icons/icons8-critical-thinking-80.png" alt="Admin Management" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
                         Admin Management
                     </h1>
-                    <p className="text-white/50 text-sm">Add or remove system administrators and manage their permissions.</p>
+                    <p className="text-white/40 text-xs mt-1">Add or remove system administrators and manage their permissions across the platform.</p>
                 </motion.div>
 
-                <div className="flex items-center gap-4 flex-1 justify-end">
-                    <div className="relative w-64 h-[42px]">
+                <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+                    <div className="relative w-full sm:w-72">
                         <Shield className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" size={16} />
                         <input
                             type="text"
                             placeholder="Search admins..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full h-full bg-white/5 bg-transparent border border-white/10 rounded-full pl-11 pr-4 py-2 text-white text-xs focus:outline-none focus:border-accent transition-all"
+                            className="w-full h-11 bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 text-white text-xs focus:outline-none focus:border-accent transition-all"
                         />
                     </div>
                     <button 
                         onClick={() => setIsAddModalOpen(true)}
-                        className="flex items-center gap-2 bg-accent text-white px-5 py-2 rounded-full transition-all font-black text-[10px] uppercase tracking-widest hover:opacity-90 active:scale-95 h-[42px] shrink-0"
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 bg-accent text-white px-6 h-11 rounded-xl transition-all font-black text-[10px] uppercase tracking-widest hover:opacity-90 active:scale-95 shrink-0"
                     >
                         <UserPlus size={16} />
                         Add New Admin
@@ -123,13 +123,13 @@ const AdminManagementPage = () => {
                 </div>
             </div>
 
-            {/* Admin Table */}
-            <div className="bg-transparent border border-white/10 rounded-2xl shadow-xl shadow-black/40">
+            {/* Admin Table / Cards */}
+            <div className="bg-transparent border border-white/10 rounded-2xl shadow-xl shadow-black/40 overflow-hidden">
                 {/* Desktop Table */}
                 <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="text-white/40 text-xs uppercase tracking-widest font-bold border-b border-white/10">
+                            <tr className="text-white/40 text-[10px] uppercase tracking-widest font-black border-b border-white/10">
                                 <th className="px-6 py-5">Administrator</th>
                                 <th className="px-6 py-5">Role</th>
                                 <th className="px-6 py-5">Joined At</th>
@@ -145,14 +145,14 @@ const AdminManagementPage = () => {
                                 <tr key={admin.id} className="hover:bg-white/[0.02] transition-colors group">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold shadow-inner shrink-0">
+                                            <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold shadow-inner shrink-0 border border-accent/10">
                                                 {admin.photo_url ? (
                                                     <img src={admin.photo_url} alt="" className="w-full h-full object-cover rounded-full" />
                                                 ) : admin.email.charAt(0).toUpperCase()}
                                             </div>
                                             <div>
-                                                <div className="text-white font-medium">{admin.name || admin.email.split('@')[0]}</div>
-                                                <div className="text-white/40 text-xs">{admin.email}</div>
+                                                <div className="text-white font-bold text-sm tracking-tight">{admin.name || admin.email.split('@')[0]}</div>
+                                                <div className="text-white/30 text-xs font-medium">{admin.email}</div>
                                             </div>
                                         </div>
                                     </td>
@@ -165,16 +165,16 @@ const AdminManagementPage = () => {
                                             value={admin.role}
                                             onChange={(val) => handleRoleChange(admin.id, val)}
                                             variant="accent"
-                                            className="text-[10px] font-black uppercase tracking-widest w-40 !rounded-full"
+                                            className="text-[10px] font-black uppercase tracking-widest w-40 !rounded-xl"
                                         />
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-white/50 text-sm">
+                                    <td className="px-6 py-4 whitespace-nowrap text-white/40 text-sm font-medium">
                                         {new Date(admin.created_at).toLocaleDateString()}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <button onClick={() => handleViewAdmin(admin)} className="p-2 text-white/40 hover:text-white transition-colors"><Eye size={18} /></button>
-                                            <button onClick={() => handleRemoveAdmin(admin.id)} className="p-2 text-white/40 hover:text-red-400 transition-colors"><Trash2 size={18} /></button>
+                                        <div className="flex justify-end gap-1">
+                                            <button onClick={() => handleViewAdmin(admin)} className="p-2 text-white/30 hover:text-white transition-colors"><Eye size={18} /></button>
+                                            <button onClick={() => handleRemoveAdmin(admin.id)} className="p-2 text-white/30 hover:text-red-500 transition-colors"><Trash2 size={18} /></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -186,30 +186,34 @@ const AdminManagementPage = () => {
                 {/* Mobile Cards */}
                 <div className="md:hidden divide-y divide-white/5">
                     {loading ? (
-                        <div className="px-4 py-12 text-center text-white/30 text-sm">Loading administrators...</div>
+                        <div className="px-4 py-12 text-center text-white/30 text-sm font-medium">Loading administrators...</div>
                     ) : filteredAdmins.length === 0 ? (
-                        <div className="px-4 py-12 text-center text-white/30 text-sm">No administrators found</div>
+                        <div className="px-4 py-12 text-center text-white/30 text-sm font-medium">No administrators found</div>
                     ) : filteredAdmins.map((admin) => (
-                        <div key={admin.id} className="p-4 space-y-3">
-                            <div className="flex items-center justify-between">
+                        <div key={admin.id} className="p-5 space-y-5">
+                            <div className="flex items-start justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold shrink-0">
+                                    <div className="w-11 h-11 rounded-full bg-accent/20 flex items-center justify-center text-accent font-black shrink-0 border border-accent/10">
                                         {admin.photo_url ? (
                                             <img src={admin.photo_url} alt="" className="w-full h-full object-cover rounded-full" />
                                         ) : admin.email.charAt(0).toUpperCase()}
                                     </div>
-                                    <div>
-                                        <p className="text-white font-medium text-sm">{admin.name || admin.email.split('@')[0]}</p>
-                                        <p className="text-white/40 text-xs truncate max-w-[180px]">{admin.email}</p>
+                                    <div className="min-w-0">
+                                        <p className="text-white font-bold text-sm truncate leading-tight">{admin.name || admin.email.split('@')[0]}</p>
+                                        <p className="text-white/40 text-xs truncate max-w-[160px] font-medium">{admin.email}</p>
                                     </div>
                                 </div>
-                                <div className="flex gap-1">
-                                    <button onClick={() => handleViewAdmin(admin)} className="p-2 text-white/40 hover:text-white transition-colors"><Eye size={16} /></button>
-                                    <button onClick={() => handleRemoveAdmin(admin.id)} className="p-2 text-white/40 hover:text-red-400 transition-colors"><Trash2 size={16} /></button>
+                                <div className="flex gap-1 shrink-0">
+                                    <button onClick={() => handleViewAdmin(admin)} className="p-2 text-white/30 hover:text-white transition-colors"><Eye size={18} /></button>
+                                    <button onClick={() => handleRemoveAdmin(admin.id)} className="p-2 text-white/30 hover:text-red-500 transition-colors"><Trash2 size={18} /></button>
                                 </div>
                             </div>
-                            <div className="flex items-center justify-between pl-13">
-                                <span className="text-white/30 text-xs">{new Date(admin.created_at).toLocaleDateString()}</span>
+
+                            <div className="space-y-3 pt-2">
+                                <div className="flex items-center justify-between px-1">
+                                    <span className="text-[10px] uppercase font-black text-white/20 tracking-widest">Joined On</span>
+                                    <span className="text-white/40 text-[10px] font-bold">{new Date(admin.created_at).toLocaleDateString()}</span>
+                                </div>
                                 <CustomDropdown
                                     options={[
                                         { label: 'ADMIN', value: 'ADMIN' },
@@ -218,7 +222,7 @@ const AdminManagementPage = () => {
                                     value={admin.role}
                                     onChange={(val) => handleRoleChange(admin.id, val)}
                                     variant="accent"
-                                    className="text-[10px] font-black uppercase tracking-widest w-36 !rounded-full"
+                                    className="w-full text-[10px] font-black uppercase tracking-widest !rounded-xl h-11"
                                 />
                             </div>
                         </div>

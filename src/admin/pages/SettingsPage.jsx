@@ -57,10 +57,13 @@ const SettingsPage = () => {
 
     return (
         <div className="max-w-4xl mx-auto space-y-6">
-            <h1 className="text-lg sm:text-2xl font-bold text-white mb-8 flex items-center gap-2">
-                <img src="/Icons/icons8-setting-100.png" alt="Settings" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
-                Platform Configuration
-            </h1>
+            <div className="mb-8">
+                <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                    <img src="/Icons/icons8-setting-100.png" alt="Settings" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
+                    Platform Configuration
+                </h1>
+                <p className="text-white/40 text-xs mt-1">Configure global platform parameters, commission rates, and maintenance modes</p>
+            </div>
 
             <div className="bg-transparent border border-white/10 rounded-xl overflow-hidden shadow-sm">
                 <div className="p-6 border-b border-white/10 bg-white/[0.02]">

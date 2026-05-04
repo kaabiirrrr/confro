@@ -65,17 +65,17 @@ const SkillsPage = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
                         <img src="/Icons/icons8-skills-100.png" alt="Skills" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
                         Skill Management
                     </h1>
-                    <p className="text-white/60 text-sm mt-1">Configure available talent skills and categories</p>
+                    <p className="text-white/40 text-xs mt-1">Configure available talent skills and categories</p>
                 </div>
-                <div className="flex items-center gap-4 flex-1 justify-end">
-                    <div className="relative w-64">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={18} />
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <div className="relative flex-1 sm:flex-none sm:w-64">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
                         <input
                             type="text"
                             placeholder="Search skills..."
@@ -86,9 +86,11 @@ const SkillsPage = () => {
                     </div>
                     <button
                         onClick={() => setIsAdding(!isAdding)}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-xl hover:bg-accent-hover transition font-bold text-sm shadow-lg shadow-accent/20 shrink-0"
+                        className="flex-shrink-0 inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-accent text-white rounded-xl hover:bg-accent-hover transition font-bold text-sm shadow-lg shadow-accent/20"
                     >
-                        <Plus size={18} /> {isAdding ? 'Close' : 'Add New Skill'}
+                        <Plus size={18} />
+                        <span className="hidden sm:inline">{isAdding ? 'Close' : 'Add New Skill'}</span>
+                        <span className="sm:hidden">{isAdding ? 'Close' : 'Add'}</span>
                     </button>
                 </div>
             </div>

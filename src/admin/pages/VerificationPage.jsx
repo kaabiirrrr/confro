@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { 
-    Clock, Check, X, AlertCircle, RefreshCw, ShieldCheck, 
+import {
+    Clock, Check, X, AlertCircle, RefreshCw, ShieldCheck,
     ExternalLink, CheckCircle, XCircle, Search, User, Eye, FileText
 } from 'lucide-react';
 import { adminReviewIdentity } from '../../services/apiService';
@@ -65,7 +65,7 @@ const VerificationPage = () => {
             ''
         ).toUpperCase();
         const matchesSearch = name.includes(search) || email.includes(search);
-        const matchesRole = roleFilter === 'ALL' || role === roleFilter || (roleFilter === 'FREELANCER' && !role) ;
+        const matchesRole = roleFilter === 'ALL' || role === roleFilter || (roleFilter === 'FREELANCER' && !role);
         return matchesSearch && matchesRole;
     });
 
@@ -88,13 +88,13 @@ const VerificationPage = () => {
             <div className="flex flex-col gap-3 sm:gap-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                        <h1 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2">
+                        <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
                             <img src="/Icons/icons8-verification-100.png" alt="Verification" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
                             Identity Verification
                         </h1>
-                        <p className="text-white/60 text-xs sm:text-sm mt-1">Review and approve identity documents for freelancers and clients</p>
+                        <p className="text-white/40 text-xs mt-1">Review and approve identity documents for freelancers and clients</p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
                         <div className="relative flex-1 sm:w-64">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
                             <input
@@ -102,23 +102,25 @@ const VerificationPage = () => {
                                 placeholder="Search by name or email..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2 text-white text-xs sm:text-sm focus:outline-none focus:border-accent transition-all"
+                                className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white text-xs sm:text-sm focus:outline-none focus:border-accent transition-all"
                             />
                         </div>
-                        <button onClick={loadRequests} className="p-2 hover:bg-white/5 rounded-lg text-white/60 transition group flex-shrink-0">
-                            <RefreshCw size={18} className={loading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                        <button
+                            onClick={loadRequests}
+                            className="w-10 h-10 flex items-center justify-center hover:bg-white/5 rounded-xl text-white/60 transition group flex-shrink-0 border border-white/10"
+                        >
+                            <RefreshCw size={16} className={loading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
                         </button>
                     </div>
                 </div>
                 {/* Status tabs */}
-                <div className="flex items-center border-b border-white/10 overflow-x-auto no-scrollbar">
+                <div className="flex items-center overflow-x-auto no-scrollbar">
                     {['PENDING', 'APPROVED', 'REJECTED', 'ALL'].map((status) => (
                         <button
                             key={status}
                             onClick={() => setStatusFilter(status)}
-                            className={`relative px-3 sm:px-4 pb-3 pt-1 text-[10px] sm:text-xs font-bold tracking-widest uppercase transition-colors whitespace-nowrap ${
-                                statusFilter === status ? 'text-accent' : 'text-white/40 hover:text-white/70'
-                            }`}
+                            className={`relative px-3 sm:px-4 pb-3 pt-1 text-[10px] sm:text-xs font-bold tracking-widest uppercase transition-colors whitespace-nowrap ${statusFilter === status ? 'text-accent' : 'text-white/40 hover:text-white/70'
+                                }`}
                         >
                             {status.charAt(0) + status.slice(1).toLowerCase()}
                             {statusFilter === status && (
@@ -132,11 +134,10 @@ const VerificationPage = () => {
                 <div className="flex items-center gap-2">
                     {[['ALL', 'All Users'], ['FREELANCER', 'Freelancers'], ['CLIENT', 'Clients']].map(([val, label]) => (
                         <button key={val} onClick={() => setRoleFilter(val)}
-                            className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border transition-colors ${
-                                roleFilter === val
+                            className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border transition-colors ${roleFilter === val
                                     ? 'bg-accent/10 text-accent border-accent/30'
                                     : 'border-white/10 text-white/30 hover:text-white/60'
-                            }`}>
+                                }`}>
                             {label}
                         </button>
                     ))}
@@ -145,105 +146,104 @@ const VerificationPage = () => {
 
             <div className="bg-transparent border border-white/10 rounded-xl overflow-hidden">
                 <div className="overflow-x-auto admin-table-wrap">
-                <table className="w-full text-left">
-                    <thead>
-                        <tr className="border-b border-white/10 text-white/60 text-xs uppercase tracking-wider">
-                            <th className="px-6 py-4 font-medium">User</th>
-                            <th className="px-6 py-4 font-medium">Role</th>
-                            <th className="px-6 py-4 font-medium">Status</th>
-                            <th className="px-6 py-4 font-medium">Docs</th>
-                            <th className="px-6 py-4 font-medium">Submitted</th>
-                            <th className="px-6 py-4 font-medium text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/5">
-                        {loading ? (
-                            <tr><td colSpan="6" className="px-6 py-12 text-center text-white/40">
-                                <InfinityLoader fullScreen={false} size="md" text="Loading requests..." />
-                            </td></tr>
-                        ) : filteredRequests.length === 0 ? (
-                            <tr><td colSpan="6" className="px-6 py-16 text-center text-white/40">
-                                <div className="flex flex-col items-center gap-2">
-                                    <ShieldCheck size={32} className="opacity-20" />
-                                    <p>No results found matching your search</p>
-                                </div>
-                            </td></tr>
-                        ) : filteredRequests.map((req) => {
-                            const name = req.profile?.name || req.user?.email || 'Unknown User';
-                            const avatar = req.profile?.avatar_url;
-                            const docCount = [
-                                req.document_front_url,
-                                req.document_back_url,
-                                req.selfie_url
-                            ].filter(Boolean).length;
+                    <table className="w-full text-left">
+                        <thead>
+                            <tr className="border-b border-white/10 text-white/60 text-xs uppercase tracking-wider">
+                                <th className="px-6 py-4 font-medium">User</th>
+                                <th className="px-6 py-4 font-medium">Role</th>
+                                <th className="px-6 py-4 font-medium">Status</th>
+                                <th className="px-6 py-4 font-medium">Docs</th>
+                                <th className="px-6 py-4 font-medium">Submitted</th>
+                                <th className="px-6 py-4 font-medium text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-white/5">
+                            {loading ? (
+                                <tr><td colSpan="6" className="px-6 py-12 text-center text-white/40">
+                                    <InfinityLoader fullScreen={false} size="md" text="Loading requests..." />
+                                </td></tr>
+                            ) : filteredRequests.length === 0 ? (
+                                <tr><td colSpan="6" className="px-6 py-16 text-center text-white/40">
+                                    <div className="flex flex-col items-center gap-2">
+                                        <ShieldCheck size={32} className="opacity-20" />
+                                        <p>No results found matching your search</p>
+                                    </div>
+                                </td></tr>
+                            ) : filteredRequests.map((req) => {
+                                const name = req.profile?.name || req.user?.email || 'Unknown User';
+                                const avatar = req.profile?.avatar_url;
+                                const docCount = [
+                                    req.document_front_url,
+                                    req.document_back_url,
+                                    req.selfie_url
+                                ].filter(Boolean).length;
 
-                            return (
-                                <tr key={req.user_id || req.id} className="hover:bg-white/[0.02] transition">
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-3">
-                                            {avatar ? (
-                                                <img
-                                                    src={avatar}
-                                                    alt={name}
-                                                    className="w-10 h-10 rounded-full object-cover bg-white/10"
-                                                />
-                                            ) : (
-                                                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/40 font-bold uppercase">
-                                                    {name.charAt(0)}
-                                                </div>
-                                            )}
-                                            <div className="flex flex-col">
-                                                <span className="text-white font-medium">{name}</span>
-                                                {(req.user?.email && req.user.email !== name) && (
-                                                    <span className="text-white/40 text-xs">{req.user.email}</span>
+                                return (
+                                    <tr key={req.user_id || req.id} className="hover:bg-white/[0.02] transition">
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-3">
+                                                {avatar ? (
+                                                    <img
+                                                        src={avatar}
+                                                        alt={name}
+                                                        className="w-10 h-10 rounded-full object-cover bg-white/10"
+                                                    />
+                                                ) : (
+                                                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/40 font-bold uppercase">
+                                                        {name.charAt(0)}
+                                                    </div>
                                                 )}
+                                                <div className="flex flex-col">
+                                                    <span className="text-white font-medium">{name}</span>
+                                                    {(req.user?.email && req.user.email !== name) && (
+                                                        <span className="text-white/40 text-xs">{req.user.email}</span>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {(() => {
-                                            const role = (
-                                                req.profile?.role ||
-                                                req.user?.role ||
-                                                req.role ||
-                                                'FREELANCER'
-                                            ).toUpperCase();
-                                            const isClient = role === 'CLIENT';
-                                            return (
-                                                <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${
-                                                    isClient
-                                                        ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                                                        : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
-                                                }`}>
-                                                    {isClient ? 'Client' : 'Freelancer'}
-                                                </span>
-                                            );
-                                        })()}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <StatusBadge status={req.status || req.verification_status || 'PENDING'} />
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <span className="text-white/60 text-sm">
-                                            {docCount > 0 ? `${docCount} file${docCount !== 1 ? 's' : ''}` : 'No Files'}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 text-white/60 text-sm">
-                                        {new Date(req.submitted_at || req.created_at).toLocaleDateString()}
-                                    </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <button
-                                            onClick={() => { setSelectedRequest(req); setIsModalOpen(true); }}
-                                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent/10 text-accent hover:bg-accent hover:text-white rounded-lg transition text-sm font-medium"
-                                        >
-                                            <Eye size={14} /> Review
-                                        </button>
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {(() => {
+                                                const role = (
+                                                    req.profile?.role ||
+                                                    req.user?.role ||
+                                                    req.role ||
+                                                    'FREELANCER'
+                                                ).toUpperCase();
+                                                const isClient = role === 'CLIENT';
+                                                return (
+                                                    <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${isClient
+                                                            ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                                            : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
+                                                        }`}>
+                                                        {isClient ? 'Client' : 'Freelancer'}
+                                                    </span>
+                                                );
+                                            })()}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <StatusBadge status={req.status || req.verification_status || 'PENDING'} />
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <span className="text-white/60 text-sm">
+                                                {docCount > 0 ? `${docCount} file${docCount !== 1 ? 's' : ''}` : 'No Files'}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 text-white/60 text-sm">
+                                            {new Date(req.submitted_at || req.created_at).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            <button
+                                                onClick={() => { setSelectedRequest(req); setIsModalOpen(true); }}
+                                                className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent/10 text-accent hover:bg-accent hover:text-white rounded-lg transition text-sm font-medium"
+                                            >
+                                                <Eye size={14} /> Review
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -285,20 +285,20 @@ const VerificationPage = () => {
                             {/* OCR Extracted Data */}
                             {(() => {
                                 const ocr = selectedRequest.extracted_data || selectedRequest.ocr_data || selectedRequest.ocr || {};
-                                const name   = ocr.name || ocr.full_name;
-                                const dob    = ocr.dob  || ocr.date_of_birth;
+                                const name = ocr.name || ocr.full_name;
+                                const dob = ocr.dob || ocr.date_of_birth;
                                 const docNum = ocr.document_number || ocr.doc_number || ocr.id_number;
-                                const addr   = ocr.address;
+                                const addr = ocr.address;
                                 const hasOCR = name || dob || docNum;
                                 if (!hasOCR) return null;
                                 return (
                                     <div className="bg-[#0a0f1e] border border-white/10 rounded-xl p-4">
                                         <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-3">OCR Extracted Data</p>
                                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                            {name   && <div><p className="text-white/30 text-[10px] uppercase tracking-wider mb-0.5">Name</p><p className="text-white text-sm font-medium">{name}</p></div>}
-                                            {dob    && <div><p className="text-white/30 text-[10px] uppercase tracking-wider mb-0.5">Date of Birth</p><p className="text-white text-sm font-medium">{dob}</p></div>}
+                                            {name && <div><p className="text-white/30 text-[10px] uppercase tracking-wider mb-0.5">Name</p><p className="text-white text-sm font-medium">{name}</p></div>}
+                                            {dob && <div><p className="text-white/30 text-[10px] uppercase tracking-wider mb-0.5">Date of Birth</p><p className="text-white text-sm font-medium">{dob}</p></div>}
                                             {docNum && <div><p className="text-white/30 text-[10px] uppercase tracking-wider mb-0.5">Doc Number</p><p className="text-white text-sm font-mono">{'****' + String(docNum).slice(-4)}</p></div>}
-                                            {addr   && <div><p className="text-white/30 text-[10px] uppercase tracking-wider mb-0.5">Address</p><p className="text-white text-xs leading-relaxed">{addr}</p></div>}
+                                            {addr && <div><p className="text-white/30 text-[10px] uppercase tracking-wider mb-0.5">Address</p><p className="text-white text-xs leading-relaxed">{addr}</p></div>}
                                         </div>
                                     </div>
                                 );
