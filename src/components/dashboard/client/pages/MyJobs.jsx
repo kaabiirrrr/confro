@@ -139,8 +139,8 @@ const MyJobs = () => {
         </Button>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-5 sm:gap-10 border-b border-white/5 mb-8 sm:mb-10 overflow-x-auto no-scrollbar">
+      {/* Tabs — Justify Between on Mobile */}
+      <div className="flex items-center justify-between sm:justify-start gap-4 sm:gap-10 border-b border-white/5 mb-8 sm:mb-10 overflow-x-auto no-scrollbar w-full">
         {STATUS_TABS.map(t => {
           const isActive = activeTab === t.key;
           const count = t.key === 'all' ? jobs.length : jobs.filter(j => (j.status || '').toLowerCase() === t.key.toLowerCase()).length;
@@ -199,7 +199,7 @@ const MyJobs = () => {
                     <p className="text-light-text/60 text-sm line-clamp-2 mb-4 leading-relaxed">{job.description}</p>
                   )}
 
-                  <div className="flex items-center justify-between md:justify-start gap-x-8 gap-y-4">
+                  <div className="flex items-center justify-between sm:justify-start gap-x-4 sm:gap-x-8 gap-y-4">
                     <div className="flex flex-col">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-1">Budget</span>
                       <div className="flex items-center gap-1.5">
@@ -251,7 +251,7 @@ const MyJobs = () => {
                         Proposals <ChevronRight size={14} />
                       </button>
                     )}
-                    <div className="flex items-center gap-1 bg-transparent md:bg-white/5 rounded-full px-0 py-0 md:px-1 md:py-1 border-0 md:border border-white/5">
+                    <div className="flex items-center gap-1">
                       {job.is_bidding_open !== false && (job.status === 'OPEN' || job.status === 'IN_PROGRESS') && (
                         <button
                             onClick={() => {
