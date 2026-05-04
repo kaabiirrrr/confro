@@ -8,9 +8,9 @@ import { profileApi } from "../../../../services/profileApi";
 const CompanyDetailsSection = () => {
   const { profile } = useAuth();
 
-  const [edit,setEdit] = useState(false);
+  const [edit, setEdit] = useState(false);
 
-  const [form,setForm] = useState({
+  const [form, setForm] = useState({
     companyName: profile?.company_name || "",
     size: profile?.company_size || "",
     description: profile?.bio || ""
@@ -27,8 +27,8 @@ const CompanyDetailsSection = () => {
     }
   }, [profile]);
 
-  const handleChange = (e)=>{
-    setForm({...form,[e.target.name]:e.target.value});
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSave = async () => {
@@ -45,38 +45,38 @@ const CompanyDetailsSection = () => {
     }
   };
 
-  const handleCancel = ()=>{
+  const handleCancel = () => {
     setEdit(false);
   };
 
   return (
 
-    <div className="glass-card rounded-[2rem] p-5 sm:p-8 lg:p-10 relative overflow-hidden group">
+    <div className="glass-card rounded-3xl p-4 sm:p-10 relative overflow-hidden group w-full">
       {/* Decorative Gradient Background */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
-      
+
       <div className="relative z-10">
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-12">
-          <div>
-            <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-8 relative">
+          <div className="text-center sm:text-left w-full sm:w-auto">
+            <h2 className="text-xl font-bold text-white tracking-tight flex items-center justify-center sm:justify-start gap-2">
               <Building2 size={20} className="text-accent" />
               Company details
             </h2>
             <p className="text-white/40 text-sm mt-1">Information about your organization and industry</p>
           </div>
-          
+
           {!edit && (
             <button
               onClick={() => setEdit(true)}
-              className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2 text-sm font-semibold shadow-sm"
+              className="absolute top-0 right-0 sm:relative sm:top-auto sm:right-auto px-2 py-2 sm:px-4 sm:py-2 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2 text-xs sm:text-sm font-semibold shadow-sm"
             >
-              <Pencil size={14} />
-              Edit Details
+              <Pencil size={12} className="sm:w-[14px] sm:h-[14px]" />
+              <span className="hidden sm:inline">Edit Details</span>
             </button>
           )}
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
           {/* Company Icon */}
           <div className="relative shrink-0 hidden sm:flex items-center justify-center w-24 h-24">
             <Building2 size={48} className="text-accent" />
@@ -84,25 +84,23 @@ const CompanyDetailsSection = () => {
 
           <div className="flex-1">
             {!edit ? (
-              <div className="flex flex-col gap-10 w-full">
-                <div className="w-full">
-                  <h3 className="text-3xl font-bold text-white tracking-tight mb-3">
+              <div className="flex flex-col gap-6 sm:gap-10 w-full">
+                <div className="w-full text-center sm:text-left">
+                  <h3 className="text-xl sm:text-3xl font-bold text-white tracking-tight mb-3">
                     {form.companyName || "No Company Added"}
                   </h3>
                   {form.tagline ? (
-                    <p className="text-accent text-[14px] font-semibold tracking-wide uppercase inline-block">
+                    <p className="text-accent text-[12px] sm:text-[14px] font-semibold tracking-wide uppercase inline-block">
                       {form.tagline}
                     </p>
                   ) : (
-                    <p className="text-white/20 text-sm italic">Add a tagline to define your brand</p>
+                    <p className="text-white/20 text-xs sm:text-sm italic">Add a tagline to define your brand</p>
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-12">
-                  <div className="space-y-1.5">
-                    <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">Company Size</p>
-                    <p className="text-white text-base font-medium tracking-tight">{form.size ? `${form.size} employees` : "Not specified"}</p>
-                  </div>
+                <div className="py-4 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-4 border-t border-white/5 w-full min-w-0 text-center sm:text-left">
+                  <p className="text-white/30 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Company Size</p>
+                  <p className="text-white text-xs sm:text-base font-medium tracking-tight text-center sm:text-right break-words min-w-0 flex-1">{form.size ? `${form.size} employees` : "Not specified"}</p>
                 </div>
 
                 {form.description && (
@@ -156,11 +154,10 @@ const CompanyDetailsSection = () => {
                         key={size.value}
                         type="button"
                         onClick={() => setForm({ ...form, size: size.value })}
-                        className={`px-4 py-2 rounded-full text-xs font-bold transition-all border ${
-                          parseInt(form.size) === size.value
-                            ? "bg-accent/20 border-accent text-accent"
-                            : "bg-white/5 border-white/10 text-white/40 hover:border-white/20"
-                        }`}
+                        className={`px-4 py-2 rounded-full text-xs font-bold transition-all border ${parseInt(form.size) === size.value
+                          ? "bg-accent/20 border-accent text-accent"
+                          : "bg-white/5 border-white/10 text-white/40 hover:border-white/20"
+                          }`}
                       >
                         {size.label}
                       </button>

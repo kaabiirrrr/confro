@@ -187,18 +187,18 @@ const FreelancerPolicies = () => {
                             )}
                         </div>
                         <div>
-                            <h2 className={`text-lg sm:text-2xl font-bold mb-1 ${activePolicy.slug?.includes('withdrawal') || activePolicy.title?.toLowerCase().includes('withdrawal') ? 'text-red-500' : 'text-white'}`}>
+                            <h2 className={`text-base sm:text-2xl font-bold mb-1 ${activePolicy.slug?.includes('withdrawal') || activePolicy.title?.toLowerCase().includes('withdrawal') ? 'text-red-500' : 'text-white'}`}>
                                 {activePolicy.title}
                             </h2>
-                            <p className="text-white/30 text-xs font-bold uppercase tracking-widest">
+                            <p className="text-white/30 text-[10px] sm:text-xs font-bold uppercase tracking-widest">
                                 Last updated: {activePolicy.updated_at ? new Date(activePolicy.updated_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'Today'}
                             </p>
                         </div>
                     </div>
 
-                    <div className={`prose prose-invert max-w-none text-sm leading-relaxed space-y-6 ${activePolicy.slug?.includes('withdrawal') || activePolicy.title?.toLowerCase().includes('withdrawal') ? 'text-red-500/70' : 'text-white/50'}`}>
+                    <div className={`prose prose-invert max-w-none text-[13px] sm:text-sm leading-relaxed space-y-4 sm:space-y-6 ${activePolicy.slug?.includes('withdrawal') || activePolicy.title?.toLowerCase().includes('withdrawal') ? 'text-red-500/70' : 'text-white/50'}`}>
                         {activePolicy.description && (
-                            <p className={`text-base font-medium ${activePolicy.slug?.includes('withdrawal') || activePolicy.title?.toLowerCase().includes('withdrawal') ? 'text-red-500' : 'text-white/80'}`}>
+                            <p className={`text-sm sm:text-base font-medium ${activePolicy.slug?.includes('withdrawal') || activePolicy.title?.toLowerCase().includes('withdrawal') ? 'text-red-500' : 'text-white/80'}`}>
                                 {activePolicy.description}
                             </p>
                         )}
@@ -211,11 +211,11 @@ const FreelancerPolicies = () => {
                             )}
 
                             <div>
-                                <h3 className={`text-lg font-bold mb-4 ${activePolicy.slug?.includes('withdrawal') || activePolicy.title?.toLowerCase().includes('withdrawal') ? 'text-red-500' : 'text-white'}`}>Core Guidelines</h3>
-                                <ul className={`space-y-4 list-none p-0`}>
+                                <h3 className={`text-base sm:text-lg font-bold mb-3 sm:mb-4 ${activePolicy.slug?.includes('withdrawal') || activePolicy.title?.toLowerCase().includes('withdrawal') ? 'text-red-500' : 'text-white'}`}>Core Guidelines</h3>
+                                <ul className={`space-y-3 sm:space-y-4 list-none p-0`}>
                                     {getPolicyDetails(activePolicy.slug || activePolicy.title?.toLowerCase()).map((detail, idx) => (
                                         <li key={idx} className="flex gap-3 items-start group">
-                                            <div className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 group-hover:scale-125 transition-transform ${activePolicy.slug?.includes('withdrawal') || activePolicy.title?.toLowerCase().includes('withdrawal') ? 'bg-red-500' : 'bg-accent'}`} />
+                                            <div className={`mt-1.5 w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full shrink-0 group-hover:scale-125 transition-transform ${activePolicy.slug?.includes('withdrawal') || activePolicy.title?.toLowerCase().includes('withdrawal') ? 'bg-red-500' : 'bg-accent'}`} />
                                             <span>{detail}</span>
                                         </li>
                                     ))}

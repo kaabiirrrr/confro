@@ -81,10 +81,10 @@ const ServicesMarketplace = () => {
             className="flex flex-col md:flex-row md:items-end justify-between gap-6"
           >
             <div>
-              <h1 className="text-2xl font-semibold text-white tracking-tight">
+              <h1 className="text-lg sm:text-2xl font-semibold text-white tracking-tight">
                 Browse Services
               </h1>
-              <p className="text-base text-light-text/70 mt-1">
+              <p className="text-[11px] sm:text-sm text-light-text/70 mt-1">
                 Discover pre-packaged custom services created by top-tier freelancers.
               </p>
             </div>
@@ -98,7 +98,7 @@ const ServicesMarketplace = () => {
                   placeholder="Search services..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full bg-secondary/50 border border-white/10 rounded-full py-2.5 pl-11 pr-4 text-sm text-white focus:border-accent/50 focus:ring-4 focus:ring-accent/5 transition-all outline-none"
+                  className="w-full bg-secondary/50 border border-white/10 rounded-full py-2 sm:py-2.5 pl-11 pr-4 text-[13px] sm:text-sm text-white focus:border-accent/50 focus:ring-4 focus:ring-accent/5 transition-all outline-none"
                 />
               </div>
             </div>
@@ -110,8 +110,8 @@ const ServicesMarketplace = () => {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition ${activeCategory === cat
-                  ? "bg-accent text-white shadow-md shadow-accent/20"
+                className={`whitespace-nowrap px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition ${activeCategory === cat
+                  ? "bg-accent text-white"
                   : "text-white/50 border border-transparent hover:text-white hover:bg-white/5"
                   }`}
               >
@@ -182,7 +182,7 @@ const ServiceCard = ({ service, index }) => {
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         <div className="absolute top-4 right-4 translate-y-[-10px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-          <div className="bg-primary/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-xl">
+          <div className="bg-primary/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
             <span className="text-accent font-semibold text-sm font-sans tracking-tight">₹{service.price}</span>
           </div>
         </div>
@@ -201,7 +201,7 @@ const ServiceCard = ({ service, index }) => {
             </div>
           </div>
 
-          <h3 className="text-lg font-semibold text-white group-hover:text-accent transition-colors leading-snug line-clamp-2">
+          <h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-accent transition-colors leading-snug line-clamp-2">
             {service.title}
           </h3>
         </div>

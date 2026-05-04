@@ -212,14 +212,13 @@ const ContractDetails = () => {
           </div>
           <h1 className="text-2xl font-semibold text-white tracking-tight leading-tight">{contract.job?.title || 'Project Workspace'}</h1>
           
-          {/* Team Quick Stats */}
           {isClient && (
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-4 pt-4 border-t border-white/5">
-                <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between sm:justify-start gap-4 sm:gap-6 mt-4 pt-4 border-t border-white/5 w-full">
+                <div className="flex items-center gap-2 shrink-0">
                     <Users size={14} className="text-accent" />
                     <span className="text-white text-[10px] sm:text-xs font-semibold">{freelancers.length} / 10 Members</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 shrink-0">
                     <Activity size={14} className="text-emerald-400" />
                     <span className="text-white text-[10px] sm:text-xs font-semibold">Team Progress: {analytics.length > 0 ? Math.round(analytics.reduce((acc, curr) => acc + curr.progress, 0) / analytics.length) : 0}%</span>
                 </div>

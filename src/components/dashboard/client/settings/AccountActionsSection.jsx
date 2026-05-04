@@ -7,6 +7,7 @@ import { deleteAccount } from "../../../../services/apiService";
 import { toast } from "react-hot-toast";
 import { toastApiError } from "../../../../utils/apiErrorToast";
 import InfinityLoader from "../../../common/InfinityLoader";
+import SettingsCard from "../../../ui/SettingsCard";
 
 const CLOSE_REASONS = [
   { value: "quality", label: "Not satisfied with freelancers" },
@@ -64,40 +65,42 @@ const AccountActionsSection = () => {
   return (
     <div className="space-y-10">
       {/* ACCOUNT ACTION CARD */}
-      <div className="glass-card rounded-[2rem] p-8 lg:p-10 relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
-
-        <div className="relative z-10 text-center sm:text-left">
-          <h3 className="text-2xl font-bold text-white tracking-tight mb-2">Account Management</h3>
-          <p className="text-white/40 text-sm mb-10 font-medium italic">Current role: Client Account Administrator</p>
-
-          <div className="flex flex-col sm:flex-row items-center gap-6">
+      <SettingsCard
+        title="Account Management"
+        subtitle="Manage your platform presence and data privacy"
+        icon="/Icons/icons8-alert-96 (1).png"
+        iconClassName="w-[30px] h-[30px]"
+      >
+        <div className="space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-6">
+            <div className="flex-1 min-w-0">
+              <h4 className="text-white font-bold text-sm sm:text-lg">Close Account</h4>
+              <p className="text-white/40 text-xs sm:text-sm font-medium mt-0.5 sm:mt-1 leading-relaxed">Permanently remove your organization's profile and history.</p>
+            </div>
             <button
-              onClick={() => navigate("/join")}
-              className="w-full sm:w-auto h-12 px-8 rounded-full bg-accent text-white font-bold text-base hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20"
+              onClick={() => { setShowCloseModal(true); setStep(1); }}
+              className="w-full sm:w-auto px-6 sm:px-8 h-9 sm:h-12 shrink-0 rounded-full border border-red-500/20 bg-red-500/5 text-red-500 font-bold text-xs sm:text-sm hover:bg-red-500/10 transition-all active:scale-95"
             >
-              Create New Account
+              Close Account
             </button>
+          </div>
 
-            <div className="flex items-center gap-6">
+          <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+             <button
+                onClick={() => navigate("/join")}
+                className="w-full sm:w-auto h-11 px-6 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 text-sm font-bold transition-all"
+              >
+                Create New Account
+              </button>
               <button
                 onClick={() => setShowTransfer(!showTransfer)}
-                className="text-white/40 hover:text-white text-sm font-bold transition-all flex items-center gap-2 group/btn"
+                className="w-full sm:w-auto h-11 px-6 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 text-sm font-bold transition-all flex items-center justify-center gap-2"
               >
                 Transfer Ownership
-                <div className="w-1 h-1 rounded-full bg-white/20 group-hover/btn:bg-accent transition-colors" />
               </button>
-
-              <button
-                onClick={() => { setShowCloseModal(true); setStep(1); }}
-                className="text-red-500/60 hover:text-red-500 text-sm font-bold transition-all"
-              >
-                Close Account
-              </button>
-            </div>
           </div>
         </div>
-      </div>
+      </SettingsCard>
 
       {/* TRANSFER OWNERSHIP PANEL */}
       <AnimatePresence>

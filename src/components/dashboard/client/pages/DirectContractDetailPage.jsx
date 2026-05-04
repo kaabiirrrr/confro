@@ -152,13 +152,13 @@ export default function DirectContractDetailPage() {
     : '—';
 
   return (
-    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 sm:mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
         <div>
           <button
             onClick={() => navigate('/client/direct-contracts')}
-            className="inline-flex items-center gap-2 text-white/30 hover:text-white text-xs font-bold uppercase tracking-[0.2em] transition-colors mb-4"
+            className="inline-flex items-center gap-2 text-white/30 hover:text-white text-xs font-bold uppercase tracking-[0.2em] transition-colors mb-2 sm:mb-4"
           >
             <ArrowLeft size={14} />
             Back to Contracts

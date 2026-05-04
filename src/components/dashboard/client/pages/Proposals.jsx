@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../../../../lib/api';
-import { 
-  FileText, CheckCircle, XCircle, Clock, MessageCircle, User, IndianRupee, 
-  ChevronDown, ChevronUp, Briefcase, Edit2, ChevronRight, ShieldCheck, 
-  Zap, AlertTriangle, AlertCircle, ShieldCheck as LowRiskIcon, Star, 
+import {
+  FileText, CheckCircle, XCircle, Clock, MessageCircle, User, IndianRupee,
+  ChevronDown, ChevronUp, Briefcase, Edit2, ChevronRight, ShieldCheck,
+  Zap, AlertTriangle, AlertCircle, ShieldCheck as LowRiskIcon, Star,
   TrendingUp, Info, X, Shield, Lock
 } from 'lucide-react';
 import { formatINR } from '../../../../utils/currencyUtils';
@@ -17,6 +17,7 @@ import Tabs from '../../../ui/Tabs';
 import SectionHeader from '../../../ui/SectionHeader';
 import EmptyState from '../../../ui/EmptyState';
 import InfinityLoader from '../../../common/InfinityLoader';
+import CustomDropdown from '../../../ui/CustomDropdown';
 import { useRealtimeProposals } from '../../../../context/RealtimeContext';
 import { useAuth } from '../../../../context/AuthContext';
 import EscrowFundingModal from '../components/EscrowFundingModal';
@@ -330,21 +331,38 @@ const Proposals = () => {
   };
 
   return (
-    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 sm:mt-6 pb-12 space-y-6">
       <SectionHeader
         title="Proposals"
         subtext={`${proposals.length} proposal${proposals.length !== 1 ? 's' : ''} received`}
       />
 
-      {/* Tabs */}
-      <Tabs
-        tabs={STATUS_TABS.map(tab => ({
-          ...tab,
-          count: tab.key === 'all' ? proposals.length : proposals.filter(p => p.status === tab.key).length
-        }))}
-        activeTab={activeTab}
-        onChange={setActiveTab}
-      />
+      {/* Tabs and Global Sort */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 sm:gap-4 mb-6">
+        <Tabs
+          tabs={STATUS_TABS.map(tab => ({
+            ...tab,
+            count: tab.key === 'all' ? proposals.length : proposals.filter(p => p.status === tab.key).length
+          }))}
+          activeTab={activeTab}
+          onChange={setActiveTab}
+          className="-mx-4 px-4 sm:mx-0 sm:px-0 sm:w-auto"
+        />
+
+        <div className="self-start sm:self-auto shrink-0 w-[140px]">
+          <CustomDropdown
+            value={sortBy}
+            onChange={(val) => setSortBy(val)}
+            options={[
+              { label: 'Best Match', value: 'match' },
+              { label: 'Price', value: 'price' },
+              { label: 'Recent', value: 'date' }
+            ]}
+            variant="glass"
+            fullWidth={true}
+          />
+        </div>
+      </div>
 
       {isLoading ? (
         <div className="flex items-center justify-center h-64"><InfinityLoader size="lg" /></div>
@@ -368,29 +386,11 @@ const Proposals = () => {
               return (
                 <Card key={job.id} padding="p-0" className="bg-transparent overflow-hidden">
                   <button onClick={() => setExpandedJob(isExpanded ? null : job.id)}
-                    className="w-full flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-5 py-4 hover:bg-accent/5 transition gap-4">
-                    <div className="flex items-center justify-between w-full sm:w-auto gap-3">
-                      <p className="text-slate-950 dark:text-white font-medium truncate max-w-[300px] sm:max-w-none">{job?.title || 'Job'}</p>
-                    </div>
-                    <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4">
-                      <span className="shrink-0 bg-accent/10 text-accent border border-accent/20 rounded-full px-3 py-1 text-[10px] sm:text-xs font-bold order-2 sm:order-none">{jobProposals.length} proposals</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-slate-900/40 dark:text-white/30 font-bold uppercase tracking-wider">Sort:</span>
-                        <select
-                          value={sortBy}
-                          onChange={(e) => {
-                            e.stopPropagation();
-                            setSortBy(e.target.value);
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                          className="bg-slate-100 dark:bg-white/5 text-slate-900 dark:text-white text-[10px] sm:text-sm font-bold rounded-full px-3 sm:px-4 py-1.5 sm:py-2 outline-none cursor-pointer hover:bg-slate-200 dark:hover:bg-white/10 transition min-w-[110px] sm:min-w-[140px]"
-                        >
-                          <option value="match" className="bg-white dark:bg-secondary text-slate-900 dark:text-white">Best Match</option>
-                          <option value="price" className="bg-white dark:bg-secondary text-slate-900 dark:text-white">Price</option>
-                          <option value="date" className="bg-white dark:bg-secondary text-slate-900 dark:text-white">Recent</option>
-                        </select>
-                      </div>
-                      <div className="shrink-0">
+                    className="w-full flex items-center justify-between px-4 sm:px-5 py-4 hover:bg-accent/5 transition gap-4 text-left">
+                    <p className="text-slate-950 dark:text-white font-medium truncate flex-1">{job?.title || 'Job'}</p>
+                    <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+                      <span className="shrink-0 bg-accent/10 text-accent border border-accent/20 rounded-full px-3 py-1 text-[10px] sm:text-xs font-bold">{jobProposals.length} proposals</span>
+                      <div className="shrink-0 flex items-center justify-center">
                         {isExpanded ? <ChevronUp size={18} className="text-slate-900/40 dark:text-white/40" /> : <ChevronDown size={18} className="text-slate-900/40 dark:text-white/40" />}
                       </div>
                     </div>
@@ -414,24 +414,24 @@ const Proposals = () => {
 
                             return (
                               <div key={roleId} className="border-b border-white/5 last:border-0">
-                                 <div className="bg-white/[0.01] px-4 sm:px-6 py-2 sm:py-3 flex flex-row items-center justify-between gap-2 sm:gap-4">
-                                   <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-3 min-w-0">
-                                     <h4 className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-accent truncate">{roleInfo.title}</h4>
-                                     <span className="w-fit bg-slate-900/5 dark:bg-white/5 px-1.5 sm:px-2 py-0.5 rounded-full text-[6px] sm:text-[8px] font-bold text-slate-900/40 dark:text-white/40 uppercase tracking-widest whitespace-nowrap">
-                                       {roleInfo.filled_positions || 0} / {roleInfo.positions || 1} Hired
-                                     </span>
-                                   </div>
-                                   <div className="flex items-center gap-2 sm:gap-6 shrink-0">
-                                     <div className="text-right">
-                                       <span className="text-[6px] sm:text-[8px] font-black uppercase tracking-widest text-slate-900/30 dark:text-white/20 block">Best Offer</span>
-                                       <span className="text-[9px] sm:text-xs font-bold text-green-500 dark:text-green-400">₹{formatINR(bestBid).replace('₹', '')}</span>
-                                     </div>
-                                     <div className="text-right">
-                                       <span className="text-[6px] sm:text-[8px] font-black uppercase tracking-widest text-slate-900/30 dark:text-white/20 block">Avg. Bid</span>
-                                       <span className="text-[9px] sm:text-xs font-bold text-slate-950/60 dark:text-white/60">₹{formatINR(avgBid).replace('₹', '')}</span>
-                                     </div>
-                                   </div>
-                                 </div>
+                                <div className="bg-white/[0.01] px-4 sm:px-6 py-2 sm:py-3 flex flex-row items-center justify-between gap-2 sm:gap-4">
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-3 min-w-0">
+                                    <h4 className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-accent truncate">{roleInfo.title}</h4>
+                                    <span className="w-fit bg-slate-900/5 dark:bg-white/5 px-1.5 sm:px-2 py-0.5 rounded-full text-[6px] sm:text-[8px] font-bold text-slate-900/40 dark:text-white/40 uppercase tracking-widest whitespace-nowrap">
+                                      {roleInfo.filled_positions || 0} / {roleInfo.positions || 1} Hired
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-2 sm:gap-6 shrink-0">
+                                    <div className="text-right">
+                                      <span className="text-[6px] sm:text-[8px] font-black uppercase tracking-widest text-slate-900/30 dark:text-white/20 block">Best Offer</span>
+                                      <span className="text-[9px] sm:text-xs font-bold text-green-500 dark:text-green-400">₹{formatINR(bestBid).replace('₹', '')}</span>
+                                    </div>
+                                    <div className="text-right">
+                                      <span className="text-[6px] sm:text-[8px] font-black uppercase tracking-widest text-slate-900/30 dark:text-white/20 block">Avg. Bid</span>
+                                      <span className="text-[9px] sm:text-xs font-bold text-slate-950/60 dark:text-white/60">₹{formatINR(avgBid).replace('₹', '')}</span>
+                                    </div>
+                                  </div>
+                                </div>
 
                                 {/* Role Proposals */}
                                 <div className="divide-y divide-white/5">
@@ -441,12 +441,12 @@ const Proposals = () => {
 
                                     return (
                                       <div key={proposal.id} className="group/card px-6 py-6 flex flex-col gap-6 transition-all duration-300 hover:bg-slate-50 dark:hover:bg-white/[0.03] relative overflow-hidden">
-                                        
+
                                         {/* TOP SECTION: Freelancer Profile & Match */}
-                                        <div className="flex items-center justify-between gap-6">
-                                          <div className="flex items-center gap-4 min-w-0">
+                                        <div className="flex items-center justify-between gap-4 sm:gap-6">
+                                          <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                                             <div className="shrink-0 relative group/avatar">
-                                              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent text-lg font-black overflow-hidden relative">
+                                              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent text-lg font-black overflow-hidden relative">
                                                 {proposal.freelancer?.avatar_url ? (
                                                   <img src={proposal.freelancer.avatar_url} alt="" className="w-full h-full object-cover" />
                                                 ) : (
@@ -460,14 +460,16 @@ const Proposals = () => {
                                               </div>
                                             </div>
 
-                                            <div className="min-w-0">
-                                              <div className="flex flex-wrap items-center gap-3 mb-1">
-                                                <p onClick={() => navigate(`/freelancer/${proposal.freelancer_id}`)} className="text-slate-950 dark:text-white font-black text-lg hover:text-accent cursor-pointer transition-colors truncate tracking-tight">
+                                            <div className="min-w-0 flex-1">
+                                              <div className="flex flex-col-reverse sm:flex-row sm:items-center gap-1 sm:gap-3 mb-1">
+                                                <p onClick={() => navigate(`/freelancer/${proposal.freelancer_id}`)} className="text-slate-950 dark:text-white font-black text-base sm:text-lg hover:text-accent cursor-pointer transition-colors truncate tracking-tight">
                                                   {proposal.freelancer?.name || 'Freelancer'}
                                                 </p>
-                                                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${sc.cls}`}>
-                                                  {sc.icon} {proposal.status}
-                                                </span>
+                                                <div className="flex justify-end sm:block">
+                                                  <span className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-full text-[8px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 ${sc.cls}`}>
+                                                    {sc.icon} {proposal.status}
+                                                  </span>
+                                                </div>
                                               </div>
                                               <ProposalBadges match={matchData[proposal.id]} />
                                             </div>
@@ -477,7 +479,7 @@ const Proposals = () => {
                                         </div>
 
                                         {/* MIDDLE SECTION: Cover Letter (Full Width) */}
-                                        <div className="rounded-[18px] border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.04] overflow-hidden">
+                                        <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.04] overflow-hidden">
                                           <div className="flex items-center gap-2 px-5 py-2 border-b border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/[0.03]">
                                             <MessageCircle size={12} className="text-accent shrink-0" />
                                             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-white/40">Cover Letter</span>
@@ -511,38 +513,38 @@ const Proposals = () => {
                                           </div>
 
                                           <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 w-full lg:w-auto justify-between lg:justify-end">
-                                             <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-2 border-b sm:border-0 border-white/5 pb-2 sm:pb-0">
-                                               <span className="text-[8px] sm:text-[10px] text-slate-900/40 dark:text-white/30 uppercase font-black tracking-widest">Proposed Bid:</span>
-                                               <span className="text-lg sm:text-xl font-black text-slate-950 dark:text-white tracking-tighter">
-                                                 ₹{formatINR(proposal.proposed_rate).replace('₹', '')}
-                                               </span>
-                                             </div>
-                                             
-                                             {proposal.status === 'PENDING' && (
-                                               <div className="flex items-center justify-end w-full sm:w-auto gap-2 sm:gap-3">
-                                                 <button 
-                                                   onClick={() => handleStatusUpdate(proposal.id, 'REJECTED')} 
-                                                   className="p-2 text-slate-400 dark:text-white/20 hover:text-red-500 hover:bg-red-500/5 rounded-full transition-all duration-200"
-                                                   title="Reject Proposal"
-                                                 >
-                                                   <X size={18} />
-                                                 </button>
-                                                 <button
-                                                   onClick={() => navigate(`/client/messages?userId=${proposal.freelancer_id}`)}
-                                                   className="px-4 sm:px-5 py-2 bg-accent text-white border border-accent rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition-all shadow-md shadow-accent/20"
-                                                 >
-                                                   Message
-                                                 </button>
-                                                 <Button
-                                                   onClick={() => setRoleModal({ isOpen: true, proposal: proposal, role: roleInfo.title, scope: '' })}
-                                                   disabled={updatingId === proposal.id}
-                                                   className="!rounded-full px-5 sm:px-6 py-2 bg-green-500 text-white hover:bg-green-600 font-black text-[9px] sm:text-[10px] uppercase tracking-widest shadow-lg shadow-green-500/20 transition-all hover:scale-105 active:scale-95"
-                                                 >
-                                                   Fund Now
-                                                 </Button>
-                                               </div>
-                                             )}
-                                           </div>
+                                            <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-2 border-b sm:border-0 border-white/5 pb-2 sm:pb-0">
+                                              <span className="text-[8px] sm:text-[10px] text-slate-900/40 dark:text-white/30 uppercase font-black tracking-widest">Proposed Bid:</span>
+                                              <span className="text-lg sm:text-xl font-black text-slate-950 dark:text-white tracking-tighter">
+                                                ₹{formatINR(proposal.proposed_rate).replace('₹', '')}
+                                              </span>
+                                            </div>
+
+                                            {proposal.status === 'PENDING' && (
+                                              <div className="flex items-center justify-end w-full sm:w-auto gap-1.5 sm:gap-3">
+                                                <button
+                                                  onClick={() => handleStatusUpdate(proposal.id, 'REJECTED')}
+                                                  className="p-1.5 sm:p-2 text-slate-400 dark:text-white/20 hover:text-red-500 hover:bg-red-500/5 rounded-full transition-all duration-200"
+                                                  title="Reject Proposal"
+                                                >
+                                                  <X size={18} className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
+                                                </button>
+                                                <button
+                                                  onClick={() => navigate(`/client/messages?userId=${proposal.freelancer_id}`)}
+                                                  className="px-3 sm:px-5 py-1.5 sm:py-2 bg-accent text-white border border-accent rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition-all shadow-md shadow-accent/20"
+                                                >
+                                                  Message
+                                                </button>
+                                                <Button
+                                                  onClick={() => setRoleModal({ isOpen: true, proposal: proposal, role: roleInfo.title, scope: '' })}
+                                                  disabled={updatingId === proposal.id}
+                                                  className="!rounded-full px-4 sm:px-6 py-1.5 sm:py-2 bg-green-500 text-white hover:bg-green-600 font-black text-[8px] sm:text-[10px] uppercase tracking-widest shadow-lg shadow-green-500/20 transition-all hover:scale-105 active:scale-95"
+                                                >
+                                                  Fund Now
+                                                </Button>
+                                              </div>
+                                            )}
+                                          </div>
                                         </div>
                                       </div>
                                     );
@@ -555,24 +557,24 @@ const Proposals = () => {
                       </div>
 
                       <div className="bg-transparent border-t border-white/5 px-5 py-5">
-                        <div className="flex items-center justify-between mb-4">
-                          <h4 className="text-slate-950/70 dark:text-white/70 text-sm font-semibold tracking-wide uppercase">Job Posting Details</h4>
+                        <div className="flex items-center justify-between mb-4 gap-2">
+                          <h4 className="text-slate-950/70 dark:text-white/70 text-xs sm:text-sm font-semibold tracking-wide uppercase whitespace-nowrap">Job Posting Details</h4>
                           <button
                             onClick={() => navigate(`/client/jobs`)}
-                            className="text-accent text-xs hover:underline flex items-center gap-1.5 font-medium"
+                            className="text-accent text-[10px] sm:text-xs hover:underline flex items-center gap-1 sm:gap-1.5 font-medium shrink-0"
                           >
-                            Manage in My Jobs <ChevronRight size={14} />
+                            Manage in My Jobs <ChevronRight size={14} className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                           </button>
                         </div>
-                        <div className="bg-transparent rounded-2xl p-6 space-y-4">
+                        <div className="bg-transparent rounded-2xl sm:p-6 space-y-4">
                           {job?.description && (
                             <p className="text-slate-900/60 dark:text-white/50 text-sm leading-relaxed">{job.description}</p>
                           )}
-                          <div className="flex flex-wrap gap-5 pt-2">
+                          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-y-4 gap-x-2 sm:gap-5 pt-2">
                             <div className="space-y-1">
                               <p className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold tracking-wider">Budget</p>
                               <p className="text-slate-900/70 dark:text-white/70 text-xs flex items-center gap-1">
-                                <IndianRupee size={12} className="text-accent" />
+                                <IndianRupee size={12} className="text-accent shrink-0" />
                                 {job?.budget_amount > 0
                                   ? formatINR(job.budget_amount)
                                   : formatINR(job.roles?.reduce((acc, r) => acc + (r.budget || 0), 0) || 0)}
@@ -580,25 +582,25 @@ const Proposals = () => {
                               </p>
                             </div>
                             {job?.duration && (
-                              <div className="space-y-1">
+                              <div className="space-y-1 text-right sm:text-left">
                                 <p className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold tracking-wider">Duration</p>
-                                <p className="text-slate-900/70 dark:text-white/70 text-xs flex items-center gap-1">
-                                  <Clock size={12} className="text-accent" />
+                                <p className="text-slate-900/70 dark:text-white/70 text-xs flex items-center justify-end sm:justify-start gap-1">
+                                  <Clock size={12} className="text-accent shrink-0" />
                                   {job.duration}
                                 </p>
                               </div>
                             )}
                             {job?.category && (
-                              <div className="space-y-1">
+                              <div className="space-y-1 col-span-2 sm:col-span-1">
                                 <p className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold tracking-wider">Category</p>
                                 <p className="text-slate-900/70 dark:text-white/70 text-xs">{job.category}</p>
                               </div>
                             )}
                             {job?.bid_deadline && (
-                              <div className="space-y-1">
+                              <div className="space-y-1 col-span-2 sm:col-span-1">
                                 <p className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold tracking-wider">Bidding Deadline</p>
                                 <p className={`text-xs flex items-center gap-1 font-medium ${new Date() > new Date(job.bid_deadline) ? 'text-red-400' : 'text-slate-950 dark:text-white'}`}>
-                                  <Clock size={12} className={new Date() > new Date(job.bid_deadline) ? 'text-red-400' : 'text-accent'} />
+                                  <Clock size={12} className={`shrink-0 ${new Date() > new Date(job.bid_deadline) ? 'text-red-400' : 'text-accent'}`} />
                                   {new Date() > new Date(job.bid_deadline) ? 'Closed' : new Date(job.bid_deadline).toLocaleString()}
                                 </p>
                               </div>
@@ -648,10 +650,10 @@ const Proposals = () => {
 
 
           {/* Page Footer Navigation */}
-          <div className="pt-8 border-t border-white/10 flex justify-start">
+          <div className="pt-8 border-t border-slate-200 dark:border-white/10 flex justify-start sm:justify-end">
             <button
               onClick={() => navigate('/client/jobs')}
-              className="group flex items-center gap-3 px-6 py-3 bg-transparent hover:bg-white/5 text-white rounded-full transition shadow-xl"
+              className="group flex items-center gap-3 px-6 py-3 bg-transparent border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 text-slate-950 dark:text-white rounded-full transition"
             >
               <div className="p-2 transition">
                 <Briefcase size={20} className="text-accent" />
@@ -697,14 +699,14 @@ const RoleAssignmentModal = ({
           <div className="flex items-center gap-6">
             <div className="relative group/logo">
               <div className="absolute -inset-4 bg-accent/20 rounded-full blur-2xl opacity-0 group-hover/logo:opacity-100 transition duration-1000"></div>
-              <img 
-                src="/Icons/AI-Connect.png" 
-                className="w-14 h-14 object-contain block dark:hidden relative z-10" 
+              <img
+                src="/Icons/AI-Connect.png"
+                className="w-14 h-14 object-contain block dark:hidden relative z-10"
                 alt="Logo"
               />
-              <img 
-                src="/Icons/White-AI-Connect.png" 
-                className="w-14 h-14 object-contain hidden dark:block relative z-10" 
+              <img
+                src="/Icons/White-AI-Connect.png"
+                className="w-14 h-14 object-contain hidden dark:block relative z-10"
                 alt="Logo"
               />
             </div>
@@ -733,14 +735,14 @@ const RoleAssignmentModal = ({
           <div className="space-y-3 relative">
             <div className="flex items-center justify-between mb-1">
               <label className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-white/30 ml-1">Mission Scope (Mandatory)</label>
-                <button
-                  onClick={() => handleAIOptimize(role, scope)}
-                  disabled={isValidatingAI}
-                  className="text-[9px] font-black text-accent uppercase tracking-[0.2em] flex items-center gap-2 bg-accent/5 hover:bg-accent/10 sm:px-3 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95"
-                >
-                  {isValidatingAI ? <InfinityLoader size={8} /> : <Zap size={10} className="fill-accent" />}
-                  AI Optimize
-                </button>
+              <button
+                onClick={() => handleAIOptimize(role, scope)}
+                disabled={isValidatingAI}
+                className="text-[9px] font-black text-accent uppercase tracking-[0.2em] flex items-center gap-2 bg-accent/5 hover:bg-accent/10 sm:px-3 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95"
+              >
+                {isValidatingAI ? <InfinityLoader size={8} /> : <Zap size={10} className="fill-accent" />}
+                AI Optimize
+              </button>
             </div>
             <textarea
               value={scope}
@@ -782,11 +784,11 @@ const RoleAssignmentModal = ({
                   </p>
                 </div>
               </div>
-              
+
               <div className="relative z-10">
                 {hasInsufficientFunds ? (
                   <div className="flex items-center gap-2 p-3 bg-rose-500/5 border border-rose-500/10 rounded-xl text-[9px] text-rose-500 font-bold uppercase tracking-wider">
-                    <AlertCircle size={14} /> 
+                    <AlertCircle size={14} />
                     <span>Insufficient demo credits. Reset wallet via Dashboard.</span>
                   </div>
                 ) : (

@@ -88,7 +88,7 @@ export default function CustomExportPage() {
               <CustomDropdown
                 options={[
                   { label: 'All authenticated active contracts', value: '' },
-                  ...contracts.map(c => ({ label: c.title || `Contract #${c.id}`, value: c.id }))
+                  ...contracts.map(c => ({ label: c.job?.title || c.title || `Contract #${c.id.substring(0, 8)}`, value: c.id }))
                 ]}
                 value={form.contract_id}
                 onChange={(val) => {
@@ -123,12 +123,11 @@ export default function CustomExportPage() {
                     key={value}
                     type="button"
                     onClick={() => { setForm(p => ({ ...p, format: value })); setPreview(null); }}
-                    className={`flex items-center justify-center gap-3 flex-1 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all active:scale-95 ${form.format === value
-                        ? 'bg-accent/10 border-accent/40 text-accent shadow-lg shadow-accent/10'
+                    className={`flex items-center justify-center gap-3 flex-1 py-4 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all active:scale-95 ${form.format === value
+                        ? 'bg-accent/10 border-accent/40 text-accent'
                         : 'bg-white/5 border-white/10 text-white/20 hover:text-white/60'
                       }`}
                   >
-                    <Icon size={16} />
                     {label}
                   </button>
                 ))}
@@ -139,12 +138,12 @@ export default function CustomExportPage() {
               <button
                 onClick={handleExport}
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-3 py-4 bg-accent text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-accent/20 hover:bg-accent/90 transition-all active:scale-95 disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-3 py-4 bg-accent text-white rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition-all active:scale-95 disabled:opacity-50"
               >
                 {loading ? (
                   <><InfinityLoader size={20} /> Synthesizing Data Stream...</>
                 ) : (
-                  <><Download size={18} /> {form.format === 'csv' ? 'Execute CSV Extraction' : 'Initialize Data Preview'}</>
+                  <>{form.format === 'csv' ? 'Execute CSV Extraction' : 'Initialize Data Preview'}</>
                 )}
               </button>
             </div>

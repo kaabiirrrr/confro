@@ -42,7 +42,7 @@ const FreelancerSettingsSidebar = ({ active, setActive }) => {
               }`}
           >
             {active === item.id && (
-              <span className="absolute left-0 top-0 h-full w-[3px] bg-accent rounded-full shadow-[0_0_10px_rgba(var(--accent-rgb),0.5)]" />
+              <span className="absolute left-0 top-0 h-full w-[3px] bg-accent rounded-full" />
             )}
             {item.label}
           </button>

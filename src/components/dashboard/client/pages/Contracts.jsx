@@ -116,9 +116,8 @@ const Contracts = () => {
                           {contract.status || 'Active'}
                         </span>
                       </div>
-                      <div className="flex flex-wrap items-center gap-2 mt-1">
+                      <div className="flex items-center justify-between mt-1">
                         <span className="text-light-text/60 text-sm font-medium">{freelancerName}</span>
-                        <span className="w-1 h-1 rounded-full bg-white/10" />
                         <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-light-text/30">ID: {contract.id.substring(0, 8)}</span>
                       </div>
                     </div>
@@ -130,26 +129,26 @@ const Contracts = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6 p-5 border border-white/10 rounded-xl bg-white/[0.01]">
-                  <div className="flex flex-col items-end md:items-start text-right md:text-left">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
+                  <div className="flex flex-col text-left">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-1">Contract Value</span>
                     <span className="text-sm font-semibold text-white">{formatAmount(contract.amount || contract.agreed_rate)}</span>
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col items-end md:items-start text-right md:text-left">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-1">Start Date</span>
                     <span className="text-sm font-semibold text-white">{formatDate(contract.start_date || contract.created_at)}</span>
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col text-left">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-1">Estimated End</span>
                     <span className="text-sm font-semibold text-white">{formatDate(contract.end_date)}</span>
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col items-end md:items-start text-right md:text-left">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-1">Last Updated</span>
                     <span className="text-sm font-semibold text-white">{formatDate(contract.updated_at || contract.created_at)}</span>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between mt-6 gap-3">
+                <div className="flex items-center justify-end mt-6 gap-3">
                   <button
                     onClick={() => navigate('/client/messages')}
                     className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 h-9 bg-white/[0.02] text-white/70 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all shadow-sm"

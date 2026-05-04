@@ -7,13 +7,13 @@ const AccountHealthSection = () => {
   const [fullAccess, setFullAccess] = useState(true);
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 pb-12 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* TITLE */}
       <div>
-        <h1 className="text-2xl font-semibold text-white tracking-tight">Account health</h1>
-        <p className="text-white/50 text-sm mt-1 font-medium">
-          Manage your account access and stay on track with platform Trust &amp; Safety guidelines
+        <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">Account health</h1>
+        <p className="text-white/40 text-[11px] sm:text-sm mt-1 font-medium leading-relaxed max-w-2xl">
+          Manage your account access and stay on track with platform Trust &amp; Safety guidelines.
         </p>
       </div>
 
@@ -21,21 +21,23 @@ const AccountHealthSection = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         {/* PLATFORM ACCESS */}
-        <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-          <div className="w-full sm:max-w-[400px]">
-            <h3 className="text-lg font-bold text-white mb-2">Platform access</h3>
-            <p className="text-white/50 text-sm mb-6 leading-relaxed">
+        <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[100px] -mr-32 -mt-32 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
+
+          <div className="w-full sm:max-w-[400px] relative z-10">
+            <h3 className="text-base sm:text-lg font-bold text-white mb-2">Platform access</h3>
+            <p className="text-white/40 text-[11px] sm:text-sm mb-6 leading-relaxed">
               Your account currently has full platform access. Continue to follow Trust &amp; Safety policies to maintain uninterrupted access.
             </p>
             <Link
               to="/client/policies"
-              className="w-full sm:w-auto flex sm:inline-flex items-center justify-center px-6 py-3 bg-accent text-white text-sm font-bold rounded-full hover:bg-accent/90 transition-all"
+              className="w-full sm:w-auto flex sm:inline-flex items-center justify-center px-6 py-2.5 sm:py-3 bg-accent text-white text-[11px] sm:text-sm font-bold rounded-full hover:bg-accent/90 transition-all active:scale-95"
             >
               Learn about our policies
             </Link>
           </div>
 
-          <div className="flex sm:flex-col items-center gap-3 shrink-0 w-full sm:w-auto justify-between sm:justify-start">
+          <div className="flex sm:flex-col items-center gap-3 shrink-0 w-full sm:w-auto justify-between sm:justify-start relative z-10">
             <div className="flex items-center justify-center">
               <ShieldCheck size={32} className="text-accent" />
             </div>
@@ -48,7 +50,7 @@ const AccountHealthSection = () => {
                   className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-all ${fullAccess ? "translate-x-6" : ""}`}
                 />
               </button>
-              <span className="text-accent text-xs font-bold uppercase tracking-widest">
+              <span className="text-accent text-[9px] font-black uppercase tracking-[0.2em]">
                 {fullAccess ? "Full Access" : "Restricted"}
               </span>
             </div>
@@ -56,32 +58,35 @@ const AccountHealthSection = () => {
         </div>
 
         {/* ACCOUNT STANDING */}
-        <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-          <div className="w-full sm:max-w-[400px]">
-            <h3 className="text-lg font-bold text-white mb-2">Account standing</h3>
-            <p className="text-white/50 text-sm leading-relaxed mb-6">
+        <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[100px] -mr-32 -mt-32 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
+
+          <div className="w-full sm:max-w-[400px] relative z-10">
+            <h3 className="text-base sm:text-lg font-bold text-white mb-2">Account standing</h3>
+            <p className="text-white/40 text-[11px] sm:text-sm leading-relaxed mb-6">
               Based on your enforcement history, your account is in good standing and meets our guidelines.
               Continue following best practices to maintain your status and avoid future enforcement.
             </p>
             <Link
               to="/client/identity-verification"
-              className="w-full sm:w-auto flex sm:inline-flex items-center justify-center px-6 py-3 bg-white/10 text-white text-sm font-bold rounded-full hover:bg-white/20 transition-all"
+              className="w-full sm:w-auto flex sm:inline-flex items-center justify-center px-6 py-2.5 sm:py-3 bg-white/5 border border-white/10 text-white text-[11px] sm:text-sm font-bold rounded-full hover:bg-white/10 transition-all active:scale-95"
             >
               Verify Identity
             </Link>
           </div>
 
-          <div className="flex sm:flex-col items-center gap-2 shrink-0 mx-auto sm:mx-0">
-            <div className="w-20 h-10 border-t-[5px] border-accent rounded-t-full" />
-            <span className="text-accent text-xs font-bold uppercase tracking-widest mt-2">Good</span>
+          <div className="flex sm:flex-col items-center gap-2 shrink-0 mx-auto sm:mx-0 relative z-10">
+            <div className="w-20 h-10 border-t-[5px] border-accent rounded-t-full opacity-60" />
+            <span className="text-accent text-[9px] sm:text-xs font-black uppercase tracking-[0.2em] mt-2">Standing: Good</span>
           </div>
         </div>
       </div>
 
-      {/* ENFORCEMENT HISTORY */}
-      <div className="bg-transparent border border-white/10 rounded-[2rem] overflow-hidden">
-        <div className="px-5 sm:px-8 pt-8 pb-0">
-          <h3 className="text-base font-bold text-white uppercase tracking-wider mb-6">Enforcement history</h3>
+      <div className="bg-transparent border border-white/10 rounded-[2rem] overflow-hidden relative group">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[100px] -mr-32 -mt-32 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
+
+        <div className="px-5 sm:px-10 pt-10 pb-0 relative z-10">
+          <h3 className="text-[10px] sm:text-xs font-black text-white/20 uppercase tracking-[0.3em] mb-6">Enforcement History Protocol</h3>
 
           {/* TABS */}
           <div className="flex gap-4 sm:gap-8 border-b border-white/10">

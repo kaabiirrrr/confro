@@ -5,6 +5,7 @@ import { toastApiError } from '../../../../../utils/apiErrorToast';
 import { toast } from 'react-hot-toast';
 import InfinityLoader from '../../../../common/InfinityLoader';
 import CustomDropdown from '../../../../ui/CustomDropdown';
+import CustomDatePicker from '../../../../ui/CustomDatePicker';
 
 const STATUS_CFG = {
   PENDING: { cls: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', Icon: Clock },
@@ -74,14 +75,14 @@ export default function TimesheetsPage() {
   };
 
   return (
-    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 sm:mt-6 pb-12 space-y-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-white">Timesheets</h1>
-        <p className="text-white/50 text-sm mt-1">Review and approve weekly timesheets from your active freelancers.</p>
+        <h1 className="text-lg sm:text-2xl font-semibold text-white tracking-tight">Timesheets</h1>
+        <p className="text-white/50 text-[11px] sm:text-sm mt-1 max-w-xl">Review and approve weekly timesheets from your active freelancers.</p>
       </div>
 
       {/* Filters Interface */}
-      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-3 sm:gap-4 mb-8 p-4 sm:p-5 bg-transparent border border-white/10 rounded-2xl">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-3 sm:gap-4 mb-8 p-3 sm:p-4 bg-transparent border border-white/10 rounded-2xl">
         <div className="space-y-1.5 w-full sm:flex-1 sm:min-w-[240px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Select Contract</label>
           <CustomDropdown
@@ -97,12 +98,7 @@ export default function TimesheetsPage() {
 
         <div className="space-y-1.5 w-full sm:min-w-[200px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Week Start Date</label>
-          <input
-            type="date"
-            value={filters.week_start}
-            onChange={e => setFilters(p => ({ ...p, week_start: e.target.value }))}
-            className="w-full bg-transparent border border-white/10 text-white text-xs sm:text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-accent/50 transition-all"
-          />
+          <CustomDatePicker value={filters.week_start} onChange={(val) => setFilters(p => ({ ...p, week_start: val }))} />
         </div>
 
         <div className="space-y-1.5 w-full sm:min-w-[180px]">
@@ -124,7 +120,7 @@ export default function TimesheetsPage() {
           {[1, 2, 3, 4].map(i => <div key={i} className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-28" />)}
         </div>
       ) : timesheets.length === 0 ? (
-        <div className="text-center py-20 bg-transparent border border-white/10 rounded-2xl">
+        <div className="text-center py-20 bg-transparent rounded-2xl">
           <Clock className="mx-auto text-white/20 mb-4" size={48} />
           <h3 className="text-white font-semibold text-lg">No Timesheets Found</h3>
           <p className="text-white/30 text-xs mt-2 max-w-xs mx-auto font-medium italic">

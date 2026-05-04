@@ -112,7 +112,7 @@ const PendingOffers = () => {
                 className="flex flex-col md:flex-row gap-6"
               >
                 {/* LEFT: Freelancer Info */}
-                <div className="flex items-center gap-4 md:w-1/4 shrink-0">
+                <div className="flex items-center gap-4 w-full md:w-1/4 shrink-0">
                   <Avatar
                     src={freelancerAvatar}
                     name={freelancerName}
@@ -121,34 +121,52 @@ const PendingOffers = () => {
                   />
                   <div className="flex flex-col justify-center min-h-16">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <div className="text-white font-bold text-lg leading-tight truncate max-w-[150px]">{freelancerName}</div>
+                      <div className="text-white font-bold text-base leading-tight truncate max-w-[150px]">{freelancerName}</div>
                       {offer.freelancer?.is_verified && (
-                        <ShieldCheck size={15} className="text-blue-400 shrink-0" title="Identity Verified" />
+                        <ShieldCheck size={14} className="text-blue-400 shrink-0" title="Identity Verified" />
                       )}
                     </div>
-                    <span className="bg-accent/10 text-accent border border-accent/20 rounded-full px-2 py-0.5 text-[10px] mt-1.5 inline-block uppercase font-bold tracking-wider self-start">Freelancer</span>
+                    <span className="bg-accent/10 text-accent border border-accent/20 rounded-full px-2 py-0.5 text-[8px] mt-1 inline-block uppercase font-bold tracking-wider self-start">Freelancer</span>
                   </div>
                 </div>
 
                 {/* CENTER: Proposal Details */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-white font-medium text-base mb-2">{jobTitle}</h3>
-                  <p className="text-white/40 text-sm line-clamp-2 md:line-clamp-3 mb-4">
+                <div className="flex-1 w-full min-w-0 flex flex-col justify-center">
+                  <div className="mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
+                    <div>
+                      <p className="text-[10px] text-slate-900/40 dark:text-white/30 uppercase font-bold tracking-wider mb-1">Proposal For</p>
+                      <h3 className="text-slate-950 dark:text-white font-medium text-base leading-tight">{jobTitle}</h3>
+                    </div>
+                    <div className="flex items-center justify-between w-full sm:w-auto gap-2 sm:gap-4 shrink-0 mt-1 sm:mt-0">
+                      <div className="flex items-center gap-1 text-accent font-black text-sm sm:text-base">
+                        <IndianRupee size={14} />
+                        {bidAmount}
+                      </div>
+                      {offer.createdAt && (
+                        <div className="flex items-center gap-1.5 text-slate-900/50 dark:text-white/40 text-[10px] sm:text-xs font-medium">
+                          <span className="opacity-70">Submitted:</span>
+                          {new Date(offer.createdAt).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: 'numeric' 
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <p className="text-slate-900/60 dark:text-white/40 text-sm line-clamp-2 md:line-clamp-3 mb-1 mt-1 text-justify">
                     {coverLetter}
                   </p>
-                  <div className="flex items-baseline gap-1 text-accent font-bold text-xl">
-                    {formatINR(bidAmount)}
-                  </div>
                 </div>
 
                 {/* RIGHT: Actions */}
-                <div className="flex flex-wrap md:flex-col gap-2 shrink-0 md:w-32 self-center">
+                <div className="flex flex-col gap-2 w-full md:w-32 shrink-0 self-stretch md:self-center mt-2 md:mt-0">
                   <Button 
-                    variant="success"
+                    variant="primary"
                     size="sm"
                     onClick={() => handleAction(offerId, "ACCEPTED")}
                     icon={Check}
-                    className="flex-1 md:flex-none"
+                    className="w-full !text-slate-950 dark:!text-slate-950 shadow-none font-bold"
                   >
                     Accept
                   </Button>
@@ -157,7 +175,7 @@ const PendingOffers = () => {
                     size="sm"
                     onClick={() => handleAction(offerId, "REJECTED")}
                     icon={X}
-                    className="flex-1 md:flex-none"
+                    className="w-full !bg-red-500 hover:!bg-red-600 !text-white !border-red-500 shadow-none font-bold"
                   >
                     Reject
                   </Button>

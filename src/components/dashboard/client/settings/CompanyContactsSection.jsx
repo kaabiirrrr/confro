@@ -9,7 +9,7 @@ import CustomDropdown from "../../../ui/CustomDropdown";
 
 const CompanyContactsSection = () => {
   const { profile: contextProfile, refreshProfile, user: authUser } = useAuth();
-  const [edit,setEdit] = useState(false);
+  const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState(contextProfile);
 
@@ -38,7 +38,7 @@ const CompanyContactsSection = () => {
   const getPhone = (p) =>
     p?.phone || p?.mobile_number || p?.step_data?.contact_info?.phone || "";
 
-  const [form,setForm] = useState({
+  const [form, setForm] = useState({
     owner: "",
     phone: "",
     email: "",
@@ -58,8 +58,8 @@ const CompanyContactsSection = () => {
     }
   }, [profile, authUser]);
 
-  const handleChange = (e)=>{
-    setForm({...form,[e.target.name]:e.target.value});
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSave = async () => {
@@ -84,86 +84,84 @@ const CompanyContactsSection = () => {
     }
   };
 
-  const handleCancel = ()=>{
+  const handleCancel = () => {
     setEdit(false);
   };
 
   return (
 
-    <div className="glass-card rounded-[2rem] p-5 sm:p-8 lg:p-10 relative overflow-hidden group">
+    <div className="glass-card rounded-3xl p-4 sm:p-10 relative overflow-hidden group w-full">
       {/* Decorative Gradient Background */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
-      
+
       <div className="relative z-10">
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-12">
-          <div>
-            <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-8 relative">
+          <div className="text-center sm:text-left w-full sm:w-auto">
+            <h2 className="text-xl font-bold text-white tracking-tight flex items-center justify-center sm:justify-start gap-2">
               <User size={20} className="text-accent" />
               Company contacts
             </h2>
             <p className="text-white/40 text-sm mt-1">Primary contact points and location data</p>
           </div>
-          
+
           {!edit && (
             <button
               onClick={() => setEdit(true)}
-              className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2 text-sm font-semibold shadow-sm"
+              className="absolute top-0 right-0 sm:relative sm:top-auto sm:right-auto px-2 py-2 sm:px-4 sm:py-2 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2 text-xs sm:text-sm font-semibold shadow-sm"
             >
-              <Pencil size={14} />
-              Edit Contacts
+              <Pencil size={12} className="sm:w-[14px] sm:h-[14px]" />
+              <span className="hidden sm:inline">Edit Contacts</span>
             </button>
           )}
         </div>
 
         {!edit ? (
           /* NORMAL VIEW */
-          <div className="space-y-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
-              <div className="space-y-1.5">
-                <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">Account Owner</p>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                    <User size={14} className="text-white/60" />
-                  </div>
-                  <p className="text-white text-base font-medium tracking-tight">{form.owner || "Not specified"}</p>
+          <div className="space-y-0 divide-y divide-white/5">
+            <div className="py-4 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-4 first:border-none w-full min-w-0 text-center sm:text-left">
+              <p className="text-white/30 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Account Owner</p>
+              <div className="flex items-center justify-center sm:justify-end gap-2.5 flex-1 min-w-0 w-full">
+                <div className="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                  <User size={12} className="text-white/60" />
                 </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">Contact Phone</p>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                    <Phone size={14} className="text-white/60" />
-                  </div>
-                  <p className="text-white text-base font-medium tracking-tight">{form.phone || "No phone added"}</p>
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">Contact Email</p>
-                <p className="text-white text-base font-medium tracking-tight">{form.email || "No email added"}</p>
+                <p className="text-white text-xs sm:text-base font-medium tracking-tight truncate">{form.owner || "Not specified"}</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-y-8">
-              <div className="space-y-1.5">
-                <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">Current Time Zone</p>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                    <Clock size={14} className="text-white/60" />
-                  </div>
-                  <p className="text-white text-base font-medium tracking-tight">{form.timezone || "Not specified"}</p>
+            <div className="py-4 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-4 border-t border-white/5 w-full min-w-0 text-center sm:text-left">
+              <p className="text-white/30 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Contact Phone</p>
+              <div className="flex items-center justify-center sm:justify-end gap-2.5 flex-1 min-w-0 w-full">
+                <div className="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                  <Phone size={12} className="text-white/60" />
                 </div>
+                <p className="text-white text-xs sm:text-base font-medium tracking-tight truncate">{form.phone || "No phone added"}</p>
               </div>
+            </div>
 
-              <div className="space-y-1.5 pt-6 border-t border-white/5">
-                <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">Location</p>
-                <div className="flex items-start gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mt-0.5">
-                    <MapPin size={14} className="text-white/60" />
-                  </div>
-                  <p className="text-white text-base font-medium tracking-tight">{form.location || "No location specified"}</p>
+            <div className="py-4 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-4 border-t border-white/5 w-full min-w-0 text-center sm:text-left">
+              <p className="text-white/30 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Contact Email</p>
+              <div className="flex items-center justify-center sm:justify-end gap-2.5 flex-1 min-w-0 w-full overflow-hidden">
+                <p className="text-white text-xs sm:text-base font-medium tracking-tight truncate">{form.email || "No email added"}</p>
+              </div>
+            </div>
+
+            <div className="py-4 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-4 border-t border-white/5 w-full min-w-0 text-center sm:text-left">
+              <p className="text-white/30 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Time Zone</p>
+              <div className="flex items-center justify-center sm:justify-end gap-2.5 flex-1 min-w-0 w-full">
+                <div className="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                  <Clock size={12} className="text-white/60" />
                 </div>
+                <p className="text-white text-xs sm:text-base font-medium tracking-tight truncate">{form.timezone || "Not specified"}</p>
+              </div>
+            </div>
+
+            <div className="py-4 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-4 border-t border-white/5 w-full min-w-0 text-center sm:text-left">
+              <p className="text-white/30 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Location</p>
+              <div className="flex items-start justify-center sm:justify-end gap-2.5 flex-1 min-w-0 w-full">
+                <div className="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <MapPin size={12} className="text-white/60" />
+                </div>
+                <p className="text-white text-xs sm:text-base font-medium tracking-tight text-center">{form.location || "No location specified"}</p>
               </div>
             </div>
           </div>

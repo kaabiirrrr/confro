@@ -75,7 +75,7 @@ export default function DirectContractsPage() {
           {[1, 2, 3].map((i) => <SkeletonRow key={i} />)}
         </div>
       ) : contracts.length === 0 ? (
-        <div className="text-center py-20 bg-transparent border border-white/10 rounded-2xl">
+        <div className="text-center py-20 bg-transparent rounded-2xl">
           <FileSignature className="mx-auto text-white/10 mb-6" size={48} strokeWidth={1.5} />
           <h3 className="text-white font-bold text-lg mb-2">No direct contracts yet</h3>
           <p className="text-white/30 text-xs max-w-xs mx-auto leading-relaxed mb-8">

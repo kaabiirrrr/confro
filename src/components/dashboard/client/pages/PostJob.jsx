@@ -102,7 +102,7 @@ const PostJob = () => {
       getMyJobs().then(res => {
         const jobs = res?.data ?? res ?? [];
         setIsFirstJob(Array.isArray(jobs) ? jobs.length === 0 : false);
-      }).catch(() => {});
+      }).catch(() => { });
     }
   }, [editJobId]);
   const [selectedSkills, setSelectedSkills] = useState([]);
@@ -220,61 +220,61 @@ const PostJob = () => {
   // --- CONNECT AI HANDLERS ---
   const handleAIImprove = async () => {
     if (form.description.length < 10 && form.title.length < 5) {
-        return toast.error('Please type a title or rough description first.');
+      return toast.error('Please type a title or rough description first.');
     }
-    
+
     setAiModal(prev => ({ ...prev, isThinking: true }));
     try {
-        // Send a clean, consolidated context string instead of raw JSON
-        const context = `Title: ${form.title}\nDescription: ${form.description}`;
-        const res = await aiImproveJob(context);
-        
-        if (res.success) {
-            // Ensure we handle both string and object data gracefully
-            const description = typeof res.data === 'string' 
-                ? res.data 
-                : res.data.improvedPost || res.data.description || JSON.stringify(res.data);
+      // Send a clean, consolidated context string instead of raw JSON
+      const context = `Title: ${form.title}\nDescription: ${form.description}`;
+      const res = await aiImproveJob(context);
 
-            setAiModal({
-                isOpen: true,
-                aiData: { description: description, skills: [] },
-                type: 'improve',
-                isThinking: false
-            });
-        }
+      if (res.success) {
+        // Ensure we handle both string and object data gracefully
+        const description = typeof res.data === 'string'
+          ? res.data
+          : res.data.improvedPost || res.data.description || JSON.stringify(res.data);
+
+        setAiModal({
+          isOpen: true,
+          aiData: { description: description, skills: [] },
+          type: 'improve',
+          isThinking: false
+        });
+      }
     } catch (err) {
-        toast.error('AI refinement failed. Please try again.');
-        setAiModal(prev => ({ ...prev, isThinking: false }));
+      toast.error('AI refinement failed. Please try again.');
+      setAiModal(prev => ({ ...prev, isThinking: false }));
     }
   };
 
   const handleAISuggestSkills = async () => {
     if (!form.category) return toast.error('Please select a category first.');
-    
+
     setAiModal(prev => ({ ...prev, isThinking: true }));
     try {
-        const res = await aiSuggestSkills(form.category);
-        if (res.success) {
-            setAiModal({
-                isOpen: true,
-                aiData: { skills: res.data.skills },
-                type: 'skills',
-                isThinking: false
-            });
-        }
+      const res = await aiSuggestSkills(form.category);
+      if (res.success) {
+        setAiModal({
+          isOpen: true,
+          aiData: { skills: res.data.skills },
+          type: 'skills',
+          isThinking: false
+        });
+      }
     } catch (err) {
-        toast.error('AI skill suggestion failed.');
-        setAiModal(prev => ({ ...prev, isThinking: false }));
+      toast.error('AI skill suggestion failed.');
+      setAiModal(prev => ({ ...prev, isThinking: false }));
     }
   };
 
   const applyAISuggestions = (aiData) => {
     if (aiData.description) {
-        setForm(f => ({ ...f, description: aiData.description }));
+      setForm(f => ({ ...f, description: aiData.description }));
     }
     if (aiData.skills && aiData.skills.length > 0) {
-        const uniqueNewSkills = aiData.skills.filter(s => !selectedSkills.includes(s));
-        setSelectedSkills(prev => [...prev, ...uniqueNewSkills].slice(0, 10));
+      const uniqueNewSkills = aiData.skills.filter(s => !selectedSkills.includes(s));
+      setSelectedSkills(prev => [...prev, ...uniqueNewSkills].slice(0, 10));
     }
     setAiModal(prev => ({ ...prev, isOpen: false }));
     toast.success('AI suggestions applied!');
@@ -343,36 +343,36 @@ const PostJob = () => {
 
       {/* ECONOMY & BUDGET SUMMARY — Front and Center for Transparency */}
       {connectsSettings?.is_connect_system_enabled && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-3 rounded-2xl bg-transparent"
         >
-             <div className="flex items-center gap-3">
-               <img src="/Icons/link.png" alt="Connects" className="w-5 h-5 object-contain opacity-60" />
-               <p className="text-xs text-white/40">
-                 Posting requires <span className="text-accent font-bold">{connectsSettings.job_post_cost} connects</span>
-               </p>
-             </div>
+          <div className="flex items-center gap-3">
+            <img src="/Icons/link.png" alt="Connects" className="w-5 h-5 object-contain opacity-60" />
+            <p className="text-xs text-white/40">
+              Posting requires <span className="text-accent font-bold">{connectsSettings.job_post_cost} connects</span>
+            </p>
+          </div>
 
-             <div className="flex items-center gap-6">
-               <div className="flex items-center gap-2">
-                 <p className="text-[10px] text-white/20 uppercase tracking-widest">Connects Required</p>
-                 <p className="text-sm font-black text-accent">{connectsSettings.job_post_cost}</p>
-               </div>
-               <div className="w-px h-4 bg-white/10" />
-               <div className="flex items-center gap-2">
-                 <p className="text-[10px] text-white/20 uppercase tracking-widest">Connects Available</p>
-                 <p className={`text-sm font-black ${connectsBalance < connectsSettings.job_post_cost ? 'text-rose-500' : 'text-white/50'}`}>
-                   {connectsBalance}
-                 </p>
-               </div>
-               {connectsBalance < connectsSettings.job_post_cost && (
-                 <Link to="/client/buy-connects" className="px-4 py-1.5 bg-rose-500 text-white font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-rose-400 transition whitespace-nowrap">
-                   Refill
-                 </Link>
-               )}
-             </div>
+          <div className="flex items-center gap-3 sm:gap-6">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <p className="text-[9px] sm:text-[10px] text-white/20 uppercase tracking-widest whitespace-nowrap">Connects Required</p>
+              <p className="text-xs sm:text-sm font-black text-accent">{connectsSettings.job_post_cost}</p>
+            </div>
+            <div className="w-px h-4 bg-white/10 shrink-0" />
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <p className="text-[9px] sm:text-[10px] text-white/20 uppercase tracking-widest whitespace-nowrap">Connects Available</p>
+              <p className={`text-xs sm:text-sm font-black ${connectsBalance < connectsSettings.job_post_cost ? 'text-rose-500' : 'text-white/50'}`}>
+                {connectsBalance}
+              </p>
+            </div>
+            {connectsBalance < connectsSettings.job_post_cost && (
+              <Link to="/client/buy-connects" className="px-3 sm:px-4 py-1.5 bg-rose-500 text-white font-bold rounded-full text-[9px] sm:text-[10px] uppercase tracking-widest hover:bg-rose-400 transition whitespace-nowrap">
+                Refill
+              </Link>
+            )}
+          </div>
         </motion.div>
       )}
 
@@ -409,39 +409,39 @@ const PostJob = () => {
           </div>
         </FormSection>
 
-        
+
         {/* Job Title */}
         <FormSection label="Job Title" icon={<Briefcase size={14} />}>
           <input
             type="text"
             value={form.title}
             onChange={e => handleChange('title', e.target.value)}
-            className="w-full bg-white/[0.02] border border-white/5 rounded-full px-5 py-4 text-sm text-white placeholder-white/10 focus:outline-none focus:border-accent transition-all"
+            className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-5 py-4 text-sm text-white placeholder-white/10 focus:outline-none focus:border-accent transition-all"
             placeholder="e.g. React Developer Needed for E-commerce Website"
             maxLength={100}
           />
           <div className="flex justify-end mt-1.5">
-             <span className="text-[10px] font-medium text-white/10">{form.title.length}/100</span>
+            <span className="text-[10px] font-medium text-white/10">{form.title.length}/100</span>
           </div>
         </FormSection>
 
         {/* Description */}
-        <FormSection 
-            label="Job Description" 
-            icon={<FileText size={14} />}
-            action={
-                <button 
-                    onClick={handleAIImprove}
-                    disabled={aiModal.isThinking}
-                    className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-full text-accent text-[8px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50"
-                    title={aiModal.isThinking ? 'Reading Context...' : 'Rewrite with Connect AI'}
-                >
-                    <Sparkles size={12} className="sm:w-2.5 sm:h-2.5" />
-                    <span className="hidden sm:inline">
-                        {aiModal.isThinking ? 'Reading Context...' : 'Rewrite with Connect AI'}
-                    </span>
-                </button>
-            }
+        <FormSection
+          label="Job Description"
+          icon={<FileText size={14} />}
+          action={
+            <button
+              onClick={handleAIImprove}
+              disabled={aiModal.isThinking}
+              className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-full text-accent text-[8px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50"
+              title={aiModal.isThinking ? 'Reading Context...' : 'Rewrite with Connect AI'}
+            >
+              <Sparkles size={12} className="sm:w-2.5 sm:h-2.5" />
+              <span className="hidden sm:inline">
+                {aiModal.isThinking ? 'Reading Context...' : 'Rewrite with Connect AI'}
+              </span>
+            </button>
+          }
         >
           <textarea
             rows="10"
@@ -464,22 +464,22 @@ const PostJob = () => {
         </FormSection>
 
         {/* Skills */}
-        <FormSection 
-            label="Skills Required" 
-            icon={<Tag size={14} />}
-            action={
-                <button 
-                    onClick={handleAISuggestSkills}
-                    disabled={aiModal.isThinking}
-                    className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-full text-accent text-[8px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50"
-                    title={aiModal.isThinking ? 'Analyzing Market...' : 'Suggest Skills'}
-                >
-                    <Wand2 size={12} className="sm:w-2.5 sm:h-2.5" />
-                    <span className="hidden sm:inline">
-                        {aiModal.isThinking ? 'Analyzing Market...' : 'Suggest Skills'}
-                    </span>
-                </button>
-            }
+        <FormSection
+          label="Skills Required"
+          icon={<Tag size={14} />}
+          action={
+            <button
+              onClick={handleAISuggestSkills}
+              disabled={aiModal.isThinking}
+              className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-full text-accent text-[8px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50"
+              title={aiModal.isThinking ? 'Analyzing Market...' : 'Suggest Skills'}
+            >
+              <Wand2 size={12} className="sm:w-2.5 sm:h-2.5" />
+              <span className="hidden sm:inline">
+                {aiModal.isThinking ? 'Analyzing Market...' : 'Suggest Skills'}
+              </span>
+            </button>
+          }
         >
           <div className="flex flex-wrap gap-2 mb-4">
             {selectedSkills.map(skill => (
@@ -498,7 +498,7 @@ const PostJob = () => {
               onChange={e => { setSkillInput(e.target.value); setShowSkillSuggestions(true); }}
               onFocus={() => setShowSkillSuggestions(true)}
               onKeyDown={e => { if (e.key === 'Enter' && skillInput.trim()) { addSkill(skillInput.trim()); } }}
-              className="w-full bg-white/[0.02] border border-white/5 rounded-full px-5 py-4 text-sm text-white placeholder-white/10 focus:outline-none focus:border-accent transition-all"
+              className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-5 py-4 text-sm text-white placeholder-white/10 focus:outline-none focus:border-accent transition-all"
               placeholder="Add skill (up to 10)..."
               disabled={selectedSkills.length >= 10}
             />
@@ -515,7 +515,7 @@ const PostJob = () => {
                     key={type}
                     type="button"
                     onClick={() => handleChange('budget_type', type)}
-                    className={`flex-1 py-3 px-4 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all ${form.budget_type === type
+                    className={`flex-1 py-3 px-4 rounded-2xl border text-[10px] font-bold uppercase tracking-widest transition-all ${form.budget_type === type
                       ? 'bg-accent/10 border-accent text-accent'
                       : 'bg-white/[0.02] border-white/5 text-white/40 hover:bg-white/[0.04]'
                       }`}
@@ -530,7 +530,7 @@ const PostJob = () => {
                   type="number"
                   value={form.budget_amount}
                   onChange={e => handleChange('budget_amount', e.target.value)}
-                  className="w-full bg-white/[0.02] border border-white/5 rounded-full pl-12 pr-5 py-4 text-sm text-white focus:outline-none focus:border-accent transition-all"
+                  className="w-full bg-white/[0.02] border border-white/5 rounded-2xl pl-12 pr-5 py-4 text-sm text-white focus:outline-none focus:border-accent transition-all"
                   placeholder={form.budget_type === 'hourly' ? '0.00 / hr' : '0.00'}
                   min="1"
                 />
@@ -544,14 +544,14 @@ const PostJob = () => {
                 <div key={idx} className="p-6 bg-transparent border border-white/5 rounded-2xl relative group/role animate-in fade-in slide-in-from-right-4 duration-300">
 
                   {form.roles.length > 1 && (
-                    <button 
+                    <button
                       onClick={() => removeRole(idx)}
                       className="absolute top-4 right-4 p-2 hover:bg-red-500/10 text-white/20 hover:text-red-400 rounded-lg transition-all opacity-0 group-hover/role:opacity-100"
                     >
                       <X size={14} />
                     </button>
                   )}
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
                       <div className="space-y-2">
@@ -560,7 +560,7 @@ const PostJob = () => {
                           type="text"
                           value={role.title}
                           onChange={e => updateRole(idx, 'title', e.target.value)}
-                          className="w-full bg-white/[0.02] border border-white/5 rounded-full px-5 py-3 text-sm text-white focus:outline-none focus:border-accent"
+                          className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-5 py-3 text-sm text-white focus:outline-none focus:border-accent"
                           placeholder="e.g. Lead Frontend Architect"
                         />
                       </div>
@@ -585,7 +585,7 @@ const PostJob = () => {
                               type="number"
                               value={role.budget}
                               onChange={e => updateRole(idx, 'budget', e.target.value)}
-                              className="w-full bg-white/[0.02] border border-white/5 rounded-full pl-10 pr-5 py-3 text-sm text-white focus:outline-none focus:border-accent"
+                              className="w-full bg-white/[0.02] border border-white/5 rounded-2xl pl-10 pr-5 py-3 text-sm text-white focus:outline-none focus:border-accent"
                               placeholder="0.00"
                             />
                           </div>
@@ -596,7 +596,7 @@ const PostJob = () => {
                             type="number"
                             value={role.positions}
                             onChange={e => updateRole(idx, 'positions', e.target.value)}
-                            className="w-full bg-white/[0.02] border border-white/5 rounded-full px-5 py-3 text-sm text-white focus:outline-none focus:border-accent"
+                            className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-5 py-3 text-sm text-white focus:outline-none focus:border-accent"
                             min="1"
                           />
                         </div>
@@ -620,7 +620,7 @@ const PostJob = () => {
                   </div>
                 </div>
               ))}
-              
+
               <button
                 type="button"
                 onClick={addRole}
@@ -642,7 +642,7 @@ const PostJob = () => {
                 key={level.value}
                 type="button"
                 onClick={() => handleChange('experience_level', level.value)}
-                className={`w-full p-4 rounded-full border text-left transition-all px-8 ${form.experience_level === level.value
+                className={`w-full p-4 rounded-2xl border text-left transition-all px-8 ${form.experience_level === level.value
                   ? 'border-accent bg-accent/5'
                   : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.04]'
                   }`}
@@ -664,7 +664,7 @@ const PostJob = () => {
                 key={d}
                 type="button"
                 onClick={() => handleChange('duration', d)}
-                className={`w-full py-3.5 px-8 rounded-full border text-[10px] font-bold uppercase tracking-widest text-left transition-all ${form.duration === d
+                className={`w-full py-3.5 px-8 rounded-2xl border text-[10px] font-bold uppercase tracking-widest text-left transition-all ${form.duration === d
                   ? 'border-accent bg-accent/5 text-accent'
                   : 'bg-white/[0.02] border-white/5 text-white/20 hover:bg-white/[0.04]'
                   }`}
@@ -682,7 +682,7 @@ const PostJob = () => {
               type="datetime-local"
               value={form.bid_deadline}
               onChange={e => handleChange('bid_deadline', e.target.value)}
-              className="w-full bg-white/[0.02] border border-white/5 rounded-full px-6 py-4 text-sm text-white focus:outline-none focus:border-accent transition-all [color-scheme:dark]"
+              className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-accent transition-all [color-scheme:dark]"
             />
             <p className="mt-2 text-[10px] text-white/20 uppercase font-bold tracking-wider">
               Bidding will automatically close at this time.
@@ -692,30 +692,30 @@ const PostJob = () => {
 
         {/* Attachments */}
         <FormSection label="Attachments (optional)" icon={<Paperclip size={14} />}>
-           <div className="grid grid-cols-1 gap-3">
-              {attachments.map((file, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-white/[0.04] border border-white/10 rounded-xl">
-                      <div className="flex items-center gap-3 overflow-hidden">
-                          <Paperclip size={14} className="text-accent shrink-0" />
-                          <span className="text-xs text-white/60 truncate">{file.name}</span>
-                      </div>
-                      <button
-                          type="button"
-                          onClick={() => setAttachments(prev => prev.filter((_, idx) => idx !== i))}
-                          className="p-1 hover:bg-red-500/10 text-white/20 hover:text-red-400 rounded-lg transition-colors"
-                      >
-                          <X size={14} />
-                      </button>
-                  </div>
-              ))}
-              <label className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-white/5 rounded-2xl hover:border-accent hover:bg-accent/5 cursor-pointer transition-all group">
-                <Plus size={20} className="text-white/10 group-hover:text-accent mb-2 transition-colors" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-white/20 group-hover:text-accent transition-colors">
-                   {uploadingFile ? 'Uploading...' : 'Attach Files'}
-                </span>
-                <input type="file" multiple className="hidden" onChange={handleFileUpload} accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip" />
-              </label>
-           </div>
+          <div className="grid grid-cols-1 gap-3">
+            {attachments.map((file, i) => (
+              <div key={i} className="flex items-center justify-between p-3 bg-white/[0.04] border border-white/10 rounded-xl">
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <Paperclip size={14} className="text-accent shrink-0" />
+                  <span className="text-xs text-white/60 truncate">{file.name}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAttachments(prev => prev.filter((_, idx) => idx !== i))}
+                  className="p-1 hover:bg-red-500/10 text-white/20 hover:text-red-400 rounded-lg transition-colors"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+            <label className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-white/5 rounded-2xl hover:border-accent hover:bg-accent/5 cursor-pointer transition-all group">
+              <Plus size={20} className="text-white/10 group-hover:text-accent mb-2 transition-colors" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white/20 group-hover:text-accent transition-colors">
+                {uploadingFile ? 'Uploading...' : 'Attach Files'}
+              </span>
+              <input type="file" multiple className="hidden" onChange={handleFileUpload} accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip" />
+            </label>
+          </div>
         </FormSection>
 
 
@@ -727,7 +727,7 @@ const PostJob = () => {
           >
             Discard
           </button>
-          
+
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto order-1 sm:order-2">
             <button
               onClick={() => handleSubmit('DRAFT')}
@@ -750,7 +750,7 @@ const PostJob = () => {
 
       </div>
 
-      <AIJobPreviewModal 
+      <AIJobPreviewModal
         isOpen={aiModal.isOpen}
         onClose={() => setAiModal(prev => ({ ...prev, isOpen: false }))}
         onApply={applyAISuggestions}
@@ -766,8 +766,8 @@ const PostJob = () => {
 const FormSection = ({ label, icon, action, children }) => (
   <div className="mb-8 sm:mb-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
     <div className="flex items-center justify-between mb-4 gap-3">
-      <div className="flex items-center gap-3 min-w-0">
-        <div className="w-8 h-8 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-white/20 shrink-0">
+      <div className="flex items-center min-w-0">
+        <div className="w-8 h-8 flex items-center justify-center text-white/20 shrink-0">
           {icon}
         </div>
         <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 truncate">{label}</h3>

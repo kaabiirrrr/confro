@@ -3,6 +3,7 @@ import { Receipt, ChevronLeft, ChevronRight, AlertCircle, CheckCircle2, RotateCc
 import { getTransactions, getMyContracts } from '../../../../../services/apiService';
 import { toastApiError } from '../../../../../utils/apiErrorToast';
 import CustomDropdown from '../../../../ui/CustomDropdown';
+import CustomDatePicker from '../../../../ui/CustomDatePicker';
 
 const toInputDate = (d) => d.toISOString().split('T')[0];
 const nDaysAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n); return toInputDate(d); };
@@ -10,10 +11,10 @@ const fmt$ = (v) => `₹${parseFloat(v || 0).toLocaleString('en-IN', { minimumFr
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
 
 const STATUS_CFG = {
-  escrow:   { cls: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', Icon: Clock },
-  released: { cls: 'bg-green-500/10 text-green-400 border-green-500/20',   Icon: CheckCircle2 },
-  refunded: { cls: 'bg-blue-500/10 text-blue-400 border-blue-500/20',      Icon: RotateCcw },
-  failed:   { cls: 'bg-red-500/10 text-red-400 border-red-500/20',         Icon: XCircle },
+  escrow: { cls: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', Icon: Clock },
+  released: { cls: 'bg-green-500/10 text-green-400 border-green-500/20', Icon: CheckCircle2 },
+  refunded: { cls: 'bg-blue-500/10 text-blue-400 border-blue-500/20', Icon: RotateCcw },
+  failed: { cls: 'bg-red-500/10 text-red-400 border-red-500/20', Icon: XCircle },
 };
 
 const StatusBadge = ({ status }) => {
@@ -39,7 +40,7 @@ export default function TransactionsPage() {
   });
 
   useEffect(() => {
-    getMyContracts().then(r => setContracts(r?.data ?? [])).catch(() => {});
+    getMyContracts().then(r => setContracts(r?.data ?? [])).catch(() => { });
   }, []);
 
   const load = useCallback(async () => {
@@ -65,24 +66,24 @@ export default function TransactionsPage() {
   const selectCls = "bg-transparent border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-accent/50 transition-all font-medium min-w-[160px]";
 
   return (
-    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-white tracking-tight">Transaction History</h1>
-        <p className="text-white/50 text-sm mt-1 font-medium">All payment transactions across your contracts.</p>
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 pb-12 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="mb-4">
+        <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">Transaction History</h1>
+        <p className="text-white/40 text-[11px] sm:text-sm mt-1 font-medium leading-relaxed max-w-2xl">Full historical log of payment transactions across your operational contracts.</p>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-3 sm:gap-5 mb-10 p-4 sm:p-6 bg-transparent border border-white/10 rounded-2xl">
-        <div className="space-y-1.5 w-full sm:flex-1 sm:min-w-[160px]">
-          <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">From</label>
-          <input type="date" value={filters.from} onChange={setFilter('from')} className={`w-full ${selectCls}`} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 p-3 sm:p-4 bg-transparent border border-white/10 rounded-[24px]">
+        <div className="space-y-1.5">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Temporal Start</label>
+          <CustomDatePicker value={filters.from} onChange={(val) => setFilters(p => ({ ...p, from: val, page: 1 }))} />
         </div>
-        <div className="space-y-1.5 w-full sm:flex-1 sm:min-w-[160px]">
-          <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">To</label>
-          <input type="date" value={filters.to} onChange={setFilter('to')} className={`w-full ${selectCls}`} />
+        <div className="space-y-1.5">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Temporal End</label>
+          <CustomDatePicker value={filters.to} onChange={(val) => setFilters(p => ({ ...p, to: val, page: 1 }))} />
         </div>
-        <div className="space-y-1.5 w-full sm:flex-1 sm:min-w-[160px]">
-          <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Status</label>
+        <div className="space-y-1.5">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Status Protocol</label>
           <CustomDropdown
             options={STATUSES.map(s => ({ label: s || 'All statuses', value: s }))}
             value={filters.status}
@@ -90,8 +91,8 @@ export default function TransactionsPage() {
             className="w-full"
           />
         </div>
-        <div className="space-y-1.5 w-full sm:flex-[2] sm:min-w-[200px]">
-          <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Contract</label>
+        <div className="space-y-1.5">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Contract Node</label>
           <CustomDropdown
             options={[
               { label: 'All contracts', value: '' },
@@ -106,7 +107,7 @@ export default function TransactionsPage() {
 
       {loading ? (
         <div className="space-y-2">
-          {[1,2,3,4,5].map(i => <div key={i} className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-16 w-full" />)}
+          {[1, 2, 3, 4, 5].map(i => <div key={i} className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-16 w-full" />)}
         </div>
       ) : rows.length === 0 ? (
         <div className="text-center py-24 bg-transparent border border-white/10 rounded-2xl">
@@ -118,7 +119,19 @@ export default function TransactionsPage() {
         </div>
       ) : (
         <>
-          <div className="bg-transparent border border-white/10 rounded-2xl overflow-hidden mb-4">
+          <div className="bg-transparent border border-white/10 rounded-[2rem] overflow-hidden self-stretch flex flex-col relative group">
+            {/* Decorative corner glow */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[100px] -mr-32 -mt-32 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
+
+            <div className="px-8 py-6 border-b border-white/10 flex items-center justify-between relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-1.5 h-5 bg-accent/40 rounded-full" />
+                <div>
+                  <p className="text-[10px] text-white/20 font-black uppercase tracking-widest leading-none mb-1">Ledger Protocol</p>
+                  <h3 className="text-white font-bold text-sm uppercase tracking-wider">Transaction Registry</h3>
+                </div>
+              </div>
+            </div>
             {/* Desktop Header - hidden on mobile */}
             <div className="hidden sm:grid sm:grid-cols-[140px_1fr_1fr_100px_120px] gap-4 px-8 py-5 border-b border-white/10 text-[9px] text-white/20 font-black uppercase tracking-widest">
               <span>Date</span>
@@ -129,10 +142,11 @@ export default function TransactionsPage() {
             </div>
 
             {rows.map((tx, i) => {
-              const party = tx.counterparty?.profiles || tx.counterparty || {};
-              const partyName = party.name || tx.counterparty_name || '—';
-              const partyAvatar = party.avatar_url;
-              const contractLabel = tx.contract_title || tx.contract?.title || tx.job?.title || `Contract #${tx.contract_id?.substring(0, 8) ?? '—'}`;
+              // In Client Dashboard, counterparty is the payee (Freelancer)
+              const profile = Array.isArray(tx.payee?.profiles) ? tx.payee.profiles[0] : tx.payee?.profiles;
+              const partyName = profile?.name || tx.payee?.name || tx.counterparty_name || '—';
+              const partyAvatar = profile?.avatar_url || tx.payee?.avatar_url;
+              const contractLabel = tx.contract?.title || tx.contract_title || tx.job?.title || (tx.contract?.id ? `Contract #${tx.contract.id.substring(0, 8)}` : '—');
 
               return (
                 <div key={tx.id ?? i} className="border-b border-white/5 last:border-0 hover:bg-white/5 transition group">
@@ -188,7 +202,7 @@ export default function TransactionsPage() {
               <button
                 onClick={() => goPage(pagination.page + 1)}
                 disabled={pagination.page >= pagination.pages}
-                className="p-1.5 rounded-lg border border-white/10 hover:border-white/20 disabled:opacity-30 transition"
+                className="p-1.5 rounded-full border border-white/10 hover:border-white/20 disabled:opacity-30 transition"
               >
                 <ChevronRight size={16} />
               </button>

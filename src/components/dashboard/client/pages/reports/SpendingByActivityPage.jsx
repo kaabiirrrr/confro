@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import { getSpendingByActivity, getMyContracts } from '../../../../../services/apiService';
 import { toastApiError } from '../../../../../utils/apiErrorToast';
+import CustomDatePicker from '../../../../ui/CustomDatePicker';
 
 const toInputDate = (d) => d.toISOString().split('T')[0];
 const nDaysAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n); return toInputDate(d); };
@@ -61,39 +62,28 @@ export default function SpendingByActivityPage() {
   const grandTotal = data?.grand_total ?? 0;
 
   return (
-    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 sm:mt-6 pb-12 space-y-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-white tracking-tight">Spending Analysis by Activity</h1>
-        <p className="text-white/50 text-sm mt-1 font-medium">Comprehensive breakdown of organizational capital allocation and operational expenditure.</p>
+        <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">Spending Analysis by Activity</h1>
+        <p className="text-white/40 text-[11px] sm:text-sm mt-1 font-medium leading-relaxed max-w-2xl">Comprehensive breakdown of organizational capital allocation and operational expenditure.</p>
       </div>
 
       {/* Temporal Parameters & Presets */}
-      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-3 sm:gap-5 mb-10 p-4 sm:p-6 bg-transparent border border-white/10 rounded-2xl">
-        <div className="space-y-1.5 w-full sm:w-auto">
-          <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Temporal Origin</label>
-          <input
-            type="date"
-            value={from}
-            onChange={e => setFrom(e.target.value)}
-            className="w-full bg-transparent border border-white/10 text-white text-xs sm:text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-accent/50 transition-all font-medium"
-          />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-10 p-3 sm:p-4 bg-transparent border border-white/10 rounded-[24px] items-end">
+        <div className="lg:col-span-3 space-y-1.5">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Temporal Start</label>
+          <CustomDatePicker value={from} onChange={setFrom} />
         </div>
-        <div className="space-y-1.5 w-full sm:w-auto">
-          <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Temporal Termination</label>
-          <input
-            type="date"
-            value={to}
-            onChange={e => setTo(e.target.value)}
-            className="w-full bg-transparent border border-white/10 text-white text-xs sm:text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-accent/50 transition-all font-medium"
-          />
+        <div className="lg:col-span-3 space-y-1.5">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Temporal End</label>
+          <CustomDatePicker value={to} onChange={setTo} />
         </div>
-        <div className="h-px w-full sm:h-10 sm:w-px bg-white/5 sm:mx-2" />
-        <div className="flex gap-2 w-full sm:w-auto">
+        <div className="lg:col-span-6 flex gap-2 w-full overflow-x-auto no-scrollbar pb-1">
           {RANGE_PRESETS.map(({ label, days }) => (
             <button
               key={days}
               onClick={() => { setFrom(nDaysAgo(days)); setTo(toInputDate(new Date())); }}
-              className="flex-1 sm:flex-none px-3 sm:px-4 py-2.5 text-[9px] sm:text-[10px] font-black uppercase tracking-widest border border-white/10 text-white/40 hover:text-white hover:bg-white/5 hover:border-white/20 rounded-xl transition-all active:scale-95"
+              className="flex-none px-4 py-2 text-[9px] font-black uppercase tracking-widest border border-white/5 text-white/30 hover:text-white hover:bg-white/5 hover:border-white/10 rounded-full transition-all active:scale-95"
             >
               Last {label}
             </button>
@@ -102,48 +92,53 @@ export default function SpendingByActivityPage() {
       </div>
 
       {loading ? (
-        <div className="space-y-6">
-          <div className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-24 w-full" />
+        <div className="space-y-2">
+          <div className="animate-pulse bg-white/5 border border-white/10 rounded-[2rem] h-24 w-full" />
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-80" />
-            <div className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-80" />
+            <div className="animate-pulse bg-white/5 border border-white/10 rounded-[2rem] h-80" />
+            <div className="animate-pulse bg-white/5 border border-white/10 rounded-[2rem] h-80" />
           </div>
         </div>
       ) : !data || (breakdown.length === 0 && byContract.length === 0) ? (
-        <div className="text-center py-24 bg-transparent border border-white/10 rounded-2xl">
-          <PieIcon className="mx-auto text-white/10 mb-6" size={56} strokeWidth={1.5} />
-          <h3 className="text-white font-bold text-xl tracking-tight">No Expenditure Detected</h3>
-          <p className="text-white/30 text-xs mt-3 max-w-sm mx-auto font-medium leading-relaxed uppercase tracking-widest italic">
+        <div className="text-center py-24 bg-transparent border border-white/10 rounded-[2rem] animate-in fade-in zoom-in duration-700">
+          <div className="mx-auto mb-6 flex items-center justify-center">
+            <PieIcon size={48} className="text-white/10" strokeWidth={1.5} />
+          </div>
+          <h3 className="text-white font-bold text-xl tracking-tight mb-2">No Temporal Flux Detected</h3>
+          <p className="text-white/30 text-xs uppercase tracking-widest font-medium italic">
             Zero transaction events identified within the current temporal parameters.
           </p>
         </div>
       ) : (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 pb-12 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {/* Aggregate Expenditure Card */}
-          <div className="bg-transparent border border-white/10 rounded-2xl p-8 flex items-center justify-between">
-            <div>
-              <p className="text-[10px] text-white/20 font-black uppercase tracking-widest mb-1">Total Organizational Expenditure</p>
-              <h3 className="text-white font-bold text-sm tracking-wide opacity-60">Aggregate Capital Distribution</h3>
+          <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative overflow-hidden group">
+            {/* Subtle decorative glow similar to account health */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[100px] -mr-32 -mt-32 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
+
+            <div className="relative z-10">
+              <p className="text-[10px] sm:text-xs text-accent font-black uppercase tracking-[0.25em] mb-2">Capital Utilization</p>
+              <h3 className="text-white font-bold text-lg sm:text-xl lg:text-2xl tracking-tight leading-tight max-w-[400px]">Aggregate Organizational Capital Distribution</h3>
             </div>
-            <div className="text-right">
-              <span className="text-accent text-3xl md:text-4xl font-black tracking-tighter leading-none">{fmt$(grandTotal)}</span>
-              <p className="text-white/10 text-[8px] font-black uppercase mb-0.5 tracking-widest">Validated Assets (INR)</p>
+            <div className="text-left sm:text-right relative z-10">
+              <span className="text-accent text-4xl sm:text-5xl font-black tracking-tighter leading-none">{fmt$(grandTotal)}</span>
+              <p className="text-white/20 text-[9px] font-black uppercase mt-1.5 tracking-widest">Validated Assets (INR)</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          <div className="flex flex-col gap-8">
             {/* Visual Analytics Segment */}
             {breakdown.length > 0 && (
-              <div className="bg-transparent border border-white/10 rounded-2xl p-8">
+              <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-10">
                 <div className="flex items-center gap-3 mb-8">
                   <PieIcon size={20} className="text-accent" />
                   <div>
                     <p className="text-[10px] text-white/20 font-black uppercase tracking-widest leading-none mb-1">Analytics</p>
-                    <h3 className="text-white font-bold text-sm uppercase tracking-wider">Spending Distribution</h3>
+                    <h3 className="text-white font-bold text-sm sm:text-base uppercase tracking-wider">Spending Distribution</h3>
                   </div>
                 </div>
 
-                <div className="flex flex-col items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                   {/* High-Fidelity Donut Chart */}
                   <div className="w-full h-80 relative">
                     <ResponsiveContainer width="100%" height="100%">
@@ -176,7 +171,7 @@ export default function SpendingByActivityPage() {
                   </div>
 
                   {/* Enhanced Legend System */}
-                  <div className="w-full mt-10 space-y-3.5">
+                  <div className="w-full space-y-3.5">
                     {breakdown.map((item, i) => (
                       <div key={item.key ?? i} className="group flex items-center justify-between gap-4 p-3.5 bg-transparent border border-white/10 rounded-xl hover:bg-white/5 transition-all">
                         <div className="flex items-center gap-3 min-w-0">
@@ -185,12 +180,12 @@ export default function SpendingByActivityPage() {
                         </div>
                         <div className="flex items-center gap-5 shrink-0 px-1">
                           <div className="text-right">
-                            <p className="text-white/10 text-[8px] font-black uppercase mb-0.5">Ratio</p>
-                            <span className="text-white/40 text-[11px] font-black">{Number(item.percentage || 0).toFixed(1)}%</span>
+                            <span className="text-white/20 text-[8px] font-black uppercase block tracking-widest mb-0.5">Ratio</span>
+                            <span className="text-white/80 font-black text-[11px] tracking-tight">{item.percentage}%</span>
                           </div>
                           <div className="text-right">
-                            <p className="text-accent/20 text-[8px] font-black uppercase mb-0.5">Capital</p>
-                            <span className="text-white font-black text-xs group-hover:text-accent transition-colors">{fmt$(item.total)}</span>
+                            <span className="text-white/20 text-[8px] font-black uppercase block tracking-widest mb-0.5">Capital</span>
+                            <span className="text-accent font-black text-[11px] tracking-tight">{fmt$(item.total)}</span>
                           </div>
                         </div>
                       </div>
@@ -202,7 +197,7 @@ export default function SpendingByActivityPage() {
 
             {/* Strategic Contract Breakdown Table */}
             {byContract.length > 0 && (
-              <div className="bg-transparent border border-white/10 rounded-2xl overflow-hidden self-stretch flex flex-col">
+              <div className="bg-transparent border border-white/10 rounded-[2rem] overflow-hidden self-stretch flex flex-col">
                 <div className="px-8 py-6 border-b border-white/10 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-1.5 h-5 bg-accent/40 rounded-full" />
@@ -232,8 +227,8 @@ export default function SpendingByActivityPage() {
                             </span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-white/30 text-[9px] font-bold uppercase tracking-widest">{c.transaction_count ?? 0} event{c.transaction_count !== 1 ? 's' : ''}</span>
-                            <span className="text-accent font-black text-sm">{fmt$(c.total_amount)}</span>
+                            <span className="text-white/30 text-[9px] font-bold uppercase tracking-widest">{c.count ?? 0} event{c.count !== 1 ? 's' : ''}</span>
+                            <span className="text-accent font-black text-sm">{fmt$(c.total)}</span>
                           </div>
                         </div>
                         {/* Desktop row */}
@@ -248,10 +243,10 @@ export default function SpendingByActivityPage() {
                             </span>
                           </div>
                           <div className="text-right">
-                            <span className="text-accent font-black text-xs">{fmt$(c.total_amount)}</span>
+                            <span className="text-accent font-black text-sm shrink-0">{fmt$(c.total)}</span>
                           </div>
                           <div className="text-right">
-                            <span className="text-white/40 text-[11px] font-bold tracking-tight">{c.transaction_count ?? 0}</span>
+                            <span className="text-white/30 text-[10px] font-bold uppercase tracking-widest">{c.count ?? 0}</span>
                           </div>
                         </div>
                       </div>

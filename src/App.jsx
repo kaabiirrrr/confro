@@ -513,6 +513,7 @@ function App() {
                             <Route path="messages" element={<Messages />} />
                             <Route path="payments" element={<Payments />} />
                             <Route path="settings" element={<ClientSettings />} />
+                            <Route path="ai" element={<div className="bg-primary min-h-[80vh] flex flex-col pt-4"><AIAssistant userRole="client" externalOpen /></div>} />
                             <Route path="invite" element={<InviteTeammate />} />
                             <Route path="identity-verification" element={<IdentityVerificationPage />} />
                             <Route path="account-health" element={<AccountHealthSection />} />

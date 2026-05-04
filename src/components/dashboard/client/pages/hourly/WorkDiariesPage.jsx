@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast';
 import { useAuth } from '../../../../../context/AuthContext';
 import InfinityLoader from '../../../../common/InfinityLoader';
 import CustomDropdown from '../../../../ui/CustomDropdown';
+import CustomDatePicker from '../../../../ui/CustomDatePicker';
 
 const today = () => new Date().toISOString().split('T')[0];
 const fmt = (d) => d ? new Date(d).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : '—';
@@ -107,11 +108,11 @@ export default function WorkDiariesPage() {
   const inputCls = "w-full bg-transparent border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-accent/50 transition-all";
 
   return (
-    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-6">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 sm:mt-6 pb-12 space-y-6">
       <div className="flex items-start justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-white">Work Diaries</h1>
-          <p className="text-white/50 text-sm mt-1">Review and approve daily work logs for hourly contracts.</p>
+          <h1 className="text-lg sm:text-2xl font-semibold text-white tracking-tight">Work Diaries</h1>
+          <p className="text-white/50 text-[11px] sm:text-sm mt-1 max-w-xl">Review and approve daily work logs for hourly contracts.</p>
         </div>
         {isFreelancer && (
           <button
@@ -125,7 +126,7 @@ export default function WorkDiariesPage() {
       </div>
 
       {/* Filters Interface */}
-      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-3 sm:gap-4 mb-8 p-4 sm:p-5 bg-transparent border border-white/10 rounded-2xl">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-3 sm:gap-4 mb-8 p-3 sm:p-4 bg-transparent border border-white/10 rounded-2xl">
         <div className="space-y-1.5 w-full sm:flex-1 sm:min-w-[240px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Select Contract</label>
           <CustomDropdown
@@ -142,12 +143,7 @@ export default function WorkDiariesPage() {
         
         <div className="space-y-1.5 w-full sm:min-w-[200px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Filter By Date</label>
-          <input
-            type="date"
-            value={filters.week_start}
-            onChange={e => setFilters(p => ({ ...p, week_start: e.target.value }))}
-            className="w-full bg-transparent border border-white/10 text-white text-xs sm:text-sm rounded-full px-3 py-2.5 focus:outline-none focus:border-accent/50 transition-all"
-          />
+          <CustomDatePicker value={filters.week_start} onChange={(val) => setFilters(p => ({ ...p, week_start: val }))} />
         </div>
 
       </div>
@@ -201,7 +197,7 @@ export default function WorkDiariesPage() {
           {[1, 2, 3, 4].map(i => <div key={i} className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-24" />)}
         </div>
       ) : entries.length === 0 ? (
-        <div className="text-center py-20 bg-transparent border border-white/10 rounded-2xl">
+        <div className="text-center py-20 bg-transparent rounded-2xl">
           <BookOpen className="mx-auto text-white/20 mb-4" size={48} />
           <h3 className="text-white font-semibold text-lg">No Activity Logged</h3>
           <p className="text-white/30 text-xs mt-2 max-w-xs mx-auto font-medium">

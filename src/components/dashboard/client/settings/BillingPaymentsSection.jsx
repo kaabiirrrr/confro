@@ -21,10 +21,10 @@ return (
 
     <div className="space-y-10">
       <div className="mb-8 sm:mb-10">
-        <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-none mb-3">
+        <h2 className="text-xl sm:text-3xl font-bold text-white tracking-tight leading-none mb-3">
           Billing &amp; Payments
         </h2>
-        <p className="text-white/40 text-sm font-medium">
+        <p className="text-white/40 text-[11px] sm:text-sm font-medium">
           Manage your billing cycle, outstanding balances, and active payment instruments.
         </p>
       </div>
@@ -41,11 +41,11 @@ return (
               <Calendar size={24} className="text-accent" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white tracking-tight mb-1">Company billing cycle</h3>
+              <h3 className="text-lg font-bold text-white tracking-tight mb-1">Company billing cycle</h3>
               <div className="flex items-center gap-3">
-                <span className="text-white font-bold">Weekly</span>
+                <span className="text-white text-sm sm:text-base font-bold">Weekly</span>
                 <span className="w-1 h-1 rounded-full bg-white/20" />
-                <span className="text-white/40 text-xs font-semibold uppercase tracking-widest">Standard Terms</span>
+                <span className="text-white/40 text-[9px] sm:text-xs font-semibold uppercase tracking-widest">Standard Terms</span>
               </div>
             </div>
           </div>
@@ -96,8 +96,8 @@ return (
               <DollarSign size={24} className="text-accent" />
             </div>
             <div>
-              <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight mb-1">Outstanding balance</h3>
-              <p className="text-3xl sm:text-4xl font-black text-white">₹0.00</p>
+              <h3 className="text-base sm:text-xl font-bold text-white tracking-tight mb-1">Outstanding balance</h3>
+              <p className="text-2xl sm:text-4xl font-black text-white">₹0.00</p>
             </div>
           </div>
           <button
@@ -145,8 +145,8 @@ return (
       {/* BILLING METHOD CARD */}
       <div className="glass-card rounded-2xl p-5 sm:p-8 relative overflow-hidden">
         <div className="flex items-center gap-3 mb-10">
-          <Wallet size={24} className="text-accent" />
-          <h3 className="text-2xl font-bold text-white tracking-tight">Billing methods</h3>
+          <Wallet size={20} className="text-accent sm:w-6 sm:h-6" />
+          <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Billing methods</h3>
         </div>
 
         {!savedMethod ? (

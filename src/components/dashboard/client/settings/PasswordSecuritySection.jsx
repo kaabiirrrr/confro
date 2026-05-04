@@ -161,8 +161,8 @@ const PasswordSecuritySection = () => {
                         </div>
                         <p className="text-[10px] text-white/30 font-black uppercase tracking-[0.2em]">Guard Protocol v4.2</p>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white leading-tight">Security Perimeter</h1>
-                    <p className="text-white/40 text-sm font-medium max-w-xl leading-relaxed">
+                    <h1 className="text-xl sm:text-3xl font-semibold tracking-tight text-white leading-tight">Security Perimeter</h1>
+                    <p className="text-white/40 text-[11px] sm:text-sm font-medium max-w-xl leading-relaxed">
                         Manage organizational access credentials, multi-factor authentication nodes, and cryptographic recovery questions.
                     </p>
                 </div>
@@ -176,16 +176,16 @@ const PasswordSecuritySection = () => {
                             <div className="space-y-2">
                                 <div className="flex items-center gap-2">
                                     <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                                    <p className="text-[10px] text-accent font-black uppercase tracking-widest leading-none">Primary Access Node</p>
+                                    <p className="text-[8px] sm:text-[10px] text-accent font-black uppercase tracking-widest leading-none">Primary Access Node</p>
                                 </div>
-                                <h3 className="text-white font-bold text-2xl tracking-tight">Portal Authentication</h3>
-                                <p className="text-white/30 text-[11px] font-medium max-w-md">Rotate credentials regularly to maintain cryptographic integrity.</p>
+                                <h3 className="text-white font-bold text-xl sm:text-2xl tracking-tight">Portal Authentication</h3>
+                                <p className="text-white/30 text-[9px] sm:text-[11px] font-medium max-w-md">Rotate credentials regularly to maintain cryptographic integrity.</p>
                             </div>
                             <button 
                                 onClick={() => setShowChange(true)}
-                                className="w-fit h-14 px-8 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest text-white hover:bg-white/10 hover:border-accent/40 transition-all active:scale-95 flex items-center gap-3 group"
+                                className="w-fit h-12 sm:h-14 px-6 sm:px-8 bg-white/5 border border-white/10 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-white hover:bg-white/10 hover:border-accent/40 transition-all active:scale-95 flex items-center gap-2 sm:gap-3 group"
                             >
-                                <Lock size={14} className="group-hover:text-accent transition-colors" />
+                                <Lock size={12} className="sm:w-[14px] sm:h-[14px] group-hover:text-accent transition-colors" />
                                 Rotate Passcode
                             </button>
                         </div>
@@ -198,8 +198,8 @@ const PasswordSecuritySection = () => {
                                         <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" className="w-8 h-8" alt="G" />
                                     </div>
                                     <div className="space-y-1 min-w-0">
-                                        <span className="text-white/30 text-[9px] font-black uppercase tracking-widest block">Third-Party Node</span>
-                                        <span className="text-white font-bold text-sm truncate">Google Workspace</span>
+                                        <span className="text-white/30 text-[8px] sm:text-[9px] font-black uppercase tracking-widest block">Third-Party Node</span>
+                                        <span className="text-white font-bold text-xs sm:text-sm truncate">Google Workspace</span>
                                     </div>
                                 </div>
                                 <button 
@@ -217,8 +217,8 @@ const PasswordSecuritySection = () => {
                                         <img src="https://cdn-icons-png.flaticon.com/512/153/153240.png" className="w-8 h-8 brightness-200" alt="A" />
                                     </div>
                                     <div className="space-y-1 min-w-0">
-                                        <span className="text-white/30 text-[9px] font-black uppercase tracking-widest block">Hardware Token</span>
-                                        <span className="text-white font-bold text-sm truncate">Apple ID</span>
+                                        <span className="text-white/30 text-[8px] sm:text-[9px] font-black uppercase tracking-widest block">Hardware Token</span>
+                                        <span className="text-white font-bold text-xs sm:text-sm truncate">Apple ID</span>
                                     </div>
                                 </div>
                                 <button 
@@ -239,10 +239,10 @@ const PasswordSecuritySection = () => {
                             <div className="space-y-2">
                                 <div className="flex items-center gap-2">
                                     <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                                    <p className="text-[10px] text-white/20 font-black uppercase tracking-widest block leading-none">Active Defense Protocol</p>
+                                    <p className="text-[8px] sm:text-[10px] text-white/20 font-black uppercase tracking-widest block leading-none">Active Defense Protocol</p>
                                 </div>
-                                <h3 className="text-white font-bold text-2xl tracking-tight leading-none">Dual-Factor Auth</h3>
-                                <p className="text-white/30 text-[11px] font-medium max-w-md">Multi-layered security nodes for identity verification.</p>
+                                <h3 className="text-white font-bold text-lg sm:text-2xl tracking-tight leading-none">Dual-Factor Auth</h3>
+                                <p className="text-white/30 text-[8px] sm:text-[11px] font-medium max-w-md">Multi-layered security nodes for identity verification.</p>
                             </div>
                         </div>
 
@@ -255,8 +255,8 @@ const PasswordSecuritySection = () => {
                                             <Smartphone size={28} />
                                         </div>
                                         <div className="space-y-1">
-                                            <p className="text-white font-bold text-base leading-tight">Mobile Biometry</p>
-                                            <p className="text-white/20 text-[10px] font-black uppercase tracking-widest leading-tight">Biometric Push Nodes</p>
+                                            <p className="text-white font-bold text-xs sm:text-base leading-tight">Mobile Biometry</p>
+                                            <p className="text-white/20 text-[8px] sm:text-[10px] font-black uppercase tracking-widest leading-tight">Biometric Push Nodes</p>
                                         </div>
                                     </div>
                                     <button
@@ -278,8 +278,8 @@ const PasswordSecuritySection = () => {
                                             <Key size={28} />
                                         </div>
                                         <div className="space-y-1">
-                                            <p className="text-white font-bold text-base leading-tight">Authenticator Node</p>
-                                            <p className="text-white/20 text-[10px] font-black uppercase tracking-widest leading-tight">TOTP Cryptography</p>
+                                            <p className="text-white font-bold text-xs sm:text-base leading-tight">Authenticator Node</p>
+                                            <p className="text-white/20 text-[8px] sm:text-[10px] font-black uppercase tracking-widest leading-tight">TOTP Cryptography</p>
                                         </div>
                                     </div>
                                     <button
@@ -299,11 +299,11 @@ const PasswordSecuritySection = () => {
                                 <div className="flex items-start justify-between gap-6">
                                     <div className="space-y-4 flex-1">
                                         <div className="space-y-1.5">
-                                            <p className="text-[10px] text-white/20 font-black uppercase tracking-widest">Recovery Protocol</p>
-                                            <h4 className="text-white font-bold text-lg">Security Questions</h4>
+                                            <p className="text-[7px] sm:text-[10px] text-white/20 font-black uppercase tracking-widest">Recovery Protocol</p>
+                                            <h4 className="text-white font-bold text-sm sm:text-lg">Security Questions</h4>
                                         </div>
                                         <div className="p-6 bg-white/[0.02] border border-white/10 rounded-[2rem]">
-                                            <p className="text-white/40 text-[13px] italic leading-relaxed">
+                                            <p className="text-white/40 text-[11px] sm:text-[13px] italic leading-relaxed">
                                                 {settings.has_security_answer ? `"${settings.security_question}"` : 'Emergency recovery question not yet configured.'}
                                             </p>
                                         </div>

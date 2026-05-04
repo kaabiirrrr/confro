@@ -12,10 +12,10 @@ return (
 
     <div className="max-w-[1200px]">
       <div className="mb-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-none mb-3">
+        <h2 className="text-xl sm:text-3xl font-bold text-white tracking-tight leading-none mb-3">
           Teams & Members
         </h2>
-        <p className="text-white/40 text-sm font-medium">
+        <p className="text-white/40 text-[11px] sm:text-sm font-medium">
           Collaborate with your colleagues, manage organization roles, and track invitations.
         </p>
       </div>
@@ -30,7 +30,7 @@ return (
       </button>
 
       {/* TABS */}
-      <div className="flex gap-4 sm:gap-10 border-b border-white/5 mb-10 overflow-x-auto no-scrollbar">
+      <div className="flex justify-between sm:justify-start gap-4 sm:gap-10 border-b border-white/5 mb-10 overflow-x-auto no-scrollbar">
         {[
           { id: "teams", label: "Org Teams" },
           { id: "members", label: "Members" },
@@ -39,7 +39,7 @@ return (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`pb-4 text-xs sm:text-sm font-bold uppercase tracking-widest transition-all relative whitespace-nowrap shrink-0 ${
+            className={`pb-4 text-[10px] sm:text-sm font-bold uppercase tracking-widest transition-all relative whitespace-nowrap shrink-0 ${
               tab === t.id ? "text-white" : "text-white/30 hover:text-white/60"
             }`}
           >
@@ -74,10 +74,10 @@ return (
                 />
               </div>
 
-              <h3 className="text-2xl font-bold text-white tracking-tight mb-3">
+              <h3 className="text-lg sm:text-2xl font-bold text-white tracking-tight mb-3">
                 Architect your first team
               </h3>
-              <p className="text-white/40 max-w-[420px] mb-10 text-sm font-medium leading-relaxed italic">
+              <p className="text-white/40 max-w-[420px] mb-10 text-[11px] sm:text-sm font-medium leading-relaxed italic">
                 Organize your workflow by creating specialized teams for different projects or departments.
               </p>
 
@@ -131,10 +131,10 @@ return (
                   alt="Members"
                 />
               </div>
-              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
+              <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight mb-2">
                 Operational Solo Mode
               </h3>
-              <p className="text-white/40 text-sm font-medium">
+              <p className="text-white/40 text-[11px] sm:text-sm font-medium">
                 No external team members have been onboarded to your organization yet.
               </p>
             </div>
@@ -166,10 +166,10 @@ return (
                   alt="Invites"
                 />
               </div>
-              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
+              <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight mb-2">
                 Queue Empty
               </h3>
-              <p className="text-white/40 text-sm font-medium italic">
+              <p className="text-white/40 text-[11px] sm:text-sm font-medium italic">
                 There are currently no outbound invitations awaiting acceptance.
               </p>
             </div>

@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import { getWeeklySummary } from '../../../../../services/apiService';
 import { toastApiError } from '../../../../../utils/apiErrorToast';
+import CustomDatePicker from '../../../../ui/CustomDatePicker';
 
 const toInputDate = (d) => d.toISOString().split('T')[0];
 const nWeeksAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n * 7); return toInputDate(d); };
@@ -54,33 +55,29 @@ export default function WeeklySummaryPage() {
   }));
 
   return (
-    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-white tracking-tight">Weekly Financial Summary</h1>
-        <p className="text-white/50 text-sm mt-1 font-medium">Overview of your spending activity over time.</p>
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 pb-12 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="mb-4">
+        <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">Weekly Financial Summary</h1>
+        <p className="text-white/40 text-[11px] sm:text-sm mt-1 font-medium leading-relaxed max-w-2xl">Overview of your spending activity and transaction velocity over time.</p>
       </div>
 
-      {/* Temporal Parameters & Presets */}
-      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-4 mb-10 p-4 sm:p-6 bg-transparent border border-white/10 rounded-2xl">
-        <div className="space-y-1.5 w-full sm:min-w-[160px]">
-          <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">From</label>
-          <input type="date" value={from} onChange={e => setFrom(e.target.value)}
-            className="w-full bg-transparent border border-white/10 text-white text-xs sm:text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-accent/50 transition-all font-medium" />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4 p-3 sm:p-4 bg-transparent border border-white/10 rounded-[24px] items-end">
+        <div className="lg:col-span-3 space-y-1.5">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Temporal Start</label>
+          <CustomDatePicker value={from} onChange={setFrom} />
         </div>
-        <div className="space-y-1.5 w-full sm:min-w-[160px]">
-          <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">To</label>
-          <input type="date" value={to} onChange={e => setTo(e.target.value)}
-            className="w-full bg-transparent border border-white/10 text-white text-xs sm:text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-accent/50 transition-all font-medium" />
+        <div className="lg:col-span-3 space-y-1.5">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Temporal End</label>
+          <CustomDatePicker value={to} onChange={setTo} />
         </div>
-        <div className="h-px w-full sm:h-10 sm:w-px bg-white/5 sm:mx-2" />
-        <div className="flex gap-2 w-full sm:w-auto">
+        <div className="lg:col-span-6 flex gap-2 w-full overflow-x-auto no-scrollbar pb-1">
           {[
             { label: '4 weeks', weeks: 4 },
             { label: '8 weeks', weeks: 8 },
             { label: '12 weeks', weeks: 12 },
           ].map(({ label, weeks }) => (
             <button key={weeks} onClick={() => { setFrom(nWeeksAgo(weeks)); setTo(toInputDate(new Date())); }}
-              className="flex-1 sm:flex-none px-3 sm:px-4 py-2.5 text-[9px] sm:text-[10px] font-black uppercase tracking-widest border border-white/10 text-white/40 hover:text-white hover:bg-white/5 hover:border-white/20 rounded-xl transition-all active:scale-95">
+              className="flex-none px-4 py-2 text-[9px] font-black uppercase tracking-widest border border-white/5 text-white/30 hover:text-white hover:bg-white/5 hover:border-white/10 rounded-full transition-all active:scale-95">
               Last {label}
             </button>
           ))}
@@ -105,17 +102,22 @@ export default function WeeklySummaryPage() {
       ) : (
         <>
           {/* Stat cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-2">
-            {STAT_CARDS.map(({ key, label, image }) => (
-              <div key={key} className="bg-transparent border border-white/10 rounded-2xl p-6 flex flex-col justify-between">
-                <div className="mb-4">
-                  <img src={image} alt={label} className="w-14 h-14" />
-                </div>
-                <div>
-                  <p className="text-white/40 text-[10px] font-bold uppercase tracking-wider mb-1.5">{label}</p>
-                  <p className={`text-3xl font-black tracking-tighter ${key === 'total_refunded' ? 'text-red-500' : 'text-white'}`}>{fmt$(summary[key])}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {Object.entries({
+              total_spent: 'Aggregate Outflow',
+              transaction_count: 'Velocity',
+              total_escrow: 'Active Escrow',
+              total_refunded: 'Recovered'
+            }).map(([key, label]) => (
+              <div key={key} className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-8 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 blur-3xl -mr-16 -mt-16 rounded-full group-hover:bg-accent/10 transition-all duration-700" />
+                <div className="relative z-10">
+                  <p className="text-white/20 text-[9px] font-black uppercase tracking-[0.2em] mb-2">{label}</p>
+                  <p className={`text-2xl sm:text-3xl font-black tracking-tighter ${key === 'total_refunded' && summary[key] > 0 ? 'text-red-500' : 'text-white'}`}>
+                    {key === 'transaction_count' ? summary[key] : fmt$(summary[key])}
+                  </p>
                   {key === 'total_spent' && summary.transaction_count != null && (
-                    <p className="text-white/30 text-[9px] font-black uppercase tracking-widest mt-2">{summary.transaction_count} transactions</p>
+                    <p className="text-white/30 text-[8px] font-bold uppercase tracking-widest mt-2">Historical Events</p>
                   )}
                 </div>
               </div>
@@ -124,22 +126,23 @@ export default function WeeklySummaryPage() {
 
           {/* Bar chart */}
           {chartData.length > 0 ? (
-            <div className="bg-transparent border border-white/10 rounded-2xl p-8">
-              <div className="flex items-center gap-3 mb-8">
+            <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-10 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 blur-[120px] -mr-48 -mt-48 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
+              <div className="flex items-center gap-3 mb-8 relative z-10">
                  <BarChart3 size={20} className="text-accent" />
                  <div>
-                   <p className="text-[10px] text-light-text/20 font-black uppercase tracking-widest leading-none mb-1">Analytics</p>
-                   <h3 className="text-light-text font-bold text-sm uppercase tracking-wider">Weekly Spending</h3>
+                   <p className="text-[10px] text-white/20 font-black uppercase tracking-widest leading-none mb-1">Temporal Analytics</p>
+                   <h3 className="text-white font-bold text-sm uppercase tracking-wider">Weekly Capital Velocity</h3>
                  </div>
               </div>
-              <div className="w-full h-[320px]">
+              <div className="w-full h-[320px] relative z-10">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
-                    <XAxis dataKey="week" tick={{ fill: 'var(--color-text-muted)', fontSize: 11, fontWeight: 600 }} axisLine={false} tickLine={false} dy={10} />
-                    <YAxis tickFormatter={v => `₹${v}`} tick={{ fill: 'var(--color-text-muted)', fontSize: 11, fontWeight: 600 }} axisLine={false} tickLine={false} dx={-10} width={60} />
-                    <Tooltip content={<CustomTooltip />} cursor={{ fill: 'var(--color-hover)', radius: 8 }} />
-                    <Bar dataKey="spent" fill="#38bdf8" radius={[6, 6, 0, 0]} maxBarSize={56} animationDuration={1500} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                    <XAxis dataKey="week" tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontWeight: 700 }} axisLine={false} tickLine={false} dy={10} />
+                    <YAxis tickFormatter={v => `₹${v}`} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontWeight: 700 }} axisLine={false} tickLine={false} dx={-10} width={60} />
+                    <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.05)', radius: 8 }} />
+                    <Bar dataKey="spent" fill="var(--color-accent)" radius={[6, 6, 0, 0]} maxBarSize={56} animationDuration={1500} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

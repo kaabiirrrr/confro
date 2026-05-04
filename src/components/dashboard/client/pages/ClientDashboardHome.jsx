@@ -170,7 +170,7 @@ const ConnectsActivitySection = memo(() => {
 
 // Memoized Analytics Grid for Client
 const AnalyticsGrid = memo(({ stats }) => {
-  const { wallet, profile, role } = useAuth();
+  const { wallet, profile, role, membership: authMembership } = useAuth();
   const [membership, setMembership] = useState(null);
   const [connectWallet, setConnectWallet] = useState(null);
 
@@ -193,7 +193,12 @@ const AnalyticsGrid = memo(({ stats }) => {
   }, []);
 
   const items = useMemo(() => {
-    const planName = membership?.plan_snapshot?.name || "Free";
+    const planName = membership?.plan_snapshot?.name
+      || membership?.plan?.name
+      || authMembership?.plan_snapshot?.name
+      || authMembership?.plan?.name
+      || profile?.membership_type
+      || "Free";
 
     // Calculate Next Top-up
     let nextTopupStr = '30 days';
@@ -241,43 +246,39 @@ const AnalyticsGrid = memo(({ stats }) => {
   return (
     <div className="space-y-4 mb-8">
       {/* System Health Guard */}
-      <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between px-6 py-3 sm:py-2.5 bg-white/5 border border-white/5 rounded-2xl gap-2 sm:gap-0">
-        <div className="flex items-center gap-3">
-          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40">Capital Economy Active</span>
+      <div className="flex items-center justify-between px-4 sm:px-6 py-2 bg-white/5 border border-white/5 rounded-xl">
+        <div className="flex items-center gap-2">
+          <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white/40 whitespace-nowrap">Capital Economy Active</span>
         </div>
-        <Link to={`${basePath}/buy-connects`} className="text-[9px] font-black uppercase tracking-[0.2em] text-accent hover:text-white transition-colors">
+        <Link to={`${basePath}/buy-connects`} className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] text-accent hover:text-white transition-colors whitespace-nowrap">
           Refill Post Credits
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 sm:flex sm:flex-nowrap items-center justify-between gap-6 sm:gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-y-6 sm:gap-0 -mx-3 sm:mx-0">
         {items.map((item, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="group transition-all w-full sm:w-auto text-left"
+            className="group transition-all px-3 sm:px-4 w-1/2 sm:w-auto flex-shrink-0"
           >
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-10 h-10 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+            <div className="flex flex-col sm:flex-row items-center gap-2 mb-2">
+              <div className="w-7 h-7 sm:w-10 sm:h-10 flex items-center justify-center shrink-0 transition-transform duration-500 group-hover:scale-110">
                 {ICON_MAP[item.icon]}
               </div>
-              <h3 className="text-white/30 text-[9px] font-black uppercase tracking-[0.3em]">{item.label}</h3>
+              <h3 className="text-white/30 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] leading-tight text-center sm:text-left">{item.label}</h3>
             </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className={`text-xl font-black tracking-tight ${item.badge ? 'text-accent' : 'text-white'}`}>
-                  {item.value}
-                </p>
-                {item.subValue && (
-                  <p className="text-[9px] font-medium text-white/20 uppercase tracking-widest mt-0.5">
-                    {item.subValue}
-                  </p>
-                )}
-              </div>
-            </div>
+            <p className={`text-center sm:text-left text-lg sm:text-xl font-black tracking-tight ${item.badge ? 'text-accent' : 'text-white'}`}>
+              {item.value}
+            </p>
+            {item.subValue && (
+              <p className="text-center sm:text-left text-[8px] font-medium text-white/20 uppercase tracking-widest mt-0.5">
+                {item.subValue}
+              </p>
+            )}
           </motion.div>
         ))}
       </div>
@@ -435,11 +436,7 @@ const ClientDashboardHome = () => {
           <h1 className="text-lg sm:text-2xl font-semibold text-slate-900 dark:text-white tracking-tight">
             Welcome back, {profile?.name?.split(" ")[0] || "User"}
           </h1>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-light-text/70 max-w-2xl">
-            {isFullySetup
-              ? "You're all set! It's time to find the perfect talent for your next big project."
-              : "Complete these steps to unlock all features and start hiring talent."}
-          </p>
+          <p className="text-[11px] sm:text-sm text-white/40 mt-1 font-medium">Review your performance, managed talent, and operational insights.</p>
         </div>
         <Button
           onClick={() => navigate('/client/post-job')}
@@ -467,7 +464,7 @@ const ClientDashboardHome = () => {
               <CreditCard size={24} />
             </div>
             <div>
-              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white/60 mb-1">
+              <h3 className="text-[10px] font-black uppercase tracking-widest sm:tracking-[0.2em] whitespace-nowrap sm:whitespace-normal text-slate-900 dark:text-white/60 mb-1">
                 Enterprise Wallet (Verified)
               </h3>
               <p className="text-slate-600 dark:text-white/60 text-xs font-medium">Manage your project funding and escrow balance securely.</p>
@@ -558,9 +555,9 @@ const ClientDashboardHome = () => {
             <button
               onClick={handleSendVerification}
               disabled={sendingVerification}
-              className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 flex justify-between items-start hover:border-accent/30 transition shadow-sm backdrop-blur-sm text-left w-full disabled:opacity-60"
+              className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 flex justify-between items-start hover:border-accent/30 transition shadow-sm backdrop-blur-sm text-left w-full disabled:opacity-60 relative"
             >
-              <div>
+              <div className="w-full flex flex-col items-center sm:items-start text-center sm:text-left pr-6 sm:pr-0">
                 <p className="text-[10px] sm:text-xs text-light-text/40 mb-2 uppercase tracking-wider">Required to hire</p>
                 <h3 className="font-semibold text-base sm:text-lg underline">Verify your email</h3>
                 <p className="text-light-text/60 text-xs sm:text-sm mt-2 max-w-[280px]">
@@ -570,18 +567,20 @@ const ClientDashboardHome = () => {
                   {sendingVerification ? "Sending…" : "Click to send verification email →"}
                 </p>
               </div>
-              {sendingVerification
-                ? <InfinityLoader size={20} />
-                : <Mail className="text-light-text/40 shrink-0" size={20} />
-              }
+              <div className="absolute top-5 right-5 sm:relative sm:top-auto sm:right-auto">
+                {sendingVerification
+                  ? <InfinityLoader size={20} />
+                  : <Mail className="text-light-text/40 shrink-0" size={20} />
+                }
+              </div>
             </button>
           )}
           {showBillingCard && (
             <button
               onClick={() => navigate("/client/billing")}
-              className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 flex justify-between items-start hover:border-accent/30 transition shadow-sm backdrop-blur-sm text-left w-full"
+              className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 flex justify-between items-start hover:border-accent/30 transition shadow-sm backdrop-blur-sm text-left w-full relative"
             >
-              <div>
+              <div className="w-full flex flex-col items-center sm:items-start text-center sm:text-left pr-6 sm:pr-0">
                 <p className="text-[10px] sm:text-xs text-light-text/40 mb-2 uppercase tracking-wider">Required to hire</p>
                 <h3 className="font-semibold text-base sm:text-lg underline">Add a billing method</h3>
                 <p className="text-light-text/60 text-xs sm:text-sm mt-2 max-w-[280px]">
@@ -589,7 +588,9 @@ const ClientDashboardHome = () => {
                 </p>
                 <p className="text-accent text-xs mt-3">Click to add a payment method →</p>
               </div>
-              <CreditCard className="text-light-text/40 shrink-0" size={20} />
+              <div className="absolute top-5 right-5 sm:relative sm:top-auto sm:right-auto">
+                <CreditCard className="text-light-text/40 shrink-0" size={20} />
+              </div>
             </button>
           )}
         </div>
@@ -598,10 +599,10 @@ const ClientDashboardHome = () => {
 
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Overview</h2>
-        <div className="flex bg-slate-100 dark:bg-white/5 p-1 rounded-full border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-sm relative">
+        <div className="flex bg-slate-100 dark:bg-white/5 p-1 rounded-full border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-sm relative scale-90 sm:scale-100 origin-right">
           <button
             onClick={() => setView("grid")}
-            className={`px-6 py-2 rounded-full relative z-10 transition-colors duration-300 ${view === "grid" ? "text-white dark:text-primary" : "text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white"}`}
+            className={`px-4 py-1.5 sm:px-6 sm:py-2 rounded-full relative z-10 transition-colors duration-300 ${view === "grid" ? "text-white dark:text-primary" : "text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white"}`}
           >
             {view === "grid" && (
               <motion.div
@@ -614,7 +615,7 @@ const ClientDashboardHome = () => {
           </button>
           <button
             onClick={() => setView("list")}
-            className={`px-6 py-2 rounded-full relative z-10 transition-colors duration-300 ${view === "list" ? "text-white dark:text-primary" : "text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white"}`}
+            className={`px-4 py-1.5 sm:px-6 sm:py-2 rounded-full relative z-10 transition-colors duration-300 ${view === "list" ? "text-white dark:text-primary" : "text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white"}`}
           >
             {view === "list" && (
               <motion.div
@@ -665,9 +666,9 @@ const ClientDashboardHome = () => {
               <div
                 key={item.id ?? i}
                 onClick={() => navigate(isContract ? `/client/contracts` : `/client/jobs`)}
-                className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex items-start gap-3 hover:border-accent/40 cursor-pointer transition shadow-sm backdrop-blur-sm group"
+                className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex items-center gap-3 hover:border-accent/40 cursor-pointer transition shadow-sm backdrop-blur-sm group"
               >
-                <div className="shrink-0 mt-0.5">
+                <div className="shrink-0">
                   {isContract ? (
                     <img src="/Icons/icons8-contract-60.png" alt="Contract" className="w-10 h-10 object-contain" />
                   ) : (
@@ -676,18 +677,20 @@ const ClientDashboardHome = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm text-slate-700 dark:text-white/70 group-hover:text-accent transition-colors leading-snug break-words">{title}</p>
-                  <p className="text-slate-400 dark:text-light-text/30 text-[10px] uppercase font-bold tracking-widest mt-1">{isContract ? "Contract" : "Job"} · {fmtDate(date)}</p>
-                  <div className="flex flex-wrap items-center gap-2 mt-2">
-                    {isContract && item.deadline_risk && (
-                      <div className={`px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-tighter border ${item.deadline_risk.risk === 'high' ? 'bg-rose-500/10 text-rose-500 border-rose-500/30' :
-                        item.deadline_risk.risk === 'medium' ? 'bg-amber-500/10 text-amber-500 border-amber-500/30' :
-                          'bg-emerald-500/10 text-emerald-500 border-emerald-500/30'
-                        }`}>
-                        {item.deadline_risk.probability}% Delay Risk
-                      </div>
-                    )}
-                    <StatusBadge status={item.status} />
-                  </div>
+                  {isContract && item.deadline_risk && (
+                    <div className={`inline-flex mt-1.5 px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-tighter border ${item.deadline_risk.risk === 'high' ? 'bg-rose-500/10 text-rose-500 border-rose-500/30' :
+                      item.deadline_risk.risk === 'medium' ? 'bg-amber-500/10 text-amber-500 border-amber-500/30' :
+                        'bg-emerald-500/10 text-emerald-500 border-emerald-500/30'
+                      }`}>
+                      {item.deadline_risk.probability}% Delay Risk
+                    </div>
+                  )}
+                </div>
+                <div className="shrink-0 text-right flex flex-col items-end gap-1.5 ml-auto">
+                  <StatusBadge status={item.status} />
+                  <p className="text-slate-400 dark:text-light-text/30 text-[9px] uppercase font-bold tracking-widest whitespace-nowrap">
+                    {fmtDate(date)}
+                  </p>
                 </div>
               </div>
             );
@@ -726,19 +729,17 @@ const ClientDashboardHome = () => {
       {/* WORK ACTIVITY SUMMARY */}
       {!workLoading && (workSummary.length > 0 || stats.active_contracts > 0) && (
         <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-900 dark:text-white tracking-tight">Work Activity</h2>
-                <p className="text-slate-400 dark:text-white/30 text-[10px] uppercase font-black tracking-widest leading-none mt-1">Today's Progress Updates</p>
-              </div>
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white tracking-tight">Work Activity</h2>
+            <div className="flex items-center justify-between mt-1">
+              <p className="text-slate-400 dark:text-white/30 text-[10px] uppercase font-black tracking-widest leading-none">Today's Progress Updates</p>
+              <button
+                onClick={() => navigate('/client/work-activity')}
+                className="shrink-0 text-slate-400 dark:text-white/40 hover:text-accent dark:hover:text-white transition-colors text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 whitespace-nowrap"
+              >
+                Detailed History <ChevronRight size={14} />
+              </button>
             </div>
-            <button
-              onClick={() => navigate('/client/work-activity')}
-              className="text-white/40 hover:text-white transition-colors text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"
-            >
-              Detailed History <ChevronRight size={14} />
-            </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {workSummary.map((activity) => (
@@ -755,11 +756,11 @@ const ClientDashboardHome = () => {
       )}
 
       <div className="mb-16 sm:mb-24">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+        <div className="flex items-center justify-between mb-8">
           <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Find experts by category</h2>
           <button
             onClick={() => navigate("/client/consultations")}
-            className="text-accent flex items-center gap-2 hover:underline text-xs font-bold uppercase tracking-widest"
+            className="shrink-0 text-accent flex items-center gap-2 hover:underline text-xs font-bold uppercase tracking-widest whitespace-nowrap"
           >
             Browse all <ChevronRight size={18} />
           </button>
@@ -950,5 +951,3 @@ const ClientDashboardHome = () => {
 };
 
 export default ClientDashboardHome;
-
-

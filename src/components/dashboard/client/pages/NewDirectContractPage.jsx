@@ -108,11 +108,11 @@ export default function NewDirectContractPage() {
   const freelancerTitle = prefillFreelancer?.title || prefillFreelancer?.profiles?.title;
 
   return (
-    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 text-white">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 sm:mt-6 pb-12 text-white">
       {/* Back */}
       <button
         onClick={() => navigate('/client/direct-contracts')}
-        className="flex items-center gap-2 text-white/50 hover:text-white text-sm mb-6 transition"
+        className="flex items-center gap-2 text-white/50 hover:text-white text-sm mb-3 sm:mb-6 transition"
       >
         <ArrowLeft size={16} />
         Direct Contracts

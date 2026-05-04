@@ -35,10 +35,10 @@ const practices = [
 
 const BestPractices = () => {
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 pb-12 space-y-1 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* Back Button and Header Section */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         <Link
           to="/client/account-health"
           className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm font-medium group"
@@ -48,18 +48,16 @@ const BestPractices = () => {
         </Link>
 
         {/* Header Banner (No Card Style) */}
-        <div className="relative pt-4 pb-6 border-b border-white/10 mb-8">
-          <div className="relative z-10 max-w-2xl flex flex-col items-start gap-4">
-            <div className="inline-flex items-center gap-2 text-accent text-xs font-bold uppercase tracking-widest">
-              <Lightbulb size={16} />
-              <span>Success Guide</span>
+        <div className="relative pt-2 pb-5 border-b border-white/10 mb-6">
+          <div className="relative z-10 max-w-2xl flex flex-col items-start gap-3">
+            <div className="inline-flex items-center gap-2 text-accent text-[9px] font-black uppercase tracking-[0.3em]">
+              <Lightbulb size={14} />
+              <span>Success Guide Protocol</span>
             </div>
-            <h1 className="text-3xl lg:text-4xl font-semibold text-white tracking-tight">
-              Client Best Practices
-            </h1>
-            <p className="text-white/50 text-sm font-medium leading-relaxed max-w-xl">
-              Follow these essential Trust &amp; Safety tips to build successful relationships with freelancers, maintain perfect account standing, and achieve exactly what you need.
-            </p>
+            <div className="flex flex-col items-start gap-1">
+              <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">Client Best Practices</h1>
+              <p className="text-white/40 text-[11px] sm:text-sm mt-1 font-medium leading-relaxed max-w-2xl">Follow these essential Trust &amp; Safety tips to build successful relationships with freelancers, maintain perfect account standing, and achieve exactly what you need.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -69,30 +67,30 @@ const BestPractices = () => {
         {practices.map((practice, index) => (
           <div
             key={index}
-            className={`group relative bg-transparent border border-white/10 rounded-[2rem] p-8 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-1 ${practice.border}`}
+            className={`group relative bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-10 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-1 ${practice.border}`}
           >
             {/* Background Gradient */}
             <div className={`absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none ${practice.color}`} />
 
             <div className="relative z-10 flex flex-col h-full">
-              <div className="w-16 h-16 flex items-center justify-center mb-6">
+              <div className="w-14 h-14 flex items-center justify-center mb-6">
                 {practice.image ? (
-                  <img src={practice.image} alt={practice.title} className="w-16 h-16 object-contain" />
+                  <img src={practice.image} alt={practice.title} className="w-14 h-14 object-contain" />
                 ) : (
-                  <div className="w-14 h-14 rounded-full bg-transparent flex items-center justify-center border border-white/10">
+                  <div className="w-12 h-12 rounded-full bg-transparent flex items-center justify-center border border-white/10">
                     {practice.icon}
                   </div>
                 )}
               </div>
-              <h3 className="text-lg font-bold text-white mb-3">
+              <h3 className="text-base sm:text-lg font-bold text-white mb-3">
                 {practice.title}
               </h3>
-              <p className="text-white/50 leading-relaxed text-sm flex-grow">
+              <p className="text-white/40 leading-relaxed text-[11px] sm:text-xs flex-grow font-medium">
                 {practice.desc}
               </p>
-              <div className="mt-8 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/30 group-hover:text-accent transition-colors">
-                <CheckCircle size={16} className="opacity-0 group-hover:opacity-100 -ml-6 group-hover:ml-0 transition-all duration-300" />
-                <span>Recommended</span>
+              <div className="mt-8 flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.2em] text-white/20 group-hover:text-accent transition-colors">
+                <CheckCircle size={14} className="opacity-0 group-hover:opacity-100 -ml-6 group-hover:ml-0 transition-all duration-300" />
+                <span>Protocol: Recommended</span>
               </div>
             </div>
           </div>
@@ -106,10 +104,8 @@ const BestPractices = () => {
             <ShieldCheck size={36} className="text-accent" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white mb-2">Stay Protected</h3>
-            <p className="text-white/50 text-sm font-medium">
-              Review your Account Health standing at any time.
-            </p>
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Stay Protected</h3>
+            <p className="text-white/40 text-[11px] sm:text-sm font-medium leading-relaxed">Review your Account Health standing at any time.</p>
           </div>
         </div>
 

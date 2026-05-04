@@ -95,7 +95,7 @@ const ClientTopbar = () => {
         else if (searchType === 'Jobs') endpoint = `/api/jobs/all?search=${encodeURIComponent(searchQuery)}&limit=5&status=OPEN`;
 
         if (!endpoint) return;
-        
+
         const res = await api.get(endpoint);
         const items = (res.data?.data || []).slice(0, 5);
         setSuggestions(items);
@@ -345,19 +345,25 @@ const ClientTopbar = () => {
       rightActions={
         <div className="relative">
           <button
-            onClick={() => setOpenAI(o => !o)}
+            onClick={() => {
+              if (window.innerWidth < 768) {
+                navigate('/client/ai');
+              } else {
+                setOpenAI(o => !o);
+              }
+            }}
             className={`relative w-8 h-8 flex items-center justify-center rounded-full transition-all duration-200 group ${openAI ? 'bg-accent/10' : 'hover:bg-accent/10'}`}
             title="Connect AI"
           >
             <img
               src="/Icons/White-AI-Connect.png"
               alt="Connect AI"
-              className={`w-8 h-8 object-contain transition-all mr-2 duration-200 select-none pointer-events-none hidden dark:block grayscale brightness-200 ${openAI ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
+              className={`w-8 h-8 object-contain transition-all duration-200 select-none pointer-events-none hidden dark:block grayscale brightness-200 ${openAI ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
             />
             <img
               src="/Icons/AI-Connect.png"
               alt="Connect AI"
-              className={`w-8 h-8 object-contain transition-all mr-2 duration-200 select-none pointer-events-none block dark:hidden ${openAI ? 'opacity-100 [filter:invert(67%)_sepia(61%)_saturate(2462%)_hue-rotate(165deg)_brightness(102%)_contrast(100%)]' : 'opacity-50 group-hover:opacity-100 group-hover:[filter:invert(67%)_sepia(61%)_saturate(2462%)_hue-rotate(165deg)_brightness(102%)_contrast(100%)]'}`}
+              className={`w-8 h-8 object-contain transition-all duration-200 select-none pointer-events-none block dark:hidden ${openAI ? 'opacity-100 [filter:invert(67%)_sepia(61%)_saturate(2462%)_hue-rotate(165deg)_brightness(102%)_contrast(100%)]' : 'opacity-50 group-hover:opacity-100 group-hover:[filter:invert(67%)_sepia(61%)_saturate(2462%)_hue-rotate(165deg)_brightness(102%)_contrast(100%)]'}`}
             />
           </button>
           {/* Desktop AI */}

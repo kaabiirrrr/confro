@@ -16,16 +16,16 @@ const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
 
   const [form, setForm] = useState({
     firstName: profile?.name?.split(' ')[0] || '',
-    lastName:  profile?.name?.split(' ').slice(1).join(' ') || '',
-    email:     profile?.email || '',
+    lastName: profile?.name?.split(' ').slice(1).join(' ') || '',
+    email: profile?.email || '',
   });
 
   React.useEffect(() => {
     if (profile) {
       setForm({
         firstName: profile.name?.split(' ')[0] || '',
-        lastName:  profile.name?.split(' ').slice(1).join(' ') || '',
-        email:     profile.email || '',
+        lastName: profile.name?.split(' ').slice(1).join(' ') || '',
+        email: profile.email || '',
       });
     }
   }, [profile]);
@@ -48,14 +48,14 @@ const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
   };
 
   return (
-    <div className="glass-card rounded-[2rem] p-5 sm:p-8 lg:p-10 relative overflow-hidden group">
+    <div className="glass-card rounded-3xl p-4 sm:p-10 relative overflow-hidden group w-full min-w-0">
       {/* Decorative Gradient */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
 
       <div className="relative z-10">
 
-        {/* ── Section Header (desktop only row, mobile hidden) ── */}
-        <div className="hidden sm:flex justify-between items-start gap-6 mb-10">
+        {/* ── Section Header (desktop only) ── */}
+        <div className="hidden sm:flex justify-between items-start gap-6 mb-8">
           <div>
             <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
               <User size={20} className="text-accent" />
@@ -74,46 +74,44 @@ const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
         </div>
 
         {/* ── MOBILE: Instagram-style Profile Header ── */}
-        <div className="sm:hidden flex flex-col items-center text-center mb-8 gap-3">
+        <div className="sm:hidden flex flex-col items-center text-center mb-6 gap-3 px-2 w-full min-w-0">
           {/* Avatar */}
-          <div onClick={onOpenImageModal} className="cursor-pointer group/avatar relative mb-1">
-            <div className="absolute -inset-1 bg-gradient-to-tr from-accent to-transparent rounded-full opacity-20 blur-sm group-hover/avatar:opacity-40 transition-opacity" />
+          <div onClick={onOpenImageModal} className="cursor-pointer group/avatar relative">
+            <div className="absolute -inset-1.5 bg-gradient-to-tr from-accent to-transparent rounded-full opacity-20 blur-sm" />
             <div className="relative rounded-full p-1 bg-white/5 border border-white/10">
               <Avatar
                 src={profileImage}
                 name={form.firstName || profile?.name || "U"}
-                size="w-24 h-24"
-                className="text-[36px] font-bold rounded-full overflow-hidden"
+                size="w-20 h-20"
+                className="text-3xl font-bold rounded-full overflow-hidden"
               />
             </div>
-            <div className="absolute bottom-1 right-1 w-7 h-7 rounded-full bg-accent text-white flex items-center justify-center shadow-lg border-2 border-[#111827]">
-              <Camera size={12} />
+            <div className="absolute bottom-1 right-1 w-6 h-6 rounded-full bg-accent text-white flex items-center justify-center shadow-lg border-2 border-[#111827]">
+              <Camera size={10} />
             </div>
           </div>
 
-          {/* Name + Role */}
-          <div>
-            <h3 className="text-2xl font-bold tracking-tight text-white leading-tight">
+          <div className="min-w-0 w-full">
+            <h3 className="text-lg font-bold tracking-tight text-white leading-tight break-words">
               {profile?.name || "User"}
             </h3>
-            <div className="inline-flex items-center gap-1.5 text-accent text-[10px] font-black uppercase tracking-widest mt-1">
-              <CheckCircle2 size={11} /> Client Account
+            <div className="inline-flex items-center gap-1.5 text-accent text-[10px] font-black uppercase tracking-widest mt-1 px-3 py-0.5 bg-accent/5 rounded-full border border-accent/10">
+              <CheckCircle2 size={10} /> Client
             </div>
           </div>
 
-          {/* Edit Profile Button — full width */}
           {!edit && (
             <button
               onClick={() => setEdit(true)}
-              className="w-full max-w-[240px] mt-1 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center gap-2 text-sm font-semibold"
+              className="w-full max-w-[160px] h-9 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 text-[11px] font-bold transition-all active:scale-95"
             >
-              <Pencil size={13} /> Edit Profile
+              <Pencil size={10} className="inline mr-1" /> Edit Profile
             </button>
           )}
         </div>
 
-        {/* ── Content ── */}
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
+        {/* ── Main Content ── */}
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
 
           {/* Avatar (Desktop only) */}
           <div className="hidden sm:flex shrink-0 flex-col items-center lg:items-start gap-4 mx-auto lg:mx-0">
@@ -134,7 +132,7 @@ const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
           </div>
 
           {/* Info / Edit Form */}
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             {!edit ? (
               <div className="space-y-0 divide-y divide-white/5">
                 {/* Desktop name display */}
@@ -147,17 +145,17 @@ const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
                   </div>
                 </div>
 
-                {/* Info rows — Instagram list style on mobile */}
-                <div className="py-4 flex items-center justify-between gap-4">
-                  <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em] w-24 shrink-0">Full Name</p>
-                  <p className="text-white text-sm sm:text-base font-medium tracking-tight text-right">{profile?.name || "Not provided"}</p>
+                {/* Info rows — Stack on mobile, side-by-side on desktop */}
+                <div className="py-4 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-4 border-t border-white/5 first:border-none w-full min-w-0 text-center sm:text-left">
+                  <p className="text-white/30 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Full Name</p>
+                  <p className="text-white text-xs sm:text-base font-medium tracking-tight text-center sm:text-right break-words min-w-0 flex-1">{profile?.name || "Not provided"}</p>
                 </div>
 
-                <div className="py-4 flex items-center justify-between gap-4">
-                  <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em] w-24 shrink-0">Email</p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-white text-sm sm:text-base font-medium tracking-tight truncate max-w-[160px] sm:max-w-none">{form.email || "No email"}</p>
-                    <CheckCircle2 size={13} className="text-green-500/50 shrink-0" />
+                <div className="py-4 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-4 border-t border-white/5 w-full min-w-0 text-center sm:text-left">
+                  <p className="text-white/30 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Email Address</p>
+                  <div className="flex items-center justify-center sm:justify-end gap-2 min-w-0 flex-1 w-full overflow-hidden">
+                    <p className="text-white text-xs sm:text-base font-medium tracking-tight truncate min-w-0">{form.email || "No email"}</p>
+                    <CheckCircle2 size={12} className="text-green-500/50 shrink-0" />
                   </div>
                 </div>
               </div>

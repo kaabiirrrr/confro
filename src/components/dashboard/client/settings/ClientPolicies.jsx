@@ -40,10 +40,10 @@ const ClientPolicies = () => {
   const isRefundActive = activePolicy.id === 'refund';
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 pb-12 space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* Back Button and Header Section */}
-      <div className="space-y-6">
+      <div className="space-y-2">
         <Link
           to="/client/account-health"
           className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm font-medium group"
@@ -52,26 +52,26 @@ const ClientPolicies = () => {
           Back
         </Link>
 
-        <div className="relative pt-4 pb-6 border-b border-white/10 mb-8">
-          <div className="relative z-10 max-w-2xl flex flex-col items-start gap-4">
-            <div className="inline-flex items-center gap-2 text-accent text-xs font-bold uppercase tracking-widest">
-              <Lock size={16} />
-              <span>Platform Policies</span>
+        <div className="relative pt-2 pb-4 border-b border-white/10 mb-2">
+          <div className="relative z-10 max-w-2xl flex flex-col items-start gap-2">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[9px] font-black uppercase tracking-[0.3em]">
+              <Lock size={14} />
+              <span>Platform Policies Protocol</span>
             </div>
-            <h1 className="text-3xl lg:text-4xl font-semibold text-white tracking-tight">
+            <h1 className="text-xl sm:text-3xl lg:text-4xl font-semibold text-white tracking-tight">
               Trust &amp; Safety Guidelines
             </h1>
-            <p className="text-white/50 text-sm font-medium leading-relaxed max-w-xl">
+            <p className="text-white/40 text-[11px] sm:text-sm font-medium leading-relaxed max-w-xl">
               Our policies are designed to create a safe, fair, and professional environment for both clients and freelancers. Adhering to these guidelines ensures you maintain full platform access.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-14 items-start">
+      <div className="flex flex-col md:flex-row gap-6 md:gap-14 items-start">
 
-        {/* Sidebar (Matching Image 3 Style) */}
-        <div className="w-full md:w-[190px] shrink-0 flex flex-col gap-2">
+        {/* Sidebar (Matching Freelancer Style) */}
+        <div className="w-full md:w-[190px] shrink-0 flex flex-row md:flex-col gap-1 overflow-x-auto no-scrollbar pb-2 md:pb-0">
           {policies.map((policy) => {
             const isActive = activePolicy.id === policy.id;
             const isRefund = policy.id === 'refund';
@@ -80,7 +80,7 @@ const ClientPolicies = () => {
               <button
                 key={policy.id}
                 onClick={() => setActivePolicy(policy)}
-                className={`relative text-left pl-6 py-3 transition-all duration-300 ${isActive
+                className={`relative text-left pl-4 md:pl-6 pr-3 py-2 md:py-3 transition-all duration-300 whitespace-nowrap md:whitespace-normal ${isActive
                     ? isRefund ? 'text-red-500 font-medium' : 'text-white font-medium'
                     : isRefund ? 'text-red-500/60 hover:text-red-500' : 'text-light-text/60 hover:text-light-text'
                   }`}
@@ -97,8 +97,10 @@ const ClientPolicies = () => {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 bg-transparent border border-white/10 rounded-[2rem] p-8 md:p-10 min-h-[400px]">
-          <div className="flex items-center gap-5 mb-8 pb-8 border-b border-white/10">
+        <div className="flex-1 bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-8 md:p-10 min-h-[300px] sm:min-h-[500px] shadow-2xl backdrop-blur-sm relative group overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[100px] -mr-32 -mt-32 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
+          
+          <div className="relative z-10 flex items-center gap-3 sm:gap-5 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-white/10">
             <div className="w-16 h-16 flex items-center justify-center">
               {activePolicy.image ? (
                 <img src={activePolicy.image} alt={activePolicy.title} className="w-16 h-16 object-contain" />
@@ -107,22 +109,22 @@ const ClientPolicies = () => {
               )}
             </div>
             <div>
-              <h2 className={`text-2xl font-bold mb-1 ${isRefundActive ? 'text-red-500' : 'text-white'}`}>
+              <h2 className={`text-base sm:text-2xl font-bold mb-1 ${isRefundActive ? 'text-red-500' : 'text-white'}`}>
                 {activePolicy.title}
               </h2>
-              <p className="text-white/30 text-xs font-bold uppercase tracking-widest">Last updated: Today</p>
+              <p className="text-white/30 text-[10px] sm:text-xs font-bold uppercase tracking-widest">Last updated: Today</p>
             </div>
           </div>
 
-          <div className={`prose prose-invert max-w-none text-sm leading-relaxed space-y-6 ${isRefundActive ? 'text-red-500/70' : 'text-white/50'}`}>
-            <p className={`text-base font-medium ${isRefundActive ? 'text-red-500' : 'text-white/80'}`}>
+          <div className={`prose prose-invert max-w-none text-[13px] sm:text-sm leading-relaxed space-y-4 sm:space-y-6 ${isRefundActive ? 'text-red-500/70' : 'text-white/50'}`}>
+            <p className={`text-sm sm:text-base lg:text-lg font-medium ${isRefundActive ? 'text-red-500' : 'text-white/80'}`}>
               {activePolicy.desc}
             </p>
             <p>
               At Connect, we are committed to maintaining a secure and transparent marketplace. It is critical that all users review and understand these parameters.
             </p>
-            <h3 className={`text-lg font-bold mt-8 mb-4 ${isRefundActive ? 'text-red-500' : 'text-white'}`}>Core Principles</h3>
-            <ul className={`list-disc pl-5 space-y-3 ${isRefundActive ? 'marker:text-red-500 text-red-500/80' : 'marker:text-accent text-white/50'}`}>
+            <h3 className={`text-base sm:text-lg font-bold mt-6 sm:mt-8 mb-3 sm:mb-4 ${isRefundActive ? 'text-red-500' : 'text-white'}`}>Core Principles</h3>
+            <ul className={`list-disc pl-5 space-y-2 sm:space-y-3 ${isRefundActive ? 'marker:text-red-500 text-red-500/80' : 'marker:text-accent text-white/50'}`}>
               <li>Maintain transparency and honesty in all transactions.</li>
               <li>Respect the intellectual property and confidentiality of others.</li>
               <li>Communicate professionally and promptly.</li>

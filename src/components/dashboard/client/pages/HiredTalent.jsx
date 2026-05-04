@@ -38,11 +38,11 @@ const HiredTalent = () => {
   };
 
   return (
-    <div className="max-w-[1500px] mx-auto py-6 sm:py-8 text-light-text font-sans tracking-tight animate-in fade-in duration-700">
+    <div className="max-w-[1460px] mx-auto py-2 sm:py-8 text-light-text font-sans tracking-tight animate-in fade-in duration-700">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
         <div className="space-y-1">
           <h1 className="text-lg sm:text-2xl font-semibold text-white tracking-tight">Hired Talent</h1>
-          <p className="text-sm sm:text-base text-light-text/70">View and manage the freelancers you've hired for your projects.</p>
+          <p className="text-[11px] sm:text-sm text-light-text/70">View and manage the freelancers you've hired for your projects.</p>
         </div>
       </div>
 
@@ -53,7 +53,7 @@ const HiredTalent = () => {
           ))}
         </div>
       ) : freelancers.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-12 sm:p-20 bg-transparent border border-white/10 rounded-2xl text-center shadow-lg">
+        <div className="flex flex-col items-center justify-center p-12 sm:p-20 bg-transparent border-none rounded-2xl text-center">
           <Briefcase className="w-12 h-12 text-light-text/20 mb-6" />
           <h3 className="text-lg font-semibold text-white mb-2">No freelancers hired yet</h3>
           <p className="text-light-text/50 text-base mb-8 max-w-md mx-auto">
@@ -82,7 +82,7 @@ const HiredTalent = () => {
             return (
               <div
                 key={contract.id || Math.random()}
-                className="bg-transparent border border-white/10 rounded-2xl p-5 hover:border-accent/40 transition-all shadow-sm group"
+                className="bg-transparent border border-white/10 rounded-2xl p-5 hover:border-accent/40 transition-all shadow-sm group relative"
               >
                 <div className="flex flex-col md:flex-row md:items-start gap-5">
                   {/* Avatar + Name + Email */}
@@ -101,14 +101,18 @@ const HiredTalent = () => {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-white font-semibold text-sm truncate group-hover:text-accent transition-colors">{freelancerName}</h3>
-                      {email && <p className="text-white/30 text-[10px] truncate mt-0.5">{email}</p>}
-                      {freelancerTitle && <p className="text-white/40 text-[10px] truncate mt-0.5 italic">{freelancerTitle}</p>}
-                      <span className={`inline-block mt-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest border ${
-                        status.toUpperCase() === 'ACTIVE'
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-white font-semibold text-sm truncate group-hover:text-accent transition-colors">{freelancerName}</h3>
+                        <span className={`md:hidden absolute top-5 right-5 inline-block px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest border ${status.toUpperCase() === 'ACTIVE'
                           ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                           : 'bg-white/5 text-white/40 border-white/10'
-                      }`}>{status}</span>
+                          }`}>{status}</span>
+                      </div>
+                      {freelancerTitle && <p className="text-white/40 text-[10px] truncate mt-0.5 italic">{freelancerTitle}</p>}
+                      <span className={`hidden md:inline-block mt-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest border ${status.toUpperCase() === 'ACTIVE'
+                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                        : 'bg-white/5 text-white/40 border-white/10'
+                        }`}>{status}</span>
                     </div>
                   </div>
 
@@ -140,10 +144,10 @@ const HiredTalent = () => {
                         <p className="text-xs text-white/60">{endDate}</p>
                       </div>
                     )}
-                    
+
                     {/* Spacer to push 'Hired On' to the right column on mobile (2rd row, 2nd col) */}
-                    {!endDate && <div className="sm:hidden" />} 
-                    
+                    {!endDate && <div className="sm:hidden" />}
+
                     <div className="text-right sm:text-left">
                       <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Hired On</p>
                       <p className="text-xs text-white/60">{createdAt}</p>

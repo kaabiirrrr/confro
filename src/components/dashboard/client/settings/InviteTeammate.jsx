@@ -72,8 +72,7 @@ const InviteTeammate = () => {
   return (
 
     <div className="min-h-screen flex flex-col">
-
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 pb-12 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
 
         {/* BACK */}
@@ -90,7 +89,7 @@ const InviteTeammate = () => {
 
         {/* TITLE */}
 
-        <h1 className="text-2xl font-semibold text-white tracking-tight">
+        <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
           Invite teammate
         </h1>
 
@@ -98,13 +97,11 @@ const InviteTeammate = () => {
 
         {/* EMAIL FIELD */}
 
-        <div className="mb-10">
-
-          <label className="block text-sm font-semibold text-white/90 mb-2">
+        <div className="mb-6">
+          <label className="block text-[11px] sm:text-sm font-semibold text-white/90 mb-2 uppercase tracking-wider">
             Add emails
           </label>
-
-          <p className="text-sm text-white/50 mb-4 font-medium">
+          <p className="text-[11px] sm:text-sm text-white/50 mb-4 font-medium leading-relaxed">
             You can invite multiple members to this team at once by adding their emails.
           </p>
 
@@ -116,22 +113,20 @@ const InviteTeammate = () => {
               value={emails}
               onChange={(e) => setEmails(e.target.value)}
               placeholder="Emails, separated by commas (e.g., john@company.com)"
-              className="w-full bg-primary border border-white/10 outline-none focus:border-accent/50 rounded-full pl-12 pr-4 py-4 text-[15px] text-white transition-all relative z-10"
+              className="w-full bg-primary border border-white/10 outline-none focus:border-accent/50 rounded-full pl-12 pr-4 py-3.5 text-[13px] sm:text-[15px] text-white transition-all relative z-10"
             />
           </div>
-
         </div>
 
 
 
         {/* ROLE SECTION */}
 
-        <div className="mb-10">
-
-          <div className="flex flex-wrap justify-between items-start gap-3 mb-6">
+        <div className="mb-6">
+          <div className="flex flex-wrap justify-between items-start gap-3 mb-4">
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="text-base sm:text-lg font-bold text-white">Assign role</h3>
-              <span className="text-[10px] font-black uppercase tracking-widest text-accent">
+              <span className="text-[9px] font-black uppercase tracking-widest text-accent">
                 Unlock Business Plus
               </span>
             </div>
@@ -143,7 +138,7 @@ const InviteTeammate = () => {
             </Link>
           </div>
 
-          <p className="text-sm text-white/50 mb-8 leading-relaxed font-medium">
+          <p className="text-[11px] sm:text-sm text-white/50 mb-6 leading-relaxed font-medium">
             Select relevant predefined role. Each role comes with permissions that will apply to all teammates on this invite.
           </p>
 
@@ -226,14 +221,14 @@ const InviteTeammate = () => {
 
 
         {/* PERMISSIONS */}
-        <div className="mb-10 bg-primary/40 border border-white/5 rounded-[2rem] p-6">
-          <h3 className="text-[16px] font-bold text-white mb-5 flex items-center gap-2">
+        <div className="mb-6 bg-primary/40 border border-white/5 rounded-[2rem] p-6 sm:p-8">
+          <h3 className="text-sm sm:text-base font-bold text-white mb-4 flex items-center gap-2">
             Teammate(s) will have these permissions:
           </h3>
-          <ul className="space-y-3">
+          <ul className="space-y-2">
             {getPermissionsList().map((perm, idx) => (
-              <li key={idx} className="flex items-start gap-3 text-[15px] text-light-text/80 font-medium">
-                <CheckCircle2 size={18} className="text-accent shrink-0 mt-0.5" />
+              <li key={idx} className="flex items-start gap-3 text-[12px] sm:text-[15px] text-light-text/80 font-medium">
+                <CheckCircle2 size={16} className="text-accent shrink-0 mt-0.5" />
                 {perm}
               </li>
             ))}

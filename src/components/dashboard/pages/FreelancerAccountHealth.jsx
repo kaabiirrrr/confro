@@ -64,13 +64,12 @@ const FreelancerAccountHealth = () => {
   const isRestricted = statusData.account_status === "RESTRICTED";
 
   return (
-    <div className="w-full lg:max-w-[1400px] mx-auto mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="w-full lg:max-w-[1400px] mx-auto mt-2 pb-12 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
-      {/* TITLE */}
       <div>
-        <h1 className="text-2xl font-semibold text-white tracking-tight">Account health</h1>
-        <p className="text-white/50 text-sm mt-1 font-medium">
-          Manage your account access and stay on track with platform Trust &amp; Safety guidelines
+        <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">Account health</h1>
+        <p className="text-white/40 text-[11px] sm:text-sm mt-1 font-medium leading-relaxed max-w-2xl">
+          Manage your account access and stay on track with platform Trust &amp; Safety guidelines.
         </p>
       </div>
 
@@ -78,19 +77,21 @@ const FreelancerAccountHealth = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         {/* PLATFORM ACCESS */}
-        <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-          <div className="w-full sm:max-w-[400px]">
-            <h3 className="text-lg font-bold text-white mb-2">Platform access</h3>
-            <p className="text-white/50 text-sm mb-6 leading-relaxed">
+        <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[100px] -mr-32 -mt-32 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
+          
+          <div className="w-full sm:max-w-[400px] relative z-10">
+            <h3 className="text-base sm:text-lg font-bold text-white mb-2">Platform access</h3>
+            <p className="text-white/40 text-[11px] sm:text-sm mb-6 leading-relaxed">
               {isRestricted
                 ? "Your account currently has restricted access due to policy violations. Please review your enforcement history."
                 : "Your account currently has full platform access. Continue to follow Trust & Safety policies to maintain uninterrupted access."}
             </p>
-            <Link to="/freelancer/policies" className="w-full sm:w-auto flex sm:inline-flex items-center justify-center px-6 py-3 bg-accent text-white text-sm font-bold rounded-full hover:bg-accent/90 transition-all">
+            <Link to="/freelancer/policies" className="w-full sm:w-auto flex sm:inline-flex items-center justify-center px-6 py-2.5 sm:py-3 bg-accent text-white text-[11px] sm:text-sm font-bold rounded-full hover:bg-accent/90 transition-all active:scale-95">
               Learn about our policies
             </Link>
           </div>
-          <div className="flex sm:flex-col items-center gap-3 shrink-0 w-full sm:w-auto justify-between sm:justify-start">
+          <div className="flex sm:flex-col items-center gap-3 shrink-0 w-full sm:w-auto justify-between sm:justify-start relative z-10">
             <div className="flex items-center justify-center">
               <ShieldCheck size={32} className={isRestricted ? "text-red-500" : "text-accent"} />
             </div>
@@ -98,7 +99,7 @@ const FreelancerAccountHealth = () => {
               <div className={`w-12 h-6 rounded-full relative transition-all ${!isRestricted ? "bg-accent" : "bg-white/10"}`}>
                 <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-all ${!isRestricted ? "translate-x-6" : ""}`} />
               </div>
-              <span className={`${isRestricted ? "text-red-500" : "text-accent"} text-xs font-bold uppercase tracking-widest`}>
+              <span className={`${isRestricted ? "text-red-500" : "text-accent"} text-[9px] sm:text-xs font-black uppercase tracking-[0.2em]`}>
                 {!isRestricted ? "Full Access" : "Restricted"}
               </span>
             </div>
@@ -106,27 +107,30 @@ const FreelancerAccountHealth = () => {
         </div>
 
         {/* ACCOUNT STANDING */}
-        <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-          <div className="w-full sm:max-w-[400px]">
-            <h3 className="text-lg font-bold text-white mb-2">Account standing</h3>
-            <p className="text-white/50 text-sm leading-relaxed mb-6">
+        <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[100px] -mr-32 -mt-32 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
+          
+          <div className="w-full sm:max-w-[400px] relative z-10">
+            <h3 className="text-base sm:text-lg font-bold text-white mb-2">Account standing</h3>
+            <p className="text-white/40 text-[11px] sm:text-sm leading-relaxed mb-6">
               Based on your enforcement history, your account is in {statusData.account_status.toLowerCase()} standing.
               {statusData.account_status === "GOOD" ? " Continue following best practices to maintain your status." : " Please review platform rules."}
             </p>
           </div>
-          <div className="flex sm:flex-col items-center gap-2 shrink-0 mx-auto sm:mx-0">
-            <div className={`w-20 h-10 border-t-[5px] ${statusData.account_status === 'GOOD' ? 'border-accent' : 'border-orange-500'} rounded-t-full`} />
-            <span className={`text-xs font-bold uppercase tracking-widest mt-2 ${statusData.account_status === 'GOOD' ? 'text-accent' : 'text-orange-500'}`}>
-              {statusData.account_status === 'GOOD' ? 'Good' : statusData.account_status}
+          <div className="flex sm:flex-col items-center gap-2 shrink-0 mx-auto sm:mx-0 relative z-10">
+            <div className={`w-20 h-10 border-t-[5px] ${statusData.account_status === 'GOOD' ? 'border-accent' : 'border-orange-500'} rounded-t-full opacity-60`} />
+            <span className={`text-[9px] sm:text-xs font-black uppercase tracking-[0.2em] mt-2 ${statusData.account_status === 'GOOD' ? 'text-accent' : 'text-orange-500'}`}>
+              Standing: {statusData.account_status === 'GOOD' ? 'Good' : statusData.account_status}
             </span>
           </div>
         </div>
       </div>
 
-      {/* ENFORCEMENT HISTORY */}
-      <div className="bg-transparent border border-white/10 rounded-[2rem] overflow-hidden">
-        <div className="px-5 sm:px-8 pt-8 pb-0">
-          <h3 className="text-base font-bold text-white uppercase tracking-wider mb-6">Enforcement history</h3>
+      <div className="bg-transparent border border-white/10 rounded-[2rem] overflow-hidden relative group">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[100px] -mr-32 -mt-32 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
+        
+        <div className="px-5 sm:px-10 pt-10 pb-0 relative z-10">
+          <h3 className="text-[10px] sm:text-xs font-black text-white/20 uppercase tracking-[0.3em] mb-6">Enforcement History Protocol</h3>
 
           {/* TABS */}
           <div className="flex gap-4 sm:gap-8 border-b border-white/10">
