@@ -245,6 +245,26 @@ export const fetchSuspiciousUsers = async () => {
     return response.data;
 };
 
+export const fetchUserFraudTimeline = async (userId) => {
+    const response = await api.get(`/api/admin/fraud/user-timeline/${userId}`);
+    return response.data;
+};
+
+export const markUserAsFraud = async (userId) => {
+    const response = await api.post(`/api/admin/fraud/mark-fraud/${userId}`);
+    return response.data;
+};
+
+export const freezeUserAccount = async (userId) => {
+    const response = await api.post(`/api/admin/fraud/freeze/${userId}`);
+    return response.data;
+};
+
+export const clearFraudFlag = async (userId) => {
+    const response = await api.post(`/api/admin/fraud/clear/${userId}`);
+    return response.data;
+};
+
 // --- Broadcast Notifications ---
 export const sendBroadcast = async (payload) => {
     const response = await api.post(`/api/admin/notifications/send`, payload);
