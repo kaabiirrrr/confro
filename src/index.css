@@ -533,7 +533,7 @@ html:not(.dark) .text-white\/90 {
 /* Note: Does NOT affect text-white inside bg-accent / .btn-primary / .login-btn
    because those elements already have their own color rules with higher specificity */
 html:not(.dark) .text-white {
-  color: var(--color-light-text);
+  color: var(--color-light-text) !important;
 }
 
 /* ── Gray text that's too light for light bg ── */

@@ -552,7 +552,7 @@ const ContractDetails = () => {
 
           <div className="border border-white/5 rounded-2xl p-6 bg-transparent">
             <h3 className="text-[10px] font-bold text-light-text/40 uppercase tracking-[0.3em] mb-8 pb-4 border-b border-white/5">Project Info</h3>
-            <div className="flex flex-wrap items-center gap-x-12 gap-y-6">
+            <div className="flex flex-wrap items-center justify-between md:justify-start gap-x-12 gap-y-6">
               {isClient && contract.status === 'IN_PROGRESS' && (
                 <div className="w-full">
                   <DeadlineRiskCard contractId={id} />

@@ -14,19 +14,19 @@ const SettingsSidebar = ({ active, setActive }) => {
   return (
     <div className="w-full lg:w-[220px]">
       {/* Mobile: horizontal scrollable tabs */}
-      <div className="flex lg:hidden gap-1 overflow-x-auto no-scrollbar w-full min-w-0 relative">
+      <div className="flex lg:hidden gap-4 overflow-x-auto no-scrollbar w-full min-w-0 relative border-b border-white/5 px-2">
         {menu.map(item => (
           <button
             key={item.id}
             onClick={() => setActive(item.id)}
-            className={`relative shrink-0 px-3 py-3 text-xs font-semibold whitespace-nowrap transition-all rounded-full ${active === item.id
+            className={`relative shrink-0 px-1 py-4 text-[13px] font-bold whitespace-nowrap transition-all ${active === item.id
               ? "text-white"
               : "text-white/40 hover:text-white"
               }`}
           >
             {item.label}
             {active === item.id && (
-              <span className="absolute bottom-[-1px] left-2 right-2 h-[2px] bg-accent rounded-full z-10" />
+              <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-accent rounded-full z-10" />
             )}
           </button>
         ))}

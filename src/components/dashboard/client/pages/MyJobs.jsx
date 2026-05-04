@@ -188,7 +188,7 @@ const MyJobs = () => {
             <div key={job.id} className="bg-transparent border border-white/10 rounded-2xl p-6 hover:border-accent/40 transition-all shadow-sm group">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-2">
+                  <div className="flex items-center justify-between md:justify-start gap-3 mb-4">
                     <h3 className="text-white font-semibold text-lg truncate group-hover:text-accent transition-colors tracking-tight">{job.title}</h3>
                     <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-widest shrink-0 ${STATUS_BADGE[job.status] || 'bg-white/5 text-white/40 border-white/10'}`}>
                       {(job.status || 'open').replace(/_/g, ' ')}
@@ -199,7 +199,7 @@ const MyJobs = () => {
                     <p className="text-light-text/60 text-sm line-clamp-2 mb-4 leading-relaxed">{job.description}</p>
                   )}
 
-                  <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+                  <div className="flex items-center justify-between md:justify-start gap-x-8 gap-y-4">
                     <div className="flex flex-col">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 mb-1">Budget</span>
                       <div className="flex items-center gap-1.5">
@@ -242,7 +242,7 @@ const MyJobs = () => {
                 </div>
 
                 {/* Actions */}
-                  <div className="flex items-center gap-2 sm:gap-3 shrink-0 self-end md:self-start">
+                  <div className="flex items-center justify-between md:justify-start gap-2 sm:gap-3 shrink-0 w-full md:w-auto mt-6 md:mt-0">
                     {(job.proposal_count || 0) > 0 && (
                       <button
                         onClick={() => navigate(`/client/proposals?job=${job.id}`)}
@@ -251,7 +251,7 @@ const MyJobs = () => {
                         Proposals <ChevronRight size={14} />
                       </button>
                     )}
-                    <div className="flex items-center gap-1 bg-white/5 rounded-full px-1 py-1 border border-white/5">
+                    <div className="flex items-center gap-1 bg-transparent md:bg-white/5 rounded-full px-0 py-0 md:px-1 md:py-1 border-0 md:border border-white/5">
                       {job.is_bidding_open !== false && (job.status === 'OPEN' || job.status === 'IN_PROGRESS') && (
                         <button
                             onClick={() => {

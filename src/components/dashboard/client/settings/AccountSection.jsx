@@ -145,16 +145,16 @@ const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
                   </div>
                 </div>
 
-                {/* Info rows — Stack on mobile, side-by-side on desktop */}
-                <div className="py-4 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-4 border-t border-white/5 first:border-none w-full min-w-0 text-center sm:text-left">
+                {/* Info rows — Centered on Mobile, Justified on Desktop */}
+                <div className="py-5 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-1 sm:gap-4 border-t border-white/5 first:border-none w-full min-w-0 text-center sm:text-left">
                   <p className="text-white/30 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Full Name</p>
-                  <p className="text-white text-xs sm:text-base font-medium tracking-tight text-center sm:text-right break-words min-w-0 flex-1">{profile?.name || "Not provided"}</p>
+                  <p className="text-white text-[14px] sm:text-base font-medium tracking-tight text-center sm:text-right break-words min-w-0 flex-1">{profile?.name || "Not provided"}</p>
                 </div>
 
-                <div className="py-4 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-1 sm:gap-4 border-t border-white/5 w-full min-w-0 text-center sm:text-left">
+                <div className="py-5 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-1 sm:gap-4 border-t border-white/5 w-full min-w-0 text-center sm:text-left">
                   <p className="text-white/30 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Email Address</p>
-                  <div className="flex items-center justify-center sm:justify-end gap-2 min-w-0 flex-1 w-full overflow-hidden">
-                    <p className="text-white text-xs sm:text-base font-medium tracking-tight truncate min-w-0">{form.email || "No email"}</p>
+                  <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-end gap-2 min-w-0 flex-1 w-full overflow-hidden">
+                    <p className="text-white text-[14px] sm:text-base font-medium tracking-tight truncate min-w-0">{form.email || "No email"}</p>
                     <CheckCircle2 size={12} className="text-green-500/50 shrink-0" />
                   </div>
                 </div>

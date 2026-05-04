@@ -650,7 +650,7 @@ const Proposals = () => {
 
 
           {/* Page Footer Navigation */}
-          <div className="pt-8 border-t border-slate-200 dark:border-white/10 flex justify-start sm:justify-end">
+          <div className="pt-8 border-t border-slate-200 dark:border-white/10 flex justify-center sm:justify-end">
             <button
               onClick={() => navigate('/client/jobs')}
               className="group flex items-center gap-3 px-6 py-3 bg-transparent border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 text-slate-950 dark:text-white rounded-full transition"

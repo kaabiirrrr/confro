@@ -13,10 +13,10 @@ const nWeeksAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n * 7);
 const fmt$ = (v) => `₹${parseFloat(v || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const STAT_CARDS = [
-  { key: 'total_spent',     label: 'Total Spent',     image: '/Icons/icons8-rupee-64.png'      },
-  { key: 'total_released',  label: 'Released',        image: '/Icons/icons8-growth-100.png'           },
-  { key: 'total_in_escrow', label: 'In Escrow',       image: '/Icons/icons8-bag-100.png'       },
-  { key: 'total_refunded',  label: 'Refunded',        image: '/Icons/icons8-refund-80.png' },
+  { key: 'total_spent',        label: 'Aggregate Outflow', image: '/Icons/icons8-rupee-64.png'      },
+  { key: 'transaction_count',  label: 'Velocity',         image: '/Icons/icons8-growth-100.png'    },
+  { key: 'total_escrow',       label: 'Active Escrow',    image: '/Icons/icons8-bag-100.png'       },
+  { key: 'total_refunded',     label: 'Recovered',        image: '/Icons/icons8-refund-80.png'    },
 ];
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -102,21 +102,25 @@ export default function WeeklySummaryPage() {
       ) : (
         <>
           {/* Stat cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {Object.entries({
-              total_spent: 'Aggregate Outflow',
-              transaction_count: 'Velocity',
-              total_escrow: 'Active Escrow',
-              total_refunded: 'Recovered'
-            }).map(([key, label]) => (
-              <div key={key} className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-8 relative overflow-hidden group">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {STAT_CARDS.map((card) => (
+              <div key={card.key} className="bg-transparent border border-white/10 rounded-[2rem] p-5 sm:p-8 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 blur-3xl -mr-16 -mt-16 rounded-full group-hover:bg-accent/10 transition-all duration-700" />
+                
+                {/* Icon from previous UI */}
+                <div className="absolute -right-2 -top-2 w-16 h-16 opacity-5 sm:opacity-10 group-hover:scale-110 transition-transform duration-500">
+                  <img src={card.image} alt="" className="w-full h-full object-contain filter grayscale invert" />
+                </div>
+
                 <div className="relative z-10">
-                  <p className="text-white/20 text-[9px] font-black uppercase tracking-[0.2em] mb-2">{label}</p>
-                  <p className={`text-2xl sm:text-3xl font-black tracking-tighter ${key === 'total_refunded' && summary[key] > 0 ? 'text-red-500' : 'text-white'}`}>
-                    {key === 'transaction_count' ? summary[key] : fmt$(summary[key])}
+                  <div className="flex items-center gap-2 mb-2">
+                    <img src={card.image} alt="" className="w-4 h-4 sm:w-5 sm:h-5 object-contain" />
+                    <p className="text-white/20 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em]">{card.label}</p>
+                  </div>
+                  <p className={`text-xl sm:text-3xl font-black tracking-tighter ${card.key === 'total_refunded' && summary[card.key] > 0 ? 'text-red-500' : 'text-white'}`}>
+                    {card.key === 'transaction_count' ? summary[card.key] : fmt$(summary[card.key])}
                   </p>
-                  {key === 'total_spent' && summary.transaction_count != null && (
+                  {card.key === 'total_spent' && summary.transaction_count != null && (
                     <p className="text-white/30 text-[8px] font-bold uppercase tracking-widest mt-2">Historical Events</p>
                   )}
                 </div>
@@ -135,7 +139,7 @@ export default function WeeklySummaryPage() {
                    <h3 className="text-white font-bold text-sm uppercase tracking-wider">Weekly Capital Velocity</h3>
                  </div>
               </div>
-              <div className="w-full h-[320px] relative z-10">
+              <div className="w-full h-[320px] relative z-10 min-w-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />

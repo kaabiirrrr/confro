@@ -66,7 +66,7 @@ const Contracts = () => {
         }))}
         activeTab={activeTab}
         onChange={setActiveTab}
-        className="mb-8"
+        className="mb-8 justify-between sm:justify-start"
       />
 
       {isLoading ? (

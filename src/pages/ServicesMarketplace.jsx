@@ -105,7 +105,7 @@ const ServicesMarketplace = () => {
           </motion.div>
 
           {/* CATEGORY TABS - Dashboard Pill Style */}
-          <div className="flex gap-2 overflow-x-auto hide-scrollbar py-1 mt-8">
+          <div className="flex gap-2 overflow-x-auto no-scrollbar py-1 mt-8">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
@@ -130,7 +130,7 @@ const ServicesMarketplace = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="py-32 flex flex-col items-center justify-center text-center bg-transparent rounded-3xl border border-dashed border-white/10 backdrop-blur-sm"
+            className="py-32 flex flex-col items-center justify-center text-center bg-transparent rounded-3xl border-none sm:border sm:border-dashed sm:border-white/10 backdrop-blur-sm"
           >
             <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6">
               <ShoppingBag size={32} className="text-white/20" />

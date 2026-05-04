@@ -155,7 +155,7 @@ const InviteTeammate = () => {
                 }`}
             >
               <div className="flex justify-between items-center mb-3">
-                <h4 className={`text-sm font-bold transition-colors ${role === "messenger" ? "text-white" : "text-white/60"}`}>
+                <h4 className={`text-sm font-bold transition-colors ${role === "messenger" ? "text-accent dark:text-white" : "text-white/60"}`}>
                   Messenger
                 </h4>
                 <div className={`w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center ${role === "messenger" ? "border-accent" : "border-white/10"
@@ -178,7 +178,7 @@ const InviteTeammate = () => {
                 }`}
             >
               <div className="flex justify-between items-center mb-3">
-                <h4 className={`text-sm font-bold transition-colors ${role === "recruiter" ? "text-white" : "text-white/60"}`}>
+                <h4 className={`text-sm font-bold transition-colors ${role === "recruiter" ? "text-accent dark:text-white" : "text-white/60"}`}>
                   Recruiter
                 </h4>
                 <div className={`w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center ${role === "recruiter" ? "border-accent" : "border-white/10"
@@ -201,7 +201,7 @@ const InviteTeammate = () => {
                 }`}
             >
               <div className="flex justify-between items-center mb-3">
-                <h4 className={`text-sm font-bold transition-colors ${role === "manager" ? "text-white" : "text-white/60"}`}>
+                <h4 className={`text-sm font-bold transition-colors ${role === "manager" ? "text-accent dark:text-white" : "text-white/60"}`}>
                   Hiring manager
                 </h4>
                 <div className={`w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center ${role === "manager" ? "border-accent" : "border-white/10"
