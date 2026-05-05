@@ -6,6 +6,7 @@ import { ROLES, ADMIN_ROLES } from '../utils/roles';
 import { logger } from '../utils/logger';
 import { cleanImageUrl } from '../utils/imageUrl';
 import { checkProfileCompletion, getApiUrl } from '../utils/authUtils';
+import { getDeviceId } from '../utils/fingerprint';
 
 const AuthContext = createContext();
 
@@ -169,12 +170,14 @@ export function AuthProvider({ children }) {
 
     const login = async (email, password) => {
         try {
+            const deviceId = await getDeviceId();
             // ── Always clear any stale session before logging in ──────────
             // This prevents a CLIENT session from persisting when a FREELANCER
             // logs in, or vice versa (the core cause of the role mismatch bug).
             try {
                 await supabase.auth.signOut();
             } catch { /* ignore signout errors */ }
+            localStorage.setItem('device_id', deviceId);
             localStorage.removeItem('user_role');
             localStorage.removeItem('user_profile');
             // Cleanup existing tokens
@@ -182,7 +185,7 @@ export function AuthProvider({ children }) {
             localStorage.removeItem('login_source');
 
 
-            const response = await axios.post(`${API_URL}/api/auth/login`, { email, password });
+            const response = await axios.post(`${API_URL}/api/auth/login`, { email, password, deviceId });
 
             if (response.data.success) {
                 const data = response.data.data;

@@ -5,7 +5,8 @@ import {
     FileSignature, CreditCard, AlertOctagon,
     BarChart3, Bell, ShieldAlert, Settings, LogOut,
     ShieldCheck, HandCoins, ScrollText, Tag, Megaphone, UserSearch,
-    UserCircle, Sun, Moon, HelpCircle, Menu, X, Ticket
+    UserCircle, Sun, Moon, HelpCircle, Menu, X, Ticket, Link as LinkIcon,
+    Landmark
 } from 'lucide-react';
 
 import { useTheme } from '../../context/ThemeContext';
@@ -98,6 +99,7 @@ const AdminLayout = () => {
         { path: '/admin/proposals', icon: <img src="/Icons/icons8-new-job-100.png" alt="Proposals" className="w-6 h-6 object-contain" />, label: 'Proposals', roles: ['ADMIN', 'SUPER_ADMIN'] },
         { path: '/admin/contracts', icon: <img src="/Icons/icons8-contract-60.png" alt="Contracts" className="w-6 h-6 object-contain" />, label: 'Contracts', roles: ['ADMIN', 'SUPER_ADMIN'] },
         { path: '/admin/payments', icon: <img src="/Icons/icons8-payments-64.png" alt="Revenue" className="w-6 h-6 object-contain" />, label: 'Revenue & Payments', roles: ['ADMIN', 'SUPER_ADMIN', 'FINANCE_ADMIN'] },
+        { path: '/admin/treasury', icon: <Landmark size={20} className="text-accent" />, label: 'Treasury', roles: ['ADMIN', 'SUPER_ADMIN', 'FINANCE_ADMIN'] },
         { path: '/admin/withdrawals', icon: <img src="/Icons/icons8-withdrawal-80.png" alt="Withdrawals" className="w-6 h-6 object-contain" />, label: 'Withdrawals', roles: ['ADMIN', 'SUPER_ADMIN'] },
         { path: '/admin/connects', icon: <HandCoins size={18} className="text-accent" />, label: 'Connect Economy', roles: ['ADMIN', 'SUPER_ADMIN'] },
         { path: '/admin/disputes', icon: <img src="/Icons/icons8-disputes-100.png" alt="Disputes" className="w-6 h-6 object-contain" />, label: 'Disputes', roles: ['ADMIN', 'SUPER_ADMIN'] },
@@ -110,6 +112,7 @@ const AdminLayout = () => {
         { path: '/admin/faqs', icon: <img src="/Icons/icons8-faq-80.png" alt="FAQ Management" className="w-6 h-6 object-contain" />, label: 'FAQ Management', roles: ['ADMIN', 'SUPER_ADMIN'] },
         { path: '/admin/reviews', icon: <img src="/Icons/icons8-review-100.png" alt="Reviews" className="w-6 h-6 object-contain" />, label: 'Reviews', roles: ['ADMIN', 'SUPER_ADMIN'] },
         { path: '/admin/fraud', icon: <img src="/Icons/icons8-fraud-80.png" alt="Fraud Detection" className="w-6 h-6 object-contain" />, label: 'Fraud Detection', roles: ['ADMIN', 'SUPER_ADMIN'] },
+        { path: '/admin/trust-graph', icon: <img src="/Icons/icons8-trust-64.png" alt="TrustGraph Intelligence" className="w-6 h-6 object-contain" />, label: 'TrustGraph Intelligence', roles: ['ADMIN', 'SUPER_ADMIN'] },
         { path: '/admin/admin-management', icon: <img src="/Icons/icons8-critical-thinking-80.png" alt="Admin Management" className="w-6 h-6 object-contain" />, label: 'Admin Management', roles: ['SUPER_ADMIN'] },
         { path: '/admin/insights', icon: <img src="/Icons/icons8-leader-100.png" alt="Admin Insights" className="w-6 h-6 object-contain" />, label: 'Admin Insights', roles: ['SUPER_ADMIN'] },
         { path: '/admin/admin-logs', icon: <img src="/Icons/icons8-logs-64.png" alt="Admin Logs" className="w-6 h-6 object-contain" />, label: 'Admin Logs', roles: ['SUPER_ADMIN'] },

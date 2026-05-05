@@ -103,8 +103,7 @@ const PaymentsPage = () => {
     return (
         <div className="space-y-8">
 
-            {/* ── Header ── */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div className="flex justify-between items-start sm:items-center gap-3">
                 <div>
                     <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
                         <img src="/Icons/icons8-payments-64.png" alt="Revenue" className="w-6 h-6 sm:w-7 sm:h-7 object-contain" />
@@ -113,8 +112,9 @@ const PaymentsPage = () => {
                     <p className="text-white/40 text-xs mt-1">Platform earnings across all revenue streams · 3% commission</p>
                 </div>
                 <button onClick={() => { fetchPayments(); fetchRevenue(); }}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 text-white/60 hover:text-white hover:bg-white/5 text-xs font-bold uppercase tracking-widest transition">
-                    <RefreshCw size={13} /> Refresh
+                    className="p-2 text-white/60 hover:text-accent transition-colors"
+                    title="Refresh">
+                    <RefreshCw size={18} className={(isLoading || revenueLoading) ? "animate-spin" : ""} />
                 </button>
             </div>
 
@@ -244,7 +244,7 @@ const PaymentsPage = () => {
                             <tbody className="divide-y divide-white/5">
                                 {isLoading ? (
                                     <tr><td colSpan="7" className="px-6 py-12 text-center text-white/40">
-                                        <InfinityLoader fullScreen={false} text="Loading transactions..."/>
+                                        <InfinityLoader fullScreen={false} text="Loading transactions..." />
                                     </td></tr>
                                 ) : filteredPayments.length === 0 ? (
                                     <tr><td colSpan="7" className="px-6 py-8 text-center text-white/50">No transactions found.</td></tr>

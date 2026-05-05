@@ -265,6 +265,22 @@ export const clearFraudFlag = async (userId) => {
     return response.data;
 };
 
+// --- TrustGraph & Reputation Shield (New) ---
+export const fetchFraudClusters = async () => {
+    const response = await api.get(`/api/admin/fraud/clusters`);
+    return response.data;
+};
+
+export const recalculateTrustScore = async (userId) => {
+    const response = await api.post(`/api/admin/fraud/recalculate/${userId}`);
+    return response.data;
+};
+
+export const flagFraudUser = async (userId, reason = '') => {
+    const response = await api.post(`/api/admin/fraud/flag/${userId}`, { reason });
+    return response.data;
+};
+
 // --- Broadcast Notifications ---
 export const sendBroadcast = async (payload) => {
     const response = await api.post(`/api/admin/notifications/send`, payload);

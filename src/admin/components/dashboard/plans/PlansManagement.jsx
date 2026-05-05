@@ -4,6 +4,7 @@ import { Plus, Edit2, Trash2, CheckCircle2, X, Eye, EyeOff } from 'lucide-react'
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import CustomDropdown from '../../../../components/ui/CustomDropdown';
+import InfinityLoader from '../../../../components/common/InfinityLoader';
 
 import { getApiUrl } from '../../../../utils/authUtils';
  
@@ -124,7 +125,7 @@ const PlansManagement = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="w-7 h-7 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
+        <InfinityLoader fullScreen={false} text="Loading plans..." />
       </div>
     );
   }
@@ -140,7 +141,7 @@ const PlansManagement = () => {
         {isSuperAdmin && (
           <button
             onClick={() => handleOpenModal()}
-            className="flex items-center gap-2 bg-accent text-white px-5 py-2 rounded-full font-black text-[10px] uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all h-[32px] shrink-0"
+            className="flex items-center gap-1 sm:gap-2 bg-accent text-white px-3 sm:px-5 py-1.5 sm:py-2 rounded-full font-black text-[8px] sm:text-[10px] uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all h-[28px] sm:h-[32px] shrink-0"
           >
             <Plus size={13} />
             Create Plan
@@ -245,7 +246,7 @@ const PlansManagement = () => {
       {/* Editor Modal */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-16 sm:pt-24">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -261,7 +262,7 @@ const PlansManagement = () => {
             >
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-4 right-4 p-1.5 bg-white/5 hover:bg-white/10 rounded-full text-white/50 hover:text-white transition-colors"
+                className="absolute top-4 right-4 p-1.5 text-white/50 hover:text-accent transition-colors"
               >
                 <X size={16} />
               </button>
@@ -346,7 +347,7 @@ const PlansManagement = () => {
                   <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2 rounded-full text-xs font-bold text-white/50 hover:text-white hover:bg-white/5 transition-colors">
                     Cancel
                   </button>
-                  <button type="submit" className="px-5 py-2 rounded-full text-xs font-bold bg-accent text-primary hover:bg-white transition-all shadow-lg">
+                  <button type="submit" className="px-5 py-2 rounded-full text-xs font-bold bg-accent text-white hover:text-primary hover:bg-white transition-all shadow-lg">
                     {editingPlan ? 'Save Changes' : 'Create Plan'}
                   </button>
                 </div>

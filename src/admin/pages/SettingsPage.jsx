@@ -3,6 +3,7 @@ import { Save, Settings2, Percent, Users } from 'lucide-react';
 import * as adminService from '../../services/adminService';
 import { toast } from 'react-hot-toast';
 import CustomDropdown from '../../components/ui/CustomDropdown';
+import InfinityLoader from '../../components/common/InfinityLoader';
 
 const SettingsPage = () => {
     const [settings, setSettings] = useState({
@@ -53,7 +54,7 @@ const SettingsPage = () => {
         }
     };
 
-    if (isLoading) return <div className="p-8 text-white/50">Loading configurations...</div>;
+    if (isLoading) return <div className="p-8"><InfinityLoader fullScreen={false} text="Loading configurations..." /></div>;
 
     return (
         <div className="max-w-4xl mx-auto space-y-6">
@@ -65,8 +66,8 @@ const SettingsPage = () => {
                 <p className="text-white/40 text-xs mt-1">Configure global platform parameters, commission rates, and maintenance modes</p>
             </div>
 
-            <div className="bg-transparent border border-white/10 rounded-xl overflow-hidden shadow-sm">
-                <div className="p-6 border-b border-white/10 bg-white/[0.02]">
+            <div className="bg-transparent border border-white/10 rounded-xl overflow-visible sm:overflow-hidden shadow-sm">
+                <div className="p-6 border-b border-white/10 bg-white/[0.02] rounded-t-xl sm:rounded-none">
                     <div className="flex items-center gap-3">
                         <Settings2 className="text-accent" />
                         <div>
@@ -89,12 +90,12 @@ const SettingsPage = () => {
                                 The default percentage cut taken from successful contracts. For example, enter '0.10' for 10% or '0.15' for 15%.
                             </p>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 w-full sm:w-auto">
                             <input
                                 type="text"
                                 value={settings.platform_commission}
                                 onChange={(e) => setSettings({ ...settings, platform_commission: e.target.value })}
-                                className="w-24 bg-primary border border-white/10 rounded-lg px-3 py-2 text-white focus:border-accent outline-none"
+                                className="flex-1 sm:flex-none w-full sm:w-24 bg-primary border border-white/10 rounded-lg px-3 py-2 text-white focus:border-accent outline-none"
                             />
                             <button
                                 onClick={() => handleSave('platform_commission', settings.platform_commission, 'Global commission rate for contracts')}
@@ -116,7 +117,7 @@ const SettingsPage = () => {
                                 When toggled on, non-admin users will see a maintenance page and API functionality will be restricted. Enter 'true' or 'false'.
                             </p>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 w-full sm:w-auto">
                             <CustomDropdown
                                 options={[
                                     { label: 'Off', value: 'false' },
@@ -124,7 +125,7 @@ const SettingsPage = () => {
                                 ]}
                                 value={settings.maintenance_mode}
                                 onChange={(val) => setSettings({ ...settings, maintenance_mode: val })}
-                                className="w-24"
+                                className="flex-1 sm:flex-none w-full sm:w-24"
                             />
                             <button
                                 onClick={() => handleSave('maintenance_mode', settings.maintenance_mode, 'Put platform in maintenance mode')}

@@ -214,6 +214,7 @@ const FraudPage = lazy(() => import("./admin/pages/FraudPage"));
 const AdminProfilePage = lazy(() => import("./admin/pages/AdminProfilePage"));
 const AdminManagementPage = lazy(() => import("./admin/pages/AdminManagementPage"));
 const ProblemsPage = lazy(() => import("./admin/pages/ProblemsPage"));
+const TrustGraphPage = lazy(() => import("./admin/pages/TrustGraphPage"));
 const FAQManagementPage = lazy(() => import("./admin/pages/FAQManagementPage"));
 const ReviewsManagementPage = lazy(() => import("./admin/pages/ReviewsManagementPage"));
 const SupportTicketsPage = lazy(() => import("./admin/pages/SupportTicketsPage"));
@@ -223,6 +224,7 @@ const PlansManagement = lazy(() => import("./admin/components/dashboard/plans/Pl
 const AnnouncementsManagement = lazy(() => import("./admin/components/dashboard/announcements/AnnouncementsManagement"));
 const LotteryAdminPage = lazy(() => import("./admin/pages/LotteryAdminPage"));
 const ConnectsManagementPage = lazy(() => import("./admin/pages/ConnectsManagementPage"));
+const TreasuryPage = lazy(() => import("./admin/pages/TreasuryPage"));
 
 /* Loading Component */
 const LoadingSpinner = () => <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader/></div>;
@@ -537,6 +539,7 @@ function App() {
                             <Route path="proposals" element={<ProposalsPage />} />
                             <Route path="contracts" element={<ContractsPage />} />
                             <Route path="payments" element={<PaymentsPage />} />
+                            <Route path="treasury" element={<TreasuryPage />} />
                             <Route path="disputes" element={<DisputesPage />} />
                             <Route path="reports" element={<ModerationPage />} />
                             <Route path="notifications" element={<AdminNotificationsPage />} />
@@ -552,6 +555,7 @@ function App() {
                             <Route path="offers" element={<OffersPage />} />
                             <Route path="announcements" element={<AnnouncementsPage />} />
                             <Route path="fraud" element={<FraudPage />} />
+                            <Route path="trust-graph" element={<TrustGraphPage />} />
                             <Route path="problems" element={<ProblemsPage />} />
                             <Route path="support-tickets" element={<SupportTicketsPage />} />
                             <Route path="support-tickets/:id" element={<SupportTicketDetailPage />} />
