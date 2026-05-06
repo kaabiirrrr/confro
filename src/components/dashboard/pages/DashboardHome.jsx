@@ -129,7 +129,7 @@ const AnalyticsGrid = memo(({ freelancerStats, reliability }) => {
         subValue: `Next: ${nextTopupStr}`
       },
       {
-        label: "Demo Credits",
+        label: "Demo Connects",
         value: formatINR(wallet?.balance || 0),
         icon: "credits"
       },

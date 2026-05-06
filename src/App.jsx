@@ -254,7 +254,9 @@ function LandingPage() {
       <Testimonials />
       <ExperiencedFreelancers />
       <CTASection />
-      <Footer />
+      <div className="max-w-[1630px] mx-auto w-full px-4 md:px-6 lg:px-10">
+        <Footer />
+      </div>
     </>
   );
 }

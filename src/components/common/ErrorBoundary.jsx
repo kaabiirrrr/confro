@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -7,45 +8,68 @@ class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
     return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
-    // You can also log the error to an error reporting service
     console.error("[ErrorBoundary] Caught error:", error, errorInfo);
-    
-    // In a real SaaS, we would send this to Sentry/LogRocket here
-    // analytics.trackError(error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      // You can render any custom fallback UI
       return (
-        <div className="min-h-screen flex items-center justify-center bg-[#0F172A] text-white p-6">
-          <div className="max-w-md w-full glassmorphism p-8 rounded-2xl text-center">
-            <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
+        <div className="min-h-screen flex flex-col bg-primary text-light-text transition-colors duration-300">
+          {/* Static Header Matching Navbar Positioning */}
+          <div className="w-full border-b border-white/5">
+            <div className="max-w-[1630px] mx-auto h-14 md:h-20 px-4 md:px-8 flex items-center">
+              <img
+                src="/Logo-LightMode-trimmed.png"
+                alt="Logo"
+                className="h-7 md:h-12 object-contain block dark:hidden"
+              />
+              <img
+                src="/Logo2.png"
+                alt="Logo"
+                className="h-6 md:h-10 object-contain hidden dark:block"
+              />
             </div>
-            <h1 className="text-2xl font-bold mb-4 text-white">Something went wrong</h1>
-            <p className="text-white/70 mb-8">
-              We encountered an unexpected error. Our team has been notified.
-            </p>
-            <button 
-              onClick={() => window.location.reload()}
-              className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all"
-            >
-              Reload Page
-            </button>
+          </div>
+
+          <div className="flex-1 flex flex-col items-center justify-center p-6 -mt-10 md:-mt-20">
+            <div className="max-w-2xl w-full p-6 md:p-10 text-center relative">
+              <div className="relative z-10">
+                <div className="mb-4 md:mb-6 transform transition-transform duration-500 flex justify-center ml-[-16px] md:ml-[-32px]">
+                  <img
+                    src="/ChatGPT Image May 6, 2026, 02_39_23 PM.png"
+                    alt="Error Illustration"
+                    className="w-64 h-64 md:w-[480px] md:h-[480px] object-contain"
+                  />
+                </div>
+
+                <h1 className="text-lg md:text-3xl font-bold tracking-tight text-light-text leading-tight md:whitespace-nowrap mb-2 md:mb-4">
+                  Something Went Wrong
+                </h1>
+
+                <p className="text-xs md:text-base text-text-secondary mb-6 md:mb-8 leading-relaxed md:whitespace-nowrap px-4 md:px-0">
+                  Our Team has been notified and we're looking into it.
+                </p>
+
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="px-8 py-2.5 md:px-12 md:py-3.5 bg-accent hover:bg-accent/90 text-white rounded-full font-semibold text-sm md:text-lg transition-all duration-300 cursor-pointer min-w-[140px] md:min-w-[180px] shadow-lg shadow-accent/20 active:scale-95"
+                  >
+                    Reload
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       );
     }
 
-    return this.props.children; 
+    return this.props.children;
   }
 }
 

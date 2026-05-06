@@ -120,7 +120,7 @@ export default function WalletModal({ isOpen, onClose, onSuccess }) {
             initial={{ opacity: 0, scale: 0.95, y: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            className="relative w-full max-w-lg bg-secondary border border-white/10 rounded-[20px] overflow-hidden shadow-2xl"
+            className="relative w-full max-w-lg bg-secondary border border-white/10 rounded-xl overflow-hidden shadow-2xl"
           >
             {/* Top Glossy Header */}
             <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-accent/5 to-transparent pointer-events-none" />
@@ -195,11 +195,10 @@ export default function WalletModal({ isOpen, onClose, onSuccess }) {
                   </div>
                 )}
                 
-                {/* Action Button */}
                 <button
                   onClick={handleTopup}
                   disabled={loading}
-                  className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white py-3.5 rounded-full font-black text-[9px] uppercase tracking-[0.25em] shadow-lg shadow-accent/20 transition-all flex items-center justify-center gap-2 active:scale-95"
+                  className="mx-auto w-fit px-12 bg-accent hover:bg-accent/90 disabled:opacity-50 text-white py-3.5 rounded-full font-black text-[9px] uppercase tracking-[0.25em] transition-all flex items-center justify-center gap-2 active:scale-95"
                 >
                   {loading ? (
                     <InfinityLoader/>

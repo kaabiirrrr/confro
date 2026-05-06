@@ -789,7 +789,7 @@ const RoleAssignmentModal = ({
                 {hasInsufficientFunds ? (
                   <div className="flex items-center gap-2 p-3 bg-rose-500/5 border border-rose-500/10 rounded-xl text-[9px] text-rose-500 font-bold uppercase tracking-wider">
                     <AlertCircle size={14} />
-                    <span>Insufficient demo credits. Reset wallet via Dashboard.</span>
+                    <span>Insufficient demo connects. Reset wallet via Dashboard.</span>
                   </div>
                 ) : (
                   <p className="text-[9px] text-slate-500 dark:text-white/30 font-medium leading-relaxed italic opacity-80">

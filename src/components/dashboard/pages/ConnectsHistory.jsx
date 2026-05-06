@@ -8,9 +8,9 @@ import InfinityLoader from "../../common/InfinityLoader";
 const CONNECTS_TYPES = [
     { label: "All connects", value: "" },
     { label: "All debits", value: "all_debits" },
-    { label: "All credits", value: "all_credits" },
+    { label: "All connects", value: "all_credits" },
     { label: "Add Connects", value: "Add Connects" },
-    { label: "Ad credits", value: "Ad credits" },
+    { label: "Ad connects", value: "Ad connects" },
     { label: "Purchased", value: "Purchased" },
     { label: "New membership", value: "New membership" },
     { label: "Applied to job", value: "Applied to job" },
@@ -79,7 +79,7 @@ export default function ConnectsHistory() {
             <div className="flex flex-row justify-between items-start sm:items-center gap-4 mb-8">
                 <div>
                     <h1 className="text-xl sm:text-3xl font-bold text-white tracking-tight mb-2 sm:mb-3">
-                        {isClient ? 'Project Credit History' : 'Connects History'}
+                        {isClient ? 'Project Connects History' : 'Connects History'}
                     </h1>
                     <div className="space-y-1">
                         <label className="text-light-text/30 text-[9px] font-bold uppercase tracking-[0.2em] block">
@@ -89,7 +89,7 @@ export default function ConnectsHistory() {
                     </div>
                 </div>
                 <Link to={`${basePath}/buy-connects`} className="h-10 sm:h-12 shrink-0 flex items-center px-5 sm:px-8 bg-accent text-white font-bold rounded-full transition-all text-[9px] uppercase tracking-[0.2em] hover:bg-accent/80 active:scale-95 shadow-xl shadow-accent/10 mt-1 sm:mt-0">
-                    {isClient ? 'Refill Credits' : 'Buy Connects'}
+                    {isClient ? 'Refill Connects' : 'Buy Connects'}
                 </Link>
             </div>
 

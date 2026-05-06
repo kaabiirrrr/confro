@@ -126,7 +126,7 @@ const Hero = () => {
             )}
           </div>
 
-          <p className="text-light-text/70 text-xs sm:text-sm md:text-base leading-relaxed max-w-xl mx-auto lg:mx-0 px-2 sm:px-0">
+          <p className="text-light-text/70 text-xs sm:text-sm md:text-base leading-relaxed max-w-xl mx-auto lg:mx-0 px-2 sm:px-0 text-justify">
             <strong>Connectfreelance</strong> is a freelance platform in India to hire freelancers and find remote work easily.
             Connect businesses with talented freelancers, facilitating project collaboration and hiring. Find top talent or discover your next remote job opportunity.
           </p>

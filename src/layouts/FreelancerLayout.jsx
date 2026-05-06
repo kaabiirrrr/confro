@@ -46,7 +46,7 @@ const FreelancerLayout = () => {
   }, [location.pathname]);
 
   if (authLoading || profileLoading) {
-    return <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader/></div>;
+    return <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader /></div>;
   }
 
   if (!user) {

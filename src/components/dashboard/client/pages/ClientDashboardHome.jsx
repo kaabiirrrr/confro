@@ -197,6 +197,7 @@ const AnalyticsGrid = memo(({ stats }) => {
       || membership?.plan?.name
       || authMembership?.plan_snapshot?.name
       || authMembership?.plan?.name
+      || authMembership?.membership_plans?.name
       || profile?.membership_type
       || "Free";
 
@@ -217,7 +218,7 @@ const AnalyticsGrid = memo(({ stats }) => {
         badge: true
       },
       {
-        label: "Post Credits",
+        label: "Post Connects",
         value: connectWallet?.balance || 0,
         icon: "connects",
         subValue: `Next: ${nextTopupStr}`
@@ -233,7 +234,7 @@ const AnalyticsGrid = memo(({ stats }) => {
         icon: "reliability"
       },
     ];
-  }, [wallet, membership, profile, connectWallet]);
+  }, [wallet, membership, profile, connectWallet, authMembership]);
 
   const ICON_MAP = {
     plan: <img src="/Icons/icons8-membership-card-100.png" alt="" className="w-full h-full object-contain" />,
@@ -252,7 +253,7 @@ const AnalyticsGrid = memo(({ stats }) => {
           <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white/40 whitespace-nowrap">Capital Economy Active</span>
         </div>
         <Link to={`${basePath}/buy-connects`} className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] text-accent hover:text-white transition-colors whitespace-nowrap">
-          Refill Post Credits
+          Refill Post Connects
         </Link>
       </div>
 
@@ -440,7 +441,7 @@ const ClientDashboardHome = () => {
         </div>
         <Button
           onClick={() => navigate('/client/post-job')}
-          className="rounded-full px-6 h-10 sm:h-12 text-sm font-semibold shadow-lg shadow-accent/20 hover:scale-105 transition-all w-full sm:w-fit"
+          className="rounded-full px-6 h-10 sm:h-10 sm:px-16 text-sm font-semibold hover:scale-105 transition-all w-full sm:w-fit"
         >
           Post a Job
         </Button>
@@ -569,7 +570,7 @@ const ClientDashboardHome = () => {
               </div>
               <div className="absolute top-5 right-5 sm:relative sm:top-auto sm:right-auto">
                 {sendingVerification
-                  ? <InfinityLoader/>
+                  ? <InfinityLoader />
                   : <Mail className="text-light-text/40 shrink-0" size={20} />
                 }
               </div>

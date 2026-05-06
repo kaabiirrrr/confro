@@ -368,7 +368,7 @@ const ClientTopbar = () => {
           </button>
           {/* Desktop AI */}
           {openAI && (
-            <div className="hidden md:block" style={{ position: 'absolute', top: '110%', right: 0, zIndex: 9999 }}>
+            <div className="hidden md:block" style={{ position: 'absolute', top: 'calc(100% + 12px)', right: 0, width: 400, zIndex: 9999, maxWidth: 'calc(100vw - 16px)' }}>
               <AIAssistant userRole="client" externalOpen onClose={() => setOpenAI(false)} />
             </div>
           )}

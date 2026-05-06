@@ -102,7 +102,7 @@ const Sidebar = () => {
         </div>
         <Link to={`${basePath}/buy-connects`}
           className="btn-outline block text-center w-full py-2.5 rounded-full text-sm transition text-white hover:bg-accent hover:border-accent">
-          {isClient ? "Buy Post Credits" : "Buy Connects"}
+          {isClient ? "Buy Post Connects" : "Buy Connects"}
         </Link>
         <Link to={`${basePath}/connects`} className="block text-center text-text-muted hover:text-light-text text-xs mt-2.5 transition">
           View history

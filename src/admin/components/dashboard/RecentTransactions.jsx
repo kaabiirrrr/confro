@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Settings2, ChevronDown, CheckCircle2, Clock } from 'lucide-react';
 import { fetchPayments } from '../../../services/adminService';
 import { formatINR } from '../../../utils/currencyUtils';
+import CustomDropdown from '../../../components/ui/CustomDropdown';
 
 const RecentTransactions = () => {
     const [transactions, setTransactions] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [timeframe, setTimeframe] = useState('month');
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const timeframes = [
-        { id: 'today', label: 'Today' },
-        { id: 'week', label: 'This Week' },
-        { id: 'month', label: 'This Month' },
-        { id: 'year', label: 'This Year' },
-        { id: 'all', label: 'All Time' }
+        { value: 'today', label: 'Today' },
+        { value: 'week', label: 'This Week' },
+        { value: 'month', label: 'This Month' },
+        { value: 'year', label: 'This Year' },
+        { value: 'all', label: 'All Time' }
     ];
 
     const loadPayments = async () => {
@@ -72,49 +71,26 @@ const RecentTransactions = () => {
     };
 
     return (
-        <div className="bg-transparent border border-slate-200 dark:border-white/5 rounded-2xl p-4 sm:p-8 shadow-sm overflow-hidden">
+        <div className="bg-transparent border border-slate-200 dark:border-white/5 rounded-2xl p-4 sm:p-8 shadow-sm">
             <div className="flex items-center justify-between gap-3 mb-6 sm:mb-8">
                 <h3 className="text-lg sm:text-xl font-black tracking-tight text-slate-900 dark:text-white shrink-0">
                     Recent Transactions
                 </h3>
                 
-                <div className="flex items-center gap-2 sm:gap-3 relative">
-                    <div className="relative">
-                        <button 
-                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                            className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-transparent hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 rounded-xl transition-all text-[10px] sm:text-sm font-bold text-slate-600 dark:text-white/80 whitespace-nowrap min-w-[100px] sm:min-w-[120px]"
+                <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                    {timeframes.map((t) => (
+                        <button
+                            key={t.value}
+                            onClick={() => setTimeframe(t.value)}
+                            className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
+                                timeframe === t.value 
+                                    ? 'bg-accent text-white shadow-lg shadow-accent/20' 
+                                    : 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white border border-white/5'
+                            }`}
                         >
-                            {timeframes.find(t => t.id === timeframe)?.label} 
-                            <ChevronDown size={14} className={`text-slate-400 dark:text-white/60 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                            {t.label}
                         </button>
-
-                        {isDropdownOpen && (
-                            <>
-                                <div 
-                                    className="fixed inset-0 z-10" 
-                                    onClick={() => setIsDropdownOpen(false)}
-                                />
-                                <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-xl shadow-xl z-20 overflow-hidden py-1">
-                                    {timeframes.map((t) => (
-                                        <button
-                                            key={t.id}
-                                            onClick={() => {
-                                                setTimeframe(t.id);
-                                                setIsDropdownOpen(false);
-                                            }}
-                                            className={`w-full text-left px-4 py-2 text-xs font-bold transition-colors ${
-                                                timeframe === t.id 
-                                                    ? 'bg-blue-500 text-white' 
-                                                    : 'text-slate-600 dark:text-white/60 hover:bg-slate-100 dark:hover:bg-white/5'
-                                            }`}
-                                        >
-                                            {t.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            </>
-                        )}
-                    </div>
+                    ))}
                 </div>
             </div>
 
@@ -190,3 +166,4 @@ const RecentTransactions = () => {
 };
 
 export default RecentTransactions;
+

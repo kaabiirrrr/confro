@@ -29,12 +29,12 @@ const Navbar = () => {
               <img
                 src="/Logo-LightMode-trimmed.png"
                 alt="Connect - Freelance Marketplace Logo"
-                className="h-7 md:h-12 object-contain block dark:hidden transition-all duration-300"
+                className="h-9 md:h-12 object-contain block dark:hidden transition-all duration-300"
               />
               <img
                 src="/Logo2.png"
                 alt="Connect - Freelance Marketplace Logo"
-                className="h-6 md:h-10 object-contain hidden dark:block transition-all duration-300"
+                className="h-8 md:h-10 object-contain hidden dark:block transition-all duration-300"
               />
             </Link>
           </div>
