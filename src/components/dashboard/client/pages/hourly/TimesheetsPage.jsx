@@ -121,7 +121,7 @@ export default function TimesheetsPage() {
         </div>
       ) : timesheets.length === 0 ? (
         <div className="text-center py-20 bg-transparent rounded-2xl">
-          <Clock className="mx-auto text-white/20 mb-4" size={48} />
+          <img src="/Icons/icons8-clock-80.png" alt="" className="mx-auto w-12 h-12 object-contain mb-4" />
           <h3 className="text-white font-semibold text-lg">No Timesheets Found</h3>
           <p className="text-white/30 text-xs mt-2 max-w-xs mx-auto font-medium italic">
             Timesheets appear here once your authenticated freelancers log their operational hours.
