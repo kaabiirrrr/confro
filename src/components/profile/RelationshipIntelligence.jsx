@@ -60,7 +60,7 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
     if (userRole !== 'CLIENT' && !isAdminView) return null;
     
     if (loading) return (
-        <div className="animate-pulse bg-slate-900/50 rounded-3xl h-64 w-full border border-slate-800" />
+        <div className="animate-pulse bg-slate-100/50 dark:bg-slate-900/50 rounded-3xl h-64 w-full border border-slate-200 dark:border-slate-800" />
     );
 
     // Standardized structure from Polish Point #4
@@ -72,16 +72,22 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
     return (
         <div className="space-y-6">
             {/* Main intelligence Card */}
-            <div className="border border-white/10 rounded-3xl p-6 relative overflow-hidden group bg-transparent">
+            <div className="border border-slate-200 dark:border-white/10 rounded-2xl md:rounded-3xl p-4 sm:p-5 md:p-8 relative overflow-hidden group bg-white dark:bg-white/[0.02] shadow-sm dark:shadow-none backdrop-blur-sm">
                 {/* Background Glow */}
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-accent/5 blur-[100px] pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
                 
                 <div className="flex flex-col lg:flex-row justify-between gap-8 relative z-10">
                     <div className="flex-1 space-y-6">
-                        <div className="flex flex-wrap items-center gap-3">
-                            <h3 className="text-xl font-semibold text-white">
-                                {isAdminView ? 'Relationship Intelligence' : 'Your History'}
-                            </h3>
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                            <div className="space-y-1.5">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-1 h-1 rounded-full bg-accent animate-pulse" />
+                                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-white/40">Relationship Intelligence</h4>
+                                </div>
+                                <h3 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
+                                    {isAdminView ? 'Enterprise History' : 'Your Shared History'}
+                                </h3>
+                            </div>
                             
                             {/* Polish Point #6: Badge Priority Logic */}
                             <div className="flex gap-2">
@@ -113,8 +119,8 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
                             /* Polish Point #7: First Project Boost */
                             <div className="flex flex-col items-center justify-center py-10 bg-transparent rounded-2xl">
                                 <Sparkles className="w-10 h-10 text-accent mb-3 opacity-80" />
-                                <p className="text-white font-semibold text-lg">New Collaboration Potential</p>
-                                <p className="text-slate-400 text-sm mt-1 max-w-sm text-center">
+                                <p className="text-slate-900 dark:text-white font-semibold text-lg">New Collaboration Potential</p>
+                                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 max-w-sm text-center">
                                     Start working together to unlock personalized trust insights and behavioral mapping.
                                 </p>
                                 <button className="mt-4 px-6 py-2 bg-accent hover:bg-accent/80 text-white rounded-full text-sm font-bold transition-all transform hover:scale-105">
@@ -153,14 +159,14 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
                                     <div className="p-2 bg-accent/10 rounded-lg">
                                         <Calendar className="w-4 h-4 text-accent" />
                                     </div>
-                                    <div>
-                                        <p className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Last Project</p>
-                                        <p className="text-sm font-medium text-slate-200">{relationship.last_project_name}</p>
+                                     <div>
+                                        <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-widest">Last Project</p>
+                                        <p className="text-sm font-medium text-slate-700 dark:text-slate-200">{relationship.last_project_name}</p>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Completed</p>
-                                    <p className="text-sm font-medium text-slate-400">
+                                    <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-widest">Completed</p>
+                                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
                                         {relationship.last_project_date ? new Date(relationship.last_project_date).toLocaleDateString() : 'Recent'}
                                     </p>
                                 </div>
@@ -170,13 +176,13 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
 
                     {/* Trust radial - Polish Point #2: Rounded Integer */}
                     {has_history && (
-                        <div className="md:w-64 flex flex-col justify-center items-center p-8 bg-transparent">
+                        <div className="md:w-64 flex flex-col justify-center items-center p-4 md:p-8 bg-transparent">
                             <div className="relative mb-4">
                                 <svg className="w-28 h-28 transform -rotate-90">
                                     <circle
                                         cx="56" cy="56" r="48"
                                         stroke="currentColor" strokeWidth="8" fill="transparent"
-                                        className="text-slate-800"
+                                        className="text-slate-100 dark:text-slate-800"
                                     />
                                     <circle
                                         cx="56" cy="56" r="48"
@@ -187,8 +193,8 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
                                     />
                                 </svg>
                                 <div className="absolute inset-0 flex items-center justify-center flex-col">
-                                    <span className="text-3xl font-bold text-white">{Math.round(trust.score)}%</span>
-                                    <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">{trust.level}</span>
+                                    <span className="text-3xl font-bold text-slate-900 dark:text-white">{Math.round(trust.score)}%</span>
+                                    <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold">{trust.level}</span>
                                 </div>
                             </div>
                             <p className="text-xs text-center text-slate-500 font-medium leading-relaxed">
@@ -203,7 +209,7 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
 
                 {/* AI Relationship Summary - Gated by threshold Polish Point #5 */}
                 {has_history && ai?.summary && (
-                    <div className="mt-8 flex gap-4 py-5 bg-transparent border-t border-white/5">
+                    <div className="mt-8 flex gap-4 py-5 bg-transparent border-t border-slate-100 dark:border-white/5">
                         <div className="flex-shrink-0">
                             <div className="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
                                 <Sparkles className="w-5 h-5 text-accent" />
@@ -215,7 +221,7 @@ const RelationshipIntelligence = ({ freelancerId, userRole, clientId: propClient
                                 <div className="flex-1 h-[1px] bg-accent/20" />
                                 <span className="text-[10px] text-accent font-bold uppercase">{ai.compatibility}% Compatibility</span>
                             </div>
-                            <p className="text-sm text-slate-200 leading-relaxed font-medium">
+                            <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
                                 "{ai.summary}"
                             </p>
                         </div>
@@ -261,25 +267,25 @@ const StatCard = ({ label, value, icon, sub }) => (
     <div className="p-4 bg-transparent">
         <div className="flex items-center gap-2 mb-2 opacity-60">
             {icon}
-            <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400">{label}</span>
+            <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 dark:text-slate-500">{label}</span>
         </div>
         <div className="flex items-baseline gap-2">
-            <div className="text-2xl font-bold text-white">{value}</div>
-            {sub && <span className="text-[10px] text-slate-500 font-bold uppercase">{sub}</span>}
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">{value}</div>
+            {sub && <span className="text-[10px] text-slate-500 dark:text-slate-500 font-bold uppercase">{sub}</span>}
         </div>
     </div>
 );
 
 const BehaviorCard = ({ title, value, description, icon }) => (
-    <div className="bg-transparent p-5 border border-white/10 rounded-2xl transition-all duration-300 group">
+    <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 hover:border-accent/40 transition-all duration-300 group shadow-sm dark:shadow-none backdrop-blur-sm">
         <div className="flex justify-between items-start mb-3">
             <div className="flex items-center gap-2">
-                <div className="p-2 bg-transparent text-slate-400 group-hover:text-accent transition-colors">
+                <div className="p-2 bg-transparent text-slate-400 dark:text-slate-500 group-hover:text-accent transition-colors">
                     {icon}
                 </div>
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">{title}</h4>
+                <h4 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{title}</h4>
             </div>
-            <span className="text-xl font-bold text-white">{value}</span>
+            <span className="text-xl font-bold text-slate-900 dark:text-white">{value}</span>
         </div>
         <p className="text-xs text-slate-500 leading-relaxed font-medium">
             {description}

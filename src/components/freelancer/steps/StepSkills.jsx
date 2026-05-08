@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { profileApi } from "../../../services/profileApi";
@@ -7,6 +7,27 @@ import AIRewriteButton from '../../ui/AIRewriteButton';
 
 export default function StepSkills({ next, back, wizardData = {} }) {
     const [skills, setSkills] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const loadExistingSkills = async () => {
+            try {
+                setLoading(true);
+                const status = await profileApi.getStatus();
+                if (status.success) {
+                    const existingSkills = status.data?.skills || status.data?.step_data?.skills;
+                    if (Array.isArray(existingSkills)) {
+                        setSkills(existingSkills.join(', '));
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading existing skills:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadExistingSkills();
+    }, []);
 
     const handleContinue = async () => {
         try {
@@ -25,10 +46,16 @@ export default function StepSkills({ next, back, wizardData = {} }) {
             animate={{ opacity: 1, x: 0 }}
             className="space-y-6"
         >
-            <div>
-                <h2 className="text-xl font-bold text-white mb-1">Your Skills</h2>
-                <p className="text-white/40 text-sm">List the skills that help you stand out. Separate them with commas.</p>
-            </div>
+            {loading ? (
+                <div className="flex justify-center py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
+                </div>
+            ) : (
+                <>
+                    <div>
+                        <h2 className="text-xl font-bold text-white mb-1">Your Skills</h2>
+                        <p className="text-white/40 text-sm">List the skills that help you stand out. Separate them with commas.</p>
+                    </div>
 
             <div className="space-y-3 pt-2">
                 <div className="flex flex-col gap-2">
@@ -52,18 +79,20 @@ export default function StepSkills({ next, back, wizardData = {} }) {
                 </div>
             </div>
 
-            <div className="flex justify-end gap-5 pt-4">
-                <button onClick={back} className="flex items-center gap-2 px-8 py-4 text-white/40 hover:text-white transition-colors text-sm font-semibold">
+            <div className="flex justify-end gap-3 sm:gap-5 pt-2 sm:pt-4">
+                <button onClick={back} className="flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 text-white/40 hover:text-white transition-colors text-xs sm:text-sm font-semibold">
                     <FiArrowLeft /> Back
                 </button>
                 <button
                     onClick={handleContinue}
                     disabled={!skills.trim()}
-                    className="bg-accent text-white font-bold px-10 py-4 rounded-full hover:bg-accent/90 disabled:opacity-30 flex items-center gap-3 transition-all shadow-xl shadow-accent/10"
+                    className="bg-accent text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-full hover:bg-accent/90 disabled:opacity-30 flex items-center gap-3 transition-all shadow-xl shadow-accent/10 text-sm sm:text-base"
                 >
                     Continue <FiArrowRight />
                 </button>
             </div>
+            </>
+            )}
         </motion.div>
     );
 }

@@ -180,9 +180,9 @@ const CustomDropdown = ({
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         className={`
-          group flex items-center justify-between px-4 py-3 
+          group flex items-center justify-between px-2 sm:px-4 py-2 sm:py-3 
           transition-all duration-300 cursor-pointer
-          ${variant === 'minimal' ? 'border-none bg-transparent !p-0' : 'border rounded-2xl bg-secondary'}
+          ${variant === 'minimal' ? 'border-none bg-transparent !p-0' : 'border rounded-xl sm:rounded-2xl bg-secondary'}
           ${isOpen && variant !== 'minimal' ? 'border-accent shadow-[0_0_0_3px_rgba(59,130,246,0.1)]' : variant !== 'minimal' ? 'border-white/10 hover:border-white/20' : ''}
           ${error ? 'border-red-500/50' : ''}
         `}
@@ -213,10 +213,10 @@ const CustomDropdown = ({
             exit={{ opacity: 0, y: 5, scale: 0.98 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
             className={`
-              absolute left-0 right-0 mt-2 z-50
-              max-h-[280px] overflow-y-auto no-scrollbar
+              absolute left-0 right-0 mt-2 z-[100]
+              max-h-[280px] overflow-y-auto
               rounded-[20px] border border-white/10 shadow-3xl p-2
-              bg-secondary backdrop-blur-2xl
+              bg-secondary
             `}
             role="listbox"
           >

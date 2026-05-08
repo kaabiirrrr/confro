@@ -79,18 +79,31 @@ const Profile = () => {
                         </p>
                     </div>
 
-                    <div className="space-y-3 sm:space-y-6">
-                        <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-900/20 dark:text-white/20">About Me</h3>
                         <p className="text-sm sm:text-lg text-slate-900/60 dark:text-white/60 leading-relaxed font-medium">
                             {profile?.bio || "I'm a dedicated professional looking to help brands and businesses grow through innovative design and robust engineering solutions."}
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-3 sm:gap-6 pt-4 sm:pt-6">
+                    {/* Skills Section */}
+                    {profile?.skills && profile.skills.length > 0 && (
+                        <div className="space-y-3 sm:space-y-6">
+                            <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-900/20 dark:text-white/20">Skills</h3>
+                            <div className="flex flex-wrap gap-2">
+                                {profile.skills.map((skill, i) => (
+                                    <span key={i} className="px-3 py-1.5 sm:px-4 sm:py-2 bg-slate-900/5 dark:bg-white/5 border border-slate-900/5 dark:border-white/5 rounded-xl text-xs sm:text-sm font-bold text-slate-700 dark:text-white/60">
+                                        {skill}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 pt-4 sm:pt-6">
                         {[
-                            { label: 'Job Success', value: '100%', sub: 'Based on 12 jobs' },
-                            { label: 'Total Earned', value: '₹2k+', sub: 'Last 12 months' },
-                            { label: 'Completion Rate', value: '98%', sub: 'On-time delivery' }
+                            { label: 'Hourly Rate', value: profile?.hourly_rate ? `₹${profile.hourly_rate}` : '₹0', sub: 'Fixed Rate' },
+                            { label: 'Experience', value: profile?.step_data?.professional_info?.experience ? `${profile.step_data.professional_info.experience}+ Yrs` : '0+ Yrs', sub: 'Prof. History' },
+                            { label: 'Job Success', value: '100%', sub: 'Based on 0 jobs' },
+                            { label: 'Total Earned', value: '₹0', sub: 'Last 12 months' },
                         ].map((stat, i) => (
                             <div key={i} className="bg-slate-900/5 dark:bg-secondary/40 border border-slate-900/5 dark:border-white/5 p-4 sm:p-8 rounded-[20px] sm:rounded-[35px] space-y-1">
                                 <p className="text-lg sm:text-2xl font-bold text-slate-950 dark:text-white">{stat.value}</p>

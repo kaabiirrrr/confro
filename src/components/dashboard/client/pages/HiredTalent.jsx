@@ -95,7 +95,7 @@ const HiredTalent = () => {
                         className="ring-2 ring-border group-hover:ring-accent/40 transition-all"
                       />
                       {contract.freelancer?.is_verified && (
-                        <div className="absolute -bottom-1 -right-1 bg-accent rounded-full p-0.5 border-2 border-[#111827]">
+                        <div className="absolute -bottom-1 -right-1 bg-accent rounded-full p-0.5">
                           <ShieldCheck size={10} className="text-white" />
                         </div>
                       )}

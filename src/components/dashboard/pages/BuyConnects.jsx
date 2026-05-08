@@ -1,21 +1,22 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-    ChevronDown, 
     RefreshCw, 
-    Zap, 
     Shield, 
-    Clock, 
-    Plus, 
-    Check, 
-    Info, 
-    ArrowRight 
+    ArrowRight,
+    CreditCard
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { connectsApi } from '../../../services/connectsApi';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../../context/AuthContext';
 import { useProfile } from '../../../context/ProfileContext';
+
+// UI Components
+import SectionHeader from "../../ui/SectionHeader";
+import Button from "../../ui/Button";
+import CustomDropdown from "../../ui/CustomDropdown";
+import Card from "../../ui/Card";
 
 export default function BuyConnects() {
     const { loading: authLoading, isAuthenticated } = useAuth();
@@ -29,13 +30,11 @@ export default function BuyConnects() {
         { id: 'professional', connects: 100, price: 50000, isBestValue: true },
         { id: 'ultimate', connects: 200, price: 100000 }
     ]);
-    const [selectedPackage, setSelectedPackage] = useState(null);
+    const [selectedPackageId, setSelectedPackageId] = useState("");
     const [settings, setSettings] = useState({ is_connect_system_enabled: true });
     const [promoCode, setPromoCode] = useState("");
     const [appliedPromo, setAppliedPromo] = useState(null);
     const [isApplyingPromo, setIsApplyingPromo] = useState(false);
-    const [isSelectOpen, setIsSelectOpen] = useState(false);
-    const selectRef = useRef(null);
 
     // Update local balance when context balance changes
     useEffect(() => {
@@ -44,22 +43,12 @@ export default function BuyConnects() {
         }
     }, [contextBalance]);
 
-    // Handle outside clicks for dropdown
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (selectRef.current && !selectRef.current.contains(event.target)) {
-                setIsSelectOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    useEffect(() => {
-        if (!selectedPackage && packages.length > 0) {
-            setSelectedPackage(packages.find(p => p.isBestValue) || packages[0]);
+        if (!selectedPackageId && packages.length > 0) {
+            const bestValue = packages.find(p => p.isBestValue) || packages[0];
+            setSelectedPackageId(bestValue.id);
         }
-    }, [packages]);
+    }, [packages, selectedPackageId]);
 
     const loadRazorpayScript = () => {
         return new Promise((resolve) => {
@@ -132,13 +121,15 @@ export default function BuyConnects() {
     };
 
     const handlePurchase = async () => {
-        if (!selectedPackage) return;
+        const selectedPkg = packages.find(p => p.id === selectedPackageId);
+        if (!selectedPkg) return;
+        
         try {
             setLoading(true);
             const isLoaded = await loadRazorpayScript();
             if (!isLoaded) { toast.error("Gateway error"); setLoading(false); return; }
 
-            const res = await connectsApi.createPaymentIntent(selectedPackage.id, promoCode);
+            const res = await connectsApi.createPaymentIntent(selectedPkg.id, promoCode);
             if (!res.success) throw new Error(res.message);
 
             const options = {
@@ -153,7 +144,7 @@ export default function BuyConnects() {
                         razorpay_order_id: response.razorpay_order_id,
                         razorpay_payment_id: response.razorpay_payment_id,
                         razorpay_signature: response.razorpay_signature,
-                        packageId: selectedPackage.id
+                        packageId: selectedPkg.id
                     });
                     if (vRes.success) {
                         toast.success("Purchase successful!");
@@ -168,148 +159,151 @@ export default function BuyConnects() {
     };
 
     const calculateFinalPrice = () => {
-        if (!selectedPackage) return 0;
-        let p = selectedPackage.price / 100;
+        const selectedPkg = packages.find(p => p.id === selectedPackageId);
+        if (!selectedPkg) return 0;
+        let p = selectedPkg.price / 100;
         if (appliedPromo) p *= (1 - (appliedPromo.discount_percentage || 0) / 100);
         return p;
     };
 
+    const selectedPkg = packages.find(p => p.id === selectedPackageId);
     const finalPrice = calculateFinalPrice();
     const expiryDate = new Date();
     expiryDate.setFullYear(expiryDate.getFullYear() + 1);
 
-    return (
-        <div className="max-w-[1500px] mx-auto px-6 py-10 space-y-10 bg-transparent">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-end gap-6">
-                <div className="space-y-1">
-                    <span className="text-accent text-[8px] font-bold uppercase tracking-widest">Capital Store</span>
-                    <h1 className="text-2xl font-bold text-white tracking-tight">Refill Connects</h1>
-                </div>
-                <div className="bg-white/5 border border-white/5 px-6 py-3 rounded-2xl flex items-center gap-3 backdrop-blur-md">
-                    <Shield className="text-emerald-500" size={14} />
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-white/40">Safe & Secure Payment</span>
-                </div>
-            </div>
+    const dropdownOptions = packages.map(pkg => ({
+        label: `${pkg.connects} Connects for ₹${(pkg.price / 100).toFixed(2)}`,
+        value: pkg.id,
+        description: pkg.isBestValue ? "Best Value" : ""
+    }));
 
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-10">
+    return (
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 md:px-10 py-6 sm:py-8 font-sans tracking-tight">
+            {/* Header */}
+            <SectionHeader 
+                title="Refill Connects" 
+                subtext="Capital Store"
+                action={
+                    <div className="bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-full flex items-center gap-2">
+                        <Shield className="text-emerald-500" size={14} />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Safe & Secure Payment</span>
+                    </div>
+                }
+            />
+
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 sm:gap-10 mt-8">
                 {/* Main Content */}
-                <div className="xl:col-span-8 bg-transparent border border-white/5 rounded-[24px] p-8 lg:p-10 space-y-10 shadow-2xl backdrop-blur-xl">
+                <Card className="xl:col-span-8 p-6 sm:p-10 space-y-8 sm:space-y-10 shadow-2xl">
                     
                     {/* Available Connects */}
-                    <div className="space-y-1 relative">
+                    <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                            <label className="text-light-text/30 text-[9px] font-bold uppercase tracking-[0.2em]">Your available Connects</label>
-                            <button onClick={handleManualRefresh} className="text-[8px] font-bold uppercase tracking-widest text-accent/40 hover:text-accent transition-colors flex items-center gap-2">
-                                <RefreshCw size={8} /> REFRESH
+                            <label className="text-slate-400 dark:text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">Your available Connects</label>
+                            <button 
+                                onClick={handleManualRefresh} 
+                                className="transition-all text-accent group p-1"
+                                title="Refresh Balance"
+                            >
+                                <RefreshCw size={14} className="group-hover:rotate-180 transition-transform duration-500" />
                             </button>
                         </div>
-                        <p className="text-3xl font-bold text-white tracking-tighter">{balance}</p>
+                        <p className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">{balance}</p>
                     </div>
 
                     {/* Package Selection */}
                     <div className="space-y-4">
-                        <label className="text-light-text/30 text-[9px] font-bold uppercase tracking-[0.2em]">Select the amount to buy</label>
-                        <div className="relative" ref={selectRef}>
-                            <button
-                                onClick={() => setIsSelectOpen(!isSelectOpen)}
-                                className={`w-full md:max-w-md flex items-center justify-between px-6 py-4 rounded-full border transition-all ${isSelectOpen ? 'border-accent/40 bg-white/10' : 'bg-white/5 border-white/10 hover:border-white/20'}`}
-                            >
-                                <span className="text-white text-sm font-bold">
-                                    {selectedPackage ? `${selectedPackage.connects} Connects for ₹${(selectedPackage.price / 100).toFixed(2)}` : "Select a package"}
-                                </span>
-                                <ChevronDown size={14} className={`text-white/40 transition-transform ${isSelectOpen ? 'rotate-180' : ''}`} />
-                            </button>
-
-                            <AnimatePresence>
-                                {isSelectOpen && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 5 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 5 }}
-                                        className="absolute top-full left-0 mt-3 w-full md:max-w-md bg-[#11141D] border border-white/10 rounded-[24px] shadow-2xl z-50 overflow-hidden backdrop-blur-2xl"
-                                    >
-                                        <div className="p-3 space-y-1">
-                                            {packages.map((pkg) => (
-                                                <button
-                                                    key={pkg.id}
-                                                    onClick={() => { setSelectedPackage(pkg); setIsSelectOpen(false); }}
-                                                    className={`w-full flex items-center justify-between p-4 rounded-xl text-xs transition-all ${selectedPackage?.id === pkg.id ? 'bg-accent/10 text-accent font-bold' : 'text-white/60 hover:bg-white/5 hover:text-white'}`}
-                                                >
-                                                    <span className="font-semibold">{pkg.connects} Connects</span>
-                                                    <span className="font-bold">₹{(pkg.price / 100).toFixed(2)}</span>
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                        <label className="text-slate-400 dark:text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">Select the amount to buy</label>
+                        <div className="max-w-md">
+                            <CustomDropdown 
+                                options={dropdownOptions}
+                                value={selectedPackageId}
+                                onChange={setSelectedPackageId}
+                                placeholder="Select a package"
+                            />
                         </div>
                     </div>
 
-                    <div className="h-[1px] bg-white/5 w-full" />
+                    <div className="h-[1px] bg-slate-100 dark:bg-white/5 w-full" />
 
                     {/* Stats Row */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="space-y-1">
-                            <label className="text-light-text/30 text-[9px] font-bold uppercase tracking-[0.2em]">Charge amount</label>
-                            <p className="text-lg font-bold text-white">₹{finalPrice.toFixed(2)}</p>
+                    <div className="grid grid-cols-3 gap-2 sm:gap-8">
+                        <div className="space-y-1 sm:space-y-1.5 text-left">
+                            <label className="text-slate-400 dark:text-white/30 text-[8px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-[0.2em]">Charge</label>
+                            <p className="text-sm sm:text-xl font-black text-slate-900 dark:text-white">₹{finalPrice.toFixed(2)}</p>
                         </div>
-                        <div className="space-y-1">
-                            <label className="text-light-text/30 text-[9px] font-bold uppercase tracking-[0.2em]">New balance</label>
-                            <p className="text-lg font-bold text-accent">{balance + (selectedPackage?.connects || 0)}</p>
+                        <div className="space-y-1 sm:space-y-1.5 border-x border-slate-100 dark:border-white/5 px-2 sm:px-0 text-center">
+                            <label className="text-slate-400 dark:text-white/30 text-[8px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-[0.2em]">Balance</label>
+                            <p className="text-sm sm:text-xl font-black text-accent">{balance + (selectedPkg?.connects || 0)}</p>
                         </div>
-                        <div className="space-y-1">
-                            <label className="text-light-text/30 text-[9px] font-bold uppercase tracking-[0.2em]">Expiry date</label>
-                            <p className="text-[11px] font-bold text-white/40">{expiryDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                        <div className="space-y-1 sm:space-y-1.5 text-right">
+                            <label className="text-slate-400 dark:text-white/30 text-[8px] sm:text-[10px] font-black uppercase tracking-wider sm:tracking-[0.2em]">Expiry</label>
+                            <p className="text-[9px] sm:text-[11px] font-bold text-slate-400 dark:text-white/40 leading-tight">
+                                {expiryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' }).replace(',', '')}
+                            </p>
                         </div>
                     </div>
 
                     {/* Promo Code Section */}
                     <div className="space-y-4 pt-4">
-                        <label className="text-light-text/30 text-[9px] font-bold uppercase tracking-[0.2em]">Promo Code</label>
-                        <div className="flex gap-4 max-w-md">
+                        <label className="text-slate-400 dark:text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">Promo Code</label>
+                        <div className="flex flex-col sm:flex-row gap-3 max-w-lg">
                             <input
                                 type="text"
-                                placeholder="Enter code"
+                                placeholder="ENTER CODE"
                                 value={promoCode}
                                 onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                                className="flex-1 bg-white/5 border border-white/10 rounded-full py-3 px-6 text-white text-xs font-bold tracking-widest focus:outline-none focus:border-accent/40 transition-all"
+                                className="flex-1 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full py-3 px-6 text-slate-900 dark:text-white text-xs font-black tracking-widest focus:outline-none focus:border-accent/40 transition-all placeholder:text-slate-300 dark:placeholder:text-white/10"
                             />
-                            <button onClick={handleApplyPromo} disabled={isApplyingPromo} className="px-8 bg-white/5 hover:bg-white/10 text-white font-bold rounded-full text-[9px] uppercase tracking-widest transition-all border border-white/5">
-                                {isApplyingPromo ? "..." : "Apply"}
-                            </button>
+                            <Button 
+                                onClick={handleApplyPromo} 
+                                isLoading={isApplyingPromo} 
+                                variant="secondary"
+                                className="px-8 text-slate-600 dark:text-white/60 border-slate-200 dark:border-white/10"
+                            >
+                                Apply
+                            </Button>
                         </div>
                     </div>
 
                     {/* CTA Section */}
                     <div className="pt-6 flex flex-col sm:flex-row items-center gap-6">
-                        <button
+                        <Button
                             onClick={handlePurchase}
-                            disabled={loading}
-                            className="w-full sm:w-auto px-10 py-4 bg-accent hover:bg-accent/90 text-white rounded-full font-bold text-[9px] uppercase tracking-widest shadow-xl shadow-accent/10 transition-all active:scale-95"
+                            isLoading={loading}
+                            className="w-full sm:w-auto px-8 h-11 text-xs uppercase tracking-widest font-black"
                         >
-                            {loading ? "Processing..." : "Buy Connects Now"}
-                        </button>
-                        <p className="text-[10px] font-bold text-white/20 uppercase tracking-widest">Secure Razorpay Checkout</p>
+                            Buy Connects Now
+                        </Button>
+                        <div className="flex items-center gap-2">
+                            <Shield size={14} className="text-slate-300 dark:text-white/10" />
+                            <p className="text-[10px] font-black text-slate-300 dark:text-white/20 uppercase tracking-widest">Secure Razorpay Checkout</p>
+                        </div>
                     </div>
-                </div>
+                </Card>
 
                 {/* Sidebar Info */}
-                <div className="xl:col-span-4 space-y-8">
-                    <div className="bg-white/[0.02] border border-accent/10 rounded-[24px] p-8 space-y-6 relative overflow-hidden group backdrop-blur-xl">
-                        <h2 className="text-lg font-bold text-white tracking-tight">Get 50% Off Freelancer Plus</h2>
-                        <p className="text-white/40 text-[11px] leading-relaxed font-medium">
+                <div className="xl:col-span-4 space-y-6 sm:space-y-8">
+                    <div className="bg-accent/5 border border-accent/10 rounded-[24px] p-6 sm:p-8 space-y-6 relative overflow-hidden group">
+                        <div className="absolute -right-4 -top-4 opacity-[0.05] group-hover:rotate-12 transition-transform duration-700">
+                            <RefreshCw size={120} className="text-accent" />
+                        </div>
+                        <h2 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">Get 50% Off Freelancer Plus</h2>
+                        <p className="text-slate-600 dark:text-white/40 text-[11px] leading-relaxed font-medium">
                             100 Connects included monthly. Plus members win 40% more contracts on average.
                         </p>
-                        <button className="w-full h-11 bg-accent text-white font-bold rounded-full transition-all text-[9px] uppercase tracking-widest hover:bg-white hover:text-primary">
+                        <Button 
+                            className="w-full h-12 text-[10px] uppercase tracking-widest font-black"
+                        >
                             Learn More
-                        </button>
+                        </Button>
                     </div>
 
-                    <div className="bg-white/[0.02] rounded-[24px] p-8 border border-white/5 space-y-4 backdrop-blur-xl">
-                        <h4 className="text-[9px] font-bold text-white/20 uppercase tracking-widest">Safe Billing</h4>
-                        <p className="text-white/30 text-[9px] leading-relaxed font-medium">
+                    <div className="bg-slate-50 dark:bg-white/[0.02] rounded-[24px] p-6 sm:p-8 border border-slate-100 dark:border-white/5 space-y-4">
+                        <div className="flex items-center gap-2 mb-2">
+                            <CreditCard size={14} className="text-accent" />
+                            <h4 className="text-[10px] font-black text-slate-900 dark:text-white/60 uppercase tracking-widest">Safe Billing</h4>
+                        </div>
+                        <p className="text-slate-500 dark:text-white/30 text-[10px] leading-relaxed font-medium italic">
                             Your transactions are protected with industry-standard bank-level encryption. We never store your card details on our servers.
                         </p>
                     </div>

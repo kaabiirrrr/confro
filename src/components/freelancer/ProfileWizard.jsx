@@ -85,16 +85,16 @@ export default function ProfileWizard() {
     }
 
     return (
-        <div className="min-h-screen bg-primary flex justify-center py-24 px-6">
+        <div className="min-h-screen bg-primary flex justify-center py-6 sm:py-24 px-4 sm:px-6">
             <div className="w-full max-w-4xl">
-                <div className="mb-4">
-                    <div className="flex justify-between items-end mb-4">
+                <div className="mb-2 sm:mb-4">
+                    <div className="flex justify-between items-end mb-2 sm:mb-4">
                         <div className="space-y-1">
-                            <span className="text-accent font-bold uppercase tracking-widest text-[10px]">Profile Verification</span>
-                            <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Let's build your profile</h1>
+                            <span className="text-accent font-bold uppercase tracking-widest text-[9px] sm:text-[10px]">Profile Verification</span>
+                            <h1 className="text-xl md:text-3xl font-bold text-white tracking-tight">Let's build your profile</h1>
                         </div>
                         <div className="text-right">
-                            <span className="text-sm font-medium text-white/40">Step {step} of {totalSteps}</span>
+                            <span className="text-[11px] sm:text-sm font-medium text-white/40">Step {step} of {totalSteps}</span>
                         </div>
                     </div>
                     <ProfileCompletionBar percentage={Math.round((step / totalSteps) * 100)} />

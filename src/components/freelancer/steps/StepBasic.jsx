@@ -148,7 +148,7 @@ export default function StepBasic({ next }) {
     <motion.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
-      className="space-y-6"
+      className="space-y-3 sm:space-y-6"
     >
       <div>
         <h2 className="text-xl font-bold text-white mb-1">Basic Information</h2>
@@ -156,10 +156,10 @@ export default function StepBasic({ next }) {
       </div>
 
       {/* Profile Photo Upload */}
-      <div className="flex items-center gap-6 group">
+      <div className="flex items-center gap-3 sm:gap-6 group">
         <div
           onClick={() => fileInputRef.current?.click()}
-          className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white/5 cursor-pointer hover:border-accent/40 transition-all flex-shrink-0 bg-white/[0.02] flex items-center justify-center"
+          className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-white/5 cursor-pointer hover:border-accent/40 transition-all flex-shrink-0 bg-white/[0.02] flex items-center justify-center"
         >
           {avatarPreview ? (
             <img
@@ -184,10 +184,10 @@ export default function StepBasic({ next }) {
           />
         </div>
 
-        <div className="space-y-1">
-          <p className="text-lg font-semibold text-white">Profile Photo <span className="text-red-400 text-sm">*</span></p>
-          <p className="text-sm text-white/30">
-            A clear photo builds trust with clients. Max 20MB.
+        <div className="space-y-0 sm:space-y-1">
+          <p className="text-sm sm:text-lg font-semibold text-white">Profile Photo <span className="text-red-400 text-sm">*</span></p>
+          <p className="text-[10px] sm:text-sm text-white/30">
+            A clear photo builds trust with clients.
           </p>
           {errors.avatar && (
             <p className="text-red-400 text-xs mt-2 font-medium">{errors.avatar}</p>
@@ -195,7 +195,7 @@ export default function StepBasic({ next }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-x-3 sm:gap-x-8 gap-y-3 sm:gap-y-5">
         <div className="space-y-2">
           <label className="text-sm font-medium text-white/50 px-1">Full Name</label>
           <input
@@ -203,7 +203,7 @@ export default function StepBasic({ next }) {
             value={formData.fullName}
             onChange={handleChange}
             placeholder="e.g. John Doe"
-            className="bg-secondary/20 border border-white/10 p-3.5 rounded-xl w-full focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-sm"
+            className="bg-secondary/20 border border-white/10 p-2 sm:p-3.5 rounded-lg sm:rounded-xl w-full focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-xs sm:text-sm"
           />
           {errors.fullName && (
             <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.fullName}</p>
@@ -217,7 +217,7 @@ export default function StepBasic({ next }) {
             value={formData.title}
             onChange={handleChange}
             placeholder="e.g. Senior Product Designer"
-            className="bg-secondary/20 border border-white/10 p-3.5 rounded-xl w-full focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-sm"
+            className="bg-secondary/20 border border-white/10 p-2 sm:p-3.5 rounded-lg sm:rounded-xl w-full focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-xs sm:text-sm"
           />
           {errors.title && (
             <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.title}</p>
@@ -268,7 +268,7 @@ export default function StepBasic({ next }) {
             value={formData.city}
             onChange={handleChange}
             placeholder="e.g. New York"
-            className="bg-secondary/20 border border-white/10 p-3.5 rounded-xl w-full focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-sm"
+            className="bg-secondary/20 border border-white/10 p-2 sm:p-3.5 rounded-lg sm:rounded-xl w-full focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-xs sm:text-sm"
           />
           {errors.city && (
             <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.city}</p>
@@ -276,8 +276,8 @@ export default function StepBasic({ next }) {
         </div>
 
         {/* Bio Section - Refined for better alignment */}
-        <div className="col-span-1 md:col-span-2 space-y-3 pt-2">
-          <div className="flex flex-col gap-2">
+        <div className="col-span-2 md:col-span-2 space-y-1 sm:space-y-3 pt-0 sm:pt-2">
+          <div className="flex flex-col gap-1 sm:gap-2">
             <div className="flex items-center justify-between px-1">
               <label className="text-sm font-medium text-white/50">Professional Bio</label>
               <div className="w-auto">
@@ -293,8 +293,8 @@ export default function StepBasic({ next }) {
               name="bio"
               value={formData.bio}
               onChange={handleChange}
-              placeholder="Write a brief introduction about your professional background and passions..."
-              className="bg-secondary/20 border border-white/10 p-4 rounded-2xl w-full h-36 resize-none focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-sm leading-relaxed"
+              placeholder="Describe your background..."
+              className="bg-secondary/20 border border-white/10 p-2 sm:p-4 rounded-lg sm:rounded-2xl w-full h-20 sm:h-36 resize-none focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-xs sm:text-sm leading-tight sm:leading-relaxed"
             />
           </div>
           {errors.bio && (
@@ -307,7 +307,7 @@ export default function StepBasic({ next }) {
         <button
           onClick={handleNext}
           disabled={uploading}
-          className="bg-accent text-white font-bold px-10 py-4 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center gap-3 transition-all shadow-xl shadow-accent/10"
+          className="bg-accent text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center gap-3 transition-all shadow-xl shadow-accent/10 text-sm sm:text-base"
         >
           {uploading ? (
             <>

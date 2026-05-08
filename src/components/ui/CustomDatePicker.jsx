@@ -144,7 +144,7 @@ const CustomDatePicker = ({
       <div
         onClick={() => setIsOpen(!isOpen)}
         className={`
-          flex items-center justify-between px-4 py-3 
+          flex items-center justify-between px-2 sm:px-4 py-2 sm:py-3 
           bg-secondary/40 backdrop-blur-md rounded-xl border transition-all duration-300 cursor-pointer
           ${isOpen ? 'border-accent shadow-[0_0_0_3px_rgba(56,189,248,0.1)]' : 'border-white/10 hover:border-white/20'}
           ${error ? 'border-red-500/50' : ''}

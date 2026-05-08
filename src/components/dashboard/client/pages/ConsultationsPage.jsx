@@ -286,7 +286,7 @@ export default function ConsultationsPage() {
                           </div>
                         )}
                         {expert.is_verified && (
-                          <div className="absolute -bottom-1 -right-1 p-1 bg-accent rounded-full ring-4 ring-[#0F1115]">
+                          <div className="absolute -bottom-0.5 -right-0.5 p-1 bg-accent rounded-full">
                             <ShieldCheck size={12} className="text-white" />
                           </div>
                         )}
@@ -301,7 +301,7 @@ export default function ConsultationsPage() {
                     {expert.hourly_rate && (
                       <div className="text-right">
                         <span className="block text-[8px] font-black text-white/20 uppercase tracking-widest">Rate</span>
-                        <span className="text-base font-black text-accent">${expert.hourly_rate}</span>
+                        <span className="text-base font-black text-accent">₹{expert.hourly_rate}</span>
                         <span className="text-[9px] text-white/20 font-bold">/hr</span>
                       </div>
                     )}

@@ -205,7 +205,7 @@ const ClientTopbar = () => {
 
       {/* Live suggestions dropdown */}
       {showSuggestions && !openSearchType && suggestions.length > 0 && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] p-3 bg-primary/40 backdrop-blur-3xl rounded-2xl shadow-2xl z-[2010] flex flex-col gap-2 border border-white/10">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] p-3 bg-primary rounded-2xl shadow-2xl z-[2010] flex flex-col gap-2 border border-white/10">
           <div className="px-1 py-1 flex items-center justify-between">
             <span className="text-[10px] font-bold uppercase tracking-widest text-slate-900/40 dark:text-white/30">Top Results</span>
             <span className="w-1 h-1 rounded-full bg-accent animate-pulse"></span>

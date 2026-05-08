@@ -12,7 +12,7 @@ export default function ProfileCompletionBar({ percentage }) {
     }, [percentage]);
 
     return (
-        <div className="w-full mb-8">
+        <div className="w-full mb-4 sm:mb-8">
             <div className="flex justify-between items-end mb-2">
                 <span className="text-sm font-medium opacity-80">Profile Completion</span>
                 <span className="text-sm font-bold" style={{ color }}>{percentage}%</span>

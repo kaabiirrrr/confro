@@ -133,7 +133,7 @@ export default function NewDirectContractModal({ isOpen, onClose, onCreated, pre
           <div className="flex gap-3">
             <div className="flex-1">
               <label className="block text-sm text-white/60 mb-1">
-                {form.project_type === 'HOURLY' ? 'Hourly Rate ($)' : 'Fixed Price ($)'}
+                {form.project_type === 'HOURLY' ? 'Hourly Rate (₹)' : 'Fixed Price (₹)'}
               </label>
               <input
                 type="number"

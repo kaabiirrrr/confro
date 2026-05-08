@@ -113,15 +113,15 @@ const ClientWorkActivityPage = () => {
     }
 
     return (
-        <div className="max-w-[1500px] mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 md:px-10 space-y-10 md:space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* ── HEADER ── */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 pb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-white/5 pb-8">
                 <div>
-                    <h1 className="text-xl font-black text-white tracking-tighter">Project Activity</h1>
-                    <p className="text-white/30 text-[11px] mt-1 uppercase tracking-widest font-bold">Monitor daily progress & transparency</p>
+                    <h1 className="text-lg sm:text-2xl font-semibold text-white tracking-tight">Project Activity</h1>
+                    <p className="text-white/30 text-[10px] md:text-[11px] mt-1 uppercase tracking-widest font-bold">Monitor daily progress & transparency</p>
                 </div>
                 
-                <div className="flex items-center gap-4">
+                <div className="w-full sm:w-auto">
                     <CustomDropdown 
                         options={activeJobs.map(j => ({ label: j.jobs?.title || 'Selected Project', value: j.job_id }))}
                         value={selectedJobId}
@@ -130,16 +130,16 @@ const ClientWorkActivityPage = () => {
                             setPage(1);
                             setSearchParams({ jobId: val });
                         }}
-                        className="min-w-[280px]"
-                        fullWidth={false}
+                        className="w-full sm:min-w-[280px]"
+                        fullWidth={true}
                         placeholder="Select Project"
                     />
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-16">
                 {/* ── LEFT: FREELANCER INFO ── */}
-                <div className="lg:col-span-1 space-y-10">
+                <div className="lg:col-span-1 space-y-10 lg:space-y-12">
                     <motion.div 
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -206,7 +206,7 @@ const ClientWorkActivityPage = () => {
                                 <motion.div 
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                    className="p-20 text-center rounded-[40px] bg-white/5 border border-dashed border-white/10"
+                                    className="p-16 text-center"
                                 >
                                     <p className="text-white/20 text-sm italic font-medium">No activity logs recorded yet for this project.</p>
                                 </motion.div>
@@ -225,13 +225,13 @@ const ClientWorkActivityPage = () => {
                                         </div>
 
                                         <div className={`pb-10 border-b border-white/5 transition-all ${log.date === todayStr ? 'border-accent/10' : ''}`}>
-                                            <div className="flex items-center justify-between mb-4">
+                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                                                 <div className="flex items-center gap-3">
-                                                    <span className="text-sm font-black text-white">
+                                                    <span className="text-sm md:text-base font-black text-white">
                                                         {new Date(log.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
                                                     </span>
                                                     {log.date === todayStr && (
-                                                        <span className="bg-accent/10 text-accent text-[9px] font-black uppercase px-2 py-0.5 rounded-md border border-accent/20 tracking-tighter">Current Day</span>
+                                                        <span className="bg-accent/10 text-accent text-[8px] md:text-[9px] font-black uppercase px-2 py-0.5 rounded-md border border-accent/20 tracking-tighter">Current Day</span>
                                                     )}
                                                 </div>
                                                 <span className="text-[10px] font-bold text-white/20 uppercase tracking-widest">

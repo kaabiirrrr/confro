@@ -229,7 +229,7 @@ const FreelancerProfilePage = () => {
 
         return (
             <div className="min-h-screen bg-primary flex flex-col items-center justify-center gap-4">
-                <InfinityLoader/>
+                <InfinityLoader />
                 <p className="text-slate-900/60 dark:text-white/60 font-medium animate-pulse">Fetching premium profile...</p>
             </div>
         );
@@ -266,7 +266,7 @@ const FreelancerProfilePage = () => {
                 <FreelancerTopbar />
             )}
 
-            <div className="max-w-[1480px] mx-auto px-4 md:px-6 py-6 md:py-12">
+            <div className="max-w-[1480px] mx-auto px-4 md:px-6">
 
                 {/* 1. TOP HEADER SECTION */}
                 <div className="mb-8 md:mb-12 bg-transparent border-none shadow-none">
@@ -313,11 +313,43 @@ const FreelancerProfilePage = () => {
                                     <div className="w-px h-4 bg-slate-900/10 dark:bg-white/10" />
                                     <span className="text-slate-950 dark:text-white/70 text-sm font-bold uppercase tracking-wider">{profile.experience_years || '0'}+ Years Exp.</span>
                                 </div>
+
+                                {/* Mobile Action Buttons */}
+                                <div className="w-full flex flex-col gap-3 mt-2">
+                                    {!isOwnProfile ? (
+                                        <>
+                                            <div className="flex gap-3">
+                                                <button
+                                                    onClick={() => navigate('/freelancer/messages', { state: { recipientId: profile.id } })}
+                                                    className="flex-1 flex items-center justify-center gap-2 py-3 bg-accent text-primary rounded-full font-bold text-xs uppercase tracking-widest shadow-lg shadow-accent/10"
+                                                >
+                                                    <MessageSquare size={16} /> Message
+                                                </button>
+                                                <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-white/[0.05] dark:bg-white/[0.02] text-slate-950 dark:text-white border border-slate-900/10 dark:border-white/10 rounded-full font-bold text-xs uppercase tracking-widest transition">
+                                                    <Check size={16} className="text-accent" /> Contacts
+                                                </button>
+                                            </div>
+                                            <button
+                                                onClick={() => toast.success('Report submitted successfully.')}
+                                                className="w-full py-2 text-slate-950/30 dark:text-white/30 text-[10px] font-bold uppercase tracking-[0.2em]"
+                                            >
+                                                Report User
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <button
+                                            onClick={() => navigate('/freelancer/setup-profile')}
+                                            className="w-full py-3 bg-accent/10 border border-accent/20 text-accent rounded-full font-bold text-xs uppercase tracking-widest transition"
+                                        >
+                                            Complete Profile Wizard
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
                         {/* Name and Header Info Column */}
-                        <div className="flex-1 flex flex-col pt-2 w-full">
+                        <div className="flex-1 flex flex-col pt-2 w-full relative">
                             {editSection === 'header' ? (
                                 <div className="space-y-4 max-w-xl">
                                     <input
@@ -396,15 +428,17 @@ const FreelancerProfilePage = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex items-center justify-center sm:justify-start gap-3 mt-4 sm:mt-0">
-                                        <div className="flex items-center gap-1.5 text-slate-900/40 dark:text-white/40 text-sm font-medium">
-                                            <MapPin size={16} />
-                                            <span>{profile.location || 'Remote'}</span>
+                                    <div className="flex flex-col items-end gap-3 mt-4 sm:mt-0">
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex items-center gap-1.5 text-slate-900/40 dark:text-white/40 text-sm font-medium">
+                                                <MapPin size={16} />
+                                                <span>{profile.location || 'Remote'}</span>
+                                            </div>
+                                            <div className="w-px h-4 bg-white/10" />
+                                            <button className="flex items-center gap-1.5 text-slate-900/40 dark:text-white/40 hover:text-accent transition text-sm font-bold uppercase tracking-widest">
+                                                <Heart size={16} /> BOOKMARK
+                                            </button>
                                         </div>
-                                        <div className="w-px h-4 bg-white/10" />
-                                        <button className="flex items-center gap-1.5 text-slate-900/40 dark:text-white/40 hover:text-accent transition text-sm font-bold uppercase tracking-widest">
-                                            <Heart size={16} /> BOOKMARK
-                                        </button>
                                     </div>
                                 </div>
                             )}
@@ -490,59 +524,59 @@ const FreelancerProfilePage = () => {
                                 </div>
                             </div>
 
-                            {/* Risk Indicator (Client Only OR Admin) */}
-                            {(role === 'CLIENT' || role === 'SUPER_ADMIN' || role === 'ADMIN') && risk && (
-                                <div className="space-y-2 flex flex-col items-center sm:items-start">
-                                    <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-950/50 dark:text-white/30">Assurance Check</p>
-                                    <div className="flex items-center gap-3">
-                                        <div className={`px-3 py-1.5 rounded-xl border flex items-center gap-2 transition-all duration-500 shadow-sm ${risk.riskLevel === 'high' ? 'bg-rose-500/10 border-rose-500/30 text-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.1)]' :
-                                            risk.riskLevel === 'medium' ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' :
-                                                risk.riskLevel === 'low' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500' :
-                                                    'bg-slate-900/5 dark:bg-white/5 border-slate-900/10 dark:border-white/10 text-slate-950/50 dark:text-white/50'
-                                            }`}>
-                                            {risk.riskLevel === 'high' || risk.riskLevel === 'medium' ? <AlertCircle size={14} /> : <ShieldCheck size={14} />}
-                                            <span className="text-[11px] font-black uppercase tracking-wider">
-                                                {risk.label || 'New Freelancer'}
-                                            </span>
-                                        </div>
-                                        {risk.isPreliminary && (
-                                            <span className="px-2 py-1 bg-accent/10 border border-accent/20 text-accent rounded-lg text-[9px] font-bold uppercase tracking-widest">Preliminary</span>
-                                        )}
-                                        {risk.confidence > 0 && (
-                                            <div className="flex flex-col">
-                                                <span className="text-[9px] text-slate-900/20 dark:text-white/20 font-bold uppercase tracking-tighter">Confidence</span>
-                                                <span className="text-[10px] text-slate-900/40 dark:text-white/40 font-black">{Math.round(risk.confidence * 100)}%</span>
+                            <div className="mt-12 flex flex-col sm:flex-row items-end justify-between gap-6">
+                                {/* Risk Indicator (Client Only OR Admin) */}
+                                {(role === 'CLIENT' || role === 'SUPER_ADMIN' || role === 'ADMIN') && risk ? (
+                                    <div className="space-y-2 flex flex-col items-center sm:items-start">
+                                        <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-950/50 dark:text-white/30">Assurance Check</p>
+                                        <div className="flex items-center gap-3">
+                                            <div className={`px-3 py-1.5 rounded-xl border flex items-center gap-2 transition-all duration-500 shadow-sm ${risk.riskLevel === 'high' ? 'bg-rose-500/10 border-rose-500/30 text-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.1)]' :
+                                                risk.riskLevel === 'medium' ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' :
+                                                    risk.riskLevel === 'low' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500' :
+                                                        'bg-slate-900/5 dark:bg-white/5 border-slate-900/10 dark:border-white/10 text-slate-950/50 dark:text-white/50'
+                                                }`}>
+                                                {risk.riskLevel === 'high' || risk.riskLevel === 'medium' ? <AlertCircle size={14} /> : <ShieldCheck size={14} />}
+                                                <span className="text-[11px] font-black uppercase tracking-wider">
+                                                    {risk.label || 'New Freelancer'}
+                                                </span>
                                             </div>
-                                        )}
+                                            {risk.isPreliminary && (
+                                                <span className="px-2 py-1 bg-accent/10 border border-accent/20 text-accent rounded-lg text-[9px] font-bold uppercase tracking-widest">Preliminary</span>
+                                            )}
+                                            {risk.confidence > 0 && (
+                                                <div className="flex flex-col">
+                                                    <span className="text-[9px] text-slate-900/20 dark:text-white/20 font-bold uppercase tracking-tighter">Confidence</span>
+                                                    <span className="text-[10px] text-slate-900/40 dark:text-white/40 font-black">{Math.round(risk.confidence * 100)}%</span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                ) : <div />}
 
-
-                            {/* Buttons Area */}
-                            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center sm:justify-start">
+                                {/* Action Buttons Row */}
                                 {!isOwnProfile ? (
-                                    <>
+                                    <div className="flex items-center gap-3">
                                         <button
                                             onClick={() => navigate('/freelancer/messages', { state: { recipientId: profile.id } })}
-                                            className="flex items-center gap-2 px-8 py-3.5 bg-slate-900/5 dark:bg-white/5 border border-slate-900/10 dark:border-white/10 hover:bg-slate-900/10 dark:hover:bg-white/10 text-slate-950 dark:text-white rounded-2xl font-bold text-sm tracking-wide transition shadow-sm"
+                                            className="flex items-center gap-2 px-6 py-3 bg-accent text-white hover:scale-[1.02] hover:brightness-110 transition-all rounded-full font-bold text-xs uppercase tracking-widest active:scale-[0.98]"
                                         >
-                                            <MessageSquare size={18} /> Send message
+                                            <MessageSquare size={16} /> Send message
                                         </button>
-                                        <button className="flex items-center gap-2 px-10 py-3.5 bg-accent/20 text-accent border border-accent/20 hover:bg-accent/30 rounded-2xl font-bold text-sm tracking-wide transition shadow-xl shadow-accent/5">
-                                            <Check size={18} /> Contacts
+                                        <button className="flex items-center gap-2 px-8 py-3 bg-white/[0.05] dark:bg-white/[0.02] text-slate-950 dark:text-white border border-slate-900/10 dark:border-white/10 hover:bg-white/[0.1] hover:scale-[1.02] rounded-full font-bold text-xs uppercase tracking-widest transition-all backdrop-blur-md active:scale-[0.98]">
+                                            <Check size={16} className="text-accent" /> Contacts
                                         </button>
                                         <button
                                             onClick={() => toast.success('Report submitted successfully. Our safety team will review it.')}
-                                            className="flex items-center gap-2 px-6 py-3.5 text-slate-950/30 dark:text-white/30 hover:text-slate-950 dark:hover:text-white transition text-sm font-bold"
+                                            className="p-3 text-slate-950/30 dark:text-white/30 hover:text-rose-500 transition-all"
+                                            title="Report User"
                                         >
-                                            Report user
+                                            <AlertCircle size={20} />
                                         </button>
-                                    </>
+                                    </div>
                                 ) : (
                                     <button
                                         onClick={() => navigate('/freelancer/setup-profile')}
-                                        className="flex items-center justify-center gap-2 px-8 py-3.5 bg-accent/10 border border-accent/20 hover:bg-accent/20 text-accent rounded-2xl font-bold text-sm tracking-wide transition w-full sm:w-auto"
+                                        className="px-8 py-3 bg-accent/10 border border-accent/20 hover:bg-accent/20 text-accent rounded-full font-bold text-xs uppercase tracking-widest transition"
                                     >
                                         Complete Profile Wizard
                                     </button>
@@ -575,7 +609,7 @@ const FreelancerProfilePage = () => {
                 </div>
 
                 {/* Relationship Intelligence Section (Trust Graph v2) */}
-                <div className="mb-12">
+                <div className="mb-8 md:mb-12">
                     <RelationshipIntelligence
                         freelancerId={id}
                         currentUserId={currentUser?.id}
@@ -639,7 +673,14 @@ const FreelancerProfilePage = () => {
                                     </div>
                                 </motion.div>
                             )}
-                            <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-slate-900/30 dark:text-white/30 pb-4 border-b border-slate-900/5 dark:border-white/5">Work</h3>
+                            {/* Work History section header */}
+                            <div className="space-y-1.5 mb-8">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-1 h-1 rounded-full bg-accent/40" />
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-white/30">Experience</h3>
+                                </div>
+                                <h1 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Work History</h1>
+                            </div>
                             <div className="space-y-8">
                                 {profile.experience && profile.experience.length > 0 ? (
                                     profile.experience.map((exp, i) => (
@@ -665,7 +706,14 @@ const FreelancerProfilePage = () => {
                         {/* Skills Section */}
                         <div className="space-y-6">
                             <div className="flex items-center justify-between pb-4 border-b border-slate-900/5 dark:border-white/5">
-                                <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-slate-900/30 dark:text-white/30">Skills</h3>
+                                {/* Skills section header */}
+                                <div className="space-y-1.5">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-1 h-1 rounded-full bg-accent/40" />
+                                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-white/30">Expertise</h3>
+                                    </div>
+                                    <h1 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Technical Skills</h1>
+                                </div>
                                 {isOwnProfile && editSection !== 'skills' && (
                                     <button
                                         onClick={() => {
@@ -1045,8 +1093,8 @@ const FreelancerProfilePage = () => {
                 )}
             </AnimatePresence>
 
-            {/* Footer space */}
-            <div className="h-20" />
+
+
             <Footer />
         </div>
     );

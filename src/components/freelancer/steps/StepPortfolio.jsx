@@ -61,22 +61,22 @@ export default function StepPortfolio({ next, back }) {
     <motion.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
-      className="space-y-4"
+      className="space-y-2 sm:space-y-4"
     >
       <div>
         <h2 className="text-xl font-bold text-white mb-1">Showcase your work</h2>
         <p className="text-white/40 text-sm">Add your best projects to demonstrate your expertise to clients.</p>
       </div>
 
-      <div className="space-y-4">
-        <div className="space-y-2">
+      <div className="space-y-2 sm:space-y-4">
+        <div className="space-y-1 sm:space-y-2">
           <label className="text-sm font-medium text-white/50 px-1">Project Title</label>
           <input
             name="title"
             value={portfolio.title}
             onChange={handleChange}
             placeholder="e.g. E-commerce Mobile App"
-            className="w-full bg-transparent border border-white/10 p-3 rounded-xl text-white focus:border-accent outline-none transition-all placeholder:text-white/20 text-sm"
+            className="w-full bg-transparent border border-white/10 p-2 sm:p-3 rounded-xl text-white focus:border-accent outline-none transition-all placeholder:text-white/20 text-xs sm:text-sm"
           />
           {errors.title && (
             <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.title}</p>
@@ -87,11 +87,11 @@ export default function StepPortfolio({ next, back }) {
           <label className="text-sm font-medium text-white/50 px-1">Project Description</label>
           <textarea
             name="description"
-            rows="4"
+            rows="2"
             value={portfolio.description}
             onChange={handleChange}
-            placeholder="Describe the problem you solved and the technologies you used..."
-            className="w-full bg-transparent border border-white/10 p-3 rounded-xl text-white focus:border-accent outline-none transition-all resize-none placeholder:text-white/20 text-sm leading-relaxed"
+            placeholder="Project tech & scope..."
+            className="w-full bg-transparent border border-white/10 p-2 sm:p-3 rounded-xl text-white focus:border-accent outline-none transition-all resize-none placeholder:text-white/20 text-xs sm:text-sm leading-tight sm:leading-relaxed sm:rows-[4]"
           />
           {errors.description && (
             <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.description}</p>
@@ -101,7 +101,7 @@ export default function StepPortfolio({ next, back }) {
         <div className="space-y-2">
           <label className="text-sm font-medium text-white/50 px-1">Project Asset</label>
           <div className="relative">
-            <label className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-4 cursor-pointer transition-all group ${
+            <label className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-2 sm:p-4 cursor-pointer transition-all group ${
               portfolio.file ? 'border-accent/40 bg-accent/5' : 'border-white/5 hover:border-white/20 bg-white/[0.01]'
             }`}>
               <div className="flex flex-col items-center gap-3">
@@ -115,12 +115,12 @@ export default function StepPortfolio({ next, back }) {
                   </>
                 ) : (
                   <>
-                    <div className="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent/10 group-hover:text-accent transition-colors">
-                      <FiUploadCloud className="text-2xl" />
+                    <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent/10 group-hover:text-accent transition-colors">
+                      <FiUploadCloud className="text-xl sm:text-2xl" />
                     </div>
                     <div className="text-center">
-                      <p className="text-sm font-medium text-white/60 group-hover:text-white/80 transition-colors">Click to upload project file</p>
-                      <p className="text-xs text-white/20 mt-1">Images, PDFs, or Case Studies (Max 50MB)</p>
+                      <p className="text-xs sm:text-sm font-medium text-white/60 group-hover:text-white/80 transition-colors">Click to upload file</p>
+                      <p className="text-[10px] sm:text-xs text-white/20 mt-1">Images, PDFs (Max 50MB)</p>
                     </div>
                   </>
                 )}
@@ -139,10 +139,10 @@ export default function StepPortfolio({ next, back }) {
         </div>
       </div>
 
-      <div className="flex justify-end gap-5 pt-4">
+      <div className="flex justify-end gap-3 sm:gap-5 pt-2 sm:pt-4">
         <button
           onClick={back}
-          className="flex items-center gap-2 px-8 py-4 text-white/40 hover:text-white transition-colors text-sm font-semibold"
+          className="flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 text-white/40 hover:text-white transition-colors text-xs sm:text-sm font-semibold"
         >
           <FiArrowLeft />
           Back
@@ -151,11 +151,11 @@ export default function StepPortfolio({ next, back }) {
         <button
           onClick={handleNext}
           disabled={loading}
-          className="bg-accent text-white font-bold px-10 py-4 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center gap-3 transition-all shadow-xl shadow-accent/10"
+          className="bg-accent text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center gap-2 sm:gap-3 transition-all shadow-xl shadow-accent/10 text-sm sm:text-base"
         >
           {loading ? (
             <>
-              <div className="animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent" />
+              <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-primary border-t-transparent" />
               Uploading...
             </>
           ) : (

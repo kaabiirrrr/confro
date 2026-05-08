@@ -84,20 +84,20 @@ export default function StepProfessional({ next, back }) {
     <motion.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
-      className="space-y-6"
+      className="space-y-3 sm:space-y-6"
     >
       {loading ? (
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-3 sm:space-y-6">
           <div>
-            <h2 className="text-xl font-bold text-white mb-1">Professional Details</h2>
-            <p className="text-white/40 text-sm">Nearly done! Add your professional rate and experience to complete your profile.</p>
+            <h2 className="text-xl font-bold text-white mb-0 sm:mb-1">Professional Details</h2>
+            <p className="text-white/40 text-xs sm:text-sm">Add your professional rate and experience to complete your profile.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-x-3 sm:gap-x-8 gap-y-3 sm:gap-y-5">
             <div className="space-y-2">
               <label className="text-sm font-medium text-white/50 px-1">Years of Experience</label>
               <input
@@ -105,7 +105,7 @@ export default function StepProfessional({ next, back }) {
                 value={formData.experience}
                 onChange={handleChange}
                 placeholder="e.g. 5"
-                className="w-full bg-secondary/20 border border-white/10 p-4 rounded-xl text-light-text focus:border-accent outline-none transition-all placeholder:text-white/20"
+                className="w-full bg-secondary/20 border border-white/10 p-2 sm:p-4 rounded-lg sm:rounded-xl text-light-text focus:border-accent outline-none transition-all placeholder:text-white/20 text-xs sm:text-base"
               />
               {errors.experience && (
                 <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.experience}</p>
@@ -113,7 +113,7 @@ export default function StepProfessional({ next, back }) {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-white/50 px-1">Hourly Rate ($)</label>
+              <label className="text-sm font-medium text-white/50 px-1">Hourly Rate (₹)</label>
               <input
                 type="number"
                 name="rate"
@@ -121,7 +121,7 @@ export default function StepProfessional({ next, back }) {
                 onChange={handleChange}
                 placeholder="e.g. 50"
                 min="0"
-                className="w-full bg-secondary/20 border border-white/10 p-4 rounded-xl text-light-text focus:border-accent outline-none transition-all placeholder:text-white/20"
+                className="w-full bg-secondary/20 border border-white/10 p-2 sm:p-4 rounded-lg sm:rounded-xl text-light-text focus:border-accent outline-none transition-all placeholder:text-white/20 text-xs sm:text-base"
               />
               {errors.rate && (
                 <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.rate}</p>
@@ -135,7 +135,7 @@ export default function StepProfessional({ next, back }) {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="e.g. +1 234 567 890"
-                className="w-full bg-secondary/20 border border-white/10 p-4 rounded-xl text-light-text focus:border-accent outline-none transition-all placeholder:text-white/20"
+                className="w-full bg-secondary/20 border border-white/10 p-2 sm:p-4 rounded-lg sm:rounded-xl text-light-text focus:border-accent outline-none transition-all placeholder:text-white/20 text-xs sm:text-base"
               />
               {errors.phone && (
                 <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.phone}</p>
@@ -149,15 +149,15 @@ export default function StepProfessional({ next, back }) {
                 value={formData.website}
                 onChange={handleChange}
                 placeholder="e.g. https://portfolio.com"
-                className="w-full bg-secondary/20 border border-white/10 p-3.5 rounded-xl text-light-text focus:border-accent outline-none transition-all placeholder:text-white/20 text-sm"
+                className="w-full bg-secondary/20 border border-white/10 p-2 sm:p-3.5 rounded-lg sm:rounded-xl text-light-text focus:border-accent outline-none transition-all placeholder:text-white/20 text-[10px] sm:text-sm"
               />
             </div>
           </div>
 
-          <div className="flex justify-end gap-5 pt-4">
+          <div className="flex justify-end gap-3 sm:gap-5 pt-2 sm:pt-4">
             <button
               onClick={back}
-              className="flex items-center gap-2 px-8 py-4 text-white/40 hover:text-white transition-colors text-sm font-semibold"
+              className="flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 text-white/40 hover:text-white transition-colors text-xs sm:text-sm font-semibold"
             >
               <FiArrowLeft />
               Back
@@ -165,7 +165,7 @@ export default function StepProfessional({ next, back }) {
 
             <button
               onClick={handleNext}
-              className="bg-accent text-white font-bold px-10 py-4 rounded-full hover:bg-accent/90 flex items-center gap-3 transition-all shadow-xl shadow-accent/10"
+              className="bg-accent text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-full hover:bg-accent/90 flex items-center gap-2 sm:gap-3 transition-all shadow-xl shadow-accent/10 text-sm sm:text-base"
             >
               Continue
               <FiArrowRight />

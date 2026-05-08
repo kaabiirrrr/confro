@@ -35,8 +35,8 @@ export function AuthProvider({ children }) {
     const [wallet, setWallet] = useState(() => {
         try {
             const stored = localStorage.getItem('user_wallet');
-            return stored ? JSON.parse(stored) : { balance: 10000, pending_balance: 0 };
-        } catch { return { balance: 10000, pending_balance: 0 }; }
+            return stored ? JSON.parse(stored) : { balance: 0, pending_balance: 0 };
+        } catch { return { balance: 0, pending_balance: 0 }; }
     });
     const [membership, setMembership] = useState(() => {
         try {
@@ -180,6 +180,9 @@ export function AuthProvider({ children }) {
             localStorage.setItem('device_id', deviceId);
             localStorage.removeItem('user_role');
             localStorage.removeItem('user_profile');
+            localStorage.removeItem('user_wallet');
+            localStorage.removeItem('user_membership');
+            localStorage.removeItem('user');
             // Cleanup existing tokens
             sessionStorage.removeItem('token');
             localStorage.removeItem('login_source');
@@ -306,6 +309,8 @@ export function AuthProvider({ children }) {
             localStorage.removeItem('token');
             localStorage.removeItem('oauth_intended_role');
             localStorage.removeItem('user_wallet');
+            localStorage.removeItem('user_membership');
+            localStorage.removeItem('login_source');
             sessionStorage.removeItem('token');
             isLoggingOut.current = false;
         }

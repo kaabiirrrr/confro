@@ -32,7 +32,7 @@ const Navbar = ({
 
   return (
     <>
-      <nav className="sticky top-0 z-[50] bg-primary/80 backdrop-blur-md border-b border-border transition-all duration-300">
+      <nav className="sticky top-0 z-[50] bg-primary border-b border-border transition-all duration-300">
 
         <div className="relative max-w-[1630px] mx-auto h-14 md:h-20 px-2 md:px-6 lg:px-10 flex items-center justify-between">
 
@@ -80,7 +80,7 @@ const Navbar = ({
                 <button
                   type="button"
                   onClick={onSearchTypeClick}
-                  className="flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-light-text/60 hover:text-light-text hover:bg-hover rounded-md transition-colors whitespace-nowrap"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-light-text/60 hover:text-light-text hover:bg-hover border border-white/10 rounded-full transition-all whitespace-nowrap active:scale-95"
                 >
                   {searchType}
                   <Arrow />

@@ -107,7 +107,7 @@ export default function StepDocuments({ next, back }) {
 
         <div
           onClick={() => document.getElementById(`file-input-${type}`)?.click()}
-          className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-6 cursor-pointer transition-all group ${
+          className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-2 sm:p-6 cursor-pointer transition-all group ${
             documents[type] ? 'border-accent/40 bg-accent/5' : 'border-white/5 hover:border-white/20 bg-white/[0.01]'
           }`}
         >
@@ -151,14 +151,14 @@ export default function StepDocuments({ next, back }) {
     <motion.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
-      className="space-y-4"
+      className="space-y-2 sm:space-y-4"
     >
       <div>
         <h2 className="text-xl font-bold text-white mb-1">Verify Your Identity</h2>
         <p className="text-white/40 text-sm">Upload documents to verify your freelancer profile and increase client trust.</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <UploadBox label="ID Proof (Front)" type="idFront" required />
         <UploadBox label="ID Proof (Back)" type="idBack" required />
         <UploadBox label="Resume / CV" type="resume" required />
@@ -166,18 +166,18 @@ export default function StepDocuments({ next, back }) {
         <UploadBox label="Certificates (Optional)" type="certificates" allowMultiple />
       </div>
 
-      <div className="bg-white/[0.02] border border-white/5 p-3 rounded-xl">
-        <p className="text-[10px] text-white/30 flex items-center gap-2 leading-relaxed">
+      <div className="bg-white/[0.02] border border-white/5 p-2 sm:p-3 rounded-lg sm:rounded-xl">
+        <p className="text-[9px] sm:text-[10px] text-white/30 flex items-center gap-2 leading-tight sm:leading-relaxed">
           <span className="w-1 h-1 rounded-full bg-accent animate-pulse" />
-          Tip: For certificates and portfolio, you can select multiple files or even a folder. Supported: PDF, JPG, PNG, DOCX (Max 25MB).
+          Tip: Supported: PDF, JPG, PNG, DOCX (Max 25MB).
         </p>
       </div>
 
-      <div className="flex justify-end gap-5 pt-4">
+      <div className="flex justify-end gap-3 sm:gap-5 pt-2 sm:pt-4">
         <button
           onClick={back}
           disabled={loading}
-          className="flex items-center gap-2 px-8 py-4 text-white/40 hover:text-white transition-colors text-sm font-semibold"
+          className="flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 text-white/40 hover:text-white transition-colors text-xs sm:text-sm font-semibold"
         >
           <FiArrowLeft />
           Back
@@ -186,11 +186,11 @@ export default function StepDocuments({ next, back }) {
         <button
           disabled={!requiredCompleted || loading}
           onClick={handleContinue}
-          className="bg-accent text-white font-bold px-10 py-4 rounded-full hover:bg-accent/90 disabled:opacity-30 flex items-center gap-3 transition-all shadow-xl shadow-accent/10"
+          className="bg-accent text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-full hover:bg-accent/90 disabled:opacity-30 flex items-center gap-2 sm:gap-3 transition-all shadow-xl shadow-accent/10 text-sm sm:text-base"
         >
           {loading ? (
             <>
-              <div className="animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent" />
+              <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-primary border-t-transparent" />
               Uploading...
             </>
           ) : (
