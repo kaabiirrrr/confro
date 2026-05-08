@@ -13,7 +13,11 @@ export default function WorkDeliverySystem({ contractId, jobId, isClient }) {
     const { role } = useAuth();
 
     useEffect(() => {
-        if (jobId) fetchDeliveries();
+        if (jobId) {
+            fetchDeliveries();
+        } else {
+            setLoading(false); // No jobId on direct contracts — skip delivery fetch
+        }
     }, [jobId]);
 
     const fetchDeliveries = async () => {

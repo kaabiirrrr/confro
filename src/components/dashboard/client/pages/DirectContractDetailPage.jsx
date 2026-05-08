@@ -31,13 +31,11 @@ const StatusBadge = ({ status }) => {
 };
 
 const InfoRow = ({ icon: Icon, label, value }) => (
-  <div className="flex items-start gap-3">
-    <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0 mt-0.5">
-      <Icon size={15} className="text-white/40" />
-    </div>
+  <div className="flex items-center gap-2.5">
+    <Icon size={13} className="text-white/30 shrink-0" />
     <div>
-      <p className="text-white/40 text-xs">{label}</p>
-      <p className="text-white text-sm font-medium mt-0.5">{value || '—'}</p>
+      <p className="text-white/30 text-[10px] uppercase tracking-widest font-bold">{label}</p>
+      <p className="text-white text-xs font-medium mt-0.5">{value || '—'}</p>
     </div>
   </div>
 );
@@ -148,13 +146,13 @@ export default function DirectContractDetailPage() {
   const freelancerTitle = freelancerProfiles.title || contract.freelancer?.title || null;
 
   const rate = contract.agreed_rate != null
-    ? `${formatINR(contract.agreed_rate)}${contract.project_type === 'HOURLY' ? '/hr' : ' fixed'}`
+    ? `₹${Number(contract.agreed_rate).toLocaleString('en-IN')}${contract.project_type === 'HOURLY' ? '/hr' : ' fixed'}`
     : '—';
 
   return (
     <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 sm:mt-6 pb-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-3 md:gap-6">
         <div>
           <button
             onClick={() => navigate('/client/direct-contracts')}
@@ -163,47 +161,50 @@ export default function DirectContractDetailPage() {
             <ArrowLeft size={14} />
             Back to Contracts
           </button>
-          <h1 className="text-3xl font-bold text-white tracking-tight">{contract.title}</h1>
-          <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">
-            {contract.project_type === 'HOURLY' ? 'Hourly Project' : 'Fixed Price Project'}
-          </p>
+          <h1 className="text-base sm:text-xl font-bold text-white tracking-tight">{contract.title}</h1>
+          <div className="flex items-center justify-between mt-1 md:block">
+            <p className="text-white/30 text-[9px] font-bold uppercase tracking-[0.2em]">
+              {contract.project_type === 'HOURLY' ? 'Hourly Project' : 'Fixed Price Project'}
+            </p>
+            <span className="md:hidden transform scale-90 origin-right"><StatusBadge status={contract.status} /></span>
+          </div>
         </div>
-        <StatusBadge status={contract.status} />
+        <span className="hidden md:inline-flex"><StatusBadge status={contract.status} /></span>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="lg:col-span-2 space-y-8 md:space-y-10">
           {/* Freelancer Profile */}
-          <div className="bg-transparent border-none p-0 flex flex-col sm:flex-row sm:items-center justify-between gap-6 backdrop-blur-none transition-all">
-            <div className="flex items-center gap-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
               {avatar ? (
-                <img src={avatar} alt={name} className="w-16 h-16 rounded-full object-cover ring-2 ring-white/5 shadow-xl" />
+                <img src={avatar} alt={name} className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover ring-2 ring-white/5" />
               ) : (
-                <div className="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center text-accent text-xl font-bold ring-2 ring-white/5">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-accent/10 flex items-center justify-center text-accent text-lg font-bold ring-2 ring-white/5">
                   {name[0]?.toUpperCase()}
                 </div>
               )}
               <div>
-                <p className="font-bold text-white text-lg">{name}</p>
-                {freelancerTitle && <p className="text-white/50 text-xs font-medium mt-1">{freelancerTitle}</p>}
+                <p className="font-semibold text-white text-sm">{name}</p>
+                {freelancerTitle && <p className="text-white/40 text-[10px] font-medium mt-0.5">{freelancerTitle}</p>}
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <button
                 onClick={handleMessage}
                 disabled={messaging}
-                className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-accent text-white font-bold text-xs uppercase tracking-widest hover:bg-accent/90 transition-all active:scale-95 disabled:opacity-50"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-accent text-white font-bold text-xs uppercase tracking-widest hover:bg-accent/90 transition disabled:opacity-50"
               >
-                {messaging ? <InfinityLoader/> : <MessageCircle size={16} />}
-                Message Freelancer
+                {messaging ? <InfinityLoader/> : <MessageCircle size={14} />}
+                Message
               </button>
 
               {contract.status === 'ACTIVE' && (
                 <button
                   onClick={() => navigate(`/meeting/create?projectId=${contract.job_id}&clientId=${contract.client_id}&freelancerId=${contract.freelancer?.id}`)}
-                  className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-blue-600/10 border border-blue-500/20 text-blue-400 font-bold text-xs uppercase tracking-widest hover:bg-blue-600/20 transition-all active:scale-95"
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-blue-600/10 border border-blue-500/20 text-blue-400 font-bold text-xs uppercase tracking-widest hover:bg-blue-600/20 transition"
                 >
-                  <Video size={16} /> Start Meeting
+                  <Video size={14} /> Meeting
                 </button>
               )}
             </div>
@@ -221,8 +222,8 @@ export default function DirectContractDetailPage() {
           {/* Contract Description */}
           {contract.description && (
             <div className="bg-transparent border-none p-0 backdrop-blur-none">
-              <h3 className="text-white/20 text-[9px] font-bold uppercase tracking-[0.2em] mb-4">Original Description</h3>
-              <p className="text-white/80 text-sm leading-relaxed whitespace-pre-wrap">{contract.description}</p>
+              <h3 className="text-white/20 text-[9px] font-bold uppercase tracking-[0.2em] mb-3">Original Description</h3>
+              <p className="text-white/60 text-xs leading-relaxed whitespace-pre-wrap">{contract.description}</p>
             </div>
           )}
         </div>
@@ -235,7 +236,7 @@ export default function DirectContractDetailPage() {
 
           {/* Financials & Dates */}
           <div className="bg-transparent border-none p-0 space-y-6 backdrop-blur-none transition-all">
-            <h3 className="text-white/20 text-[9px] font-bold uppercase tracking-[0.2em] border-b border-white/5 pb-4 mb-2">Contract Terms</h3>
+            <h3 className="text-white/20 text-[9px] font-bold uppercase tracking-[0.2em] border-b border-white/5 pb-3 mb-2">Contract Terms</h3>
             <div className="space-y-5">
               <InfoRow icon={IndianRupee} label="Agreed Rate" value={rate} />
               {contract.weekly_limit && (

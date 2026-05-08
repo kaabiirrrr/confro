@@ -78,33 +78,38 @@ const PromoSlider = memo(({ ads, currentAd, setCurrentAd }) => {
 
 // Memoized Analytics Grid
 const AnalyticsGrid = memo(({ freelancerStats, reliability }) => {
-  const { wallet, profile, role } = useAuth();
-  const [membership, setMembership] = useState(null);
-  const [connectWallet, setConnectWallet] = useState(null);
+    const { wallet, profile, role, refreshWallet, membership: authMembership } = useAuth();
+    const [membership, setMembership] = useState(null);
+    const [connectWallet, setConnectWallet] = useState(null);
 
-  const isClient = role === 'CLIENT';
-  const basePath = isClient ? '/client' : '/freelancer';
+    const isClient = role === 'CLIENT';
+    const basePath = isClient ? '/client' : '/freelancer';
 
-  useEffect(() => {
-    const fetchFinData = async () => {
-      try {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        const headers = { Authorization: `Bearer ${token}` };
+    useEffect(() => {
+        const fetchFinData = async () => {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const headers = { Authorization: `Bearer ${token}` };
 
-        // Fetch Current Membership
-        const { data: memRes } = await axios.get(`${API_URL}/api/membership/current`, { headers });
-        if (memRes.success) setMembership(memRes.data);
+                // Fetch Current Membership
+                const { data: memRes } = await axios.get(`${API_URL}/api/membership/current`, { headers });
+                if (memRes.success) setMembership(memRes.data);
 
-        // Fetch Real-time Connect Wallet
-        const { data: wallRes } = await axios.get(`${API_URL}/api/connects/balance`, { headers });
-        if (wallRes.success) setConnectWallet(wallRes.data);
-      } catch (err) { console.error('Failed to fetch dashboard fin data', err); }
-    };
-    fetchFinData();
-  }, []);
+                // Fetch Real-time Connect Wallet
+                const { data: wallRes } = await axios.get(`${API_URL}/api/connects/balance`, { headers });
+                if (wallRes.success) setConnectWallet(wallRes.data);
+
+                // Refresh Money Wallet Balance
+                await refreshWallet();
+            } catch (err) { console.error('Failed to fetch dashboard fin data', err); }
+        };
+        fetchFinData();
+    }, [refreshWallet]);
 
   const items = useMemo(() => {
-    const plan = membership?.plan?.name || profile?.membership_type || 'FREE';
+    // Prefer live API response, fallback to auth context, then profile field, then FREE
+    const activeMembership = membership || authMembership;
+    const plan = activeMembership?.plan?.name || activeMembership?.plan_snapshot?.name || profile?.membership_type || 'FREE';
 
     // Calculate Next Top-up
     let nextTopupStr = '30 days';
@@ -120,26 +125,29 @@ const AnalyticsGrid = memo(({ freelancerStats, reliability }) => {
         label: "Current Plan",
         value: plan,
         icon: "plan",
-        badge: true
+        badge: true,
+        subValue: activeMembership?.status === 'ACTIVE' ? `Renew: ${new Date(activeMembership.end_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` : 'Free Tier'
       },
       {
-        label: "Connects",
+        label: "Available Connects",
         value: connectWallet?.balance || 0,
         icon: "connects",
-        subValue: `Next: ${nextTopupStr}`
+        subValue: `Refill: ${nextTopupStr}`
       },
       {
-        label: "Demo Connects",
+        label: "Wallet Balance",
         value: formatINR(wallet?.balance || 0),
-        icon: "credits"
+        icon: "credits",
+        subValue: wallet?.is_sandbox ? "Demo Wallet" : "Real Wallet"
       },
       {
         label: "Reliability",
-        value: `${reliability?.score || 100}%`,
-        icon: "reliability"
+        value: `${reliability?.score ?? 100}%`,
+        icon: "reliability",
+        subValue: reliability?.isNew ? "New Freelancer" : `${reliability?.stats?.logs || 0}/${reliability?.stats?.expected || 30} days tracked`
       },
     ];
-  }, [reliability, wallet, membership, profile, connectWallet]);
+  }, [reliability, wallet, membership, authMembership, profile, connectWallet]);
 
   const ICON_MAP = {
     plan: <img src="/Icons/icons8-membership-card-100.png" alt="" className="w-full h-full object-contain" />,
@@ -416,7 +424,7 @@ function DashboardHome() {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="pb-8 border-b border-white/5 flex items-start sm:items-center justify-between gap-3 sm:gap-4 mt-2 group"
+          className="pb-3 border-b border-white/5 flex items-start sm:items-center justify-between gap-3 sm:gap-4 mt-2 group"
         >
           <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
             <div className="w-5 h-5 shrink-0 flex items-center justify-center mt-1 sm:mt-0">
@@ -445,9 +453,6 @@ function DashboardHome() {
         </motion.div>
       )}
 
-
-
-
       <PromoSlider ads={ads} currentAd={currentAd} setCurrentAd={setCurrentAd} />
 
       <AnalyticsGrid freelancerStats={freelancerStats} reliability={reliability} />
@@ -470,7 +475,7 @@ function DashboardHome() {
             </button>
             <button
               onClick={() => setIsFilterModalOpen(true)}
-              className="relative flex items-center justify-center gap-1.5 sm:gap-2 px-0 sm:px-6 w-10 h-10 sm:w-auto sm:h-11 rounded-full text-[9px] sm:text-[10px] font-black tracking-[0.1em] sm:tracking-[0.2em] bg-transparent sm:bg-accent text-accent sm:text-white hover:bg-white/5 sm:hover:bg-accent/80 uppercase transition-all sm:shadow-lg sm:shadow-accent/20 group"
+              className="relative flex items-center justify-center gap-1.5 sm:gap-2 px-0 sm:px-6 w-10 h-10 sm:w-auto sm:h-11 rounded-full text-[9px] sm:text-[10px] font-black tracking-[0.1em] sm:tracking-[0.2em] bg-transparent sm:bg-accent text-accent sm:text-white hover:bg-white/5 sm:hover:bg-accent/80 uppercase transition-all group"
             >
               <Filter size={18} className="sm:w-3.5 sm:h-3.5 text-accent sm:text-white" />
               <span className="hidden sm:inline">

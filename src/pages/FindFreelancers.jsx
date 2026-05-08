@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import InfinityLoader from "../components/common/InfinityLoader";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams, useLocation } from "react-router-dom";
-import { SlidersHorizontal, X } from "lucide-react";
+import { Filter as LucideFilter, X } from "lucide-react";
 import {
   getFreelancers,
   getSavedFreelancers,
@@ -204,7 +204,7 @@ const FindFreelancers = () => {
             className="md:hidden flex items-center gap-2 px-3 py-2 rounded-xl border border-white/10 text-white/70 text-sm"
             onClick={() => setShowMobileFilter(true)}
           >
-            <SlidersHorizontal size={16} className="text-accent" />
+            <LucideFilter size={16} className="text-accent" />
             Filters
           </button>
         </div>

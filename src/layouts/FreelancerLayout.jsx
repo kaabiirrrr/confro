@@ -88,7 +88,7 @@ const FreelancerLayout = () => {
       {/* Mobile sidebar toggle — floating button bottom-left */}
       {!isFullWidth && (
         <button
-          className="lg:hidden fixed bottom-6 left-4 z-[300] w-11 h-11 bg-accent text-white rounded-full flex items-center justify-center shadow-lg shadow-accent/30 transition-all duration-300"
+          className="lg:hidden fixed bottom-6 left-4 z-[300] w-11 h-11 bg-accent text-white rounded-full flex items-center justify-center transition-all duration-300"
           onClick={() => setSidebarOpen(true)}
         >
           <Menu size={20} />

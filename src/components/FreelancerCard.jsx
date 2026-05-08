@@ -76,8 +76,8 @@ const FreelancerCard = ({
     rating,
     has_availability_badge,
     profile_completed,
+    reliability_score,
   } = freelancer;
-
 
   const categoryLabel = CATEGORY_LABELS[category] || category || "Freelancer";
   const categoryColor = CATEGORY_COLORS[category] || "bg-white/5 text-white/50 border-white/10";
@@ -179,8 +179,12 @@ const FreelancerCard = ({
           <p className="text-light-text/60 text-xs truncate mt-1">
             {title || "Freelancer"}
           </p>
-          <div className="mt-2">
+          <div className="mt-2 flex items-center gap-3">
             <StarRating rating={rating} />
+            <div className="flex items-center gap-1 text-[10px] font-bold text-accent bg-accent/5 px-2 py-0.5 rounded-full border border-accent/10" title="Reliability Score">
+              <ShieldCheck size={10} />
+              {reliability_score ?? 100}%
+            </div>
           </div>
         </div>
 

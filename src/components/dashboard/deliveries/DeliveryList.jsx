@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { 
-    Download, ExternalLink, Calendar, CheckCircle2, 
+import {
+    Download, ExternalLink, Calendar, CheckCircle2,
     MessageSquare, AlertCircle, FileText, ChevronRight,
     User, Clock, Play
 } from 'lucide-react';
@@ -42,7 +42,7 @@ export default function DeliveryList({ deliveries, isClient, onUpdate }) {
     if (!deliveries || deliveries.length === 0) {
         return (
             <div className="bg-transparent border-none p-12 flex flex-col items-center justify-center text-center">
-                <FileText className="w-12 h-12 text-white/5 mb-4" />
+                <img src="/Icons/icons8-empty-box-80.png" alt="No deliveries" className="w-12 h-12 object-contain mb-4 " />
                 <h3 className="text-white font-bold opacity-40">No work delivered yet</h3>
                 <p className="text-white/20 text-sm max-w-xs mt-1 font-medium">When the freelancer submits work, it will appear here for review.</p>
             </div>
@@ -61,12 +61,12 @@ export default function DeliveryList({ deliveries, isClient, onUpdate }) {
     const handleDownload = async (path, fileName) => {
         // Fallback: extract filename from path if f.file_name was somehow missing
         let finalFileName = fileName;
-        
+
         // Always try to ensure an extension even if fileName is provided but lacks it
         if (path && (!finalFileName || !finalFileName.includes('.'))) {
             const parts = path.split('/');
             const lastPart = parts[parts.length - 1];
-            
+
             // If we have a timestamped name like 123-file.png, extract file.png
             if (lastPart.includes('-')) {
                 const extracted = lastPart.split('-').slice(1).join('-');
@@ -80,7 +80,7 @@ export default function DeliveryList({ deliveries, isClient, onUpdate }) {
                 finalFileName = lastPart;
             }
         }
-        
+
         // Final fallback to prevent UUID filenames
         if (!finalFileName) finalFileName = 'work-delivery-file';
 
@@ -92,21 +92,21 @@ export default function DeliveryList({ deliveries, isClient, onUpdate }) {
 
         try {
             toast('Starting download...', { icon: '📥' });
-            
+
             // Fetch as blob to ensure backend-controlled headers are respected
             const blob = await downloadDeliveryFile(path, finalFileName);
-            
+
             // Create local URL for the blob
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            
+
             // Forces the browser to use our filename
             link.setAttribute('download', finalFileName);
-            
+
             document.body.appendChild(link);
             link.click();
-            
+
             // Cleanup
             document.body.removeChild(link);
             setTimeout(() => window.URL.revokeObjectURL(url), 100);
@@ -131,19 +131,17 @@ export default function DeliveryList({ deliveries, isClient, onUpdate }) {
                         <button
                             key={d.id}
                             onClick={() => setSelectedId(d.id)}
-                            className={`flex-shrink-0 lg:flex-shrink w-[260px] lg:w-full text-left px-4 py-3 rounded-xl border transition-all ${
-                                selectedId === d.id 
-                                ? 'bg-accent/10 border-accent/20' 
-                                : 'bg-transparent border-transparent hover:bg-white/5'
-                            }`}
+                            className={`flex-shrink-0 lg:flex-shrink w-[260px] lg:w-full text-left px-4 py-3 rounded-xl border transition-all ${selectedId === d.id
+                                    ? 'bg-accent/10 border-accent/20'
+                                    : 'bg-transparent border-transparent hover:bg-white/5'
+                                }`}
                         >
                             <div className="flex justify-between items-start mb-2">
                                 <span className="font-bold text-white text-xs lg:text-sm">Version {d.version}</span>
-                                <span className={`text-[8px] lg:text-[10px] font-bold uppercase py-0.5 px-1.5 lg:px-2 rounded-md ${
-                                    d.status === 'approved' ? 'bg-green-500/10 text-green-400' :
-                                    d.status === 'revision_requested' ? 'bg-yellow-500/10 text-yellow-400' :
-                                    'bg-blue-500/10 text-blue-400'
-                                }`}>
+                                <span className={`text-[8px] lg:text-[10px] font-bold uppercase py-0.5 px-1.5 lg:px-2 rounded-md ${d.status === 'approved' ? 'bg-green-500/10 text-green-400' :
+                                        d.status === 'revision_requested' ? 'bg-yellow-500/10 text-yellow-400' :
+                                            'bg-blue-500/10 text-blue-400'
+                                    }`}>
                                     {d.status}
                                 </span>
                             </div>
@@ -199,7 +197,7 @@ export default function DeliveryList({ deliveries, isClient, onUpdate }) {
                                                     <p className="text-white/20 text-[10px]">{formatBytes(f.file_size)}</p>
                                                 </div>
                                             </div>
-                                            <button 
+                                            <button
                                                 onClick={() => handleDownload(f.file_url, f.file_name)}
                                                 className="p-2 text-white/20 hover:text-accent hover:bg-accent/10 rounded-lg transition-all"
                                             >
@@ -251,8 +249,8 @@ export default function DeliveryList({ deliveries, isClient, onUpdate }) {
 
                         {/* Collaborative Comments */}
                         <div className="mt-auto pt-6 border-t border-white/5">
-                            <DeliveryComments 
-                                deliveryId={activeDelivery.id} 
+                            <DeliveryComments
+                                deliveryId={activeDelivery.id}
                                 comments={activeDelivery.delivery_comments || []}
                                 onCommentAdded={onUpdate}
                             />
@@ -279,7 +277,7 @@ export default function DeliveryList({ deliveries, isClient, onUpdate }) {
                                 </button>
                             </div>
                         )}
-                        
+
                         <InputModal
                             isOpen={revisionModalOpen}
                             onClose={() => setRevisionModalOpen(false)}

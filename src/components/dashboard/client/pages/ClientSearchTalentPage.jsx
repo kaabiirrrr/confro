@@ -341,7 +341,7 @@ export default function ClientSearchTalentPage() {
                     <button
                       onClick={() => handleMessage(f)}
                       disabled={isMsgBusy}
-                      className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-accent text-white border border-accent hover:bg-accent/90 text-[10px] font-bold uppercase tracking-widest transition disabled:opacity-50 ml-auto shadow-md shadow-accent/20"
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-accent text-white border border-accent hover:bg-accent/90 text-[10px] font-bold uppercase tracking-widest transition disabled:opacity-50 ml-auto"
                     >
                       {isMsgBusy ? <InfinityLoader/> : <MessageCircle size={12} />}
                       Message

@@ -1,50 +1,48 @@
 /**
- * Global Currency Utility for USD to INR Conversion
- * Exchange Rate: 1 USD = 92.74 INR
+ * Global Currency Utility
+ * Displays values as-is with ₹ symbol — no USD/INR conversion.
  */
 
-export const USD_TO_INR = 1;
+export const USD_TO_INR = 1; // No conversion — kept for legacy compatibility
 
 /**
- * Converts USD amount to INR and formats it using the Indian numbering system.
- * @param {number} amountUSD - The amount in USD.
- * @returns {string} - Formatted INR string (e.g., ₹1,50,000).
+ * Formats a numeric amount with ₹ symbol using the Indian numbering system.
+ * Does NOT convert — displays the original stored value.
+ * @param {number} amount - The raw stored amount.
+ * @returns {string} - Formatted string (e.g., ₹1,00,000).
  */
-export function formatINR(amountUSD) {
-  if (amountUSD === null || amountUSD === undefined) return "₹0";
-  
-  const inr = Number(amountUSD) * USD_TO_INR;
-  
+export function formatINR(amount) {
+  if (amount === null || amount === undefined) return '₹0';
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
     maximumFractionDigits: 0,
-  }).format(inr);
+  }).format(Number(amount));
 }
 
 /**
- * Extracts numeric value for calculations if needed.
- * @param {number} amountUSD 
+ * Returns the numeric value as-is (no conversion).
+ * @param {number} amount
  * @returns {number}
  */
-export function getINRValue(amountUSD) {
-  return (Number(amountUSD) || 0) * USD_TO_INR;
+export function getINRValue(amount) {
+  return Number(amount) || 0;
 }
 
 /**
- * Converts INR input back to USD for backend storage.
- * @param {number} amountINR 
+ * Returns the amount as-is for backend storage (no conversion needed).
+ * @param {number|string} amount
  * @returns {number}
  */
-export function parseINRToUSD(amountINR) {
-  return (Number(amountINR) || 0) / USD_TO_INR;
+export function parseINRToUSD(amount) {
+  return Number(amount) || 0;
 }
 
 /**
- * Converts INR amount back to USD for storage
- * @param {number|string} amountINR 
+ * Returns the amount as-is for backend storage (no conversion needed).
+ * @param {number|string} amount
  * @returns {number}
  */
-export function convertToUSD(amountINR) {
-  return parseFloat((Number(amountINR) / USD_TO_INR).toFixed(2));
+export function convertToUSD(amount) {
+  return parseFloat(Number(amount).toFixed(2));
 }

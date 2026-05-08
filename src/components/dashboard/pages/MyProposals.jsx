@@ -109,7 +109,7 @@ const MyProposals = () => {
         ) : filteredProposals.length === 0 ? (
           <div className="text-center py-20 bg-transparent">
             <div className="w-20 h-20 flex items-center justify-center mx-auto mb-6">
-              <FileText className="w-10 h-10 text-slate-200 dark:text-white/10" />
+              <img src="/Icons/icons8-empty-box-80.png" alt="No proposals" className="w-10 h-10 object-contain" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No {activeTab.toLowerCase()} proposals</h3>
             <p className="text-[14px] text-light-text/40 max-w-sm mx-auto mb-8 leading-relaxed">

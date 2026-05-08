@@ -95,7 +95,9 @@ const Sidebar = () => {
       <div className="glass-card p-5">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Coins size={14} className="text-accent" />
+            <div className="w-4 h-4 shrink-0 flex items-center justify-center">
+              <img src="/Icons/link.png" alt="" className="w-full h-full object-contain" />
+            </div>
             <span className="text-light-text font-semibold text-[13px]">Connects</span>
           </div>
           <span className="text-xl font-bold text-light-text">{loading ? "—" : balance}</span>

@@ -101,7 +101,7 @@ const Profile = () => {
                         {[
                             { label: 'Hourly Rate', value: profile?.hourly_rate ? `₹${profile.hourly_rate}` : '₹0', sub: 'Fixed Rate' },
                             { label: 'Experience', value: profile?.step_data?.professional_info?.experience ? `${profile.step_data.professional_info.experience}+ Yrs` : '0+ Yrs', sub: 'Prof. History' },
-                            { label: 'Job Success', value: '100%', sub: 'Based on 0 jobs' },
+                            { label: 'Reliability', value: `${profile?.reliability_score ?? 100}%`, sub: 'Activity Score' },
                             { label: 'Total Earned', value: '₹0', sub: 'Last 12 months' },
                         ].map((stat, i) => (
                             <div key={i} className="bg-slate-900/5 dark:bg-secondary/40 border border-slate-900/5 dark:border-white/5 p-4 sm:p-8 rounded-[20px] sm:rounded-[35px] space-y-1">

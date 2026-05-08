@@ -270,9 +270,9 @@ const FreelancerProfilePage = () => {
 
                 {/* 1. TOP HEADER SECTION */}
                 <div className="mb-8 md:mb-12 bg-transparent border-none shadow-none">
-                    <div className="flex flex-col md:flex-row px-4 sm:px-6 md:px-0 py-4 sm:py-6 md:py-10 gap-6 md:gap-12 items-start">
+                    <div className="flex flex-col md:flex-row px-4 sm:px-6 md:px-0 py-3 sm:py-5 md:py-10 gap-4 md:gap-12 items-start">
                         {/* Profile Image & Mobile Header Info Container */}
-                        <div className="flex flex-col gap-6 md:gap-12 w-full md:w-auto items-start md:items-start shrink-0">
+                        <div className="flex flex-col gap-3 md:gap-12 w-full md:w-auto items-start md:items-start shrink-0">
                             <div className="flex flex-row items-center justify-center sm:justify-start gap-4 sm:gap-6 w-full md:w-auto">
                                 <div className="relative group shrink-0">
                                     <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-accent overflow-hidden shadow-2xl bg-primary md:bg-secondary relative z-10">
@@ -304,14 +304,14 @@ const FreelancerProfilePage = () => {
                             </div>
 
                             {/* Mobile-Only Title & Rate (Full Width Below Avatar/Name) */}
-                            <div className="md:hidden w-full space-y-3 mt-4 flex flex-col items-center">
-                                <div className="w-full pb-3 border-b border-slate-900/5 dark:border-white/5 flex justify-center text-center">
-                                    <p className="text-slate-950 dark:text-white font-bold text-xl leading-relaxed">{profile.title || 'Professional Freelancer'}</p>
+                            <div className="md:hidden w-full space-y-2 mt-2 flex flex-col items-center">
+                                <div className="w-full pb-2 border-b border-slate-900/5 dark:border-white/5 flex justify-center text-center">
+                                    <p className="text-slate-950 dark:text-white font-semibold text-sm leading-relaxed">{profile.title || 'Professional Freelancer'}</p>
                                 </div>
                                 <div className="flex items-center justify-center gap-3">
-                                    <span className="text-accent text-xl font-black">{formatINR(profile.hourly_rate || 0)}/hr</span>
+                                    <span className="text-accent text-sm font-bold">₹{Number(profile.hourly_rate || 0).toLocaleString('en-IN')}/hr</span>
                                     <div className="w-px h-4 bg-slate-900/10 dark:bg-white/10" />
-                                    <span className="text-slate-950 dark:text-white/70 text-sm font-bold uppercase tracking-wider">{profile.experience_years || '0'}+ Years Exp.</span>
+                                    <span className="text-slate-950 dark:text-white/70 text-xs font-bold uppercase tracking-wider">{profile.experience_years || '0'}+ Yrs</span>
                                 </div>
 
                                 {/* Mobile Action Buttons */}
@@ -336,14 +336,7 @@ const FreelancerProfilePage = () => {
                                                 Report User
                                             </button>
                                         </>
-                                    ) : (
-                                        <button
-                                            onClick={() => navigate('/freelancer/setup-profile')}
-                                            className="w-full py-3 bg-accent/10 border border-accent/20 text-accent rounded-full font-bold text-xs uppercase tracking-widest transition"
-                                        >
-                                            Complete Profile Wizard
-                                        </button>
-                                    )}
+                                    ) : null}
                                 </div>
                             </div>
                         </div>
@@ -419,7 +412,7 @@ const FreelancerProfilePage = () => {
                                             <p className="text-accent text-lg font-medium">{profile.title || 'Professional Freelancer'}</p>
                                             <div className="hidden sm:block w-px h-4 bg-white/10" />
                                             <div className="flex items-center gap-1.5 text-slate-900/60 dark:text-white/60 text-lg font-bold">
-                                                <span>{formatINR(profile.hourly_rate || 0)}/hr</span>
+                                                <span>₹{Number(profile.hourly_rate || 0).toLocaleString('en-IN')}/hr</span>
                                             </div>
                                             <div className="hidden sm:block w-px h-4 bg-white/10" />
                                             <div className="flex items-center gap-1.5 text-slate-900/60 dark:text-white/60 text-lg font-bold">
@@ -485,7 +478,7 @@ const FreelancerProfilePage = () => {
                                 </div>
                             )}
 
-                            <div className="mt-10 grid grid-cols-2 md:flex md:flex-row gap-4 md:gap-12 w-full">
+                            <div className="mt-4 grid grid-cols-2 md:flex md:flex-row gap-3 md:gap-12 w-full">
                                 {/* Ratings */}
                                 <div className="py-2 flex flex-col items-center md:items-start space-y-2 w-full md:w-auto">
                                     <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-950/50 dark:text-white/30">Client Rating</p>
@@ -509,12 +502,12 @@ const FreelancerProfilePage = () => {
                                     <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-950/50 dark:text-white/30">Reliability</p>
                                     <div className="flex flex-col items-center md:items-start gap-1.5 w-full">
                                         <div className="flex items-end gap-1.5">
-                                            <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent/60 leading-none">{reliability?.score || 100}%</span>
+                                            <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent/60 leading-none">{reliability?.score ?? 100}%</span>
                                         </div>
                                         <div className="w-full md:w-32 h-1.5 bg-slate-900/5 dark:bg-white/5 rounded-full overflow-hidden border border-slate-900/5 dark:border-white/5 relative shadow-inner">
                                             <motion.div
                                                 initial={{ width: 0 }}
-                                                animate={{ width: `${reliability?.score || 100}%` }}
+                                                animate={{ width: `${reliability?.score ?? 100}%` }}
                                                 className="h-full bg-gradient-to-r from-accent/50 to-accent relative"
                                             >
                                                 <div className="absolute inset-0 bg-white/20 w-full h-full animate-pulse" />
@@ -524,7 +517,7 @@ const FreelancerProfilePage = () => {
                                 </div>
                             </div>
 
-                            <div className="mt-12 flex flex-col sm:flex-row items-end justify-between gap-6">
+                            <div className="mt-6 md:mt-12 flex flex-col sm:flex-row items-end justify-between gap-4 md:gap-6">
                                 {/* Risk Indicator (Client Only OR Admin) */}
                                 {(role === 'CLIENT' || role === 'SUPER_ADMIN' || role === 'ADMIN') && risk ? (
                                     <div className="space-y-2 flex flex-col items-center sm:items-start">
@@ -576,7 +569,7 @@ const FreelancerProfilePage = () => {
                                 ) : (
                                     <button
                                         onClick={() => navigate('/freelancer/setup-profile')}
-                                        className="px-8 py-3 bg-accent/10 border border-accent/20 hover:bg-accent/20 text-accent rounded-full font-bold text-xs uppercase tracking-widest transition"
+                                        className="w-full md:w-auto px-8 py-3 bg-accent/10 border border-accent/20 hover:bg-accent/20 text-accent rounded-full font-bold text-xs uppercase tracking-widest transition"
                                     >
                                         Complete Profile Wizard
                                     </button>
