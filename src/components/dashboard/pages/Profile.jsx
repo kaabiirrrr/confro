@@ -82,7 +82,6 @@ const Profile = () => {
                         <p className="text-sm sm:text-lg text-slate-900/60 dark:text-white/60 leading-relaxed font-medium">
                             {profile?.bio || "I'm a dedicated professional looking to help brands and businesses grow through innovative design and robust engineering solutions."}
                         </p>
-                    </div>
 
                     {/* Skills Section */}
                     {profile?.skills && profile.skills.length > 0 && (
