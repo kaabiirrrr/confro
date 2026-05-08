@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { BookOpen, Plus, Trash2, Image } from 'lucide-react';
+import { Plus, Trash2, Image } from 'lucide-react';
 import { getWorkDiary, logWorkDiary, deleteWorkDiaryEntry, getMyContracts } from '../../../../../services/apiService';
 import { toastApiError } from '../../../../../utils/apiErrorToast';
 import { toast } from 'react-hot-toast';
@@ -198,7 +198,7 @@ export default function WorkDiariesPage() {
         </div>
       ) : entries.length === 0 ? (
         <div className="text-center py-20 bg-transparent rounded-2xl">
-          <BookOpen className="mx-auto text-white/20 mb-4" size={48} />
+          <img src="/Icons/icons8-spiral-bound-booklet-100.png" alt="" className="mx-auto w-12 h-12 object-contain mb-4" />
           <h3 className="text-white font-semibold text-lg">No Activity Logged</h3>
           <p className="text-white/30 text-xs mt-2 max-w-xs mx-auto font-medium">
             {!filters.contract_id

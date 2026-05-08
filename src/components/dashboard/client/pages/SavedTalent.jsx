@@ -3,7 +3,7 @@ import {
   getSavedFreelancers,
   removeSavedFreelancer,
 } from '../../../../services/apiService';
-import { Bookmark, MessageCircle, Trash2, ExternalLink, ShieldCheck } from 'lucide-react';
+import { MessageCircle, Trash2, ExternalLink, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { toastApiError } from '../../../../utils/apiErrorToast';
@@ -104,7 +104,7 @@ const SavedTalent = () => {
         </div>
       ) : freelancers.length === 0 ? (
         <EmptyState
-          icon={Bookmark}
+          imageSrc="/Icons/icons8-check-file-64.png"
           title="No saved talent yet"
           description="Save freelancers while browsing to quickly find them later."
           action={

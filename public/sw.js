@@ -3,13 +3,18 @@
  * Intercepts failed navigation requests and serves offline.html
  */
 
-const CACHE_NAME = 'connect-offline-v2';
+const CACHE_NAME = 'connect-offline-v4';
 const OFFLINE_URL = '/offline.html';
+const PRECACHE = [
+  OFFLINE_URL,
+  '/Logo2.png',
+  '/Logo-LightMode-trimmed.png',
+];
 
-// On install: cache the offline page immediately
+// On install: cache offline page + logos
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll([OFFLINE_URL]))
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE))
   );
   self.skipWaiting();
 });

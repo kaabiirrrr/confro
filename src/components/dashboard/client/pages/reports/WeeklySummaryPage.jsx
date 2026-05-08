@@ -104,7 +104,7 @@ export default function WeeklySummaryPage() {
           {/* Stat cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {STAT_CARDS.map((card) => (
-              <div key={card.key} className="bg-transparent border border-white/10 rounded-[2rem] p-5 sm:p-8 relative overflow-hidden group">
+              <div key={card.key} className="bg-transparent border border-white/10 rounded-xl p-5 sm:p-8 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 blur-3xl -mr-16 -mt-16 rounded-full group-hover:bg-accent/10 transition-all duration-700" />
                 
                 {/* Icon from previous UI */}
@@ -130,7 +130,7 @@ export default function WeeklySummaryPage() {
 
           {/* Bar chart */}
           {chartData.length > 0 ? (
-            <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-10 relative overflow-hidden group">
+            <div className="bg-transparent border border-white/10 rounded-xl p-6 sm:p-10 relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 blur-[120px] -mr-48 -mt-48 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
               <div className="flex items-center gap-3 mb-8 relative z-10">
                  <BarChart3 size={20} className="text-accent" />

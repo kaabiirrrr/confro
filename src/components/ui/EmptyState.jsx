@@ -1,7 +1,8 @@
 import React from 'react';
 
 const EmptyState = ({ 
-  icon: Icon, 
+  icon: Icon,
+  imageSrc,
   title, 
   description, 
   action, 
@@ -9,11 +10,15 @@ const EmptyState = ({
 }) => {
   return (
     <div className={`flex flex-col items-center justify-center text-center py-16 px-4 ${className}`}>
-      {Icon && (
+      {imageSrc ? (
+        <div className="mb-4">
+          <img src={imageSrc} alt="" className="w-12 h-12 object-contain mx-auto" />
+        </div>
+      ) : Icon ? (
         <div className="mb-4">
           <Icon className="w-12 h-12 text-white/20 mx-auto" />
         </div>
-      )}
+      ) : null}
       <h3 className="text-lg font-medium text-white mb-2">{title}</h3>
       {description && (
         <p className="text-white/40 text-sm max-w-md mx-auto mb-6">{description}</p>
