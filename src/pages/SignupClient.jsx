@@ -56,6 +56,7 @@ const SignupClient = () => {
   const handleGoogleLogin = async () => {
     try {
       localStorage.setItem('oauth_intended_role', 'CLIENT');
+      localStorage.setItem('oauth_mode', 'signup');
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -71,6 +72,7 @@ const SignupClient = () => {
   const handleFacebookLogin = async () => {
     try {
       localStorage.setItem('oauth_intended_role', 'CLIENT');
+      localStorage.setItem('oauth_mode', 'signup');
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook',
         options: {

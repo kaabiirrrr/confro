@@ -160,12 +160,12 @@ const AnalyticsGrid = memo(({ freelancerStats, reliability }) => {
   return (
     <div className="space-y-4 mb-4">
       {/* System Health Guard */}
-      <div className="flex items-center justify-between px-4 sm:px-6 py-2 bg-white/5 border border-white/5 rounded-xl">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-2 bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-xl">
         <div className="flex items-center gap-2">
           <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white/40 whitespace-nowrap">Connect Economy Active</span>
+          <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] text-slate-500 dark:text-white/40 whitespace-nowrap">Connect Economy Active</span>
         </div>
-        <Link to={`${basePath}/buy-connects`} className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] text-accent hover:text-white transition-colors whitespace-nowrap">
+        <Link to={`${basePath}/buy-connects`} className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] text-accent hover:text-accent/70 transition-colors whitespace-nowrap">
           Refill Connects
         </Link>
       </div>
@@ -183,13 +183,13 @@ const AnalyticsGrid = memo(({ freelancerStats, reliability }) => {
               <div className="w-7 h-7 sm:w-10 sm:h-10 flex items-center justify-center shrink-0 transition-transform duration-500 group-hover:scale-110">
                 {typeof item.icon === 'string' ? ICON_MAP[item.icon] : item.icon}
               </div>
-              <h3 className="text-white/30 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] leading-tight text-center sm:text-left">{item.label}</h3>
+              <h3 className="text-slate-400 dark:text-white/30 text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em] leading-tight text-center sm:text-left">{item.label}</h3>
             </div>
-            <p className={`text-center sm:text-left text-lg sm:text-xl font-black tracking-tight ${item.badge ? 'text-accent' : 'text-white'}`}>
+            <p className={`text-center sm:text-left text-lg sm:text-xl font-black tracking-tight ${item.badge ? 'text-accent' : 'text-slate-800 dark:text-white'}`}>
               {item.value}
             </p>
             {item.subValue && (
-              <p className="text-center sm:text-left text-[8px] font-medium text-white/20 uppercase tracking-widest mt-0.5">
+              <p className="text-center sm:text-left text-[8px] font-medium text-slate-400 dark:text-white/20 uppercase tracking-widest mt-0.5">
                 {item.subValue}
               </p>
             )}
@@ -460,22 +460,22 @@ function DashboardHome() {
 
       {/* FEED CONTROLS */}
       <div className="space-y-6">
-        <div className="flex items-start sm:items-center justify-between gap-4 sm:gap-8 border-b border-white/5 pb-6">
+        <div className="flex items-start sm:items-center justify-between gap-4 sm:gap-8 border-b border-black/5 dark:border-white/5 pb-6">
           <div className="space-y-1 sm:space-y-2">
-            <h2 className="text-lg sm:text-2xl font-black text-white tracking-tight">Active Market</h2>
-            <p className="text-[12px] sm:text-lg text-white/40 font-medium">Real-time opportunities matched to your profile.</p>
+            <h2 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">Active Market</h2>
+            <p className="text-[12px] sm:text-lg text-slate-500 dark:text-white/40 font-medium">Real-time opportunities matched to your profile.</p>
           </div>
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             <button
               onClick={handleManualRefresh}
-              className="flex items-center justify-center gap-1.5 sm:gap-2 px-0 sm:px-6 w-10 h-10 sm:w-auto sm:h-11 rounded-full text-[9px] sm:text-[10px] font-black tracking-[0.1em] sm:tracking-[0.2em] text-accent sm:text-white/60 sm:border sm:border-white/10 hover:text-accent hover:border-accent uppercase transition-all group"
+              className="flex items-center justify-center gap-1.5 sm:gap-2 px-0 sm:px-6 w-10 h-10 sm:w-auto sm:h-11 rounded-full text-[9px] sm:text-[10px] font-black tracking-[0.1em] sm:tracking-[0.2em] text-accent sm:text-slate-600 dark:sm:text-white/60 sm:border sm:border-slate-300 dark:sm:border-white/10 hover:text-accent hover:border-accent uppercase transition-all group"
             >
-              <RefreshCw size={18} className={`sm:w-3.5 sm:h-3.5 sm:text-accent ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw size={18} className={`sm:w-3.5 sm:h-3.5 text-accent ${loading ? 'animate-spin' : ''}`} />
               <span className="hidden sm:inline">SYNC</span>
             </button>
             <button
               onClick={() => setIsFilterModalOpen(true)}
-              className="relative flex items-center justify-center gap-1.5 sm:gap-2 px-0 sm:px-6 w-10 h-10 sm:w-auto sm:h-11 rounded-full text-[9px] sm:text-[10px] font-black tracking-[0.1em] sm:tracking-[0.2em] bg-transparent sm:bg-accent text-accent sm:text-white hover:bg-white/5 sm:hover:bg-accent/80 uppercase transition-all group"
+              className="relative flex items-center justify-center gap-1.5 sm:gap-2 px-0 sm:px-6 w-10 h-10 sm:w-auto sm:h-11 rounded-full text-[9px] sm:text-[10px] font-black tracking-[0.1em] sm:tracking-[0.2em] bg-transparent sm:bg-accent text-accent sm:text-white hover:bg-black/5 dark:hover:bg-white/5 sm:hover:bg-accent/80 uppercase transition-all group"
             >
               <Filter size={18} className="sm:w-3.5 sm:h-3.5 text-accent sm:text-white" />
               <span className="hidden sm:inline">
@@ -497,7 +497,7 @@ function DashboardHome() {
               {loading ? (
                 <RefreshCw size={18} className="text-accent animate-spin" />
               ) : (
-                <Search size={18} className="text-white/20 group-focus-within:text-accent transition-colors" />
+                <Search size={18} className="text-slate-400 dark:text-white/20 group-focus-within:text-accent transition-colors" />
               )}
             </div>
             <input
@@ -505,22 +505,22 @@ function DashboardHome() {
               placeholder="Search for jobs, skills, or keywords"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-12 sm:h-14 pl-12 pr-6 bg-white/[0.02] border border-white/10 rounded-xl text-xs sm:text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-accent/50 focus:bg-white/[0.05] transition-all"
+              className="w-full h-12 sm:h-14 pl-12 pr-6 bg-black/[0.02] dark:bg-white/[0.02] border border-black/10 dark:border-white/10 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/30 focus:outline-none focus:border-accent/50 focus:bg-black/[0.03] dark:focus:bg-white/[0.05] transition-all"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 h-6 w-6 flex items-center justify-center rounded-lg bg-white/5 text-white/40 hover:text-white transition-all active:scale-90">
+              <button onClick={() => setSearchQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 h-6 w-6 flex items-center justify-center rounded-lg bg-black/5 dark:bg-white/5 text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white transition-all active:scale-90">
                 <X size={12} />
               </button>
             )}
           </div>
 
           {/* TABS */}
-          <div className="flex items-center w-full justify-between border-b border-white/5">
+          <div className="flex items-center w-full justify-between border-b border-black/5 dark:border-white/5">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-4 sm:pb-6 text-[8px] sm:text-[10px] font-black tracking-wider sm:tracking-[0.3em] transition-all relative uppercase flex-1 text-center ${activeTab === tab ? "text-accent" : "text-white/20 hover:text-white"
+                className={`pb-4 sm:pb-6 text-[8px] sm:text-[10px] font-black tracking-wider sm:tracking-[0.3em] transition-all relative uppercase flex-1 text-center ${activeTab === tab ? "text-accent" : "text-slate-400 dark:text-white/20 hover:text-slate-700 dark:hover:text-white"
                   }`}
               >
                 {tab}
@@ -538,9 +538,9 @@ function DashboardHome() {
             <InfinityLoader fullScreen={false} text="Syncing Network..."/>
           ) : displayedJobs.length === 0 ? (
             <div className="text-center py-20">
-              <Search size={48} className="text-white/5 mx-auto mb-6" />
-              <h3 className="text-xl font-black text-white mb-2">Zero Matches Found</h3>
-              <p className="text-white/20 text-sm font-medium">Try broadening your search or sync your profile tags.</p>
+              <Search size={48} className="text-slate-200 dark:text-white/5 mx-auto mb-6" />
+              <h3 className="text-xl font-black text-slate-800 dark:text-white mb-2">Zero Matches Found</h3>
+              <p className="text-slate-400 dark:text-white/20 text-sm font-medium">Try broadening your search or sync your profile tags.</p>
             </div>
           ) : (
             <div className="space-y-10">

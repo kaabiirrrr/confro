@@ -123,6 +123,8 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     try {
+      // Mark this as a LOGIN flow — AuthCallback uses this as a secondary hint
+      localStorage.setItem('oauth_mode', 'login');
       const from = location.state?.from?.pathname;
       if (from && from !== '/') {
         localStorage.setItem('oauth_redirect_path', from);
@@ -142,6 +144,8 @@ const Login = () => {
 
   const handleFacebookLogin = async () => {
     try {
+      // Mark this as a LOGIN flow — AuthCallback uses this as a secondary hint
+      localStorage.setItem('oauth_mode', 'login');
       const from = location.state?.from?.pathname || '/';
       localStorage.setItem('oauth_redirect_path', from);
 

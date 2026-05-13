@@ -25,7 +25,7 @@ const FreelancerSettings = () => {
             </div>
 
             <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-14 w-full min-w-0 items-start">
-                <aside className="sticky top-[56px] sm:top-[70px] lg:sticky lg:top-32 lg:self-start z-[30] w-full lg:w-auto shrink-0 backdrop-blur-md lg:bg-transparent lg:backdrop-blur-none py-1 lg:py-0">
+                <aside className="sticky top-[56px] sm:top-[70px] lg:sticky lg:top-28 lg:self-start z-[30] w-full lg:w-auto shrink-0 backdrop-blur-md lg:bg-transparent lg:backdrop-blur-none py-1 lg:py-0">
                     <FreelancerSettingsSidebar active={active} setActive={setActive} />
                 </aside>
 

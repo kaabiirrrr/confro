@@ -45,7 +45,7 @@ const InfinityLoader = ({ fullScreen = true, text = "Connecting you..." }) => {
 
                 {text && (
                     <p
-                        className="text-light-text/50 animate-pulse text-[10px] mt-2 font-medium tracking-wide uppercase"
+                        className="text-gray-500 dark:text-white/50 animate-pulse text-[10px] mt-2 font-medium tracking-wide uppercase"
                     >
                         {text}
                     </p>

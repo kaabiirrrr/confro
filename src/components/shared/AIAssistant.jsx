@@ -247,7 +247,7 @@ export default function AIAssistant({ userRole = 'client', externalOpen = false,
               <img src="/Icons/search.png" alt="" style={{ width: 18, height: 18, objectFit: 'contain' }} />
               <div>
                 <div style={{ color: '#38bdf8', fontSize: 12, fontWeight: 700 }}>Guide me on this page</div>
-                <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11 }}>Step-by-step help for {pageGuide.title}</div>
+                <div className="ai-header-sub" style={{ fontSize: 11 }}>Step-by-step help for {pageGuide.title}</div>
               </div>
             </button>
           )}
@@ -282,8 +282,8 @@ export default function AIAssistant({ userRole = 'client', externalOpen = false,
               ) : (
                 <>
                   <button onClick={() => { setActiveTool(null); setResult(null); setInput(''); }}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.35)', fontSize: 12, fontWeight: 600, letterSpacing: '0.05em', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 4, padding: 0 }}>
-                    Back to tools
+                    className="ai-back-btn">
+                    ‹ Back to tools
                   </button>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
                     <div className="ai-tool-icon" style={{ width: 32, height: 32 }}>
@@ -323,7 +323,7 @@ export default function AIAssistant({ userRole = 'client', externalOpen = false,
                     'How does payment work?',
                   ].filter(Boolean).map(q => (
                     <button key={q} onClick={() => handleChat(q)}
-                      style={{ padding: '5px 10px', borderRadius: 20, border: '1px solid rgba(14,165,233,0.3)', background: 'rgba(14,165,233,0.08)', color: '#38bdf8', fontSize: 11, cursor: 'pointer', fontWeight: 600 }}>
+                      className="ai-copy-btn" style={{ borderRadius: 20, fontSize: 11 }}>
                       {q}
                     </button>
                   ))}

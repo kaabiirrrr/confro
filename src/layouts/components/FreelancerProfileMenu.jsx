@@ -68,7 +68,7 @@ const ProfileMenu = () => {
         {/* MENU */}
         <div className="flex flex-col gap-0.5">
           <Link to={`/freelancer/${user?.id}`} className="dropdown-item !py-2 sm:!py-2.5 !text-xs sm:!text-sm">
-            <img src="/Icons/icons8-user-100.png" alt="" className="w-4 h-4 sm:w-5 sm:h-5 object-contain" style={{ filter: 'invert(60%) sepia(90%) saturate(1500%) hue-rotate(175deg) brightness(110%) contrast(110%)' }} />
+            <img src="/Icons/icons8-user-100.png" alt="" className="w-4 h-4 sm:w-5 sm:h-5 object-contain" style={{ filter: 'var(--dropdown-icon-filter)' }} />
             Your profile
           </Link>
           <Link to="/freelancer/account-health" className="dropdown-item !py-2 sm:!py-2.5 !text-xs sm:!text-sm">
@@ -85,7 +85,7 @@ const ProfileMenu = () => {
           </Link>
           <ThemeToggle />
           <Link to="/freelancer/settings" className="dropdown-item !py-2 sm:!py-2.5 !text-xs sm:!text-sm">
-            <img src="/Icons/icons8-setting-100.png" alt="" className="w-4 h-4 sm:w-5 sm:h-5 object-contain" style={{ filter: 'invert(60%) sepia(90%) saturate(1500%) hue-rotate(175deg) brightness(110%) contrast(110%)' }} />
+            <img src="/Icons/icons8-setting-100.png" alt="" className="w-4 h-4 sm:w-5 sm:h-5 object-contain" style={{ filter: 'var(--dropdown-icon-filter)' }} />
             Account settings
           </Link>
         </div>
