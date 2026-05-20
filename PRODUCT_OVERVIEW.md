@@ -273,7 +273,7 @@
 ## Team & Roles
 
 - **Kabir More (CEO):** Product strategy, fundraising, partnerships
-- **Rohan Patil (CMO):** Marketing, growth, brand
+- **Rohan Patil (Co-Founder & Growth Lead):** Marketing, growth, brand
 - **Samarth Shendge (CTO):** Backend, infrastructure, security
 - **Vijay Biradar (CPO):** Product design, UX, feature roadmap
 - **Vaibhav Pawar (COO):** Operations, QA, customer support

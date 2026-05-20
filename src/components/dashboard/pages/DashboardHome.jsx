@@ -13,6 +13,7 @@ import { formatINR } from "../../../utils/currencyUtils";
 import { cleanImageUrl } from "../../../utils/imageUrl";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import BestMatchesTab from "../freelancer/BestMatchesTab";
 
 import {
   getJobStats,
@@ -534,7 +535,9 @@ function DashboardHome() {
 
         {/* FEED GRID */}
         <div className="space-y-10 min-h-[500px]">
-          {loading ? (
+          {activeTab === "BEST MATCHES" ? (
+            <BestMatchesTab />
+          ) : loading ? (
             <InfinityLoader fullScreen={false} text="Syncing Network..."/>
           ) : displayedJobs.length === 0 ? (
             <div className="text-center py-20">

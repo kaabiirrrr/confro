@@ -32,14 +32,14 @@ const ConfirmModal = ({
       
       {/* Container - Using theme-aware glass pane */}
       <div 
-        className="w-full max-w-[380px] bg-white dark:bg-[#0A1121] border border-black/5 dark:border-white/10 rounded-[32px] shadow-2xl overflow-hidden relative p-8 text-center animate-in zoom-in-95 duration-500 ease-out"
+        className="w-full max-w-[380px] bg-white dark:bg-[#0A1121] border border-black/5 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden relative p-8 text-center animate-in zoom-in-95 duration-500 ease-out"
         onClick={(e) => e.stopPropagation()}
       >
         
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-6 right-6 text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white transition-colors p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-full"
+          className="absolute top-6 right-6 text-slate-400 dark:text-white/40 hover:text-[#ef4444] dark:hover:text-[#ef4444] transition-colors p-2"
         >
           <X size={18} />
         </button>
@@ -70,7 +70,7 @@ const ConfirmModal = ({
           
           <button
             onClick={onClose}
-            className="flex-[1] py-2.5 flex items-center justify-center rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-700 dark:text-white font-semibold text-[13.5px] hover:bg-slate-100 dark:hover:bg-white/10 transition-all duration-300 active:scale-95"
+            className="flex-[1] py-2.5 flex items-center justify-center rounded-full border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-slate-700 dark:text-white font-semibold text-[13.5px] hover:bg-slate-100 dark:hover:bg-white/10 transition-all duration-300 active:scale-95"
           >
             {cancelText}
           </button>
@@ -80,7 +80,7 @@ const ConfirmModal = ({
               onConfirm();
               onClose();
             }}
-            className="flex-[1] py-2.5 flex items-center justify-center rounded-xl bg-[#ef4444] text-white font-bold text-[13.5px] hover:bg-[#ef4444]/90 transition-all duration-300 shadow-lg shadow-[#ef4444]/20 active:scale-95"
+            className="flex-[1] py-2.5 flex items-center justify-center rounded-full bg-[#ef4444] text-white font-bold text-[13.5px] hover:bg-[#ef4444]/90 transition-all duration-300 shadow-lg shadow-[#ef4444]/20 active:scale-95"
           >
             {confirmText}
           </button>

@@ -683,3 +683,144 @@ html:not(.dark) .bg-blue-500 {
 .admin-panel a[class*="px-"] {
   border-radius: 9999px !important;
 }
+
+/* Team member profile — mobile responsive fixes */
+@media (max-width: 767px) {
+  .team-avatar-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0 !important;
+  }
+
+  .team-avatar-img {
+    width: 140px !important;
+    height: 155px !important;
+  }
+
+  .hero-card {
+    padding: 24px 20px !important;
+    gap: 20px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .member-info-wrap {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .member-name-row {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    margin-bottom: 12px !important;
+  }
+
+  .member-name-title {
+    font-size: 28px !important;
+    text-align: center !important;
+  }
+
+  .member-socials-buttons-wrap {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 16px !important;
+    width: 100% !important;
+    flex-shrink: 1 !important;
+  }
+
+  .member-social-icons {
+    justify-content: center !important;
+    width: 100% !important;
+    gap: 16px !important;
+  }
+
+  .member-divider {
+    display: none !important;
+  }
+
+  .member-buttons-group {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+
+  .member-btn-portfolio {
+    grid-column: span 2 !important;
+    width: 100% !important;
+  }
+
+  .member-btn-resume,
+  .member-btn-contact {
+    grid-column: span 1 !important;
+    width: 100% !important;
+  }
+
+  .member-buttons-group a,
+  .member-buttons-group span {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 8px 12px !important;
+    font-size: 10px !important;
+    text-align: center !important;
+  }
+
+  .member-role-title {
+    text-align: center !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .member-tagline-text {
+    text-align: center !important;
+    font-size: 11.5px !important;
+    line-height: 1.7 !important;
+    color: var(--color-text-secondary) !important;
+    max-width: 90% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: 16px !important;
+  }
+
+  .member-meta-row {
+    justify-content: center !important;
+    width: 100% !important;
+    gap: 12px !important;
+  }
+
+  .member-meta-loc {
+    width: 100% !important;
+    justify-content: center !important;
+    margin-bottom: 2px !important;
+  }
+
+  .member-meta-dot {
+    display: none !important;
+  }
+
+  .member-skills-row {
+    justify-content: center !important;
+    width: 100% !important;
+  }
+}
+
+/* Custom hover states for team profile action buttons */
+.member-btn-portfolio:hover,
+.member-btn-contact:hover {
+  opacity: 0.9 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+}
+
+.member-btn-resume:hover {
+  background: var(--color-hover) !important;
+  transform: translateY(-1px);
+}

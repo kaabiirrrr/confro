@@ -1,0 +1,332 @@
+/* JobMatchCard.css */
+
+/* ── Card ── */
+.jmc-card {
+    background: linear-gradient(135deg, #0f1117 0%, #13151e 100%);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: visible;
+}
+
+.jmc-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.14);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Top row ── */
+.jmc-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.jmc-match-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px 4px 8px;
+    border-radius: 99px;
+    font-size: 12.5px;
+    font-weight: 700;
+}
+
+.jmc-match-icon {
+    font-size: 13px;
+}
+
+.jmc-match-score {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.jmc-match-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+.jmc-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.jmc-why-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.jmc-why-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+}
+
+/* ── Dismiss menu ── */
+.jmc-menu-wrap {
+    position: relative;
+}
+
+.jmc-menu-btn {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 18px;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+    line-height: 1;
+    padding: 0;
+}
+
+.jmc-menu-btn:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #e2e8f0;
+}
+
+.jmc-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: #1a1d27;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 6px;
+    z-index: 100;
+    min-width: 180px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    animation: jmc-menuPop 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes jmc-menuPop {
+    from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.jmc-menu button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.jmc-menu button:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #e2e8f0;
+}
+
+/* ── Job title ── */
+.jmc-title {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin: 0;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.jmc-title:hover {
+    color: #818cf8;
+}
+
+/* ── Meta row ── */
+.jmc-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.jmc-budget {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #22c55e;
+}
+
+.jmc-badge {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.jmc-badge--cat {
+    background: rgba(129, 140, 248, 0.08);
+    border-color: rgba(129, 140, 248, 0.2);
+    color: #a5b4fc;
+}
+
+.jmc-time {
+    font-size: 11.5px;
+    color: #475569;
+    margin-left: auto;
+}
+
+/* ── Skills row ── */
+.jmc-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.jmc-skill {
+    font-size: 11.5px;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 6px;
+}
+
+.jmc-skill--match {
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    color: #86efac;
+}
+
+.jmc-skill--miss {
+    background: rgba(239, 68, 68, 0.07);
+    border: 1px solid rgba(239, 68, 68, 0.18);
+    color: #fca5a5;
+}
+
+/* ── Match reason ── */
+.jmc-reason {
+    font-size: 12.5px;
+    color: #64748b;
+    margin: 0;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+/* ── Connect discount ── */
+.jmc-connect-discount {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 12px;
+    color: #a5b4fc;
+    font-weight: 500;
+}
+
+.jmc-discount-icon {
+    font-size: 14px;
+}
+
+/* ── Actions ── */
+.jmc-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 2px;
+}
+
+.jmc-btn-primary {
+    flex: 1;
+    background: linear-gradient(135deg, #6366f1, #818cf8);
+    border: none;
+    color: #fff;
+    padding: 9px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+}
+
+.jmc-btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.jmc-btn-save {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    padding: 9px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.jmc-btn-save:hover {
+    background: rgba(255, 255, 255, 0.09);
+    color: #f1f5f9;
+}
+
+/* ── Undo toast ── */
+.jmc-undo-toast {
+    background: #1a1d27;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 13px;
+    color: #94a3b8;
+    animation: jmc-toastIn 0.2s ease;
+}
+
+@keyframes jmc-toastIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.jmc-undo-btn {
+    background: none;
+    border: none;
+    color: #818cf8;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background 0.15s;
+}
+
+.jmc-undo-btn:hover {
+    background: rgba(129, 140, 248, 0.1);
+}

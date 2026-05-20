@@ -10,6 +10,7 @@ import { toast } from 'react-hot-toast';
 import JobFilterSidebar from './JobFilterSidebar';
 import JobCard from '../components/JobCard';
 import { useRealtimeJobs } from '../../../context/RealtimeContext';
+import BestMatchesTab from '../freelancer/BestMatchesTab';
 
 const TABS = [
   { key: 'best_matches', label: 'Best Matches' },
@@ -194,8 +195,10 @@ export default function FreelancerFindWork() {
 
       {!loading && <p className="text-light-text/20 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{pagination.total} jobs found</p>}
 
-      {/* Job list */}
-      {loading ? (
+      {/* ── BEST MATCHES: Full AI Feed ─────────────────────── */}
+      {tab === 'best_matches' ? (
+        <BestMatchesTab />
+      ) : loading ? (
         <div className="space-y-4">
           {[1, 2, 3].map(i => <div key={i} className="animate-pulse bg-transparent border border-border rounded-2xl h-44" />)}
         </div>

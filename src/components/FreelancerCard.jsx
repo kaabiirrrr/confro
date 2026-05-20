@@ -77,6 +77,8 @@ const FreelancerCard = ({
     has_availability_badge,
     profile_completed,
     reliability_score,
+    experience_years,
+    work_hours,
   } = freelancer;
 
   const categoryLabel = CATEGORY_LABELS[category] || category || "Freelancer";
@@ -222,6 +224,23 @@ const FreelancerCard = ({
           ))}
           {skills.length > 5 && (
             <span className="text-[10px] text-light-text/30">+{skills.length - 5} more</span>
+          )}
+        </div>
+      )}
+
+      {/* EXPERIENCE & HOURS CHIPS */}
+      {(experience_years || work_hours) && (
+        <div className="flex flex-wrap gap-2">
+          {experience_years && (
+            <span className="flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-full bg-accent/8 border border-accent/15 text-accent/80 font-semibold">
+              <Briefcase size={10} />
+              {experience_years}+ yrs exp
+            </span>
+          )}
+          {work_hours && (
+            <span className="flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-light-text/50 font-semibold">
+              ⏱ {work_hours}h/week
+            </span>
           )}
         </div>
       )}

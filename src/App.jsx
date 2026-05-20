@@ -55,6 +55,7 @@ const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
 const MissionVision = lazy(() => import("./pages/about/MissionVision"));
 const WhatWeProvide = lazy(() => import("./pages/about/WhatWeProvide"));
 const Team = lazy(() => import("./pages/about/Team"));
+const TeamMemberPage = lazy(() => import("./pages/about/TeamMemberPage"));
 
 const Solutions = lazy(() => import("./pages/Solutions"));
 const AppComingSoon = lazy(() => import("./pages/AppComingSoon"));
@@ -227,7 +228,7 @@ const ConnectsManagementPage = lazy(() => import("./admin/pages/ConnectsManageme
 const TreasuryPage = lazy(() => import("./admin/pages/TreasuryPage"));
 
 /* Loading Component */
-const LoadingSpinner = () => <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader/></div>;
+const LoadingSpinner = () => <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader /></div>;
 
 /* Landing Page */
 function LandingPage() {
@@ -415,8 +416,8 @@ function App() {
                         {/* Marketplace */}
                         <Route path="/find-freelancers" element={<FindFreelancers />} />
                         <Route path="/find-work" element={<FindWork />} />
-                        <Route path="/services" element={<Suspense fallback={<InfinityLoader/>}><ServicesMarketplace /></Suspense>} />
-                        <Route path="/service/:id" element={<Suspense fallback={<InfinityLoader/>}><ServiceDetailPage /></Suspense>} />
+                        <Route path="/services" element={<Suspense fallback={<InfinityLoader />}><ServicesMarketplace /></Suspense>} />
+                        <Route path="/service/:id" element={<Suspense fallback={<InfinityLoader />}><ServiceDetailPage /></Suspense>} />
 
                         <Route path="/find-talent" element={<Navigate to="/find-work" replace />} />
 
@@ -425,6 +426,7 @@ function App() {
                         <Route path="/about/mission" element={<MissionVision />} />
                         <Route path="/about/services" element={<WhatWeProvide />} />
                         <Route path="/about/team" element={<Team />} />
+                        <Route path="/about/team/:id" element={<TeamMemberPage />} />
 
                         {/* SEO Content Pages */}
                         <Route path="/how-it-works" element={<HowItWorksPage />} />

@@ -1,0 +1,243 @@
+/* BestMatchesTab.css */
+
+.bmt-root {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: start;
+    width: 100%;
+}
+
+/* ── Feed ── */
+.bmt-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.bmt-feed-header {
+    padding: 14px 18px;
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: 12px;
+}
+
+.bmt-feed-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.bmt-ai-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.04em;
+}
+
+.bmt-count {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.bmt-feed-desc {
+    font-size: 12px;
+    margin: 0;
+}
+
+/* ── Jobs grid ── */
+.bmt-jobs-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ── Load more ── */
+.bmt-load-more {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.bmt-load-more:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #e2e8f0;
+}
+
+.bmt-end-note {
+    text-align: center;
+    font-size: 12px;
+    color: #475569;
+    padding: 4px 0;
+}
+
+/* ── Skeleton cards ── */
+.bmt-skeleton-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bmt-skeleton {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
+    animation: bmt-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes bmt-shimmer {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.9; }
+}
+
+.bmt-skeleton--badge { height: 24px; width: 130px; border-radius: 99px; }
+.bmt-skeleton--title { height: 18px; width: 75%; }
+.bmt-skeleton--meta { height: 14px; width: 50%; }
+.bmt-skeleton--skills { height: 14px; width: 65%; }
+.bmt-skeleton--reason { height: 14px; width: 85%; }
+
+/* ── Cold start ── */
+.bmt-cold-start {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px;
+    gap: 14px;
+}
+
+.bmt-ai-pulse {
+    font-size: 40px;
+    animation: bmt-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes bmt-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+}
+
+.bmt-cold-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin: 0;
+}
+
+.bmt-cold-sub {
+    font-size: 13.5px;
+    color: #64748b;
+    margin: 0;
+    max-width: 360px;
+    line-height: 1.5;
+}
+
+.bmt-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(129, 140, 248, 0.2);
+    border-top-color: #818cf8;
+    border-radius: 50%;
+    animation: bmt-spin 0.8s linear infinite;
+    margin-top: 4px;
+}
+
+@keyframes bmt-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Empty state ── */
+.bmt-empty {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 40px 16px;
+    gap: 10px;
+}
+
+.bmt-empty-icon {
+    font-size: 40px;
+    margin-bottom: 4px;
+}
+
+.bmt-empty-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin: 0;
+}
+
+.bmt-empty-sub {
+    font-size: 13.5px;
+    color: #64748b;
+    max-width: 380px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.bmt-empty-widget {
+    width: 100%;
+    max-width: 380px;
+    margin-top: 16px;
+}
+
+/* ── Sidebar ── */
+.bmt-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: sticky;
+    top: 80px;
+}
+
+.bmt-how-it-works {
+    background: linear-gradient(135deg, #0f1117, #13151e);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    padding: 18px 20px;
+}
+
+.bmt-hw-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #475569;
+    margin: 0 0 12px;
+}
+
+.bmt-hw-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bmt-hw-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: #94a3b8;
+}
+
+.bmt-hw-icon {
+    font-size: 14px;
+    width: 20px;
+    text-align: center;
+}

@@ -94,24 +94,21 @@ const FreelancerProfilePage = () => {
             const response = await profileApi.getPublicProfile(id);
             if (response.success) {
                 const data = response.data;
+                // Backend now normalizes all step_data paths — use directly.
+                // Only fallback locally for skills if backend missed it.
                 const normalizedSkills = Array.isArray(data.skills) && data.skills.length > 0
                     ? data.skills
-                    : (Array.isArray(data.step_data?.skills) ? data.step_data.skills : []);
+                    : [];
 
                 setProfile({
                     ...data,
                     is_email_verified: data.is_email_verified ?? data.email_verified ?? false,
                     skills: normalizedSkills,
-                    // experience column = array of work history objects
+                    // Backend already resolves these — use directly:
                     experience: Array.isArray(data.experience) ? data.experience : [],
-                    // experience_years = string from wizard (stored in step_data)
-                    experience_years: data.step_data?.professional_info?.experience || '',
-                    // hourly_rate fallback from step_data rate string
-                    hourly_rate: data.hourly_rate || (
-                        data.step_data?.professional_info?.rate
-                            ? parseFloat(String(data.step_data.professional_info.rate).replace(/[^0-9.]/g, '')) || 0
-                            : 0
-                    ),
+                    experience_years: data.experience_years || '',
+                    hourly_rate: Number(data.hourly_rate) || 0,
+                    work_hours: data.work_hours || null,
                 });
             } else {
                 logger.error('API returned success:false', response);
@@ -119,7 +116,6 @@ const FreelancerProfilePage = () => {
             }
         } catch (error) {
             logger.error('Error fetching profile', error);
-            // toast.error('Failed to load profile');
             setProfile(null);
         } finally {
             setLoading(false);
@@ -308,10 +304,20 @@ const FreelancerProfilePage = () => {
                                 <div className="w-full pb-2 border-b border-slate-900/5 dark:border-white/5 flex justify-center text-center">
                                     <p className="text-slate-950 dark:text-white font-semibold text-sm leading-relaxed">{profile.title || 'Professional Freelancer'}</p>
                                 </div>
-                                <div className="flex items-center justify-center gap-3">
+                                <div className="flex items-center justify-center gap-3 flex-wrap">
                                     <span className="text-accent text-sm font-bold">₹{Number(profile.hourly_rate || 0).toLocaleString('en-IN')}/hr</span>
-                                    <div className="w-px h-4 bg-slate-900/10 dark:bg-white/10" />
-                                    <span className="text-slate-950 dark:text-white/70 text-xs font-bold uppercase tracking-wider">{profile.experience_years || '0'}+ Yrs</span>
+                                    {profile.experience_years && (
+                                        <>
+                                            <div className="w-px h-4 bg-slate-900/10 dark:bg-white/10" />
+                                            <span className="text-slate-950 dark:text-white/70 text-xs font-bold uppercase tracking-wider">{profile.experience_years}+ Yrs Exp.</span>
+                                        </>
+                                    )}
+                                    {profile.work_hours && (
+                                        <>
+                                            <div className="w-px h-4 bg-slate-900/10 dark:bg-white/10" />
+                                            <span className="text-slate-950 dark:text-white/70 text-xs font-bold">{profile.work_hours}h/wk</span>
+                                        </>
+                                    )}
                                 </div>
 
                                 {/* Mobile Action Buttons */}
@@ -412,13 +418,27 @@ const FreelancerProfilePage = () => {
                                             <p className="text-accent text-lg font-medium">{profile.title || 'Professional Freelancer'}</p>
                                             <div className="hidden sm:block w-px h-4 bg-white/10" />
                                             <div className="flex items-center gap-1.5 text-slate-900/60 dark:text-white/60 text-lg font-bold">
-                                                <span>₹{Number(profile.hourly_rate || 0).toLocaleString('en-IN')}/hr</span>
+                                                <IndianRupee size={16} className="text-accent" />
+                                                <span>{Number(profile.hourly_rate || 0).toLocaleString('en-IN')}/hr</span>
                                             </div>
-                                            <div className="hidden sm:block w-px h-4 bg-white/10" />
-                                            <div className="flex items-center gap-1.5 text-slate-900/60 dark:text-white/60 text-lg font-bold">
-                                                <Briefcase size={18} className="text-accent" />
-                                                <span>{profile.experience_years || '0'}+ Years Exp.</span>
-                                            </div>
+                                            {profile.experience_years && (
+                                                <>
+                                                    <div className="hidden sm:block w-px h-4 bg-white/10" />
+                                                    <div className="flex items-center gap-1.5 text-slate-900/60 dark:text-white/60 text-lg font-bold">
+                                                        <Briefcase size={18} className="text-accent" />
+                                                        <span>{profile.experience_years}+ Years Exp.</span>
+                                                    </div>
+                                                </>
+                                            )}
+                                            {profile.work_hours && (
+                                                <>
+                                                    <div className="hidden sm:block w-px h-4 bg-white/10" />
+                                                    <div className="flex items-center gap-1.5 text-slate-900/60 dark:text-white/60 text-base font-semibold">
+                                                        <Clock size={16} className="text-accent" />
+                                                        <span>{profile.work_hours}h/week</span>
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="flex flex-col items-end gap-3 mt-4 sm:mt-0">
@@ -676,20 +696,41 @@ const FreelancerProfilePage = () => {
                             </div>
                             <div className="space-y-8">
                                 {profile.experience && profile.experience.length > 0 ? (
-                                    profile.experience.map((exp, i) => (
-                                        <div key={i} className="flex justify-between items-start group">
-                                            <div className="space-y-1">
-                                                <h4 className="text-base font-bold text-slate-950 dark:text-white leading-snug">{exp.company}</h4>
-                                                <p className="text-xs text-slate-900/40 dark:text-white/40 font-medium">
-                                                    {exp.role}<br />
-                                                    {exp.start_date} — {exp.end_date || 'Present'}
-                                                </p>
+                                    profile.experience.map((exp, i) => {
+                                        // Wizard may store different field names
+                                        const company = exp.company || exp.organization || exp.employer || exp.companyName || '';
+                                        const role = exp.role || exp.position || exp.title || exp.jobTitle || '';
+                                        const startDate = exp.start_date || exp.startDate || exp.from || '';
+                                        const endDate = exp.end_date || exp.endDate || exp.to || '';
+                                        const description = exp.description || exp.summary || exp.details || '';
+                                        return (
+                                            <div key={i} className="flex flex-col gap-1.5 pb-6 border-b border-slate-900/5 dark:border-white/5 last:border-0">
+                                                <div className="flex justify-between items-start">
+                                                    <div className="space-y-0.5">
+                                                        <h4 className="text-base font-bold text-slate-950 dark:text-white leading-snug">{company || 'Company'}</h4>
+                                                        <p className="text-sm text-accent font-semibold">{role}</p>
+                                                        <p className="text-xs text-slate-900/40 dark:text-white/40 font-medium">
+                                                            {startDate}{startDate && ' — '}{endDate || (startDate ? 'Present' : '')}
+                                                        </p>
+                                                    </div>
+                                                    <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider ${i === 0 ? 'bg-accent/20 text-accent border border-accent/20' : 'bg-slate-900/5 dark:bg-white/5 text-slate-900/40 dark:text-white/40 border border-slate-900/5 dark:border-white/5'}`}>
+                                                        {i === 0 ? 'Current' : 'Past'}
+                                                    </span>
+                                                </div>
+                                                {description && (
+                                                    <p className="text-xs text-slate-900/50 dark:text-white/50 leading-relaxed mt-1">{description}</p>
+                                                )}
                                             </div>
-                                            <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider ${i === 0 ? 'bg-accent/20 text-accent border border-accent/20' : 'bg-slate-900/5 dark:bg-white/5 text-slate-900/40 dark:text-white/40 border border-slate-900/5 dark:border-white/5'}`}>
-                                                {i === 0 ? 'Primary' : 'Secondary'}
-                                            </span>
+                                        );
+                                    })
+                                ) : profile.experience_years ? (
+                                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-900/[0.03] dark:bg-white/[0.03] border border-slate-900/5 dark:border-white/5">
+                                        <Briefcase size={20} className="text-accent shrink-0" />
+                                        <div>
+                                            <p className="text-sm font-bold text-slate-900 dark:text-white">{profile.experience_years}+ Years Experience</p>
+                                            <p className="text-xs text-slate-900/40 dark:text-white/40">No detailed work history added yet</p>
                                         </div>
-                                    ))
+                                    </div>
                                 ) : (
                                     <p className="text-sm text-slate-900/30 dark:text-white/30 font-medium italic">No experience details added yet.</p>
                                 )}
