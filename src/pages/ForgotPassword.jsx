@@ -59,7 +59,7 @@ const ForgotPassword = () => {
             </div>
 
             {/* Centered content — fills remaining height below navbar */}
-            <div className="flex-1 flex items-center justify-center px-6 pt-14 md:pt-16">
+            <div className="flex-1 flex items-center justify-center px-6" style={{ marginTop: '-56px' }}>
             <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
