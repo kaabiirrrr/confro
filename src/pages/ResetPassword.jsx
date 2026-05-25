@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, CheckCircle } from 'lucide-react';
 import AuthInput from '../components/AuthInput';
-import { resetPassword } from '../services/authService';
-import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase';
 
 const ResetPassword = () => {
     const navigate = useNavigate();
@@ -14,8 +13,39 @@ const ResetPassword = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+    const [sessionReady, setSessionReady] = useState(false);
+    const [tokenError, setTokenError] = useState('');
 
-    const { logout } = useAuth();
+    // Exchange the recovery token from the URL hash into a live session
+    useEffect(() => {
+        const hash = window.location.hash;
+        const params = new URLSearchParams(hash.replace('#', '?'));
+        const accessToken = params.get('access_token');
+        const refreshToken = params.get('refresh_token');
+        const type = params.get('type');
+
+        if (type === 'recovery' && accessToken) {
+            supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken || '' })
+                .then(({ error }) => {
+                    if (error) {
+                        setTokenError('This reset link is invalid or has expired. Please request a new one.');
+                    } else {
+                        setSessionReady(true);
+                        // Clean the hash from the URL without reloading
+                        window.history.replaceState(null, '', window.location.pathname);
+                    }
+                });
+        } else {
+            // No token in URL — check if there's already an active recovery session
+            supabase.auth.getSession().then(({ data }) => {
+                if (data?.session) {
+                    setSessionReady(true);
+                } else {
+                    setTokenError('No valid reset session found. Please request a new password reset link.');
+                }
+            });
+        }
+    }, []);
 
     const validate = () => {
         if (password.length < 8) {
@@ -32,113 +62,121 @@ const ResetPassword = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        if (!validate()) return;
 
-        if (validate()) {
-            setLoading(true);
-            const result = await resetPassword(password);
+        setLoading(true);
+        try {
+            const { error: updateError } = await supabase.auth.updateUser({ password });
+            if (updateError) throw updateError;
 
-            if (result.success) {
-                setSuccess(true);
-                // Log the user out so they can log back in with their new password
-                await logout();
-                setTimeout(() => {
-                    navigate('/login');
-                }, 3000);
-            } else {
-                setError(result.message);
-            }
+            setSuccess(true);
+            // Sign out so they log in fresh with the new password
+            await supabase.auth.signOut();
+            setTimeout(() => navigate('/login'), 3000);
+        } catch (err) {
+            setError(err.message || 'Failed to update password. Please try again.');
+        } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-primary flex items-center justify-center px-4 py-12">
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="max-w-md w-full"
-            >
-                <div className="bg-secondary/30 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl relative">
-                    <Link 
-                        to="/login"
-                        className="flex w-fit items-center text-white/70 hover:text-white transition-colors mb-6 text-sm font-medium"
-                    >
-                        <ArrowLeft size={18} className="mr-2" />
-                        Back
-                    </Link>
+        <div className="min-h-screen bg-primary font-sans selection:bg-accent/30">
+            {/* Sticky navbar with logo */}
+            <div className="fixed top-0 left-0 w-full h-14 md:h-16 px-6 md:px-14 flex items-center justify-between z-50 bg-primary/80 backdrop-blur-md border-b border-white/5">
+                <Link to="/" aria-label="Connect Home">
+                    <img src="/Logo-LightMode-trimmed.png" alt="Connect" className="h-8 md:h-10 object-contain block dark:hidden" />
+                    <img src="/Logo2.png" alt="Connect" className="h-7 md:h-9 object-contain hidden dark:block" />
+                </Link>
+                <Link to="/login" className="text-white/40 hover:text-white text-sm font-medium transition-colors">
+                    Skip
+                </Link>
+            </div>
 
-                    <div className="mb-8">
-                        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">Create new password</h2>
-                        <p className="text-white/60 text-sm leading-relaxed">
-                            Your new password must be different from previous used passwords.
-                        </p>
-                    </div>
-
-                    {success ? (
-                        <div className="text-center py-4">
-                            <div className="bg-green-500/20 border border-green-500/50 p-6 rounded-2xl mb-6 flex flex-col items-center">
-                                <CheckCircle className="text-green-500 mb-2" size={32} />
-                                <p className="text-green-100 text-sm font-medium">
-                                    Password updated successfully!
-                                </p>
+            {/* Content */}
+            <div className="flex items-center justify-center min-h-screen pt-16 px-4 py-12">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="w-full max-w-md"
+                >
+                    {tokenError ? (
+                        <div className="text-center space-y-4">
+                            <p className="text-red-400 text-sm">{tokenError}</p>
+                            <Link to="/forgot-password" className="text-accent text-sm font-semibold hover:underline">
+                                Request a new reset link
+                            </Link>
+                        </div>
+                    ) : success ? (
+                        <div className="text-center space-y-4">
+                            <div className="flex flex-col items-center gap-3">
+                                <CheckCircle className="text-green-400" size={48} />
+                                <h2 className="text-2xl font-bold text-white">Password updated!</h2>
+                                <p className="text-white/50 text-sm">You can now log in with your new password.</p>
                             </div>
-                            <p className="text-white/40 text-xs">Redirecting to login page...</p>
+                            <p className="text-white/30 text-xs">Redirecting to login...</p>
                         </div>
                     ) : (
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            {error && (
-                                <div className="bg-red-500/20 border border-red-500 text-red-100 px-4 py-2 rounded-xl text-sm text-center">
-                                    {error}
+                        <>
+                            <div className="mb-8">
+                                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">Create new password</h2>
+                                <p className="text-white/50 text-sm leading-relaxed">
+                                    Your new password must be different from previously used passwords.
+                                </p>
+                            </div>
+
+                            <form onSubmit={handleSubmit} className="space-y-5">
+                                {error && (
+                                    <div className="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl text-sm">
+                                        {error}
+                                    </div>
+                                )}
+
+                                <div className="space-y-1">
+                                    <AuthInput
+                                        label="New Password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        placeholder="••••••••"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                        rightElement={
+                                            <button type="button" onClick={() => setShowPassword(!showPassword)}
+                                                className="text-white/30 hover:text-white transition-colors p-1">
+                                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                            </button>
+                                        }
+                                    />
+                                    <p className="ml-1 text-xs text-white/30">Must be at least 8 characters.</p>
                                 </div>
-                            )}
 
-                            <div className="space-y-1">
-                                <AuthInput
-                                    label="Password"
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="••••••••"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                    rightElement={
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            className="text-white/30 hover:text-white transition-colors p-1"
-                                        >
-                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                                        </button>
-                                    }
-                                />
-                                <p className="-mt-3 ml-1 text-xs text-white/40">Must be at least 8 characters.</p>
-                            </div>
+                                <div className="space-y-1">
+                                    <AuthInput
+                                        label="Confirm Password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        placeholder="••••••••"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        required
+                                    />
+                                    <p className="ml-1 text-xs text-white/30">Both passwords must match.</p>
+                                </div>
 
-                            <div className="space-y-1">
-                                <AuthInput
-                                    label="Confirm Password"
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="••••••••"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    required
-                                />
-                                <p className="-mt-3 ml-1 text-xs text-white/40">Both passwords must match.</p>
-                            </div>
-
-                            <div className="pt-2">
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white font-semibold py-3.5 rounded-full transition-all shadow-lg shadow-accent/20 active:scale-[0.98]"
-                                >
-                                    {loading ? "Updating..." : "Save new password"}
-                                </button>
-                            </div>
-                        </form>
+                                <div className="pt-2">
+                                    <button
+                                        type="submit"
+                                        disabled={loading || !sessionReady}
+                                        className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white font-semibold py-3.5 rounded-full transition-all active:scale-[0.98]"
+                                    >
+                                        {loading ? 'Updating...' : 'Save new password'}
+                                    </button>
+                                </div>
+                            </form>
+                        </>
                     )}
-                </div>
-            </motion.div>
+                </motion.div>
+            </div>
         </div>
     );
 };
