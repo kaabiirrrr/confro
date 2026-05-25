@@ -173,7 +173,7 @@ const FreelancerPolicies = () => {
                             ) : activePolicy.slug?.includes('communication') || activePolicy.title?.toLowerCase().includes('communication') ? (
                                 <img src="/Icons/icons8-communication-100.png" alt="Communication" className="w-16 h-16 object-contain" />
                             ) : activePolicy.slug?.includes('withdrawal') || activePolicy.title?.toLowerCase().includes('withdrawal') ? (
-                                <img src="/Icons/icons8-withdrawal-80.png" alt="Withdrawal" className="w-16 h-16 object-contain" />
+                                <img src="/Icons/icons8-withdrawal-80.png" alt="Withdrawal" className="w-16 h-16 object-contain" style={{ filter: 'invert(27%) sepia(95%) saturate(7481%) hue-rotate(356deg) brightness(97%) contrast(97%)' }} />
                             ) : activePolicy.slug?.includes('legal') || activePolicy.title?.toLowerCase().includes('legal') ? (
                                 <img src="/Icons/icons8-legal-80.png" alt="Legal" className="w-16 h-16 object-contain" />
                             ) : activePolicy.slug?.includes('terms') || activePolicy.title?.toLowerCase().includes('terms') ? (
