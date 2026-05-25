@@ -58,10 +58,11 @@ const MyProposals = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'ACCEPTED': return 'text-emerald-600 dark:text-emerald-400 border-emerald-500/20 bg-emerald-500/5';
-      case 'PENDING': return 'text-blue-600 dark:text-accent border-accent/20 bg-accent/5';
-      case 'REJECTED': return 'text-rose-600 dark:text-red-400 border-red-500/20 bg-red-500/5';
-      default: return 'text-slate-500 dark:text-white/20 border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5';
+      case 'ACCEPTED': return 'text-white bg-emerald-500';
+      case 'PENDING':  return 'text-white bg-yellow-500';
+      case 'REJECTED': return 'text-white bg-red-500';
+      case 'OFFER':    return 'text-white bg-accent';
+      default:         return 'text-white bg-slate-400';
     }
   };
 
@@ -127,125 +128,110 @@ const MyProposals = () => {
             )}
           </div>
         ) : (
-          <div className="bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden divide-y divide-slate-200 dark:divide-white/10">
+          <div className="space-y-3">
             {filteredProposals.map((proposal) => (
               <motion.div
                 key={proposal.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="group p-5 bg-transparent hover:bg-slate-50 dark:hover:bg-accent/[0.03] border-l-[3px] border-l-transparent hover:border-l-accent transition-all duration-300 cursor-pointer"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="group border border-slate-200 dark:border-white/10 rounded-xl bg-transparent hover:border-accent/40 dark:hover:border-accent/40 transition-all duration-300 cursor-pointer overflow-hidden"
                 onClick={() => navigate(`/freelancer/jobs/${proposal.job_id}`)}
               >
-                <div className="flex flex-col md:flex-row justify-between items-stretch md:items-start gap-4">
-                  {/* Left: Status + Title + Meta */}
-                  <div className="flex-1 space-y-3 min-w-0">
-                    {/* Status + Date */}
-                    <div className="flex items-center justify-between w-full">
-                      <span className={`px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em] border rounded-lg ${getStatusColor(proposal.status)}`}>
+                {/* Top accent bar on hover */}
+
+                <div className="p-4 sm:p-5">
+                  {/* Row 1: Status + Category + Date */}
+                  <div className="flex items-start justify-between gap-2 mb-3">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className={`px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] rounded-full whitespace-nowrap ${getStatusColor(proposal.status)}`}>
                         {proposal.status}
                       </span>
-                      <div className="flex items-center gap-1.5 text-light-text/20 text-[9px] font-bold uppercase tracking-widest">
-                        {new Date(proposal.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                      </div>
-                    </div>
-
-                    {/* Job Title */}
-                    <h3 className="text-sm sm:text-xl font-bold text-slate-900 dark:text-white group-hover:text-accent transition-colors tracking-tight line-clamp-1">
-                      {proposal.job?.title || 'Job Application'}
-                    </h3>
-
-                    {/* Meta row - Structured Grid for Mobile, Flex for Desktop */}
-                    <div className="grid grid-cols-2 md:flex md:flex-wrap items-start md:items-center gap-x-5 gap-y-3">
-                      {/* Client (Left) */}
-                      <div className="flex items-center gap-1.5 col-span-1">
-                        {proposal.job?.client?.avatar_url && (
-                          <img src={proposal.job.client.avatar_url} className="w-4 h-4 rounded-full object-cover" alt="" />
-                        )}
-                        <span className="text-[10px] text-light-text/30 font-bold uppercase tracking-widest">Client:</span>
-                        <span className="text-[11px] sm:text-sm text-light-text/60 font-medium truncate max-w-[100px] sm:max-w-none">{proposal.job?.client?.name || 'Private Client'}</span>
-                      </div>
-
-                      {/* Category - Right Side (Mobile Only) */}
                       {proposal.job?.category && (
-                        <div className="flex justify-end col-span-1 md:hidden">
-                          <span className="text-[9px] text-accent font-bold uppercase tracking-widest">{proposal.job.category}</span>
-                        </div>
-                      )}
-
-                      {/* Experience (Left) */}
-                      {proposal.job?.experience_level && (
-                        <div className="flex items-center gap-1.5 col-span-1">
-                          <span className="text-[9px] text-light-text/30 font-bold uppercase tracking-widest capitalize">{proposal.job.experience_level}</span>
-                        </div>
-                      )}
-
-                      {/* Duration (Right Side) */}
-                      {proposal.estimated_duration && (
-                        <div className="flex items-center justify-end md:justify-start gap-1 col-span-1 text-right">
-                          <span className="text-[9px] sm:text-[13px] text-light-text/40 font-medium">{proposal.estimated_duration}</span>
-                        </div>
-                      )}
-
-                      {/* Bid Deadline - Right Side (Mobile Only) */}
-                      {proposal.job?.bid_deadline && (
-                        <div className="flex items-center justify-end gap-1 col-start-2 text-right border-t border-slate-200 dark:border-white/5 md:hidden pt-2">
-                          <span className="text-[9px] text-slate-500 dark:text-light-text/20 font-bold uppercase tracking-widest">Deadline:</span>
-                          <span className="text-[9px] text-slate-700 dark:text-light-text/50">{new Date(proposal.job.bid_deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                        </div>
+                        <span className="text-[9px] text-violet-600 dark:text-violet-400 font-bold uppercase tracking-widest bg-violet-500/10 border border-violet-500/20 px-2 py-0.5 rounded-full whitespace-nowrap">
+                          {proposal.job.category}
+                        </span>
                       )}
                     </div>
-
-                    {/* Cover letter preview */}
-                    {proposal.cover_letter && (
-                      <p className="text-[10px] sm:text-sm text-slate-500 dark:text-light-text/30 line-clamp-2 italic text-left mt-3">
-                        "{proposal.cover_letter}"
-                      </p>
-                    )}
+                    <span className="text-[9px] text-slate-400 dark:text-light-text/20 font-medium shrink-0 mt-0.5">
+                      {new Date(proposal.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </span>
                   </div>
 
-                  {/* Right: Bid + Job Budget + Category + Deadline */}
-                  <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-start gap-4 md:gap-1.5 shrink-0 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-slate-200 dark:border-white/5">
+                  {/* Row 2: Title */}
+                  <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white group-hover:text-accent transition-colors tracking-tight line-clamp-1 mb-3">
+                    {proposal.job?.title || 'Job Application'}
+                  </h3>
 
-                    {/* Desktop Category */}
-                    {proposal.job?.category && (
-                      <div className="hidden md:flex justify-end w-full mb-1">
-                        <span className="text-xs text-accent font-bold uppercase tracking-widest">{proposal.job.category}</span>
-                      </div>
-                    )}
-
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-[8px] sm:text-[11px] text-slate-500 dark:text-light-text/20 font-bold uppercase tracking-[0.2em]">Your Bid:</span>
-                      <span className="text-base sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-0.5">
-                        <IndianRupee size={10} className="text-accent/60 sm:hidden" />
-                        <IndianRupee size={14} className="text-accent/60 hidden sm:block" />
-                        {formatINR(proposal.proposed_rate || proposal.bid_amount).replace('₹', '')}
+                  {/* Row 3: Client left | level + duration right */}
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    {/* Left: client */}
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      {proposal.job?.client?.avatar_url && (
+                        <img src={proposal.job.client.avatar_url} className="w-4 h-4 rounded-full object-cover shrink-0" alt="" />
+                      )}
+                      <span className="text-[10px] text-slate-500 dark:text-light-text/40 font-medium truncate">
+                        {proposal.job?.client?.name || 'Private Client'}
                       </span>
                     </div>
-                    {proposal.job?.budget_amount && (
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-[8px] sm:text-[11px] text-light-text/20 font-bold uppercase tracking-[0.2em]">Budget:</span>
-                        <span className="text-[10px] sm:text-base font-semibold text-light-text/40 flex items-center gap-0.5">
-                          <IndianRupee size={9} className="text-light-text/20 sm:hidden" />
-                          <IndianRupee size={12} className="text-light-text/20 hidden sm:block" />
-                          {formatINR(proposal.job.budget_amount).replace('₹', '')}
-                          {proposal.job.budget_type === 'hourly' ? '/hr' : ''}
+                    {/* Right: level + duration chips */}
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {proposal.job?.experience_level && (
+                        <span className="text-[8px] text-slate-400 dark:text-light-text/30 font-bold uppercase tracking-widest bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-full capitalize">
+                          {proposal.job.experience_level}
                         </span>
-                      </div>
-                    )}
+                      )}
+                      {(proposal.estimated_duration || proposal.job?.duration) && (
+                        <span className="flex items-center gap-1 text-[8px] text-slate-400 dark:text-light-text/30 font-bold uppercase tracking-widest bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-full">
+                          <Clock size={8} />
+                          {proposal.estimated_duration || proposal.job.duration}
+                        </span>
+                      )}
+                      {proposal.connects_used > 0 && (
+                        <span className="text-[8px] text-slate-400 dark:text-light-text/30 font-bold uppercase tracking-widest bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-full">
+                          {proposal.connects_used}c
+                        </span>
+                      )}
+                    </div>
+                  </div>
 
-                    {/* Desktop Deadline */}
-                    {proposal.job?.bid_deadline && (
-                      <div className="hidden md:flex items-center justify-end gap-1.5 w-full mt-2 pt-2 border-t border-slate-200 dark:border-white/5">
-                        <span className="text-[11px] text-slate-500 dark:text-light-text/20 font-bold uppercase tracking-widest">Deadline:</span>
-                        <span className="text-xs text-slate-700 dark:text-light-text/50">{new Date(proposal.job.bid_deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                      </div>
-                    )}
+                  {/* Cover letter */}
+                  {proposal.cover_letter && (
+                    <p className="text-[10px] text-slate-400 dark:text-light-text/30 line-clamp-1 italic mb-3 leading-relaxed">
+                      "{proposal.cover_letter}"
+                    </p>
+                  )}
 
-
-                    <div className="hidden md:flex opacity-0 group-hover:opacity-100 transition-all duration-300 mt-1">
-                      <div className="w-7 h-7 flex items-center justify-center bg-accent/10 rounded-lg text-accent">
-                        <ChevronRight size={14} />
+                  {/* Row 5: Bid / Budget / Deadline — justify-between */}
+                  <div className="flex items-end justify-between gap-2 pt-3 border-t border-slate-100 dark:border-white/5">
+                    <div className="flex items-start justify-between w-full sm:w-auto sm:justify-start sm:gap-4">
+                      <div>
+                        <p className="text-[8px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/20 mb-0.5">Your Bid</p>
+                        <p className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-0.5">
+                          <IndianRupee size={10} className="text-accent/60" />
+                          {formatINR(proposal.proposed_rate || proposal.bid_amount).replace('₹', '')}
+                        </p>
                       </div>
+                      {proposal.job?.budget_amount && (
+                        <div>
+                          <p className="text-[8px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/20 mb-0.5">Budget</p>
+                          <p className="text-xs font-semibold text-slate-500 dark:text-light-text/40 flex items-center gap-0.5">
+                            <IndianRupee size={9} className="text-slate-400 dark:text-light-text/20" />
+                            {formatINR(proposal.job.budget_amount).replace('₹', '')}
+                            {proposal.job.budget_type === 'hourly' ? '/hr' : ''}
+                          </p>
+                        </div>
+                      )}
+                      {proposal.job?.bid_deadline && (
+                        <div>
+                          <p className="text-[8px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/20 mb-0.5">Deadline</p>
+                          <p className="text-xs font-semibold text-slate-500 dark:text-light-text/40">
+                            {new Date(proposal.job.bid_deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 shrink-0">
+                      <ChevronRight size={16} className="text-accent" />
                     </div>
                   </div>
                 </div>

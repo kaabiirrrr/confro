@@ -179,7 +179,7 @@ const WorkDiary = () => {
         </div>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="w-full sm:w-auto px-6 sm:px-8 h-10 sm:h-12 bg-accent hover:bg-accent/90 text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] rounded-full transition active:scale-[0.98]"
+          className="w-full sm:w-auto px-6 sm:px-8 h-8 sm:h-9 bg-accent hover:bg-accent/90 text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] rounded-full transition active:scale-[0.98]"
         >
           {showAddForm ? 'View Summary' : 'Log Hours'}
         </button>
@@ -232,7 +232,7 @@ const WorkDiary = () => {
         </div>
 
         {showAddForm ? (
-          <div className="border border-light-text/10 dark:border-white/5 rounded-[24px] sm:rounded-[40px] p-5 sm:p-10 animate-in zoom-in-95 duration-500 bg-white/[0.01] shadow-sm">
+          <div className="border border-light-text/10 dark:border-white/5 rounded-xl p-5 sm:p-10 animate-in zoom-in-95 duration-500">
             <h3 className="text-[12px] sm:text-[14px] font-bold text-white mb-6 sm:mb-10 tracking-tight uppercase tracking-[0.2em] opacity-40">Log New Work Entry</h3>
             <form onSubmit={handleAddEntry} className="space-y-6 sm:space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
@@ -265,20 +265,20 @@ const WorkDiary = () => {
                   rows="4"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full bg-secondary/30 dark:bg-secondary/50 border border-light-text/10 dark:border-white/5 rounded-2xl px-5 sm:px-6 py-4 sm:py-5 text-light-text dark:text-white focus:outline-none focus:border-accent/40 focus:ring-1 focus:ring-accent/20 transition-all font-medium text-sm sm:text-[15px] resize-none leading-relaxed"
+                  className="w-full bg-secondary/30 dark:bg-secondary/50 border border-light-text/10 dark:border-white/5 rounded-xl px-5 sm:px-6 py-4 sm:py-5 text-light-text dark:text-white focus:outline-none focus:border-accent/40 focus:ring-1 focus:ring-accent/20 transition-all font-medium text-sm sm:text-[15px] resize-none leading-relaxed"
                 ></textarea>
               </div>
-              <div className="pt-4 sm:pt-6 flex flex-row gap-3 sm:gap-4">
-                <button type="submit" disabled={logging}
-                  className="flex-[2] h-12 sm:h-14 bg-accent text-white rounded-full text-[9px] sm:text-[11px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] hover:bg-accent/90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-accent/20 active:scale-95"
-                >
-                  {logging && <InfinityLoader/>}
-                  <span className="truncate">{logging ? 'Saving...' : 'Submit Log'}</span>
-                </button>
+              <div className="pt-4 sm:pt-6 flex justify-end gap-3 sm:gap-4">
                 <button type="button" onClick={() => setShowAddForm(false)}
-                  className="flex-1 h-12 sm:h-14 bg-secondary/30 dark:bg-white/5 text-light-text border border-light-text/10 rounded-full text-[9px] sm:text-[11px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] hover:bg-secondary/50 transition-all active:scale-95"
+                  className="px-6 sm:px-8 h-9 sm:h-10 bg-transparent border border-light-text/10 dark:border-white/10 text-light-text dark:text-white/60 rounded-full text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] hover:border-white/20 hover:text-white transition-all active:scale-95"
                 >
                   Cancel
+                </button>
+                <button type="submit" disabled={logging}
+                  className="px-6 sm:px-8 h-9 sm:h-10 bg-accent text-white rounded-full text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] hover:bg-accent/90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95"
+                >
+                  {logging && <InfinityLoader/>}
+                  <span>{logging ? 'Saving...' : 'Submit Log'}</span>
                 </button>
               </div>
             </form>
@@ -297,7 +297,7 @@ const WorkDiary = () => {
             <div className="divide-y divide-white/5">
               {entries.length === 0 ? (
                 <div className="py-16 sm:py-32 text-center">
-                  <History size={36} className="mx-auto mb-4 sm:mb-6 text-white/5" strokeWidth={1} />
+                  <img src="/Icons/icons8-clock-80.png" alt="No entries" className="w-10 h-10 sm:w-14 sm:h-14 mx-auto mb-4 sm:mb-6 " />
                   <p className="text-light-text/30 font-bold text-xs sm:text-sm uppercase tracking-widest">No work entries found</p>
                   <button onClick={() => setShowAddForm(true)} className="mt-4 text-[10px] font-bold text-accent uppercase tracking-[0.2em] hover:text-accent/80 transition-all underline underline-offset-8 decoration-accent/30">
                     Log your first hour

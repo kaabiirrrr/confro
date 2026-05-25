@@ -245,17 +245,15 @@ const Contracts = () => {
                   <div className="flex items-center gap-2 sm:gap-3 lg:min-w-[260px]">
                     <button
                       onClick={() => navigate('/freelancer/messages')}
-                      className="flex-1 h-9 flex items-center justify-center gap-1.5 bg-white/5 border border-white/10 hover:bg-white/10 rounded-full text-white text-[11px] font-bold uppercase tracking-widest transition active:scale-[0.98]"
+                      className="flex-1 h-9 flex items-center justify-center bg-white/5 border border-white/10 hover:bg-white/10 rounded-full text-white text-[11px] font-bold uppercase tracking-widest transition active:scale-[0.98]"
                     >
-                      <MessageSquare size={13} className="text-accent" />
                       Message
                     </button>
                     <button
                       onClick={() => navigate(`/freelancer/contracts/${contract.id}`)}
-                      className="flex-1 h-9 flex items-center justify-center gap-1.5 bg-accent text-white rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-accent/90 transition active:scale-[0.98]"
+                      className="flex-1 h-9 flex items-center justify-center bg-accent text-white rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-accent/90 transition active:scale-[0.98]"
                     >
                       Details
-                      <ExternalLink size={13} />
                     </button>
                   </div>
                 </div>

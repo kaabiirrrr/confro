@@ -7,14 +7,18 @@ import FreelancerPasswordSection from "../freelancer/settings/FreelancerPassword
 import FreelancerNotificationSection from "../freelancer/settings/FreelancerNotificationSection";
 import ProfileImageModal from "../client/settings/ProfileImageModal";
 import AppearanceSection from "../client/settings/AppearanceSection";
+import { useAuth } from "../../../context/AuthContext";
 
 const FreelancerSettings = () => {
     const [active, setActive] = useState("info");
     const [showProfileImageModal, setShowProfileImageModal] = useState(false);
     const [tempAvatar, setTempAvatar] = useState(null);
+    const { setProfile } = useAuth();
 
     const handleAvatarUpdate = (url) => {
         setTempAvatar(url);
+        // Persist into AuthContext so the new URL survives tab/component switches
+        setProfile(prev => prev ? { ...prev, avatar_url: url } : prev);
     };
 
     return (

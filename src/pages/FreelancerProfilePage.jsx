@@ -59,6 +59,7 @@ const FreelancerProfilePage = () => {
 
     const handlePhotoSelected = (avatarUrl) => {
         setProfile(prev => prev ? { ...prev, avatar_url: avatarUrl } : prev);
+        // Also update the global profile context so navbar/avatar updates immediately
         refetchProfileContext();
     };
 
@@ -359,7 +360,7 @@ const FreelancerProfilePage = () => {
                         <div className="flex flex-col gap-3 md:gap-12 w-full md:w-auto items-start md:items-start shrink-0">
                             <div className="flex flex-row items-center justify-center sm:justify-start gap-4 sm:gap-6 w-full md:w-auto">
                                 <div className="relative group shrink-0">
-                                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-accent overflow-hidden shadow-2xl bg-primary md:bg-secondary relative z-10">
+                                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-accent overflow-hidden bg-primary md:bg-secondary relative z-10">
                                         {profile.avatar_url ? (
                                             <img src={profile.avatar_url} alt={profile.name} className="w-full h-full object-cover" />
                                         ) : (
@@ -369,10 +370,12 @@ const FreelancerProfilePage = () => {
                                         )}
                                     </div>
                                     {isOwnProfile && (
-                                        <label className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                        <button
+                                            onClick={() => setShowPhotoModal(true)}
+                                            className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                        >
                                             <Camera className="text-white w-6 h-6" />
-                                            <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                                        </label>
+                                        </button>
                                     )}
                                 </div>
 
@@ -456,9 +459,8 @@ const FreelancerProfilePage = () => {
                                                 </div>
                                             )}
                                             {profile.has_availability_badge && (
-                                                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 shadow-lg shadow-emerald-500/5 mt-1 ml-1 scale-110">
-                                                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] animate-pulse" />
-                                                    <span className="text-[11px] font-black text-emerald-500 uppercase tracking-[0.1em]">Available Now</span>
+                                                <div className="hidden">
+                                                    {/* badge moved to top-right column */}
                                                 </div>
                                             )}
                                             {profile.is_verified && (
@@ -540,7 +542,13 @@ const FreelancerProfilePage = () => {
                                             )}
                                         </div>
                                     </div>
-                                    <div className="flex flex-col items-end gap-3 mt-4 sm:mt-0">
+                                    <div className="flex flex-col items-end gap-2 mt-4 sm:mt-0">
+                                        {profile.has_availability_badge && (
+                                            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                                <span className="text-[11px] font-black text-emerald-500 uppercase tracking-[0.1em]">Available Now</span>
+                                            </div>
+                                        )}
                                         <div className="flex items-center gap-3">
                                             <div className="flex items-center gap-1.5 text-slate-900/40 dark:text-white/40 text-sm font-medium">
                                                 <MapPin size={16} />
@@ -1319,6 +1327,15 @@ const FreelancerProfilePage = () => {
                     </main>
                 </div>
             </div>
+
+            {/* Profile Image Modal */}
+            {isOwnProfile && (
+                <ProfileImageModal
+                    isOpen={showPhotoModal}
+                    onClose={() => setShowPhotoModal(false)}
+                    onImageSelect={handlePhotoSelected}
+                />
+            )}
 
             {/* Verification Modal */}
             <AnimatePresence>

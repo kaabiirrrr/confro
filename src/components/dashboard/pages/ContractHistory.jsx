@@ -107,23 +107,23 @@ const ContractHistory = () => {
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-3 gap-3 sm:gap-4 w-full">
-        <div className="border border-slate-200 dark:border-white/5 rounded-2xl px-3 sm:px-6 py-3 sm:py-5">
-          <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2 whitespace-nowrap">Total Revenue</p>
+      <div className="grid grid-cols-3 gap-2 sm:gap-4 w-full">
+        <div className="border border-slate-200 dark:border-white/5 rounded-xl px-3 sm:px-6 py-3 sm:py-5">
+          <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2 leading-tight">Total Revenue</p>
           <p className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{formatINR(totalEarnings)}</p>
-          <div className="flex items-center gap-1.5 mt-2 text-[9px] font-bold text-emerald-500 dark:text-emerald-400 uppercase tracking-widest">
-            <TrendingUp size={10} /> +12% this month
+          <div className="flex items-center gap-1 mt-2 text-[8px] sm:text-[9px] font-bold text-emerald-500 dark:text-emerald-400 uppercase tracking-widest leading-tight">
+            <TrendingUp size={9} /> <span className="hidden xs:inline">+12% this month</span><span className="xs:hidden">+12%</span>
           </div>
         </div>
-        <div className="border border-slate-200 dark:border-white/5 rounded-2xl px-3 sm:px-6 py-3 sm:py-5">
-          <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2 whitespace-nowrap">Active Projects</p>
+        <div className="border border-slate-200 dark:border-white/5 rounded-xl px-3 sm:px-6 py-3 sm:py-5">
+          <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2 leading-tight">Active Projects</p>
           <p className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{contracts.filter(c => c.status === 'ACTIVE' || c.status === 'IN_PROGRESS').length}</p>
-          <p className="text-[8px] sm:text-[10px] font-bold text-slate-400 dark:text-light-text/20 uppercase tracking-widest mt-2 whitespace-nowrap">Currently in progress</p>
+          <p className="text-[8px] sm:text-[10px] font-bold text-slate-400 dark:text-light-text/20 uppercase tracking-widest mt-2 leading-tight">In progress</p>
         </div>
-        <div className="border border-slate-200 dark:border-white/5 rounded-2xl px-3 sm:px-6 py-3 sm:py-5">
-          <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2 whitespace-nowrap">Completed</p>
+        <div className="border border-slate-200 dark:border-white/5 rounded-xl px-3 sm:px-6 py-3 sm:py-5">
+          <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2 leading-tight">Completed</p>
           <p className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{contracts.filter(c => c.status === 'COMPLETED').length}</p>
-          <p className="text-[8px] sm:text-[10px] font-bold text-slate-400 dark:text-light-text/20 uppercase tracking-widest mt-2 whitespace-nowrap">Projects delivered</p>
+          <p className="text-[8px] sm:text-[10px] font-bold text-slate-400 dark:text-light-text/20 uppercase tracking-widest mt-2 leading-tight">Delivered</p>
         </div>
       </div>
 
@@ -171,104 +171,107 @@ const ContractHistory = () => {
           </p>
         </div>
       ) : (
-        <div className="border border-slate-200 dark:border-white/5 rounded-2xl overflow-hidden divide-y divide-slate-100 dark:divide-white/5 bg-transparent">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left min-w-[500px]">
-              <thead>
-                <tr className="bg-slate-50 dark:bg-white/[0.02]">
-                  <th className="px-4 sm:px-8 py-4 sm:py-5 text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-light-text/30 uppercase tracking-[0.3em]">Project & Client</th>
-                  <th className="px-4 sm:px-8 py-4 sm:py-5 text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-light-text/30 uppercase tracking-[0.3em] hidden sm:table-cell">Details</th>
-                  <th className="px-4 sm:px-8 py-4 sm:py-5 text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-light-text/30 uppercase tracking-[0.3em]">Status</th>
-                  <th className="px-4 sm:px-8 py-4 sm:py-5 text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-light-text/30 uppercase tracking-[0.3em] hidden md:table-cell">Timeline</th>
-                  <th className="px-4 sm:px-8 py-4 sm:py-5 text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-light-text/30 uppercase tracking-[0.3em] text-right">Earnings</th>
-                  <th className="px-4 sm:px-6 py-4 sm:py-5 w-12"></th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-                {filteredContracts.map((contract) => {
-                  const client = contract.client || {};
-                  const clientName = client.name || 'Client';
-                  const clientAvatar = client.avatar_url;
+        <div className="flex flex-col gap-3">
+          {filteredContracts.map((contract) => {
+            const client = contract.client || {};
+            const clientName = client.name || 'Client';
+            const clientAvatar = client.avatar_url;
+            const milestonesDone = contract.milestones?.filter(m => m.status === 'PAID').length ?? 0;
+            const milestonesTotal = contract.milestones?.length ?? 0;
 
-                  return (
-                    <tr key={contract.id} className="hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors group">
-                      <td className="px-4 sm:px-8 py-4 sm:py-6">
-                        <div className="flex items-center gap-3 sm:gap-4">
-                          {clientAvatar
-                            ? <img src={clientAvatar} alt={clientName} className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover shadow-lg flex-shrink-0" />
-                            : <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent text-xs font-bold flex-shrink-0">{clientName[0]?.toUpperCase()}</div>
-                          }
-                          <div className="min-w-0">
-                            <p className="text-slate-900 dark:text-white font-bold transition-colors truncate max-w-[120px] sm:max-w-[200px] tracking-tight text-xs sm:text-sm">
-                              {contract.job?.title || 'Contract'}
-                            </p>
-                            <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-light-text/30 font-bold uppercase tracking-widest">with {clientName}</p>
-                            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1 sm:hidden">
-                              <span className="text-[9px] font-bold text-accent/60 uppercase tracking-widest">
-                                {contract.contract_type === 'HOURLY' ? 'Hourly' : 'Fixed'}
-                              </span>
-                              <span className="w-1 h-1 bg-slate-300 dark:bg-white/10 rounded-full"></span>
-                              <span className="text-[9px] font-bold text-slate-400 dark:text-light-text/30 uppercase tracking-widest">
-                                {formatDate(contract.start_date || contract.created_at)}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 sm:px-8 py-4 sm:py-6 hidden sm:table-cell">
-                        <div className="space-y-1">
-                          <p className="text-[10px] font-bold text-slate-400 dark:text-light-text/40 uppercase tracking-widest">
-                            {contract.contract_type === 'HOURLY' ? 'Hourly Rate' : 'Fixed Price'}
-                          </p>
-                          {contract.contract_type === 'FIXED' && contract.milestones?.length > 0 && (
-                            <p className="text-[11px] text-slate-500 dark:text-white/60 font-medium">
-                              {contract.milestones.filter(m => m.status === 'PAID').length}/{contract.milestones.length} Milestones
-                            </p>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 sm:px-8 py-4 sm:py-6">
-                        <div className="flex flex-col items-start gap-1.5">
-                          <div className={`inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg text-[9px] font-bold uppercase tracking-widest ${contract.status === 'COMPLETED' ? 'bg-blue-500/10 text-blue-500 dark:text-blue-400' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'}`}>
-                            {contract.status === 'IN_PROGRESS' || contract.status === 'ACTIVE' ? 'Active' : contract.status}
-                          </div>
-                          {contract.contract_type === 'FIXED' && contract.milestones?.length > 0 && (
-                            <p className="text-[9px] text-slate-400 dark:text-light-text/30 font-bold uppercase tracking-widest sm:hidden">
-                              {contract.milestones.filter(m => m.status === 'PAID').length}/{contract.milestones.length} Done
-                            </p>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 sm:px-8 py-4 sm:py-6 hidden md:table-cell">
-                        <div className="space-y-1">
-                          <p className="text-[11px] text-slate-700 dark:text-white/70 font-bold uppercase tracking-tight">
-                            {formatDate(contract.start_date || contract.created_at)}
-                          </p>
-                          <p className="text-[10px] text-slate-400 dark:text-light-text/20 font-bold uppercase tracking-widest">
-                            to {contract.end_date ? formatDate(contract.end_date) : 'Present'}
-                          </p>
-                        </div>
-                      </td>
-                      <td className="px-4 sm:px-8 py-4 sm:py-6 text-right">
-                        <p className="text-slate-900 dark:text-white font-bold text-sm sm:text-[16px] tracking-tight">{formatINR(contract.agreed_rate)}</p>
-                        <p className={`text-[10px] font-bold uppercase tracking-widest mt-1 ${contract.payment_status === 'PAID' ? 'text-emerald-500/70 dark:text-emerald-400/60' : 'text-amber-500/70 dark:text-amber-400/60'}`}>
-                          {contract.payment_status || 'In Escrow'}
-                        </p>
-                      </td>
-                      <td className="px-4 sm:px-6 py-4 sm:py-6 w-12">
-                        <button
-                          onClick={() => navigate(`/freelancer/contracts/${contract.id}`)}
-                          className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-transparent rounded-xl transition-all text-slate-400 dark:text-light-text/30 hover:text-slate-900 dark:hover:text-white active:scale-95 ml-auto"
-                        >
-                          <ChevronRight size={16} />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+            return (
+              <div
+                key={contract.id}
+                onClick={() => navigate(`/freelancer/contracts/${contract.id}`)}
+                className="border border-slate-200 dark:border-white/10 rounded-xl bg-transparent hover:border-accent/40 dark:hover:border-accent/40 transition-all duration-200 cursor-pointer group p-4 sm:p-5"
+              >
+                {/* Top row: avatar + title + earnings */}
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    {clientAvatar
+                      ? <img src={clientAvatar} alt={clientName} className="w-9 h-9 rounded-full object-cover flex-shrink-0" />
+                      : <div className="w-9 h-9 rounded-full bg-accent/10 flex items-center justify-center text-accent text-xs font-bold flex-shrink-0">{clientName[0]?.toUpperCase()}</div>
+                    }
+                    <div className="min-w-0">
+                      <p className="text-slate-900 dark:text-white font-bold text-sm tracking-tight truncate max-w-[180px] sm:max-w-[320px] group-hover:text-accent transition-colors">
+                        {contract.job?.title || 'Contract'}
+                      </p>
+                      <p className="text-[10px] text-slate-400 dark:text-light-text/30 font-bold uppercase tracking-widest mt-0.5">with {clientName}</p>
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0 flex flex-col items-end gap-1">
+                    <p className="text-slate-900 dark:text-white font-bold text-sm tracking-tight">{formatINR(contract.agreed_rate)}</p>
+                    <p className={`text-[9px] font-bold uppercase tracking-widest ${contract.payment_status === 'PAID' ? 'text-emerald-500 dark:text-emerald-400' : 'text-amber-500 dark:text-amber-400'}`}>
+                      {contract.payment_status?.replace(/_/g, ' ') || 'In Escrow'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Info chips row */}
+                {/* Mobile: justify-between — [status + fixed price] on left, [ID] on right */}
+                {/* Desktop (sm+): normal flex-wrap row */}
+                <div className="flex items-center justify-between sm:flex-wrap sm:justify-start gap-2 mb-3">
+                  {/* Left group on mobile: status badge + project type */}
+                  <div className="flex items-center gap-2 sm:contents">
+                    {/* Status */}
+                    <span className={`px-2 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest ${contract.status === 'COMPLETED' ? 'bg-blue-500/15 text-blue-400' : contract.status === 'PENDING' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-emerald-500/15 text-emerald-400'}`}>
+                      {contract.status === 'IN_PROGRESS' ? 'Active' : contract.status}
+                    </span>
+                    {/* Project type */}
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-accent sm:text-slate-500 sm:dark:text-white/40 sm:bg-white/5 sm:border sm:border-white/10 sm:rounded-full sm:px-2 sm:py-1">
+                      {contract.project_type === 'HOURLY' ? 'Hourly' : 'Fixed Price'}
+                    </span>
+                    {/* Milestones — inline on desktop */}
+                    {milestonesTotal > 0 && (
+                      <span className="hidden sm:inline-flex px-2 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-widest text-slate-500 dark:text-white/40">
+                        {milestonesDone}/{milestonesTotal} Milestones
+                      </span>
+                    )}
+                  </div>
+                  {/* Milestones — shown on mobile outside the left group */}
+                  {milestonesTotal > 0 && (
+                    <span className="sm:hidden text-[9px] font-bold uppercase tracking-widest text-accent">
+                      {milestonesDone}/{milestonesTotal} Milestones
+                    </span>
+                  )}
+                  {/* Contract ID — right-aligned on mobile, inline on desktop */}
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-accent sm:text-slate-400 sm:dark:text-white/20 sm:bg-white/5 sm:border sm:border-white/10 sm:rounded-full sm:px-2 sm:py-1 ml-auto sm:ml-0">
+                    ID: {contract.id?.substring(0, 8).toUpperCase()}
+                  </span>
+                </div>
+
+                {/* Bottom row: timeline + extra details */}
+                <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 pt-3 border-t border-slate-200 dark:border-white/5">
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                    {/* Timeline */}
+                    <div>
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-white/20 mb-0.5">Started</p>
+                      <p className="text-[11px] font-bold text-slate-700 dark:text-white/70">{formatDate(contract.start_date || contract.created_at)}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-white/20 mb-0.5">Ended</p>
+                      <p className="text-[11px] font-bold text-slate-700 dark:text-white/70">{contract.end_date ? formatDate(contract.end_date) : 'Present'}</p>
+                    </div>
+                    {/* Last updated */}
+                    {contract.updated_at && (
+                      <div className="hidden sm:block">
+                        <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-white/20 mb-0.5">Last Update</p>
+                        <p className="text-[11px] font-bold text-slate-700 dark:text-white/70">{formatDate(contract.updated_at)}</p>
+                      </div>
+                    )}
+                    {/* Connects used */}
+                    {contract.connects_used != null && (
+                      <div className="hidden sm:block">
+                        <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-white/20 mb-0.5">Connects Used</p>
+                        <p className="text-[11px] font-bold text-slate-700 dark:text-white/70">{contract.connects_used}</p>
+                      </div>
+                    )}
+                  </div>
+                  <ChevronRight size={15} className="text-slate-300 dark:text-white/20 group-hover:text-accent transition-colors shrink-0" />
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 

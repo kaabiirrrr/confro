@@ -16,17 +16,17 @@ import { formatINR } from '../../../utils/currencyUtils';
 import InfinityLoader from '../../common/InfinityLoader';
 
 const STATUS_CFG = {
-  PENDING: { cls: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', label: 'Pending' },
-  IN_PROGRESS: { cls: 'bg-blue-500/10 text-blue-400 border-blue-500/20', label: 'In Progress' },
-  DELIVERED: { cls: 'bg-purple-500/10 text-purple-400 border-purple-500/20', label: 'Delivered' },
-  REVISION: { cls: 'bg-orange-500/10 text-orange-400 border-orange-500/20', label: 'Revision' },
-  COMPLETED: { cls: 'bg-green-500/10 text-green-400 border-green-500/20', label: 'Completed' },
-  CANCELLED: { cls: 'bg-red-500/10 text-red-400 border-red-500/20', label: 'Cancelled' },
+  PENDING:     { cls: 'bg-yellow-500 text-white', label: 'Pending' },
+  IN_PROGRESS: { cls: 'bg-blue-500 text-white', label: 'In Progress' },
+  DELIVERED:   { cls: 'bg-purple-500 text-white', label: 'Delivered' },
+  REVISION:    { cls: 'bg-orange-500 text-white', label: 'Revision' },
+  COMPLETED:   { cls: 'bg-green-500 text-white', label: 'Completed' },
+  CANCELLED:   { cls: 'bg-red-500 text-white', label: 'Cancelled' },
 };
 
 const StatusBadge = ({ status }) => {
-  const cfg = STATUS_CFG[status] || { cls: 'bg-white/5 text-white/40 border-white/10', label: status };
-  return <span className={`px-2.5 py-1 rounded-full text-xs border ${cfg.cls}`}>{cfg.label}</span>;
+  const cfg = STATUS_CFG[status] || { cls: 'bg-white/5 text-white/40 border border-white/10', label: status };
+  return <span className={`px-2.5 py-1 rounded-full text-xs ${cfg.cls}`}>{cfg.label}</span>;
 };
 
 export default function MyServices() {
@@ -157,7 +157,7 @@ export default function MyServices() {
                 s.tags?.some(t => t.toLowerCase().includes(search.toLowerCase()))
               )
               .map(svc => (
-                <div key={svc.id} className="group p-5 bg-transparent border border-white/10 rounded-2xl hover:border-accent transition-all flex flex-col md:flex-row gap-6">
+                <div key={svc.id} className="group p-5 bg-transparent border border-slate-200 dark:border-white/10 rounded-xl hover:border-accent transition-all flex flex-col md:flex-row gap-6">
                   {/* Left: Thumbnail (Find Work style integrated) */}
                   <div className="w-full md:w-64 h-40 md:h-auto rounded-xl overflow-hidden bg-transparent border border-white/5 shrink-0 relative">
                     {svc.images?.[0] ? (
@@ -302,53 +302,82 @@ export default function MyServices() {
               const name = client.name || 'Client';
               const isUpdating = updatingOrderId === order.id;
               return (
-                <div key={order.id} className="bg-transparent border border-white/10 rounded-2xl p-5 flex flex-col md:flex-row md:items-center gap-4 hover:border-accent/40 transition-all duration-300 group">
-                  {/* Top: Client + Date (Justified on Mobile) */}
-                  <div className="flex items-center justify-between md:justify-start gap-4 md:w-1/4 shrink-0">
+                <div key={order.id} className="bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-4 sm:p-5 flex flex-col gap-4 hover:border-accent/40 transition-all duration-300 group">
+                  {/* Row 1: Client + Date + Service title */}
+                  <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="relative shrink-0">
                         {client.avatar_url
                           ? <img src={client.avatar_url} alt={name} className="w-10 h-10 rounded-full object-cover" />
                           : <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold text-base">{name[0]}</div>
                         }
-                        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-primary rounded-full" title="Client Active" />
+                        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white dark:border-primary rounded-full" />
                       </div>
                       <div className="min-w-0">
-                        <p className="font-bold text-light-text text-sm truncate">{name}</p>
-                        <p className="text-light-text/30 text-[10px] uppercase font-bold tracking-wider md:hidden mt-0.5">{fmtDate(order.created_at)}</p>
+                        <p className="font-bold text-slate-900 dark:text-light-text text-sm truncate">{name}</p>
+                        <p className="text-slate-400 dark:text-light-text/30 text-[10px] uppercase font-bold tracking-wider">{fmtDate(order.created_at)}</p>
                       </div>
                     </div>
-                    <p className="text-light-text/30 text-[10px] uppercase font-bold tracking-wider hidden md:block">{fmtDate(order.created_at)}</p>
+                    <StatusBadge status={order.status} />
                   </div>
 
-                  {/* Middle: Title & Package */}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-light-text truncate text-base group-hover:text-accent transition-colors">{order.service?.title || 'Service Title'}</p>
-                    {order.package_name && <p className="text-light-text/40 text-[10px] font-medium mt-0.5">{order.package_name} package</p>}
+                  {/* Row 2: Service title + package */}
+                  <div className="border-t border-slate-100 dark:border-white/5 pt-3">
+                    <p className="font-bold text-slate-900 dark:text-light-text text-sm sm:text-base group-hover:text-accent transition-colors truncate">
+                      {order.service?.title || 'Service Title'}
+                    </p>
+                    {order.package_name && (
+                      <p className="text-slate-400 dark:text-light-text/40 text-[10px] font-medium mt-0.5 uppercase tracking-widest">{order.package_name} package</p>
+                    )}
                   </div>
 
-                  {/* Bottom: Price + Status/Action (Justified on Mobile) */}
-                  <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto pt-3 md:pt-0 border-t md:border-t-0 border-white/5">
-                    <div className="flex items-center gap-1 text-accent font-bold text-lg tracking-tight shrink-0">
-                      <span className="text-xs font-bold text-accent/60">₹</span>{parseFloat(order.price * 92.74 || 0).toFixed(0)}
+                  {/* Row 3: Info grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="border border-slate-200 dark:border-white/5 rounded-xl p-2.5">
+                      <p className="text-[8px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/20 mb-0.5">Amount</p>
+                      <p className="text-sm font-bold text-accent">₹{parseFloat(order.price * 92.74 || 0).toFixed(0)}</p>
                     </div>
+                    {order.delivery_days && (
+                      <div className="border border-slate-200 dark:border-white/5 rounded-xl p-2.5">
+                        <p className="text-[8px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/20 mb-0.5">Delivery</p>
+                        <p className="text-sm font-bold text-slate-900 dark:text-white">{order.delivery_days}d</p>
+                      </div>
+                    )}
+                    {order.revisions !== undefined && (
+                      <div className="border border-slate-200 dark:border-white/5 rounded-xl p-2.5">
+                        <p className="text-[8px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/20 mb-0.5">Revisions</p>
+                        <p className="text-sm font-bold text-slate-900 dark:text-white">{order.revisions}</p>
+                      </div>
+                    )}
+                    {order.deadline && (
+                      <div className="border border-slate-200 dark:border-white/5 rounded-xl p-2.5">
+                        <p className="text-[8px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/20 mb-0.5">Due</p>
+                        <p className="text-xs font-bold text-slate-900 dark:text-white">{fmtDate(order.deadline)}</p>
+                      </div>
+                    )}
+                  </div>
 
-                    <div className="shrink-0 flex items-center gap-3">
-                      <StatusBadge status={order.status} />
-                      <div className="w-px h-6 bg-white/5 hidden md:block" />
-                      {order.status === 'PENDING' && (
-                        <button onClick={() => handleOrderStatus(order, 'IN_PROGRESS')} disabled={isUpdating}
-                          className="h-9 px-5 bg-accent text-white rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-accent/90 transition disabled:opacity-50">
-                          {isUpdating ? <InfinityLoader/> : 'Start Order'}
-                        </button>
-                      )}
-                      {(order.status === 'IN_PROGRESS' || order.status === 'REVISION') && (
-                        <button onClick={() => handleOrderStatus(order, 'DELIVERED')} disabled={isUpdating}
-                          className="h-9 px-5 bg-purple-500/10 border border-purple-500/20 text-purple-400 rounded-xl text-[10px] font-bold uppercase tracking-wider hover:bg-purple-500/20 transition disabled:opacity-50">
-                          {isUpdating ? <InfinityLoader/> : 'Deliver Work'}
-                        </button>
-                      )}
-                    </div>
+                  {/* Row 4: Requirements preview */}
+                  {order.requirements && (
+                    <p className="text-[10px] text-slate-400 dark:text-light-text/30 italic line-clamp-2 leading-relaxed">
+                      "{order.requirements}"
+                    </p>
+                  )}
+
+                  {/* Row 5: Actions */}
+                  <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-white/5">
+                    {order.status === 'PENDING' && (
+                      <button onClick={() => handleOrderStatus(order, 'IN_PROGRESS')} disabled={isUpdating}
+                        className="h-9 px-5 bg-accent text-white rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-accent/90 transition disabled:opacity-50">
+                        {isUpdating ? <InfinityLoader/> : 'Start Order'}
+                      </button>
+                    )}
+                    {(order.status === 'IN_PROGRESS' || order.status === 'REVISION') && (
+                      <button onClick={() => handleOrderStatus(order, 'DELIVERED')} disabled={isUpdating}
+                        className="h-9 px-5 bg-purple-500/10 border border-purple-500/20 text-purple-400 rounded-full text-[10px] font-bold uppercase tracking-wider hover:bg-purple-500/20 transition disabled:opacity-50">
+                        {isUpdating ? <InfinityLoader/> : 'Deliver Work'}
+                      </button>
+                    )}
                   </div>
                 </div>
               );

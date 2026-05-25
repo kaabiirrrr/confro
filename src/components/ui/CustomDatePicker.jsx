@@ -146,7 +146,7 @@ const CustomDatePicker = ({
         className={`
           flex items-center justify-between px-2 sm:px-4 py-2 sm:py-3 
           bg-secondary/40 backdrop-blur-md rounded-xl border transition-all duration-300 cursor-pointer
-          ${isOpen ? 'border-accent shadow-[0_0_0_3px_rgba(56,189,248,0.1)]' : 'border-white/10 hover:border-white/20'}
+          ${isOpen ? 'border-accent' : 'border-white/10 hover:border-white/20'}
           ${error ? 'border-red-500/50' : ''}
         `}
       >
@@ -165,21 +165,21 @@ const CustomDatePicker = ({
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute z-[110] mt-2 w-[300px] bg-secondary/95 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-2xl"
+            className="absolute z-[110] mt-2 w-[300px] bg-secondary/95 backdrop-blur-xl border border-white/10 rounded-xl p-4"
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-1">
                 <button 
                    onClick={() => { setShowMonthPicker(!showMonthPicker); setShowYearPicker(false); }}
-                   className={`text-sm font-bold transition-colors px-2 py-1 rounded-lg hover:bg-white/5 flex items-center gap-1 ${showMonthPicker ? 'text-accent' : 'text-white'}`}
+                   className={`text-sm font-bold transition-colors px-2 py-1 rounded-full hover:bg-white/5 flex items-center gap-1 ${showMonthPicker ? 'text-accent' : 'text-white'}`}
                 >
                   {monthName}
                   <ChevronDown size={14} className={showMonthPicker ? "rotate-180" : ""} />
                 </button>
                 <button 
                    onClick={() => { setShowYearPicker(!showYearPicker); setShowMonthPicker(false); }}
-                   className={`text-sm font-bold transition-colors px-2 py-1 rounded-lg hover:bg-white/5 flex items-center gap-1 ${showYearPicker ? 'text-accent' : 'text-white'}`}
+                   className={`text-sm font-bold transition-colors px-2 py-1 rounded-full hover:bg-white/5 flex items-center gap-1 ${showYearPicker ? 'text-accent' : 'text-white'}`}
                 >
                   {currentYear}
                   <ChevronDown size={14} className={showYearPicker ? "rotate-180" : ""} />
@@ -187,10 +187,10 @@ const CustomDatePicker = ({
               </div>
               
               <div className="flex gap-1">
-                <button onClick={handlePrevMonth} className="p-1.5 hover:bg-white/5 rounded-lg text-white/50 hover:text-white transition-all">
+                <button onClick={handlePrevMonth} className="p-1.5 hover:bg-white/5 rounded-full text-white/50 hover:text-white transition-all">
                   <ChevronLeft size={18} />
                 </button>
-                <button onClick={handleNextMonth} className="p-1.5 hover:bg-white/5 rounded-lg text-white/50 hover:text-white transition-all">
+                <button onClick={handleNextMonth} className="p-1.5 hover:bg-white/5 rounded-full text-white/50 hover:text-white transition-all">
                   <ChevronRight size={18} />
                 </button>
               </div>
@@ -206,7 +206,7 @@ const CustomDatePicker = ({
                        setViewDate(new Date(yr, viewDate.getMonth(), 1));
                        setShowYearPicker(false);
                      }}
-                     className={`py-2 text-xs rounded-lg transition-all ${yr === currentYear ? 'bg-accent text-primary font-bold' : 'text-white/60 hover:bg-white/5 hover:text-white'}`}
+                     className={`py-2 text-xs rounded-full transition-all ${yr === currentYear ? 'bg-accent text-primary font-bold' : 'text-white/60 hover:bg-white/5 hover:text-white'}`}
                    >
                      {yr}
                    </button>
@@ -222,7 +222,7 @@ const CustomDatePicker = ({
                        setViewDate(new Date(currentYear, i, 1));
                        setShowMonthPicker(false);
                     }}
-                    className={`py-2 text-xs rounded-lg transition-all ${i === viewDate.getMonth() ? 'bg-accent text-primary font-bold' : 'text-white/60 hover:bg-white/5 hover:text-white'}`}
+                    className={`py-2 text-xs rounded-full transition-all ${i === viewDate.getMonth() ? 'bg-accent text-primary font-bold' : 'text-white/60 hover:bg-white/5 hover:text-white'}`}
                   >
                     {m.slice(0, 3)}
                   </button>
@@ -252,9 +252,9 @@ const CustomDatePicker = ({
                         onClick={() => !isFutureDate(day) && onDateClick(day)}
                         disabled={isFutureDate(day)}
                         className={`
-                          h-9 w-full flex items-center justify-center text-xs rounded-lg transition-all duration-200
+                          h-9 w-full flex items-center justify-center text-xs rounded-full transition-all duration-200
                           ${isSelected(day) 
-                            ? 'bg-accent text-primary font-bold shadow-lg shadow-accent/20 scale-110 z-10' 
+                            ? 'bg-accent text-primary font-bold scale-110 z-10' 
                             : isToday(day)
                               ? 'bg-accent/10 text-accent font-bold border border-accent/20'
                               : isFutureDate(day)
