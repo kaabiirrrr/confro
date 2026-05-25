@@ -12,7 +12,7 @@ import InfinityLoader from "../../common/InfinityLoader";
 import { formatINR } from "../../../utils/currencyUtils";
 import { cleanImageUrl } from "../../../utils/imageUrl";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BestMatchesTab from "../freelancer/BestMatchesTab";
 
 import {
@@ -33,8 +33,10 @@ const API_URL = getApiUrl();
 
 // Memoized Promo Slider to prevent unnecessary re-animations
 const PromoSlider = memo(({ ads, currentAd, setCurrentAd }) => {
+  const isCoreTeam = ads[currentAd].image?.includes("CoreTeamBanner");
+
   return (
-    <div className="relative group rounded-xl sm:rounded-2xl border border-white/10 overflow-hidden bg-primary/20 backdrop-blur-xl h-[180px] sm:h-[300px] flex items-center">
+    <div className="relative group rounded-xl sm:rounded-2xl border border-black/5 dark:border-white/10 overflow-hidden bg-secondary h-[180px] sm:h-[300px] flex items-center">
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.img
@@ -44,11 +46,19 @@ const PromoSlider = memo(({ ads, currentAd, setCurrentAd }) => {
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.8 }}
             src={cleanImageUrl(ads[currentAd].image, ads[currentAd].title)}
-            className="w-full h-full object-cover"
+            className={`w-full h-full ${
+              isCoreTeam
+                ? "object-cover object-[center_30%]"
+                : "object-cover"
+            }`}
             onError={(e) => { e.target.src = '/ad-direct-contracts.png' }}
           />
         </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/70 to-transparent" />
+        <div className={`absolute inset-0 bg-gradient-to-r ${
+          isCoreTeam
+            ? "from-secondary/90 via-secondary/40 to-transparent"
+            : "from-secondary/95 via-secondary/70 to-transparent"
+        }`} />
       </div>
 
       <div className="relative z-10 flex flex-col items-start justify-center p-6 sm:p-16 gap-4 sm:gap-8 w-full max-w-2xl">
@@ -63,9 +73,11 @@ const PromoSlider = memo(({ ads, currentAd, setCurrentAd }) => {
             {ads[currentAd].text}
           </p>
         </div>
-        <button className="px-5 sm:px-8 h-10 sm:h-14 bg-accent text-white font-black rounded-full hover:scale-105 transition-all flex items-center gap-2 sm:gap-4 active:scale-95 text-sm sm:text-base">
-          {ads[currentAd].button} <ArrowRight size={16} />
-        </button>
+        {ads[currentAd].button && (
+          <button className="px-5 sm:px-8 h-9 sm:h-11 bg-accent text-white font-black rounded-full hover:scale-105 transition-all flex items-center gap-2 sm:gap-4 active:scale-95 text-xs sm:text-sm">
+            {ads[currentAd].button} <ArrowRight size={16} />
+          </button>
+        )}
       </div>
 
       <div className="absolute bottom-6 right-6 sm:bottom-10 sm:right-16 flex gap-2 sm:gap-3 z-20">
@@ -202,6 +214,7 @@ const AnalyticsGrid = memo(({ freelancerStats, reliability }) => {
 });
 
 function DashboardHome() {
+  const navigate = useNavigate();
   const profileContext = useProfile();
   const authContext = useAuth();
   const cacheContext = useDashboardCache();
@@ -283,7 +296,8 @@ function DashboardHome() {
 
   const ads = useMemo(() => [
     { title: "Direct Contracts", text: "Create contracts and bring new clients with a low 5% service fee.", button: "Create contract", image: "/ad-direct-contracts.png" },
-    { title: "Boost Your Profile", text: "Higher visibility leads to more job invites. Try profile boosting.", button: "Boost profile", image: "/ad-boost-profile.png" }
+    { title: "Boost Your Profile", text: "Higher visibility leads to more job invites. Try profile boosting.", button: "Boost profile", image: "/ad-boost-profile.png" },
+    { title: "Core team members", text: "The brains behind Connect.", button: null, image: "/CoreTeamBanner.jpeg" }
   ], []);
 
   useEffect(() => {
@@ -414,9 +428,15 @@ function DashboardHome() {
               <p className="text-white/60 font-medium text-xs sm:text-[13px] tracking-tight">Boost your visibility by 3x by completing your profile.</p>
             </div>
           </div>
-          <a href="/freelancer/setup-profile" className="px-4 sm:px-6 py-2 bg-transparent border border-accent/40 text-accent font-black text-[11px] uppercase tracking-widest rounded-full hover:bg-accent/10 transition-all shadow-lg shadow-accent/5 self-start sm:self-auto">
+          <button
+            onClick={() => {
+              localStorage.setItem("profileStep", String(profile?.current_step ?? 1));
+              navigate("/freelancer/setup-profile");
+            }}
+            className="px-4 sm:px-6 py-2 bg-transparent border border-accent/40 text-accent font-black text-[11px] uppercase tracking-widest rounded-full hover:bg-accent/10 transition-all shadow-lg shadow-accent/5 self-start sm:self-auto"
+          >
             Continue Setup
-          </a>
+          </button>
         </motion.div>
       )}
 
@@ -536,7 +556,7 @@ function DashboardHome() {
         {/* FEED GRID */}
         <div className="space-y-10 min-h-[500px]">
           {activeTab === "BEST MATCHES" ? (
-            <BestMatchesTab />
+            <BestMatchesTab filters={filters} searchQuery={searchQuery} />
           ) : loading ? (
             <InfinityLoader fullScreen={false} text="Syncing Network..."/>
           ) : displayedJobs.length === 0 ? (

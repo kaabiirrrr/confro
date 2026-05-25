@@ -42,29 +42,27 @@ const ClientPolicies = () => {
   return (
     <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 pb-12 space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
-      {/* Back Button and Header Section */}
-      <div className="space-y-2">
-        <Link
-          to="/client/account-health"
-          className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm font-medium group"
-        >
-          <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-          Back
-        </Link>
-
-        <div className="relative pt-2 pb-4 border-b border-white/10 mb-2">
-          <div className="relative z-10 max-w-2xl flex flex-col items-start gap-2">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[9px] font-black uppercase tracking-[0.3em]">
-              <Lock size={14} />
+      {/* Header Section */}
+      <div className="relative pt-2 pb-4 border-b border-white/10 mb-2">
+        <div className="relative z-10 max-w-2xl flex flex-col items-start gap-2">
+          <div className="flex items-center gap-3 -ml-3 sm:-ml-4">
+            <Link
+              to="/client/account-health"
+              className="inline-flex items-center justify-center text-white/50 hover:text-white transition-colors group p-1"
+            >
+              <ChevronLeft size={20} className="group-hover:-translate-x-0.5 transition-transform" />
+            </Link>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
+              <Lock size={16} />
               <span>Platform Policies Protocol</span>
             </div>
-            <h1 className="text-xl sm:text-3xl lg:text-4xl font-semibold text-white tracking-tight">
-              Trust &amp; Safety Guidelines
-            </h1>
-            <p className="text-white/40 text-[11px] sm:text-sm font-medium leading-relaxed max-w-xl">
-              Our policies are designed to create a safe, fair, and professional environment for both clients and freelancers. Adhering to these guidelines ensures you maintain full platform access.
-            </p>
           </div>
+          <h1 className="text-xl sm:text-3xl lg:text-4xl font-semibold text-white tracking-tight">
+            Trust &amp; Safety Guidelines
+          </h1>
+          <p className="text-white/40 text-[11px] sm:text-sm font-medium leading-relaxed max-w-xl">
+            Our policies are designed to create a safe, fair, and professional environment for both clients and freelancers. Adhering to these guidelines ensures you maintain full platform access.
+          </p>
         </div>
       </div>
 
@@ -97,7 +95,7 @@ const ClientPolicies = () => {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-8 md:p-10 min-h-[300px] sm:min-h-[500px] shadow-2xl backdrop-blur-sm relative group overflow-hidden">
+        <div className="flex-1 bg-transparent border border-white/10 rounded-xl p-6 sm:p-8 md:p-10 min-h-[300px] sm:min-h-[500px] shadow-2xl backdrop-blur-sm relative group overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[100px] -mr-32 -mt-32 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
           
           <div className="relative z-10 flex items-center gap-3 sm:gap-5 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-white/10">
@@ -130,7 +128,7 @@ const ClientPolicies = () => {
               <li>Communicate professionally and promptly.</li>
               <li>Report any suspicious activity immediately to our support team.</li>
             </ul>
-            <div className={`mt-10 p-6 bg-transparent rounded-[2rem] border ${isRefundActive ? 'border-red-500/20' : 'border-white/10'}`}>
+            <div className={`mt-10 p-6 bg-transparent rounded-xl border ${isRefundActive ? 'border-red-500/20' : 'border-white/10'}`}>
               <p className={`text-xs uppercase tracking-widest leading-relaxed font-bold ${isRefundActive ? 'text-red-500/60' : 'text-white/40'}`}>
                 Note: These terms are subject to change. As an active user, it is your responsibility to stay up-to-date with our Trust &amp; Safety policies to avoid account restriction.
               </p>

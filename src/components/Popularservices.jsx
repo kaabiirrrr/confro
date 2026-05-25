@@ -112,7 +112,7 @@ const PopularServices = () => {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="bg-secondary rounded-2xl sm:rounded-3xl border border-white/10 overflow-hidden flex flex-col sm:flex-row h-auto sm:h-[240px] md:h-[280px]">
+                <div key={i} className="bg-secondary rounded-xl border border-white/10 overflow-hidden flex flex-col sm:flex-row h-auto sm:h-[240px] md:h-[280px]">
                   <div className="w-full sm:w-1/2 p-4 sm:p-6 md:p-8 flex flex-col justify-between">
                     <div>
                       <Skeleton className="h-6 w-3/4 mb-4" />
@@ -149,7 +149,7 @@ const PopularServices = () => {
                   return (
                     <div
                       key={item.id || index}
-                      className="bg-transparent rounded-2xl sm:rounded-3xl border border-white/10 overflow-hidden flex flex-col sm:flex-row h-auto sm:h-[240px] md:h-[280px] transition-all duration-300 shadow-lg shadow-black/10"
+                      className="bg-transparent rounded-xl border border-white/10 overflow-hidden flex flex-col sm:flex-row h-auto sm:h-[240px] md:h-[280px] transition-all duration-300"
                     >
                       <div className={`w-full sm:w-1/2 p-4 sm:p-6 md:p-8 flex flex-col justify-between order-2 sm:order-none ${(index === 1 || index === 2) ? 'sm:order-2' : ''}`}>
                         <div>

@@ -202,6 +202,10 @@ export function onOnlineUsers(cb) {
 export function onUserOnline(cb) { socket?.on('user-online', cb); return () => socket?.off('user-online', cb); }
 export function onUserOffline(cb) { socket?.on('user-offline', cb); return () => socket?.off('user-offline', cb); }
 
+export function toggleSocketOnline(online) {
+    socket?.emit('toggle-online', { online });
+}
+
 // ─── CALL SIGNALING ──────────────────────────────────────────────────────────
 export function onIncomingCall(cb) { socket?.on('incoming-call', cb); return () => socket?.off('incoming-call', cb); }
 export function onCallAccepted(cb) { socket?.on('call-accepted', cb); return () => socket?.off('call-accepted', cb); }

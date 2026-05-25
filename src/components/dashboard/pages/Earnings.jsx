@@ -122,15 +122,15 @@ const Earnings = () => {
           { label: 'In Review', value: fmtINR(inReview), icon: '/Icons/progress.png' },
           { label: 'Total Earned', value: fmtINR(total), icon: '/Icons/rupee.png' }
         ].map((stat, i) => (
-          <div key={i} className="p-4 sm:p-6 rounded-xl sm:rounded-2xl space-y-3 sm:space-y-4 transition-all group bg-transparent">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-              <img src={stat.icon} alt={stat.label} className="w-8 h-8 sm:w-12 sm:h-12 object-contain opacity-80" />
+          <div key={i} className="p-3 sm:p-5 rounded-xl border border-slate-200 dark:border-white/5 space-y-2 sm:space-y-3 transition-all group bg-transparent hover:border-accent/30">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
+              <img src={stat.icon} alt={stat.label} className="w-8 h-8 sm:w-10 sm:h-10 object-contain opacity-80" />
             </div>
             <div>
-              <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-light-text/30 mb-1">{stat.label}</p>
-              <h4 className="text-lg sm:text-2xl font-bold text-white tracking-tight flex items-center gap-1">
-                <IndianRupee size={14} className="text-white/40 sm:hidden" />
-                <IndianRupee size={18} className="text-white/40 hidden sm:block" />
+              <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-light-text/30 mb-0.5 sm:mb-1 whitespace-nowrap">{stat.label}</p>
+              <h4 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-1">
+                <IndianRupee size={13} className="text-slate-400 dark:text-white/40 sm:hidden" />
+                <IndianRupee size={16} className="text-slate-400 dark:text-white/40 hidden sm:block" />
                 {stat.value.replace('₹', '')}
               </h4>
             </div>
@@ -140,7 +140,7 @@ const Earnings = () => {
 
       {/* Recent Activity Section */}
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border pb-0 sm:pb-4 gap-4 sm:gap-0">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 dark:border-border pb-0 sm:pb-4 gap-4 sm:gap-0">
           <div className="flex w-full sm:w-auto text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em]">
             <button className="text-accent relative pb-3 sm:pb-4 w-full sm:w-auto text-center sm:text-left">
               RECENT ACTIVITY
@@ -168,49 +168,49 @@ const Earnings = () => {
             ))}
           </div>
         ) : paged.length === 0 ? (
-          <div className="text-center py-20 bg-transparent border border-border border-dashed rounded-2xl">
-            <div className="mb-4 text-light-text/10 flex justify-center">
-              <Receipt size={48} strokeWidth={1} />
+          <div className="text-center py-16">
+            <div className="flex items-center justify-center mx-auto mb-4 sm:mb-6">
+              <img src="/Icons/empty-jobs.png" alt="No transactions" className="w-40 h-40 object-contain" />
             </div>
-            <h3 className="text-lg font-semibold text-light-text/40 mb-1">No transactions found</h3>
-            <p className="text-xs text-light-text/20 font-medium">Try adjusting your filter settings</p>
+            <h3 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white mb-2">No transactions found</h3>
+            <p className="text-slate-400 dark:text-light-text/20 text-xs sm:text-sm font-medium">Try adjusting your filter settings</p>
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="bg-transparent border border-border rounded-2xl overflow-hidden shadow-sm">
+            <div className="bg-transparent border border-slate-200 dark:border-border rounded-xl overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
-              <div className="grid grid-cols-[1fr_100px_100px] sm:grid-cols-[1.5fr_1fr_120px_130px_160px] gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-5 border-b border-border/50 text-[9px] sm:text-[10px] font-bold text-light-text/30 uppercase tracking-widest min-w-0">
+              <div className="grid grid-cols-[1fr_100px_100px] sm:grid-cols-[1.5fr_1fr_120px_130px_160px] gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-5 border-b border-slate-100 dark:border-border/50 text-[9px] sm:text-[10px] font-bold text-slate-400 dark:text-light-text/30 uppercase tracking-widest min-w-0 bg-slate-50 dark:bg-transparent">
                 <span>Sender / Note</span>
                 <span className="hidden sm:block">Payment Method</span>
                 <span className="text-right">Amount</span>
                 <span className="text-right">Status</span>
                 <span className="hidden sm:block text-right">Date</span>
               </div>
-              <div className="divide-y divide-border/30 min-w-[600px]">
+              <div className="divide-y divide-slate-100 dark:divide-border/30 min-w-[600px]">
                 {paged.map((tx, i) => {
                   const sender = tx.sender_name || tx.payer_name || tx.client?.name || '—';
                   const upiId = tx.upi_id || tx.upi || 'Wire Transfer';
                   return (
-                    <div key={tx.id ?? i} className="grid grid-cols-[1fr_100px_100px] sm:grid-cols-[1.5fr_1fr_120px_130px_160px] gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-6 hover:bg-white/[0.02] transition-colors items-center group cursor-default">
+                    <div key={tx.id ?? i} className="grid grid-cols-[1fr_100px_100px] sm:grid-cols-[1.5fr_1fr_120px_130px_160px] gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-6 hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors items-center group cursor-default">
                       <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                         <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-accent/5 border border-accent/20 flex items-center justify-center text-accent text-sm font-black shrink-0 group-hover:bg-accent/10 transition-colors">
                           {sender[0]?.toUpperCase()}
                         </div>
                         <div className="flex flex-col min-w-0">
-                          <span className="text-light-text font-semibold truncate group-hover:text-accent transition-colors leading-none mb-1.5 text-xs sm:text-sm">{sender}</span>
-                          <span className="text-light-text/20 text-[9px] font-mono uppercase tracking-tighter">ID: {String(tx.id || i).slice(-8)}</span>
+                          <span className="text-slate-900 dark:text-light-text font-semibold truncate group-hover:text-accent transition-colors leading-none mb-1.5 text-xs sm:text-sm">{sender}</span>
+                          <span className="text-slate-400 dark:text-light-text/20 text-[9px] font-mono uppercase tracking-tighter">ID: {String(tx.id || i).slice(-8)}</span>
                         </div>
                       </div>
                       <div className="hidden sm:flex flex-col">
-                        <span className="text-light-text/60 text-xs font-bold uppercase tracking-tight truncate">{upiId}</span>
-                        <span className="text-light-text/10 text-[9px] font-black uppercase tracking-widest leading-none mt-1">Direct Deposit</span>
+                        <span className="text-slate-600 dark:text-light-text/60 text-xs font-bold uppercase tracking-tight truncate">{upiId}</span>
+                        <span className="text-slate-300 dark:text-light-text/10 text-[9px] font-black uppercase tracking-widest leading-none mt-1">Direct Deposit</span>
                       </div>
-                      <span className="text-right text-white font-bold text-sm sm:text-lg tracking-tight flex items-center justify-end gap-0.5 whitespace-nowrap">
-                        <IndianRupee size={12} className="text-white/40" />
+                      <span className="text-right text-slate-900 dark:text-white font-bold text-sm sm:text-lg tracking-tight flex items-center justify-end gap-0.5 whitespace-nowrap">
+                        <IndianRupee size={12} className="text-slate-400 dark:text-white/40" />
                         {fmtINR(tx.amount).replace('₹', '')}
                       </span>
                       <div className="flex justify-end"><StatusBadge status={tx.status} /></div>
-                      <span className="hidden sm:block text-right text-light-text/30 text-[9px] sm:text-[10px] font-bold font-mono tracking-tighter uppercase whitespace-nowrap">
+                      <span className="hidden sm:block text-right text-slate-400 dark:text-light-text/30 text-[9px] sm:text-[10px] font-bold font-mono tracking-tighter uppercase whitespace-nowrap">
                         {fmtDate(tx.created_at ?? tx.date)}
                       </span>
                     </div>
@@ -222,7 +222,7 @@ const Earnings = () => {
 
             {/* Pagination */}
             {pages > 1 && (
-              <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-widest text-light-text/40 pt-8 border-t border-border">
+              <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/40 pt-8 border-t border-slate-200 dark:border-border">
                 <span>{filtered.length} TRANSACTIONS</span>
                 <div className="flex items-center gap-2">
                   <button

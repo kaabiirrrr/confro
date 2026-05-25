@@ -59,7 +59,7 @@ const FindFreelancers = () => {
   const isDashboard = location.pathname.startsWith('/freelancer') || location.pathname.startsWith('/client');
   const queryParam = searchParams.get("q") || "";
   const { role, isAuthenticated, loading: authLoading } = useAuth();
-  
+
   // Direct check for token to prevent flicker if auth state hasn't fully hydrated
   const hasToken = !!localStorage.getItem('token');
   const isUserAuthenticated = isAuthenticated || hasToken;
@@ -70,6 +70,7 @@ const FindFreelancers = () => {
   const [freelancers, setFreelancers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [savedIds, setSavedIds] = useState(() => new Set());
   const [saveBusyId, setSaveBusyId] = useState(null);
   const [showMobileFilter, setShowMobileFilter] = useState(false);
@@ -112,9 +113,7 @@ const FindFreelancers = () => {
 
   const fetchFreelancers = async () => {
     try {
-      // Only show full loader if no freelancers are currently displayed
-      const isInitial = freelancers.length === 0;
-      if (isInitial) {
+      if (isFirstLoad) {
         setLoading(true);
       } else {
         setSearching(true);
@@ -134,6 +133,7 @@ const FindFreelancers = () => {
     } finally {
       setLoading(false);
       setSearching(false);
+      setIsFirstLoad(false);
     }
   };
 
@@ -201,11 +201,10 @@ const FindFreelancers = () => {
           </div>
           {/* Mobile filter toggle */}
           <button
-            className="md:hidden flex items-center gap-2 px-3 py-2 rounded-xl border border-white/10 text-white/70 text-sm"
+            className="md:hidden relative flex items-center justify-center w-10 h-10 rounded-full text-accent hover:bg-accent/10 transition-all"
             onClick={() => setShowMobileFilter(true)}
           >
-            <LucideFilter size={16} className="text-accent" />
-            Filters
+            <LucideFilter size={20} className="text-accent" />
           </button>
         </div>
       </motion.div>
@@ -264,9 +263,9 @@ const FindFreelancers = () => {
         </motion.div>
 
         {/* Cards */}
-        <div className={`flex-1 min-w-0 transition-opacity duration-300 ${searching ? 'opacity-60' : 'opacity-100'}`}>
+        <div className={`flex-1 min-w-0 transition-opacity duration-300 ${searching ? 'opacity-60 pointer-events-none' : 'opacity-100'}`}>
           {loading ? (
-            <InfinityLoader/>
+            <InfinityLoader />
           ) : freelancers.length > 0 ? (
             <motion.div
               variants={containerVariants}
@@ -291,7 +290,8 @@ const FindFreelancers = () => {
               })}
             </motion.div>
           ) : (
-            <div className="text-center py-12 sm:py-20 bg-transparent border border-dashed border-white/10 rounded-2xl">
+            <div className="text-center py-12 sm:py-20 bg-transparent rounded-2xl flex flex-col items-center justify-center">
+              <img src="/Icons/empty-jobs.png" alt="No freelancers found" className="w-48 sm:w-64 h-auto mb-6 opacity-90" />
               <p className="text-gray-400 text-sm sm:text-lg">No freelancers found matching your criteria.</p>
             </div>
           )}

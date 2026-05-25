@@ -95,7 +95,8 @@ export function AuthProvider({ children }) {
      * Sync user role and profile with backend
      */
     const syncUserRole = useCallback(async (session, intendedRole = null, force = false) => {
-        if (syncInProgress.current || !session) return;
+        if (!force && syncInProgress.current) return;
+        if (!session) return;
 
         // Don't overwrite role from a direct login with OAuth sync, UNLESS forced (e.g. from refreshProfile)
         if (!force && localStorage.getItem('login_source') === 'direct') {
@@ -533,6 +534,26 @@ export function AuthProvider({ children }) {
     // Use OUR profile definition, not Supabase's immediate stamp
     const isEmailVerified = !!(profile?.is_email_verified || profile?.email_verified);
 
+    const updateProfileState = useCallback((updatedProfile) => {
+        setProfile(prev => {
+            const next = typeof updatedProfile === 'function' ? updatedProfile(prev) : updatedProfile;
+            if (next) {
+                localStorage.setItem('user_profile', JSON.stringify(next));
+                setUser(prevUser => {
+                    if (prevUser) {
+                        const updatedUser = { ...prevUser, profile: next };
+                        localStorage.setItem('user', JSON.stringify(updatedUser));
+                        return updatedUser;
+                    }
+                    return prevUser;
+                });
+            } else {
+                localStorage.removeItem('user_profile');
+            }
+            return next;
+        });
+    }, []);
+
     const refreshProfile = useCallback(async () => {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
@@ -565,6 +586,7 @@ export function AuthProvider({ children }) {
         user,
         role,
         profile,
+        setProfile: updateProfileState,
         wallet,
         membership,
         loading,
@@ -583,6 +605,7 @@ export function AuthProvider({ children }) {
         user,
         role,
         profile,
+        updateProfileState,
         wallet,
         membership,
         loading,

@@ -277,16 +277,12 @@ input, textarea {
   .glass-card {
     background: transparent;
     border: 1px solid var(--color-border);
-    border-radius: 16px;
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.04),
-      0 6px 20px rgba(0, 0, 0, 0.03);
+    border-radius: var(--radius-xl);
     transition: all 0.3s ease;
   }
 
   .glass-card:hover {
     border-color: var(--color-accent);
-    box-shadow: 0 8px 30px rgba(59, 130, 246, 0.08);
   }
 
   /* Keep the glassy blur feel for dark mode */
@@ -550,16 +546,16 @@ html:not(.dark) .text-slate-500 {
 }
 
 /* ── Border overrides ── */
-html:not(.dark) .border-white\/5,
-html:not(.dark) .border-white\/10,
-html:not(.dark) .border-white\/20 {
+:where(html:not(.dark)) .border-white\/5,
+:where(html:not(.dark)) .border-white\/10,
+:where(html:not(.dark)) .border-white\/20 {
   border-color: var(--color-border);
 }
 
 /* ── Bg overrides — semi-transparent white overlays → solid card bg ── */
-html:not(.dark) .bg-white\/5,
-html:not(.dark) .bg-white\/10 {
-  background-color: var(--color-hover) !important;
+:where(html:not(.dark)) .bg-white\/5,
+:where(html:not(.dark)) .bg-white\/10 {
+  background-color: var(--color-hover);
 }
 
 /* ── Very faint white overlays (0.02, 0.07) → subtle hover bg ── */
@@ -817,7 +813,6 @@ html:not(.dark) .bg-blue-500 {
 .member-btn-contact:hover {
   opacity: 0.9 !important;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
 }
 
 .member-btn-resume:hover {

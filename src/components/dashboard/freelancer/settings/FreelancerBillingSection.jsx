@@ -37,7 +37,7 @@ const FreelancerBillingSection = () => {
               <h3 className="text-2xl sm:text-4xl font-black text-white truncate">₹0.00</h3>
             </div>
           </div>
-          <button className="w-full h-10 sm:h-12 rounded-full bg-accent text-white font-bold text-xs sm:text-sm uppercase tracking-widest hover:scale-[1.02] flex items-center justify-center gap-2 shadow-lg shadow-accent/20 transition-all">
+          <button className="w-full h-10 sm:h-12 rounded-full bg-accent text-white font-bold text-xs sm:text-sm uppercase tracking-widest hover:scale-[1.02] flex items-center justify-center gap-2 transition-all">
             Get Paid Now
           </button>
         </SettingsCard>
@@ -63,14 +63,14 @@ const FreelancerBillingSection = () => {
       {/* WITHDRAWAL METHODS */}
       <SettingsCard title="Withdrawal Methods" subtitle="Configure how you receive your professional earnings" icon={Wallet} padding="p-4 sm:p-8">
         <div className="bg-white/5 border border-dashed border-white/10 rounded-2xl p-4 sm:p-10 text-center flex flex-col items-center justify-center group hover:border-white/20 transition-all">
-          <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/5 flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
-             <Wallet size={24} className="text-white/20 sm:w-8 sm:h-8" />
+          <div className="mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+             <img src="/wallet_custom_icon.png" alt="Wallet" className="w-36 h-36 sm:w-48 sm:h-48 object-contain" />
           </div>
           <p className="text-white font-medium mb-1 sm:mb-2 text-sm sm:text-lg">No withdrawal methods configured</p>
           <p className="text-white/40 text-[11px] sm:text-sm max-w-xs mx-auto mb-6 sm:mb-8 font-medium leading-relaxed">Link a bank account or digital wallet to start receiving funds.</p>
           <button 
             onClick={() => navigate("/freelancer/withdraw")}
-            className="w-full sm:w-auto bg-accent text-white font-black h-10 sm:h-12 px-8 rounded-full hover:scale-[1.05] active:scale-95 transition-all shadow-xl shadow-accent/20 text-xs sm:text-sm"
+            className="w-full h-10 sm:h-12 rounded-full bg-accent text-white font-bold text-xs sm:text-sm uppercase tracking-widest hover:scale-[1.02] active:scale-95 flex items-center justify-center transition-all"
           >
             Add Method
           </button>

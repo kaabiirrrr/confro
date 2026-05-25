@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Mail } from 'lucide-react';
+import { ArrowLeft, Mail, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import InfinityLoader from '../components/common/InfinityLoader';
 
 import { getApiUrl } from '../utils/authUtils';
- 
+
 const API_URL = getApiUrl();
 
 const ForgotPassword = () => {
@@ -41,17 +41,29 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="min-h-screen bg-primary flex items-center md:items-start md:pt-[12vh] justify-center p-6 font-sans selection:bg-accent/30">
+        <div className="min-h-screen bg-primary flex items-center md:items-start md:pt-[12vh] justify-center p-6 font-sans selection:bg-accent/30 relative">
+            {/* Topbar Logo matching Navbar */}
+            <div className="absolute top-0 left-0 w-full h-14 md:h-20 px-14 md:px-16 flex items-center z-50">
+                <Link to="/" className="flex items-center group" aria-label="Connect Home">
+                    <img
+                        src="/Logo-LightMode-trimmed.png"
+                        alt="Connect"
+                        className="h-9 md:h-12 object-contain block dark:hidden transition-all duration-300"
+                    />
+                    <img
+                        src="/Logo2.png"
+                        alt="Connect"
+                        className="h-8 md:h-10 object-contain hidden dark:block transition-all duration-300"
+                    />
+                </Link>
+            </div>
+
             <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.28, ease: 'easeOut' }}
-                className="w-full max-w-[440px] bg-secondary border border-[var(--color-border)] rounded-2xl p-8 sm:p-10"
+                className="w-full max-w-[440px] p-8 sm:p-10"
             >
-                {/* Logo */}
-                <img src="/Logo2.png" alt="Connect"
-                    className="w-20 mx-auto block mb-8 invert dark:invert-0 object-contain" />
-
                 <AnimatePresence mode="wait">
                     {!submitted ? (
                         <motion.div key="form"
@@ -62,7 +74,7 @@ const ForgotPassword = () => {
                                 Reset your password
                             </h1>
                             <p className="text-text-secondary text-sm text-center mb-7 leading-relaxed">
-                                Enter your email and we'll send you a reset link.
+                                Enter the email associated with your account and we'll send an email with instructions to reset your password.
                             </p>
 
                             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -86,62 +98,68 @@ const ForgotPassword = () => {
                                     )}
                                 </div>
 
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="w-full py-3 rounded-full border-none bg-accent text-white text-sm font-semibold flex items-center justify-center gap-2 transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-                                >
-                                    {loading ? <InfinityLoader/> : 'Send Reset Link'}
-                                </button>
+                                <div className="flex gap-4 mt-2">
+                                    <Link
+                                        to="/login"
+                                        className="flex-1 py-3 rounded-full border border-[var(--color-border)] text-text-secondary text-sm font-semibold flex items-center justify-center transition hover:border-accent hover:text-light-text"
+                                    >
+                                        Cancel
+                                    </Link>
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        className="flex-1 py-3 rounded-full border-none bg-accent text-white text-sm font-semibold flex items-center justify-center gap-2 transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {loading ? (
+                                            <>
+                                                <Loader2 size={16} className="animate-spin" />
+                                                Sending...
+                                            </>
+                                        ) : (
+                                            'Send Reset Link'
+                                        )}
+                                    </button>
+                                </div>
                             </form>
-
-                            <div className="text-center mt-6">
-                                <Link to="/login" className="text-text-muted text-[13px] inline-flex items-center gap-1.5 hover:text-accent transition">
-                                    <ArrowLeft size={14} /> Back to log in
-                                </Link>
-                            </div>
                         </motion.div>
                     ) : (
                         <motion.div key="success"
                             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.25 }}
-                            className="text-center"
+                            className="text-center flex flex-col items-center"
                         >
                             {/* Icon */}
-                            <div className="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-5">
-                                <Mail size={24} className="text-accent" />
-                            </div>
+                            <img
+                                src="/Icons/mail-illustration.png"
+                                alt="Check Mail Illustration"
+                                className="w-70 h-70 object-contain"
+                            />
 
-                            <h1 className="text-light-text text-xl font-bold mb-3">
-                                Check your email
+                            <h1 className="text-light-text text-2xl font-bold mb-3">
+                                Check your mail
                             </h1>
 
-                            <p className="text-text-secondary text-sm leading-relaxed mb-6">
-                                If an account exists for this email, you'll receive a password reset link shortly.
+                            <p className="text-text-secondary text-sm leading-relaxed mb-8 max-w-[280px] mx-auto">
+                                We have sent a password recover instructions to your email.
                             </p>
 
-                            {/* Open Gmail / Open email if Gmail address */}
-                            {isGmail && (
-                                <a
-                                    href="https://mail.google.com"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl border border-[var(--color-border)] text-text-secondary text-[13px] font-medium mb-5 hover:border-accent hover:text-light-text transition group"
-                                >
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" className="text-text-secondary group-hover:text-light-text transition">
-                                        <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
-                                    </svg>
-                                    Open Gmail
-                                </a>
-                            )}
+                            <a
+                                href={isGmail ? "https://mail.google.com" : "mailto:"}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full max-w-[280px] py-3.5 rounded-full border-none bg-accent text-white text-[15px] font-semibold flex items-center justify-center transition hover:opacity-90 mb-6 mx-auto"
+                            >
+                                Open email app
+                            </a>
 
-                            <p className="text-text-muted text-xs mb-5">
-                                Didn't receive it? Check spam or try again in a few seconds.
-                            </p>
-
-                            <Link to="/login" className="text-text-muted text-[13px] inline-flex items-center gap-1.5 hover:text-accent transition">
-                                <ArrowLeft size={14} /> Back to log in
+                            <Link to="/login" className="text-text-secondary text-[15px] font-medium hover:text-light-text transition mb-14">
+                                Skip, I'll confirm later
                             </Link>
+
+                            <p className="text-text-muted text-xs leading-relaxed max-w-[280px] mx-auto">
+                                Did not receive the email? Check your spam filter,<br />
+                                or <button type="button" onClick={() => setSubmitted(false)} className="text-accent font-medium hover:underline">try another email address</button>
+                            </p>
                         </motion.div>
                     )}
                 </AnimatePresence>

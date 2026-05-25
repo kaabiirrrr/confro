@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Star, Clock, IndianRupee } from 'lucide-react';
+import { Star, Clock, IndianRupee, Bookmark, ThumbsDown } from 'lucide-react';
 import WhyMatchModal from './WhyMatchModal';
 import { trackRecommendationEvent } from '../../../services/recommendationApi';
+import { toggleSaveJob } from '../../../services/apiService';
+import { toast } from 'react-hot-toast';
 import './JobMatchCard.css';
 
 /**
@@ -16,6 +18,8 @@ const JobMatchCard = ({ job, onDismiss }) => {
     const [dismissed, setDismissed] = useState(false);
     const [undoVisible, setUndoVisible] = useState(false);
     const [dismissAction, setDismissAction] = useState(null);
+    const [saved, setSaved] = useState(false);
+    const [saving, setSaving] = useState(false);
     const menuRef = useRef(null);
     const undoTimer = useRef(null);
 
@@ -94,6 +98,29 @@ const JobMatchCard = ({ job, onDismiss }) => {
         setDismissAction(null);
     };
 
+    const handleToggleSave = async (e) => {
+        e.stopPropagation();
+        if (saving) return;
+        const next = !saved;
+        setSaved(next);
+        setSaving(true);
+        try {
+            const res = await toggleSaveJob(job.id);
+            setSaved(res.saved);
+            toast.success(res.saved ? 'Job saved' : 'Job unsaved');
+        } catch {
+            setSaved(!next);
+            toast.error('Could not save job');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleDislike = (e) => {
+        e.stopPropagation();
+        handleDismiss('not_relevant');
+    };
+
     const DISMISS_LABELS = {
         hide_job: 'Job hidden',
         not_relevant: 'Marked not relevant',
@@ -137,12 +164,31 @@ const JobMatchCard = ({ job, onDismiss }) => {
                         >
                             Why this?
                         </button>
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 hidden sm:block mr-2 shrink-0">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 hidden sm:block shrink-0">
                             Posted {formatTimeAgo(job.created_at || new Date().toISOString())}
                         </p>
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 block sm:hidden mr-1 shrink-0">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-light-text/20 block sm:hidden shrink-0">
                             {formatTimeAgo(job.created_at || new Date().toISOString()).replace(' ago', '')}
                         </p>
+
+                        {/* Dislike — same style as JobCard */}
+                        <button
+                            onClick={handleDislike}
+                            title="Not relevant"
+                            className="text-light-text/10 hover:text-red-400 transition-colors transform hover:scale-110 active:scale-95"
+                        >
+                            <ThumbsDown size={15} />
+                        </button>
+
+                        {/* Save — same style as JobCard */}
+                        <button
+                            onClick={handleToggleSave}
+                            disabled={saving}
+                            title={saved ? 'Unsave job' : 'Save job'}
+                            className={`transition-all transform hover:scale-110 active:scale-95 ${saved ? 'text-accent' : 'text-light-text/20 hover:text-accent'} ${saving ? 'opacity-50 cursor-wait' : ''}`}
+                        >
+                            <Bookmark size={15} className={`transition-all ${saved ? 'fill-accent' : ''}`} />
+                        </button>
                         
                         {/* Dismiss kebab menu */}
                         <div className="relative" ref={menuRef}>
@@ -208,17 +254,38 @@ const JobMatchCard = ({ job, onDismiss }) => {
                 </div>
 
                 {/* Client Info */}
-                <div className="flex justify-between items-start sm:items-center pt-3 sm:pt-4 border-t border-white/5 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-light-text/20">
-                    <div className="flex items-center gap-1.5 mt-0.5 sm:mt-0">
-                        <Star size={11} className="text-yellow-500/80 fill-yellow-500/20" />
-                        <span className="text-light-text/30 whitespace-nowrap">
-                            {job.client?.rating ? `${job.client.rating} (${job.client.reviews_count || 0})` : "NEW CLIENT"}
-                        </span>
+                <div className="flex justify-between items-center pt-3 sm:pt-4 border-t border-white/5">
+                    <div className="flex items-center gap-2.5">
+                        {job.client?.avatar_url ? (
+                            <img src={job.client.avatar_url} alt="Client" className="w-7 h-7 rounded-full object-cover ring-1 ring-white/10" />
+                        ) : (
+                            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-accent/20 to-accent/5 flex items-center justify-center text-[11px] text-accent font-bold ring-1 ring-accent/20">
+                                {(job.client?.name?.[0] || job.client?.company_name?.[0] || "C").toUpperCase()}
+                            </div>
+                        )}
+                        <div className="flex flex-col">
+                            <span className="text-[11px] text-light-text/50 font-semibold leading-tight">
+                                {job.client?.name || job.client?.company_name || "Client"}
+                            </span>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                                {(job.client?.rating && job.client.rating > 0) ? (
+                                    <>
+                                        <Star size={10} className="text-yellow-400 fill-yellow-400" />
+                                        <span className="text-[10px] font-bold text-yellow-400/90">{Number(job.client.rating).toFixed(1)}</span>
+                                        <span className="text-[9px] text-light-text/25 font-medium">({job.client.reviews_count || 0})</span>
+                                    </>
+                                ) : (
+                                    <span className="text-[9px] text-light-text/20 font-medium italic">New client</span>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1 sm:gap-4 text-right">
-                        <span className="opacity-80 break-words text-right max-w-[150px] sm:max-w-none">{job.client?.location || job.client?.country || "INTL"}</span>
-                        <span className="flex items-center gap-1 text-accent/40 font-extrabold whitespace-nowrap">
-                            PROPOSALS: <span className="text-light-text/40">{job.proposal_count ?? job.proposals?.length ?? 0}</span>
+                    <div className="flex flex-col items-end gap-1">
+                        <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-light-text/20 break-words text-right max-w-[150px] sm:max-w-none">
+                            {job.client?.location || job.client?.country || "INTL"}
+                        </span>
+                        <span className="flex items-center gap-1 text-[9px] sm:text-[10px] text-accent/40 font-extrabold uppercase tracking-widest whitespace-nowrap">
+                            Proposals: <span className="text-light-text/40">{job.proposal_count ?? job.proposals?.length ?? 0}</span>
                         </span>
                     </div>
                 </div>

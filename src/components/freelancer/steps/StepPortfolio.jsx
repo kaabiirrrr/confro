@@ -101,8 +101,10 @@ export default function StepPortfolio({ next, back }) {
         <div className="space-y-2">
           <label className="text-sm font-medium text-white/50 px-1">Project Asset</label>
           <div className="relative">
-            <label className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-2 sm:p-4 cursor-pointer transition-all group ${
-              portfolio.file ? 'border-accent/40 bg-accent/5' : 'border-white/5 hover:border-white/20 bg-white/[0.01]'
+            <label className={`flex flex-col items-center justify-center border rounded-xl p-6 sm:p-8 cursor-pointer transition-all duration-300 group ${
+              portfolio.file 
+                ? 'border-accent bg-accent/10 shadow-[0_0_15px_rgba(59,130,246,0.15)]' 
+                : 'border-white/10 bg-secondary/30 hover:bg-secondary/50 hover:border-accent/50 shadow-inner shadow-black/20'
             }`}>
               <div className="flex flex-col items-center gap-3">
                 {portfolio.file ? (
@@ -115,8 +117,8 @@ export default function StepPortfolio({ next, back }) {
                   </>
                 ) : (
                   <>
-                    <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent/10 group-hover:text-accent transition-colors">
-                      <FiUploadCloud className="text-xl sm:text-2xl" />
+                    <div className="flex items-center justify-center group-hover:text-accent transition-colors mb-1">
+                      <FiUploadCloud className="text-3xl sm:text-4xl text-white/40 group-hover:text-accent" />
                     </div>
                     <div className="text-center">
                       <p className="text-xs sm:text-sm font-medium text-white/60 group-hover:text-white/80 transition-colors">Click to upload file</p>
@@ -139,30 +141,26 @@ export default function StepPortfolio({ next, back }) {
         </div>
       </div>
 
-      <div className="flex justify-end gap-3 sm:gap-5 pt-2 sm:pt-4">
+      <div className="flex justify-between gap-3 sm:gap-5 pt-2 sm:pt-4">
         <button
           onClick={back}
-          className="flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 text-white/40 hover:text-white transition-colors text-xs sm:text-sm font-semibold"
+          className="flex items-center justify-center px-6 sm:px-8 py-2 sm:py-2.5 border border-white/20 rounded-full text-white/60 hover:text-white hover:bg-white/5 transition-colors text-xs sm:text-sm font-semibold"
         >
-          <FiArrowLeft />
           Back
         </button>
 
         <button
           onClick={handleNext}
           disabled={loading}
-          className="bg-accent text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center gap-2 sm:gap-3 transition-all shadow-xl shadow-accent/10 text-sm sm:text-base"
+          className="bg-accent text-white font-bold px-6 sm:px-10 py-2 sm:py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center justify-center transition-all text-sm sm:text-base"
         >
           {loading ? (
             <>
-              <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-primary border-t-transparent" />
+              <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-primary border-t-transparent mr-2" />
               Uploading...
             </>
           ) : (
-            <>
-              Continue
-              <FiArrowRight />
-            </>
+            "Continue"
           )}
         </button>
       </div>

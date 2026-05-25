@@ -17,6 +17,7 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
   const [cropMode, setCropMode] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
   const [zoom, setZoom] = useState(1);
+  const [baseScale, setBaseScale] = useState(1);
   const [rotation, setRotation] = useState(0);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
@@ -48,7 +49,8 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
     ctx.save();
     ctx.translate(CANVAS_SIZE / 2 + offset.x, CANVAS_SIZE / 2 + offset.y);
     ctx.rotate((rotation * Math.PI) / 180);
-    ctx.scale(zoom, zoom);
+    const actualScale = baseScale * zoom;
+    ctx.scale(actualScale, actualScale);
     ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
     ctx.restore();
     ctx.globalCompositeOperation = "destination-in";
@@ -56,39 +58,78 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
     ctx.arc(CANVAS_SIZE / 2, CANVAS_SIZE / 2, CANVAS_SIZE / 2, 0, Math.PI * 2);
     ctx.fill();
     ctx.globalCompositeOperation = "source-over";
-  }, [zoom, rotation, offset]);
+  }, [zoom, baseScale, rotation, offset]);
 
   const handleImgLoad = () => {
     const img = imgRef.current;
     if (!img) return;
     const scale = Math.max(CANVAS_SIZE / img.naturalWidth, CANVAS_SIZE / img.naturalHeight);
-    setZoom(scale);
-    setTimeout(drawCrop, 50);
+    setBaseScale(scale);
+    setZoom(1);
   };
 
   React.useEffect(() => { if (cropMode) drawCrop(); }, [cropMode, drawCrop]);
 
-  const handleMouseDown = (e) => { setDragging(true); setDragStart({ x: e.clientX - offset.x, y: e.clientY - offset.y }); };
-  const handleMouseMove = (e) => { if (!dragging) return; setOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y }); };
-  const handleMouseUp = () => setDragging(false);
+  const handleDragStart = (clientX, clientY) => {
+    setDragging(true);
+    setDragStart({ x: clientX - offset.x, y: clientY - offset.y });
+  };
+  const handleDragMove = (clientX, clientY) => {
+    if (!dragging) return;
+    setOffset({ x: clientX - dragStart.x, y: clientY - dragStart.y });
+  };
+  const handleDragEnd = () => setDragging(false);
+
+  const handleMouseDown = (e) => handleDragStart(e.clientX, e.clientY);
+  const handleMouseMove = (e) => handleDragMove(e.clientX, e.clientY);
+  const handleMouseUp = () => handleDragEnd();
+
+  const handleTouchStart = (e) => {
+    const touch = e.touches[0];
+    handleDragStart(touch.clientX, touch.clientY);
+  };
+  const handleTouchMove = (e) => {
+    if (dragging) e.preventDefault();
+    const touch = e.touches[0];
+    handleDragMove(touch.clientX, touch.clientY);
+  };
+  const handleTouchEnd = () => handleDragEnd();
 
   const handleCropDone = async () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     canvas.toBlob(async (blob) => {
-      if (!blob) return;
-      const file = new File([blob], "avatar.png", { type: "image/png" });
-      setUploading(true);
       try {
-        const res = await uploadAvatar(file);
-        const avatarUrl = res.data?.avatar_url || res.avatar_url || res;
+        if (!blob) {
+          toast.error("Failed to process image crop. Please try another image.");
+          return;
+        }
+        
+        let fileOrBlob;
+        try {
+            fileOrBlob = new File([blob], "avatar.png", { type: "image/png" });
+        } catch (e) {
+            fileOrBlob = blob; // Fallback for environments where File constructor is not supported
+            fileOrBlob.name = "avatar.png";
+        }
+        
+        setUploading(true);
+        const res = await uploadAvatar(fileOrBlob);
+        const avatarUrl = res?.data?.avatar_url || res?.avatar_url || res;
+        
+        if (!avatarUrl) {
+            throw new Error("No URL returned from server.");
+        }
+        
         onImageSelect(avatarUrl);
         toast.success("Profile photo updated");
         setCropMode(false);
         setImageSrc(null);
         onClose();
       } catch (err) {
-        toastApiError(err, "Failed to upload image");
+        console.error("Crop/Upload error:", err);
+        const msg = err?.response?.data?.message || err.message || "Failed to upload image";
+        toast.error(msg);
       } finally {
         setUploading(false);
         if (fileRef.current) fileRef.current.value = "";
@@ -123,29 +164,30 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-start justify-center pt-0 sm:pt-24 bg-black/60 backdrop-blur-sm">
           <motion.div
             initial={{ y: "100%", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="bg-secondary border border-white/10 w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl shadow-2xl"
+            className="bg-secondary border border-white/10 w-full sm:max-w-lg rounded-t-xl sm:rounded-xl shadow-2xl"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
-              <div className="flex items-center gap-3">
-                <Camera size={18} className="text-accent shrink-0" />
-                <div>
-                  <p className="text-white font-bold text-xs uppercase tracking-widest">
+            <div className="relative w-full h-14 flex items-center justify-center mt-2">
+              <div className="flex flex-col items-center text-center">
+                <div className="flex items-center gap-2 mb-0.5">
+                  <Camera size={14} className="text-accent shrink-0" />
+                  <p className="text-white font-bold text-[11px] uppercase tracking-widest">
                     {cropMode ? "Crop Photo" : "Profile Editor"}
                   </p>
-                  <p className="text-white/30 text-[10px]">
-                    {cropMode ? "Drag to reposition" : "Update your profile photo"}
-                  </p>
                 </div>
+                <p className="text-white/40 text-[9px]">
+                  {cropMode ? "Drag to reposition" : "Update your profile photo"}
+                </p>
               </div>
+              
               <button onClick={handleClose}
-                className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all shrink-0">
+                className="absolute top-1/2 -translate-y-1/2 right-5 text-white/40 hover:text-accent transition-colors shrink-0">
                 <X size={18} />
               </button>
             </div>
@@ -161,22 +203,25 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
                       ref={canvasRef}
                       width={CANVAS_SIZE}
                       height={CANVAS_SIZE}
-                      style={{ borderRadius: "50%", cursor: dragging ? "grabbing" : "grab", border: "2px solid rgba(255,255,255,0.15)" }}
+                      style={{ borderRadius: "50%", cursor: dragging ? "grabbing" : "grab", border: "2px solid rgba(255,255,255,0.15)", touchAction: "none" }}
                       onMouseDown={handleMouseDown}
                       onMouseMove={handleMouseMove}
                       onMouseUp={handleMouseUp}
                       onMouseLeave={handleMouseUp}
+                      onTouchStart={handleTouchStart}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={handleTouchEnd}
                     />
                   </div>
 
                   {/* Zoom + rotate */}
                   <div className="flex items-center gap-3 w-full">
                     <ZoomOut size={14} className="text-white/40 shrink-0" />
-                    <input type="range" min={0.5} max={3} step={0.05} value={zoom}
-                      onChange={e => { setZoom(parseFloat(e.target.value)); setTimeout(drawCrop, 10); }}
+                    <input type="range" min={1} max={3} step={0.05} value={zoom}
+                      onChange={e => setZoom(parseFloat(e.target.value))}
                       className="flex-1 accent-accent" />
                     <ZoomIn size={14} className="text-white/40 shrink-0" />
-                    <button onClick={() => { setRotation(r => r + 90); setTimeout(drawCrop, 10); }}
+                    <button onClick={() => setRotation(r => r + 90)}
                       className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all shrink-0">
                       <RotateCw size={13} />
                     </button>
@@ -190,40 +235,46 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
                       Back
                     </button>
                     <button onClick={handleCropDone} disabled={uploading}
-                      className="flex-1 h-11 rounded-full bg-accent text-white font-bold text-sm shadow-lg shadow-accent/20 disabled:opacity-50 flex items-center justify-center gap-2 transition-all">
-                      {uploading ? <InfinityLoader/> : <Check size={15} />}
-                      {uploading ? "Uploading..." : "Apply"}
+                      className="flex-1 h-11 rounded-full bg-accent text-white font-bold text-sm disabled:opacity-50 flex items-center justify-center gap-2 hover:opacity-90 transition-all">
+                      {uploading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/20 border-t-white" />
+                          Uploading...
+                        </>
+                      ) : (
+                        "Apply"
+                      )}
                     </button>
                   </div>
                 </div>
               ) : (
                 /* Upload mode */
-                <div className="space-y-5">
+                <div className="space-y-5 flex flex-col items-center">
                   {/* Upload zone */}
                   <div
                     onDragEnter={handleDrag} onDragLeave={handleDrag}
                     onDragOver={handleDrag} onDrop={handleDrop}
                     onClick={handleUploadClick}
-                    className={`w-full h-36 rounded-[2rem] border-2 border-dashed transition-all cursor-pointer flex flex-col items-center justify-center gap-2 ${
+                    className={`w-40 h-40 rounded-full border-2 border-dashed transition-all cursor-pointer flex flex-col items-center justify-center gap-2 ${
                       dragActive ? "border-accent bg-accent/5" : "border-white/10 hover:border-accent/40"
                     }`}
                   >
                     <Upload size={24} className="text-white/40" />
-                    <p className="text-white font-bold text-sm">Click or Drag Image</p>
-                    <p className="text-white/30 text-xs">PNG, JPG or WEBP · Max 5MB</p>
+                    <p className="text-white font-bold text-sm">Click or Drag</p>
+                    <p className="text-white/30 text-[10px]">PNG, JPG up to 5MB</p>
                   </div>
 
                   {/* Info */}
-                  <div>
-                    <h3 className="text-lg font-black text-white leading-snug">
-                      Show clients the best <span className="text-accent italic">version</span> of yourself.
+                  <div className="text-center w-full">
+                    <h3 className="text-lg font-bold text-white leading-snug mb-1">
+                      Profile Photo
                     </h3>
-                    <p className="text-white/40 text-sm mt-1 leading-relaxed">
-                      Your profile photo builds confidence with potential clients.
+                    <p className="text-white/40 text-sm leading-relaxed">
+                      A clear photo builds trust with clients.
                     </p>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3 rounded-[2rem] bg-white/5 border border-white/5">
+                  <div className="flex items-start gap-3 p-3 rounded-2xl bg-white/5 border border-white/5 w-full">
                     <Info size={14} className="text-blue-400 shrink-0 mt-0.5" />
                     <p className="text-white/40 text-xs leading-relaxed">
                       Must be an actual photo of you. Logos, group photos, and altered images are not allowed.
@@ -231,9 +282,9 @@ const ProfileImageModal = ({ isOpen, onClose, onImageSelect }) => {
                   </div>
 
                   {/* Buttons */}
-                  <div className="flex flex-col gap-3 pb-2">
+                  <div className="flex flex-col gap-3 pb-2 w-full">
                     <button onClick={handleUploadClick}
-                      className="w-full h-11 rounded-full bg-accent text-white font-bold text-sm shadow-lg shadow-accent/20 hover:opacity-90 transition-all">
+                      className="w-full h-11 rounded-full bg-accent text-white font-bold text-sm hover:opacity-90 transition-all">
                       Choose Profile Image
                     </button>
                     <button onClick={handleClose}

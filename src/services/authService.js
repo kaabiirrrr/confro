@@ -1,32 +1,6 @@
 import { supabase } from '../lib/supabase';
 import { logger } from '../utils/logger';
 
-/**
- * Sends a password reset email to the specified user.
- * @param {string} email - The user's email address.
- * @returns {Promise<{success: boolean, message: string, error?: any}>}
- */
-export const forgotPassword = async (email) => {
-    try {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/reset-password`,
-        });
-
-        if (error) throw error;
-
-        return {
-            success: true,
-            message: 'Password reset link sent to your email.'
-        };
-    } catch (error) {
-        logger.error("AuthService: Forgot password request failed", error);
-        return {
-            success: false,
-            message: error.message || 'An error occurred while sending reset link.',
-            error
-        };
-    }
-};
 
 /**
  * Updates the current user's password.

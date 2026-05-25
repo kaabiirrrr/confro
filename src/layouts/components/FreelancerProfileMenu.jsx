@@ -1,18 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useProfile } from "../../context/ProfileContext";
 import Avatar from "../../components/Avatar";
 import ThemeToggle from "../../components/ui/ThemeToggle";
+import { updateMyProfile } from "../../services/apiService";
+import { toggleSocketOnline } from "../../services/socketService";
 
 const ProfileMenu = () => {
-  const { user, profile, logout } = useAuth();
-  const { status } = useProfile();
+  const { user, profile, logout, setProfile } = useAuth();
+  const { status, setStatus } = useProfile();
   const navigate = useNavigate();
 
   /* ONLINE STATUS */
-  const [online, setOnline] = useState(true);
-  const toggleOnline = () => setOnline(!online);
+  const [online, setOnline] = useState(() => {
+    return status?.online_for_messages ?? profile?.online_for_messages ?? true;
+  });
+
+  useEffect(() => {
+    const val = status?.online_for_messages ?? profile?.online_for_messages ?? true;
+    setOnline(val);
+  }, [status?.online_for_messages, profile?.online_for_messages]);
+
+  const toggleOnline = async () => {
+    const newStatus = !online;
+    setOnline(newStatus);
+    toggleSocketOnline(newStatus);
+
+    try {
+      const res = await updateMyProfile({ online_for_messages: newStatus });
+      if (res.success) {
+        setProfile(prev => prev ? { ...prev, online_for_messages: newStatus } : prev);
+        setStatus(prev => prev ? { ...prev, online_for_messages: newStatus } : prev);
+      }
+    } catch (err) {
+      console.error("Failed to update online status:", err);
+    }
+  };
 
   /* LOGOUT */
   const handleLogout = async () => {

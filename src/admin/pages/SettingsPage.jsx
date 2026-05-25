@@ -59,20 +59,20 @@ const SettingsPage = () => {
     return (
         <div className="max-w-4xl mx-auto space-y-6">
             <div className="mb-8">
-                <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                     <img src="/Icons/icons8-setting-100.png" alt="Settings" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
                     Platform Configuration
                 </h1>
-                <p className="text-white/40 text-xs mt-1">Configure global platform parameters, commission rates, and maintenance modes</p>
+                <p className="text-slate-500 dark:text-white/40 text-xs mt-1">Configure global platform parameters, commission rates, and maintenance modes</p>
             </div>
 
-            <div className="bg-transparent border border-white/10 rounded-xl overflow-visible sm:overflow-hidden shadow-sm">
-                <div className="p-6 border-b border-white/10 bg-white/[0.02] rounded-t-xl sm:rounded-none">
+            <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl overflow-visible sm:overflow-hidden shadow-sm">
+                <div className="p-6 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] rounded-t-xl sm:rounded-none">
                     <div className="flex items-center gap-3">
                         <Settings2 className="text-accent" />
                         <div>
-                            <h2 className="text-lg font-semibold text-white">Global Settings</h2>
-                            <p className="text-sm text-white/50 mt-1">Changes applied here affect the entire marketplace.</p>
+                            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Global Settings</h2>
+                            <p className="text-sm text-slate-500 dark:text-white/50 mt-1">Changes applied here affect the entire marketplace.</p>
                         </div>
                     </div>
                 </div>
@@ -80,13 +80,13 @@ const SettingsPage = () => {
                 <div className="p-6 space-y-8">
 
                     {/* Commission Setting */}
-                    <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-white/5 pb-8">
+                    <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-slate-100 dark:border-white/5 pb-8">
                         <div className="max-w-md">
-                            <h3 className="text-white font-medium flex items-center gap-2">
-                                <Percent size={16} className="text-white/50" />
+                            <h3 className="text-slate-800 dark:text-white font-medium flex items-center gap-2">
+                                <Percent size={16} className="text-slate-500 dark:text-white/50" />
                                 Base Commission Rate
                             </h3>
-                            <p className="text-sm text-white/50 mt-1">
+                            <p className="text-sm text-slate-500 dark:text-white/50 mt-1">
                                 The default percentage cut taken from successful contracts. For example, enter '0.10' for 10% or '0.15' for 15%.
                             </p>
                         </div>
@@ -95,7 +95,7 @@ const SettingsPage = () => {
                                 type="text"
                                 value={settings.platform_commission}
                                 onChange={(e) => setSettings({ ...settings, platform_commission: e.target.value })}
-                                className="flex-1 sm:flex-none w-full sm:w-24 bg-primary border border-white/10 rounded-lg px-3 py-2 text-white focus:border-accent outline-none"
+                                className="flex-1 sm:flex-none w-full sm:w-24 bg-white dark:bg-primary border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2 text-slate-900 dark:text-white focus:border-accent outline-none"
                             />
                             <button
                                 onClick={() => handleSave('platform_commission', settings.platform_commission, 'Global commission rate for contracts')}
@@ -110,10 +110,10 @@ const SettingsPage = () => {
                     {/* Maintenance Mode */}
                     <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                         <div className="max-w-md">
-                            <h3 className="text-white font-medium flex items-center gap-2">
+                            <h3 className="text-slate-800 dark:text-white font-medium flex items-center gap-2">
                                 Maintenance Mode
                             </h3>
-                            <p className="text-sm text-white/50 mt-1">
+                            <p className="text-sm text-slate-500 dark:text-white/50 mt-1">
                                 When toggled on, non-admin users will see a maintenance page and API functionality will be restricted. Enter 'true' or 'false'.
                             </p>
                         </div>
@@ -141,13 +141,13 @@ const SettingsPage = () => {
             </div>
 
             {/* Admin Account Settings */}
-            <div className="bg-transparent border border-white/10 rounded-xl overflow-hidden shadow-sm">
-                <div className="p-6 border-b border-white/10 bg-white/[0.02]">
+            <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden shadow-sm">
+                <div className="p-6 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02]">
                     <div className="flex items-center gap-3">
                         <Users className="text-accent" />
                         <div>
-                            <h2 className="text-lg font-semibold text-white">Admin Account Settings</h2>
-                            <p className="text-sm text-white/50 mt-1">Update your own administrator credentials.</p>
+                            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Admin Account Settings</h2>
+                            <p className="text-sm text-slate-500 dark:text-white/50 mt-1">Update your own administrator credentials.</p>
                         </div>
                     </div>
                 </div>
@@ -155,21 +155,21 @@ const SettingsPage = () => {
                 <div className="p-6 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-white/80 mb-1.5">New Email Address</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-white/80 mb-1.5">New Email Address</label>
                             <input
                                 type="email"
                                 placeholder="Enter new email"
                                 id="adminEmail"
-                                className="w-full bg-primary border border-white/10 rounded-lg px-4 py-2 text-white focus:border-accent outline-none"
+                                className="w-full bg-white dark:bg-primary border border-slate-200 dark:border-white/10 rounded-lg px-4 py-2 text-slate-900 dark:text-white focus:border-accent outline-none"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-white/80 mb-1.5">New Password</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-white/80 mb-1.5">New Password</label>
                             <input
                                 type="password"
                                 placeholder="Enter new password"
                                 id="adminPassword"
-                                className="w-full bg-primary border border-white/10 rounded-lg px-4 py-2 text-white focus:border-accent outline-none"
+                                className="w-full bg-white dark:bg-primary border border-slate-200 dark:border-white/10 rounded-lg px-4 py-2 text-slate-900 dark:text-white focus:border-accent outline-none"
                             />
                         </div>
                     </div>

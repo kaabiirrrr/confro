@@ -8,14 +8,16 @@ const ProfileContext = createContext(null);
 const PROFILE_CACHE_TTL = 30 * 1000; // 30 seconds cache TTL
 
 export function ProfileProvider({ children }) {
-    const { user, role: authRole } = useAuth();
-    const [status, setStatus] = useState(null);
+    const { user, role: authRole, profile: authProfile } = useAuth();
+    const [status, setStatus] = useState(() => authProfile || null);
     const [balance, setBalance] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(() => !authProfile);
     const [error, setError] = useState(null);
 
     const lastFetchedAt = useRef(null);
     const isFetching = useRef(false);
+    const lastUserId = useRef(user?.id || null);
+    const lastRole = useRef(authRole || null);
 
     const fetchProfile = useCallback(async (force = false) => {
         if (!user) {
@@ -23,8 +25,8 @@ export function ProfileProvider({ children }) {
             return;
         }
         
-        // Debounce: skip if already fetching
-        if (isFetching.current) return;
+        // Debounce: skip if already fetching (unless forced)
+        if (!force && isFetching.current) return;
 
         // Cache: skip if data is fresh (unless forced)
         const now = Date.now();
@@ -63,16 +65,40 @@ export function ProfileProvider({ children }) {
         }
     }, [user, authRole]);
 
-    // Initial fetch once on mount
+    // Sync status with authProfile if authProfile changes (e.g. on login/logout)
     useEffect(() => {
-        fetchProfile();
-    }, [fetchProfile]);
+        if (authProfile) {
+            setStatus(authProfile);
+        } else {
+            setStatus(null);
+        }
+    }, [authProfile]);
+
+    // Initial fetch once on mount and when session details change
+    useEffect(() => {
+        if (user) {
+            const isNewUser = lastUserId.current !== user.id;
+            const isNewRole = lastRole.current !== authRole;
+            lastUserId.current = user.id;
+            lastRole.current = authRole;
+
+            fetchProfile(isNewUser || isNewRole);
+        } else {
+            lastUserId.current = null;
+            lastRole.current = null;
+            setStatus(null);
+            setBalance(0);
+            setLoading(false);
+        }
+    }, [user, authRole, fetchProfile]);
 
     const value = React.useMemo(() => ({
         status,
         balance,
         loading,
         error,
+        setBalance,
+        setStatus,
         refetch: () => fetchProfile(true)
     }), [status, balance, loading, error, fetchProfile]);
 

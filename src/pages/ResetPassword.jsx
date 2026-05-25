@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Lock, Eye, EyeOff, CheckCircle, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import AuthInput from '../components/AuthInput';
 import { resetPassword } from '../services/authService';
+import { useAuth } from '../context/AuthContext';
 
 const ResetPassword = () => {
     const navigate = useNavigate();
@@ -13,6 +14,8 @@ const ResetPassword = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+
+    const { logout } = useAuth();
 
     const validate = () => {
         if (password.length < 8) {
@@ -36,6 +39,8 @@ const ResetPassword = () => {
 
             if (result.success) {
                 setSuccess(true);
+                // Log the user out so they can log back in with their new password
+                await logout();
                 setTimeout(() => {
                     navigate('/login');
                 }, 3000);
@@ -54,14 +59,19 @@ const ResetPassword = () => {
                 transition={{ duration: 0.5 }}
                 className="max-w-md w-full"
             >
-                <div className="bg-secondary/30 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl">
-                    <div className="mb-8 flex flex-col items-center">
-                        <Link to="/" className="mb-6">
-                            <img src="/Logo2.png" alt="Connect Logo" className="h-10 object-contain" />
-                        </Link>
-                        <h2 className="text-3xl font-bold text-white mb-2">Reset Password</h2>
-                        <p className="text-white/50 text-center text-sm">
-                            Enter your new password below for account recovery.
+                <div className="bg-secondary/30 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl relative">
+                    <Link 
+                        to="/login"
+                        className="flex w-fit items-center text-white/70 hover:text-white transition-colors mb-6 text-sm font-medium"
+                    >
+                        <ArrowLeft size={18} className="mr-2" />
+                        Back
+                    </Link>
+
+                    <div className="mb-8">
+                        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">Create new password</h2>
+                        <p className="text-white/60 text-sm leading-relaxed">
+                            Your new password must be different from previous used passwords.
                         </p>
                     </div>
 
@@ -83,42 +93,46 @@ const ResetPassword = () => {
                                 </div>
                             )}
 
-                            <AuthInput
-                                label="New Password"
-                                type={showPassword ? "text" : "password"}
-                                placeholder="Create new password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                icon={Lock}
-                                required
-                                rightElement={
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="text-white/30 hover:text-white transition-colors p-1"
-                                    >
-                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                                    </button>
-                                }
-                            />
+                            <div className="space-y-1">
+                                <AuthInput
+                                    label="Password"
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    rightElement={
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="text-white/30 hover:text-white transition-colors p-1"
+                                        >
+                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    }
+                                />
+                                <p className="-mt-3 ml-1 text-xs text-white/40">Must be at least 8 characters.</p>
+                            </div>
 
-                            <AuthInput
-                                label="Confirm New Password"
-                                type={showPassword ? "text" : "password"}
-                                placeholder="Confirm new password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                icon={ShieldCheck}
-                                required
-                            />
+                            <div className="space-y-1">
+                                <AuthInput
+                                    label="Confirm Password"
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="••••••••"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                />
+                                <p className="-mt-3 ml-1 text-xs text-white/40">Both passwords must match.</p>
+                            </div>
 
                             <div className="pt-2">
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg shadow-accent/20 active:scale-[0.98]"
+                                    className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white font-semibold py-3.5 rounded-full transition-all shadow-lg shadow-accent/20 active:scale-[0.98]"
                                 >
-                                    {loading ? "Updating..." : "Update Password"}
+                                    {loading ? "Updating..." : "Save new password"}
                                 </button>
                             </div>
                         </form>

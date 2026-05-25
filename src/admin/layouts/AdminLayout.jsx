@@ -91,34 +91,35 @@ const AdminLayout = () => {
     };
 
     const allNavItems = [
-        { path: '/admin/dashboard', icon: <img src="/Icons/icons8-dashboard-96.png" alt="Dashboard" className="w-6 h-6 object-contain" />, label: 'Dashboard', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/users', icon: <img src="/Icons/icons8-user-100.png" alt="Users" className="w-6 h-6 object-contain" />, label: 'Users', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/client-verification', icon: <img src="/Icons/icons8-verification-100.png" alt="Client Verifications" className="w-6 h-6 object-contain" />, label: 'Client Verification', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/freelancer-verification', icon: <img src="/Icons/icons8-verification-100.png" alt="Freelancer Verifications" className="w-6 h-6 object-contain" />, label: 'Freelancer Verification', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/jobs', icon: <img src="/Icons/icons8-bag-80.png" alt="Jobs" className="w-6 h-6 object-contain" />, label: 'Jobs', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/proposals', icon: <img src="/Icons/icons8-new-job-100.png" alt="Proposals" className="w-6 h-6 object-contain" />, label: 'Proposals', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/contracts', icon: <img src="/Icons/icons8-contract-60.png" alt="Contracts" className="w-6 h-6 object-contain" />, label: 'Contracts', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/payments', icon: <img src="/Icons/icons8-payments-64.png" alt="Revenue" className="w-6 h-6 object-contain" />, label: 'Revenue & Payments', roles: ['ADMIN', 'SUPER_ADMIN', 'FINANCE_ADMIN'] },
-        { path: '/admin/treasury', icon: <Landmark size={20} className="text-accent" />, label: 'Treasury', roles: ['ADMIN', 'SUPER_ADMIN', 'FINANCE_ADMIN'] },
-        { path: '/admin/withdrawals', icon: <img src="/Icons/icons8-withdrawal-80.png" alt="Withdrawals" className="w-6 h-6 object-contain" />, label: 'Withdrawals', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/connects', icon: <HandCoins size={18} className="text-accent" />, label: 'Connect Economy', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/disputes', icon: <img src="/Icons/icons8-disputes-100.png" alt="Disputes" className="w-6 h-6 object-contain" />, label: 'Disputes', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/reports', icon: <img src="/Icons/icons8-reports-100.png" alt="Reports" className="w-6 h-6 object-contain" />, label: 'Reports', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/problems', icon: <img src="/Icons/icons8-problem-solution-66.png" alt="User Problems" className="w-6 h-6 object-contain" />, label: 'User Problems', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/support-tickets', icon: <img src="/Icons/icons8-question-mark-100.png" alt="Support Tickets" className="w-6 h-6 object-contain" />, label: 'Support Tickets', roles: ['ADMIN', 'SUPER_ADMIN', 'SUPPORT_ADMIN'] },
-        { path: '/admin/skills', icon: <img src="/Icons/icons8-skills-100.png" alt="Skills" className="w-6 h-6 object-contain" />, label: 'Skills', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/offers', icon: <img src="/Icons/icons8-offer-100.png" alt="Offers" className="w-6 h-6 object-contain" />, label: 'Offers', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/announcements', icon: <Megaphone size={18} className="text-blue-400" />, label: 'Announcements', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/faqs', icon: <img src="/Icons/icons8-faq-80.png" alt="FAQ Management" className="w-6 h-6 object-contain" />, label: 'FAQ Management', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/reviews', icon: <img src="/Icons/icons8-review-100.png" alt="Reviews" className="w-6 h-6 object-contain" />, label: 'Reviews', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/fraud', icon: <img src="/Icons/icons8-fraud-80.png" alt="Fraud Detection" className="w-6 h-6 object-contain" />, label: 'Fraud Detection', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/trust-graph', icon: <img src="/Icons/icons8-trust-64.png" alt="TrustGraph Intelligence" className="w-6 h-6 object-contain" />, label: 'TrustGraph Intelligence', roles: ['ADMIN', 'SUPER_ADMIN'] },
+        { path: '/admin/dashboard', icon: <img src="/Icons/icons8-dashboard-96.png" alt="Dashboard" className="w-6 h-6 object-contain" />, label: 'Dashboard', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'SUPPORT_ADMIN', 'VERIFICATION_ADMIN', 'ADMIN'] },
+        { path: '/admin/users', icon: <img src="/Icons/icons8-user-100.png" alt="Users" className="w-6 h-6 object-contain" />, label: 'Users', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
+        { path: '/admin/client-verification', icon: <img src="/Icons/icons8-verification-100.png" alt="Client Verifications" className="w-6 h-6 object-contain" />, label: 'Client Verification', roles: ['SUPER_ADMIN', 'VERIFICATION_ADMIN', 'ADMIN'] },
+        { path: '/admin/freelancer-verification', icon: <img src="/Icons/icons8-verification-100.png" alt="Freelancer Verifications" className="w-6 h-6 object-contain" />, label: 'Freelancer Verification', roles: ['SUPER_ADMIN', 'VERIFICATION_ADMIN', 'ADMIN'] },
+        { path: '/admin/jobs', icon: <img src="/Icons/icons8-bag-80.png" alt="Jobs" className="w-6 h-6 object-contain" />, label: 'Jobs', roles: ['SUPER_ADMIN', 'ADMIN'] },
+        { path: '/admin/proposals', icon: <img src="/Icons/icons8-new-job-100.png" alt="Proposals" className="w-6 h-6 object-contain" />, label: 'Proposals', roles: ['SUPER_ADMIN', 'ADMIN'] },
+        { path: '/admin/sales-proposals', icon: <FileText size={18} className="text-accent" />, label: 'Custom Proposals', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
+        { path: '/admin/contracts', icon: <img src="/Icons/icons8-contract-60.png" alt="Contracts" className="w-6 h-6 object-contain" />, label: 'Contracts', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
+        { path: '/admin/payments', icon: <img src="/Icons/icons8-payments-64.png" alt="Revenue" className="w-6 h-6 object-contain" />, label: 'Revenue & Payments', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
+        { path: '/admin/treasury', icon: <Landmark size={20} className="text-accent" />, label: 'Treasury', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
+        { path: '/admin/withdrawals', icon: <img src="/Icons/icons8-withdrawal-80.png" alt="Withdrawals" className="w-6 h-6 object-contain" />, label: 'Withdrawals', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
+        { path: '/admin/connects', icon: <HandCoins size={18} className="text-accent" />, label: 'Connect Economy', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
+        { path: '/admin/disputes', icon: <img src="/Icons/icons8-disputes-100.png" alt="Disputes" className="w-6 h-6 object-contain" />, label: 'Disputes', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
+        { path: '/admin/reports', icon: <img src="/Icons/icons8-reports-100.png" alt="Reports" className="w-6 h-6 object-contain" />, label: 'Reports', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
+        { path: '/admin/problems', icon: <img src="/Icons/icons8-problem-solution-66.png" alt="User Problems" className="w-6 h-6 object-contain" />, label: 'User Problems', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
+        { path: '/admin/support-tickets', icon: <img src="/Icons/icons8-question-mark-100.png" alt="Support Tickets" className="w-6 h-6 object-contain" />, label: 'Support Tickets', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
+        { path: '/admin/skills', icon: <img src="/Icons/icons8-skills-100.png" alt="Skills" className="w-6 h-6 object-contain" />, label: 'Skills', roles: ['SUPER_ADMIN', 'ADMIN'] },
+        { path: '/admin/offers', icon: <img src="/Icons/icons8-offer-100.png" alt="Offers" className="w-6 h-6 object-contain" />, label: 'Offers', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
+        { path: '/admin/announcements', icon: <Megaphone size={18} className="text-blue-400" />, label: 'Announcements', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
+        { path: '/admin/faqs', icon: <img src="/Icons/icons8-faq-80.png" alt="FAQ Management" className="w-6 h-6 object-contain" />, label: 'FAQ Management', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
+        { path: '/admin/reviews', icon: <img src="/Icons/icons8-review-100.png" alt="Reviews" className="w-6 h-6 object-contain" />, label: 'Reviews', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
+        { path: '/admin/fraud', icon: <img src="/Icons/icons8-fraud-80.png" alt="Fraud Detection" className="w-6 h-6 object-contain" />, label: 'Fraud Detection', roles: ['SUPER_ADMIN', 'ADMIN'] },
+        { path: '/admin/trust-graph', icon: <img src="/Icons/icons8-trust-64.png" alt="TrustGraph Intelligence" className="w-6 h-6 object-contain" />, label: 'TrustGraph Intelligence', roles: ['SUPER_ADMIN', 'ADMIN'] },
         { path: '/admin/admin-management', icon: <img src="/Icons/icons8-critical-thinking-80.png" alt="Admin Management" className="w-6 h-6 object-contain" />, label: 'Admin Management', roles: ['SUPER_ADMIN'] },
         { path: '/admin/insights', icon: <img src="/Icons/icons8-leader-100.png" alt="Admin Insights" className="w-6 h-6 object-contain" />, label: 'Admin Insights', roles: ['SUPER_ADMIN'] },
         { path: '/admin/admin-logs', icon: <img src="/Icons/icons8-logs-64.png" alt="Admin Logs" className="w-6 h-6 object-contain" />, label: 'Admin Logs', roles: ['SUPER_ADMIN'] },
-        { path: '/admin/plans', icon: <img src="/Icons/icons8-membership-card-100.png" alt="Plans" className="w-6 h-6 object-contain" />, label: 'Membership Plans', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/lottery', icon: <Ticket size={18} className="text-accent" />, label: 'Lottery', roles: ['ADMIN', 'SUPER_ADMIN'] },
-        { path: '/admin/settings', icon: <img src="/Icons/icons8-setting-100.png" alt="Settings" className="w-6 h-6 object-contain" />, label: 'Settings', roles: ['ADMIN', 'SUPER_ADMIN', 'MODERATOR', 'FINANCE_ADMIN', 'SUPPORT_ADMIN'] },
+        { path: '/admin/plans', icon: <img src="/Icons/icons8-membership-card-100.png" alt="Plans" className="w-6 h-6 object-contain" />, label: 'Membership Plans', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
+        { path: '/admin/lottery', icon: <Ticket size={18} className="text-accent" />, label: 'Lottery', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
+        { path: '/admin/settings', icon: <img src="/Icons/icons8-setting-100.png" alt="Settings" className="w-6 h-6 object-contain" />, label: 'Settings', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'SUPPORT_ADMIN', 'VERIFICATION_ADMIN', 'ADMIN'] },
     ];
 
     const navItems = allNavItems.filter(item => item.roles.includes(currentRole));
@@ -339,11 +340,11 @@ const AdminLayout = () => {
                                 <ShieldAlert size={16} />
                             </div>
                             <div>
-                                <h4 className="text-xs sm:text-sm font-bold text-rose-100">Security Action Required</h4>
-                                <p className="text-[10px] sm:text-[11px] text-rose-100/60 font-medium">Your password was set by a Super Admin. Please update it now.</p>
+                                <h4 className="text-xs sm:text-sm font-bold text-rose-700 dark:text-rose-100">Security Action Required</h4>
+                                <p className="text-[10px] sm:text-[11px] text-rose-600 dark:text-rose-100/60 font-medium">Your password was set by a Super Admin. Please update it now.</p>
                             </div>
                         </div>
-                        <NavLink to="/admin/profile" className="px-4 sm:px-5 py-1.5 sm:py-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-100 text-[10px] sm:text-[11px] font-black uppercase tracking-widest rounded-full transition-all border border-rose-500/20 whitespace-nowrap">
+                        <NavLink to="/admin/profile" className="w-full text-center sm:w-auto px-4 sm:px-5 py-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-700 dark:text-rose-100 text-[10px] sm:text-[11px] font-black uppercase tracking-widest rounded-full transition-all border border-rose-500/20 whitespace-nowrap">
                             Change Password
                         </NavLink>
                     </div>

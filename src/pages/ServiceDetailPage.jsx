@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Star, Clock, RefreshCcw, Check, Shield, MessageSquare, ArrowRight, AlertCircle, User } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { getServiceById, orderService, getOrCreateConversation } from '../services/apiService';
+import { Star, Clock, RefreshCcw, Check, Shield, MessageSquare, ArrowRight, AlertCircle, User, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  getServiceById, orderService, getOrCreateConversation,
+  getServiceReviews, createServiceReview, getOrderReviewStatus, getMyServiceOrders,
+} from '../services/apiService';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import logger from '../utils/logger';
@@ -10,16 +13,128 @@ import InfinityLoader from '../components/common/InfinityLoader';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
+/* ── Star picker ─────────────────────────────────────────────────────────── */
+const StarPicker = ({ value, onChange }) => (
+  <div className="flex items-center gap-1">
+    {[1, 2, 3, 4, 5].map(n => (
+      <button key={n} type="button" onClick={() => onChange(n)}
+        className="transition-transform hover:scale-110 focus:outline-none">
+        <Star size={28}
+          className={n <= value ? 'text-yellow-400 fill-yellow-400' : 'text-white/20'}
+        />
+      </button>
+    ))}
+  </div>
+);
+
+/* ── Review modal ────────────────────────────────────────────────────────── */
+const ReviewModal = ({ orderId, serviceId, onClose, onSuccess }) => {
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (rating === 0) { toast.error('Please select a star rating'); return; }
+    setSubmitting(true);
+    try {
+      await createServiceReview({ order_id: orderId, rating, comment });
+      toast.success('Review submitted!');
+      onSuccess();
+      onClose();
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to submit review');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 backdrop-blur-md bg-black/60"
+      onClick={onClose}>
+      <motion.div onClick={e => e.stopPropagation()}
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        className="bg-[#0f1623] border border-white/10 rounded-2xl w-full max-w-md p-8 shadow-2xl">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-bold">Rate this Service</h2>
+          <button onClick={onClose} className="text-white/30 hover:text-white transition"><X size={20} /></button>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="flex flex-col items-center gap-3 py-4">
+            <p className="text-white/40 text-xs uppercase font-bold tracking-widest">Your Rating</p>
+            <StarPicker value={rating} onChange={setRating} />
+            {rating > 0 && (
+              <p className="text-accent text-sm font-semibold">
+                {['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][rating]}
+              </p>
+            )}
+          </div>
+          <div>
+            <label className="block text-white/40 text-[10px] uppercase font-bold tracking-widest mb-2">
+              Comment (optional)
+            </label>
+            <textarea
+              value={comment}
+              onChange={e => setComment(e.target.value)}
+              rows={4}
+              placeholder="Share your experience with this service..."
+              className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-accent/50 resize-none transition"
+            />
+          </div>
+          <div className="flex gap-3 pt-2">
+            <button type="button" onClick={onClose}
+              className="flex-1 py-3 rounded-full border border-white/10 text-white/40 hover:text-white text-xs font-bold uppercase tracking-widest transition">
+              Cancel
+            </button>
+            <button type="submit" disabled={submitting || rating === 0}
+              className="flex-1 py-3 rounded-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white text-xs font-bold uppercase tracking-widest transition">
+              {submitting ? 'Submitting...' : 'Submit Review'}
+            </button>
+          </div>
+        </form>
+      </motion.div>
+    </div>
+  );
+};
+
+/* ── Star display (read-only) ────────────────────────────────────────────── */
+const StarDisplay = ({ value, size = 14 }) => (
+  <div className="flex items-center gap-0.5">
+    {[1, 2, 3, 4, 5].map(n => (
+      <Star key={n} size={size}
+        className={n <= Math.round(value) ? 'text-yellow-400 fill-yellow-400' : 'text-white/15'}
+      />
+    ))}
+  </div>
+);
+
+/* ── Main page ───────────────────────────────────────────────────────────── */
 const ServiceDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedPackage, setSelectedPackage] = useState(0);
   const [ordering, setOrdering] = useState(false);
   const [contacting, setContacting] = useState(false);
   const [activeImg, setActiveImg] = useState(0);
+
+  // Reviews state
+  const [reviews, setReviews] = useState([]);
+  const [reviewsAvg, setReviewsAvg] = useState(0);
+  const [reviewsTotal, setReviewsTotal] = useState(0);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [reviewPage, setReviewPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+
+  // Client rating eligibility
+  const [completedOrder, setCompletedOrder] = useState(null); // order the client can review
+  const [alreadyReviewed, setAlreadyReviewed] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
 
   useEffect(() => {
     const fetchService = async () => {
@@ -36,9 +151,47 @@ const ServiceDetailPage = () => {
     fetchService();
   }, [id]);
 
+  // Load reviews
+  const loadReviews = async (page = 1) => {
+    setReviewsLoading(true);
+    try {
+      const res = await getServiceReviews(id, page);
+      const incoming = res?.data?.reviews || [];
+      setReviewsAvg(res?.data?.average_rating || 0);
+      setReviewsTotal(res?.data?.total_reviews || 0);
+      setReviews(prev => page === 1 ? incoming : [...prev, ...incoming]);
+      setHasMore(incoming.length === 10);
+    } catch {
+      // silently fail — reviews are non-critical
+    } finally {
+      setReviewsLoading(false);
+    }
+  };
+
+  useEffect(() => { loadReviews(1); }, [id]);
+
+  // Check if logged-in client has a completed order for this service and hasn't reviewed yet
+  useEffect(() => {
+    if (!user || user.role !== 'CLIENT') return;
+    const checkEligibility = async () => {
+      try {
+        const res = await getMyServiceOrders();
+        const orders = res?.data || [];
+        const eligible = orders.find(o => o.service_id === id && o.status === 'COMPLETED');
+        if (!eligible) return;
+        setCompletedOrder(eligible);
+        const statusRes = await getOrderReviewStatus(eligible.id);
+        setAlreadyReviewed(statusRes?.data?.reviewed || false);
+      } catch {
+        // non-critical
+      }
+    };
+    checkEligibility();
+  }, [user, id]);
+
   if (loading) return (
     <div className="min-h-screen bg-primary flex items-center justify-center">
-      <InfinityLoader/>
+      <InfinityLoader />
     </div>
   );
 
@@ -83,8 +236,24 @@ const ServiceDetailPage = () => {
     finally { setContacting(false); }
   };
 
+  const handleLoadMore = () => {
+    const next = reviewPage + 1;
+    setReviewPage(next);
+    loadReviews(next);
+  };
+
+  const handleReviewSuccess = () => {
+    setAlreadyReviewed(true);
+    loadReviews(1);
+    setReviewPage(1);
+  };
+
   const pkg = packages[selectedPackage];
   const imgs = service.images?.filter(Boolean).length > 0 ? service.images.filter(Boolean) : ['/service1.jpeg'];
+
+  // Real rating display
+  const displayRating = reviewsAvg > 0 ? Number(reviewsAvg).toFixed(1) : (service.rating > 0 ? Number(service.rating).toFixed(1) : null);
+  const displayCount = reviewsTotal || service.reviews_count || 0;
 
   return (
     <div className="min-h-screen bg-primary text-white flex flex-col">
@@ -121,14 +290,14 @@ const ServiceDetailPage = () => {
             </div>
           </div>
           <div className="flex items-center gap-3 p-4 rounded-2xl border border-white/10">
-            <Star className="w-5 h-5 text-accent fill-accent shrink-0" />
+            <Star className="w-5 h-5 text-yellow-400 fill-yellow-400 shrink-0" />
             <div>
               <p className="text-[10px] text-white/40 uppercase font-bold tracking-widest">Rating</p>
               <p className="font-bold text-sm">
-                {service.rating ? Number(service.rating).toFixed(1) : service.freelancer?.rating ? Number(service.freelancer.rating).toFixed(1) : 'New'}
-                {service.orders_count > 0 && (
-                  <span className="text-white/40 font-normal"> ({service.orders_count} reviews)</span>
-                )}
+                {displayRating
+                  ? <>{displayRating} <span className="text-white/40 font-normal">({displayCount} {displayCount === 1 ? 'review' : 'reviews'})</span></>
+                  : <span className="text-white/40 font-normal">No reviews yet</span>
+                }
               </p>
             </div>
           </div>
@@ -136,7 +305,6 @@ const ServiceDetailPage = () => {
 
         {/* Images */}
         <div className="space-y-3">
-          {/* Main image — card style */}
           <div className="rounded-3xl border border-white/10 overflow-hidden bg-secondary shadow-xl flex items-center justify-center" style={{ minHeight: '400px' }}>
             <img
               src={imgs[activeImg] ?? imgs[0]}
@@ -145,7 +313,6 @@ const ServiceDetailPage = () => {
               onError={e => { e.target.src = '/service1.jpeg'; }}
             />
           </div>
-          {/* Thumbnails */}
           {imgs.length > 1 && (
             <div className="flex gap-3 overflow-x-auto pb-1">
               {imgs.map((img, i) => (
@@ -167,7 +334,7 @@ const ServiceDetailPage = () => {
           </div>
         </div>
 
-        {/* Order Card with package tabs */}
+        {/* Order Card */}
         <div className="rounded-3xl border border-white/10 overflow-hidden">
           <div className="grid grid-cols-3 border-b border-white/5">
             {packages.map((p, idx) => (
@@ -178,7 +345,6 @@ const ServiceDetailPage = () => {
               </button>
             ))}
           </div>
-
           <div className="p-6 space-y-6">
             <div className="flex items-center justify-between">
               <span className="text-3xl font-black">₹{pkg?.price ?? 0}</span>
@@ -231,6 +397,83 @@ const ServiceDetailPage = () => {
           </div>
         </div>
 
+        {/* ── REVIEWS SECTION ─────────────────────────────────────────────── */}
+        <div>
+          <div className="flex items-center justify-between pb-4 border-b border-white/5 mb-6">
+            <div>
+              <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-white/40">Client Reviews</h2>
+              {displayRating && (
+                <div className="flex items-center gap-2 mt-2">
+                  <StarDisplay value={Number(displayRating)} size={16} />
+                  <span className="text-white font-bold text-lg">{displayRating}</span>
+                  <span className="text-white/40 text-sm">({displayCount})</span>
+                </div>
+              )}
+            </div>
+
+            {/* Rate button — only for eligible clients */}
+            {completedOrder && !alreadyReviewed && (
+              <button onClick={() => setShowReviewModal(true)}
+                className="flex items-center gap-2 px-5 py-2.5 bg-accent hover:bg-accent/90 text-white text-xs font-bold uppercase tracking-widest rounded-full transition">
+                <Star size={13} className="fill-white" /> Rate this Service
+              </button>
+            )}
+            {completedOrder && alreadyReviewed && (
+              <span className="flex items-center gap-1.5 text-green-400 text-xs font-bold uppercase tracking-widest">
+                <Check size={13} /> Reviewed
+              </span>
+            )}
+          </div>
+
+          {reviewsLoading && reviews.length === 0 ? (
+            <div className="flex justify-center py-10">
+              <InfinityLoader />
+            </div>
+          ) : reviews.length === 0 ? (
+            <div className="text-center py-12 rounded-2xl border border-dashed border-white/5">
+              <Star size={32} className="text-white/10 mx-auto mb-3" />
+              <p className="text-white/30 text-sm">No reviews yet</p>
+              <p className="text-white/20 text-xs mt-1">Be the first to review this service after ordering</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {reviews.map(r => (
+                <div key={r.id} className="rounded-2xl border border-white/5 p-5 space-y-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-accent/20 overflow-hidden shrink-0">
+                        {r.client?.avatar_url
+                          ? <img src={r.client.avatar_url} alt={r.client.name} className="w-full h-full object-cover" />
+                          : <div className="w-full h-full flex items-center justify-center text-accent font-bold text-sm">
+                              {r.client?.name?.charAt(0) || 'C'}
+                            </div>
+                        }
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-white">{r.client?.name || 'Client'}</p>
+                        <p className="text-[10px] text-white/30">
+                          {new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </p>
+                      </div>
+                    </div>
+                    <StarDisplay value={r.rating} size={13} />
+                  </div>
+                  {r.comment && (
+                    <p className="text-white/60 text-sm leading-relaxed pl-12">{r.comment}</p>
+                  )}
+                </div>
+              ))}
+
+              {hasMore && (
+                <button onClick={handleLoadMore} disabled={reviewsLoading}
+                  className="w-full py-3 border border-white/10 rounded-full text-white/40 hover:text-white text-xs font-bold uppercase tracking-widest transition">
+                  {reviewsLoading ? 'Loading...' : 'Load More Reviews'}
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
         {/* FAQs */}
         {service.faqs?.length > 0 && (
           <div>
@@ -252,6 +495,18 @@ const ServiceDetailPage = () => {
       </main>
 
       <Footer />
+
+      {/* Review modal */}
+      <AnimatePresence>
+        {showReviewModal && completedOrder && (
+          <ReviewModal
+            orderId={completedOrder.id}
+            serviceId={id}
+            onClose={() => setShowReviewModal(false)}
+            onSuccess={handleReviewSuccess}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

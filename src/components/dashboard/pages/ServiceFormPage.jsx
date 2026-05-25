@@ -22,7 +22,7 @@ const EMPTY_FORM = {
   packages: [], faqs: [],
 };
 
-const inputCls = "w-full bg-transparent border border-white/10 rounded-full px-5 py-2.5 text-white text-sm focus:outline-none focus:border-accent/50 placeholder-white/20 transition";
+const inputCls = "w-full bg-transparent border border-white/10 rounded-xl px-5 py-2.5 text-white text-sm focus:outline-none focus:border-accent/50 placeholder-white/20 transition";
 const labelCls = "block text-[11px] font-bold uppercase tracking-[0.2em] text-white/40 mb-2";
 
 // â”€â”€â”€ Custom Select â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -123,7 +123,7 @@ function ImageSlot({ url, onUrl }) {
 
 // â”€â”€â”€ Section Card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const Section = ({ title, subtitle, children }) => (
-  <div className="bg-transparent border border-white/10 rounded-2xl p-6 space-y-5">
+  <div className="bg-transparent border border-white/10 rounded-xl p-6 space-y-5">
     <div>
       <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-white/40 border-b border-white/5 pb-4 mb-5">{title}</h3>
       {subtitle && <p className="text-white/40 text-xs mt-0.5">{subtitle}</p>}
@@ -162,7 +162,9 @@ export default function ServiceFormPage() {
 
   const addTag = () => {
     const t = tagInput.trim();
-    if (t && !form.tags.includes(t)) setForm(p => ({ ...p, tags: [...p.tags, t] }));
+    if (!t) { toast.error('Type a tag first'); return; }
+    if (form.tags.includes(t)) { toast.error('Tag already added'); setTagInput(''); return; }
+    setForm(p => ({ ...p, tags: [...p.tags, t] }));
     setTagInput('');
   };
 
@@ -232,7 +234,7 @@ export default function ServiceFormPage() {
             Cancel
           </button>
           <button onClick={handleSubmit} disabled={saving}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 h-9 sm:h-10 bg-accent text-white rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition disabled:opacity-50 shadow-lg shadow-accent/10">
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 h-9 sm:h-10 bg-accent text-white rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition disabled:opacity-50">
             {saving && <InfinityLoader/>}
             {isEdit ? 'Save Changes' : 'Publish Service'}
           </button>
@@ -260,11 +262,15 @@ export default function ServiceFormPage() {
               <div>
                 <label className={labelCls}>Tags</label>
                 <div className="flex gap-2">
-                  <input value={tagInput} onChange={e => setTagInput(e.target.value)}
-                    onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addTag(); } }}
-                    placeholder="Add tag, press Enter" className={inputCls} />
-                  <button type="button" onClick={addTag}
-                    className="w-10 h-10 bg-white/5 border border-white/10 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition shrink-0 flex items-center justify-center">
+                  <input
+                    id="tag-input"
+                    value={tagInput}
+                    onChange={e => setTagInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addTag(); document.getElementById('tag-input')?.focus(); } }}
+                    placeholder="Add tag, press Enter"
+                    className={inputCls} />
+                  <button type="button" onClick={() => { addTag(); document.getElementById('tag-input')?.focus(); }}
+                    className={`w-10 h-10 border rounded-full transition shrink-0 flex items-center justify-center ${tagInput.trim() ? 'border-accent text-accent hover:bg-accent/10' : 'border-white/10 text-white/20 hover:text-accent hover:border-accent/40'}`}>
                     <Plus size={15} />
                   </button>
                 </div>
@@ -284,7 +290,7 @@ export default function ServiceFormPage() {
               <label className={labelCls}>Description</label>
               <textarea value={form.description} onChange={set('description')} rows={6}
                 placeholder="Describe your service in detail — what you'll deliver, your process, requirements from the client, and why they should choose you..."
-                className="w-full bg-transparent border border-white/10 rounded-[32px] px-6 py-5 text-white text-sm focus:outline-none focus:border-accent/50 placeholder-white/20 transition resize-none" />
+                className="w-full bg-transparent border border-white/10 rounded-xl px-6 py-5 text-white text-sm focus:outline-none focus:border-accent/50 placeholder-white/20 transition resize-none" />
             </div>
           </Section>
 
@@ -309,15 +315,15 @@ export default function ServiceFormPage() {
                     <p className={`text-xs font-bold uppercase tracking-wider ${headers[i]}`}>{tier}</p>
                     <div>
                       <label className={labelCls}>Price (₹)</label>
-                      <input value={pkg.price} onChange={e => setPkg(i, 'price', e.target.value)} type="number" placeholder="â€”" className={inputCls} />
+                      <input value={pkg.price} onChange={e => setPkg(i, 'price', e.target.value)} type="number" placeholder="0" className={inputCls} />
                     </div>
                     <div>
                       <label className={labelCls}>Delivery (days)</label>
-                      <input value={pkg.delivery_days} onChange={e => setPkg(i, 'delivery_days', e.target.value)} type="number" placeholder="â€”" className={inputCls} />
+                      <input value={pkg.delivery_days} onChange={e => setPkg(i, 'delivery_days', e.target.value)} type="number" placeholder="1" className={inputCls} />
                     </div>
                     <div>
                       <label className={labelCls}>Revisions</label>
-                      <input value={pkg.revisions} onChange={e => setPkg(i, 'revisions', e.target.value)} type="number" placeholder="â€”" className={inputCls} />
+                      <input value={pkg.revisions} onChange={e => setPkg(i, 'revisions', e.target.value)} type="number" placeholder="0" className={inputCls} />
                     </div>
                   </div>
                 );

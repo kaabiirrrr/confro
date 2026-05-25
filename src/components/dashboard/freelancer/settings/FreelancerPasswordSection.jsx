@@ -20,11 +20,23 @@ const FreelancerPasswordSection = () => {
     if (passwords.new.length < 8) return toast.error('Password must be at least 8 characters');
     setSaving(true);
     try {
-      await changePassword({ current_password: passwords.current, new_password: passwords.new });
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: passwords.current,
+      });
+
+      if (signInError) throw new Error('Incorrect current password');
+
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: passwords.new
+      });
+
+      if (updateError) throw updateError;
+
       toast.success('Password changed successfully');
       setPasswords({ current: '', new: '', confirm: '' });
     } catch (err) {
-      toastApiError(err, 'Failed to change password');
+      toast.error(err.message || 'Failed to change password');
     } finally {
       setSaving(false);
     }
@@ -95,7 +107,7 @@ const FreelancerPasswordSection = () => {
             {saving ? 'Processing...' : 'Apply Password Change'}
           </button>
 
-          <button className="text-accent text-[11px] font-black uppercase tracking-widest hover:underline px-1 disabled:opacity-50 flex items-center gap-1"
+          <button className="w-full sm:w-auto text-accent text-[11px] font-black uppercase tracking-widest px-4 py-2 h-10 sm:h-12 border border-accent rounded-full hover:bg-accent/10 disabled:opacity-50 flex items-center justify-center gap-1 transition-colors"
             onClick={handleForgotPassword}
             disabled={sendingReset}
           >

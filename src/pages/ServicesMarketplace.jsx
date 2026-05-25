@@ -91,7 +91,7 @@ const ServicesMarketplace = () => {
 
             {/* SEARCH */}
             <div className="w-full md:w-auto">
-              <div className="relative w-full sm:w-96 md:w-[420px] group">
+              <div className="relative w-full sm:w-96 md:w-[560px] group">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-accent transition-colors" size={16} />
                 <input
                   type="text"
@@ -130,13 +130,10 @@ const ServicesMarketplace = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="py-32 flex flex-col items-center justify-center text-center bg-transparent rounded-3xl border-none sm:border sm:border-dashed sm:border-white/10 backdrop-blur-sm"
+            className="py-12 sm:py-24 flex flex-col items-center justify-center text-center bg-transparent rounded-2xl"
           >
-            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6">
-              <ShoppingBag size={32} className="text-white/20" />
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">No services found</h3>
-            <p className="text-light-text/50 max-w-sm">
+            <img src="/Icons/empty-jobs.png" alt="No services found" className="w-48 sm:w-64 h-auto mb-6 opacity-90" />
+            <p className="text-gray-400 text-sm sm:text-lg font-light">
               We couldn't find any services matching your search or category. Try a different term or clear filters.
             </p>
             <button
@@ -217,9 +214,9 @@ const ServiceCard = ({ service, index }) => {
           <div className="flex items-center gap-1 text-yellow-400">
             <Star size={12} fill="currentColor" />
             <span className="text-xs font-bold text-white">
-              {service.rating || service.freelancer?.rating || "5.0"} 
+              {service.rating > 0 ? Number(service.rating).toFixed(1) : service.freelancer?.rating > 0 ? Number(service.freelancer.rating).toFixed(1) : '—'}
               <span className="text-white/40 font-normal ml-1">
-                ({service.reviews_count || service.freelancer?.reviews_count || 0})
+                ({service.reviews_count || 0})
               </span>
             </span>
           </div>

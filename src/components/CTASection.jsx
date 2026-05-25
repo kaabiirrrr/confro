@@ -14,7 +14,8 @@ const CTASection = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
           className="relative rounded-3xl px-6 sm:px-12 py-12 sm:py-20 text-center overflow-hidden
-                    bg-gradient-to-r from-secondary via-primary to-secondary"
+                    bg-gradient-to-r from-blue-50 via-indigo-50/50 to-blue-50 
+                    dark:from-[#0f172a] dark:via-[#1e293b] dark:to-[#0f172a]"
         >
 
           {/* Accent Glow */}
@@ -24,7 +25,7 @@ const CTASection = () => {
           {/* Content */}
           <div className="relative z-10">
 
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold text-white mb-8 sm:mb-10 leading-tight">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold text-light-text mb-8 sm:mb-10 leading-tight">
               Find your next hire for a short task or long-term growth
             </h2>
 

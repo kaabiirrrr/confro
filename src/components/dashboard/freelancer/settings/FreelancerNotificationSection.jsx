@@ -17,16 +17,18 @@ const FreelancerNotificationSection = () => {
     push_messages: true,
   });
 
-  const handleNotificationSave = async () => {
-    setSaving(true);
+  const togglePreference = async (key) => {
+    const newValue = !notifications[key];
+    const newPrefs = { ...notifications, [key]: newValue };
+    setNotifications(newPrefs);
+    
     try {
-      await updateMyProfile({ notification_preferences: notifications });
+      await updateMyProfile({ notification_preferences: newPrefs });
       if (refreshProfile) refreshProfile();
-      toast.success('Preferences saved');
+      toast.success('Preference updated');
     } catch (err) {
-      toastApiError(err, 'Failed to save preferences');
-    } finally {
-      setSaving(false);
+      setNotifications(notifications);
+      toastApiError(err, 'Failed to update preference');
     }
   };
 
@@ -60,7 +62,7 @@ const FreelancerNotificationSection = () => {
             {tab === t.id && (
               <motion.div
                 layoutId="activeTabNote"
-                className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent shadow-[0_0_10px_rgba(56,189,248,0.5)]"
+                className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent"
               />
             )}
           </button>
@@ -90,7 +92,7 @@ const FreelancerNotificationSection = () => {
                   ].map((item) => (
                     <div 
                       key={item.key} 
-                      onClick={() => setNotifications(n => ({ ...n, [item.key]: !n[item.key] }))}
+                      onClick={() => togglePreference(item.key)}
                       className="flex items-center justify-between p-3 sm:p-4 rounded-xl bg-white/5 border border-white/10 cursor-pointer group hover:border-accent/30 transition-all"
                     >
                       <div>
@@ -113,7 +115,7 @@ const FreelancerNotificationSection = () => {
                   ].map((item) => (
                     <div 
                       key={item.key} 
-                      onClick={() => setNotifications(n => ({ ...n, [item.key]: !n[item.key] }))}
+                      onClick={() => togglePreference(item.key)}
                       className="flex items-center justify-between p-3 sm:p-4 rounded-xl bg-gradient-to-tr from-accent/5 to-transparent border border-white/10 cursor-pointer group hover:border-accent/30 transition-all col-span-full"
                     >
                        <div>
@@ -130,22 +132,7 @@ const FreelancerNotificationSection = () => {
                   ))}
                 </>
               )}
-              {/* Save Button - below toggles, right-aligned on desktop */}
-              <div className="pt-4 flex justify-start sm:justify-end">
-                <button
-                  onClick={handleNotificationSave}
-                  disabled={saving}
-                  className="w-full sm:w-auto h-10 sm:h-12 px-8 rounded-full bg-accent text-white font-bold text-xs sm:text-sm uppercase tracking-widest hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 shadow-lg shadow-accent/20 flex items-center justify-center gap-2"
-                >
-                  {saving ? (
-                    <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                  ) : null}
-                  {saving ? 'Saving...' : 'Save Preferences'}
-                </button>
-              </div>
+
             </div>
           </SettingsCard>
         </motion.div>

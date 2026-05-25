@@ -8,10 +8,12 @@ export default function StepFinish({ finish }) {
       animate={{ opacity: 1, scale: 1 }}
       className="text-center py-10"
     >
-      <div className="mb-8 flex justify-center">
-        <div className="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center text-accent">
-          <FiCheck className="text-5xl" />
-        </div>
+      <div className="ml-10 flex justify-center items-center">
+        <img
+          src="/ChatGPT%20Image%20May%2022,%202026,%2009_15_28%20PM.png"
+          alt="Success"
+          className="w-84 h-84 sm:w-92 sm:h-92 object-contain"
+        />
       </div>
 
       <h2 className="text-3xl font-bold text-white mb-4">
@@ -19,17 +21,16 @@ export default function StepFinish({ finish }) {
       </h2>
 
       <p className="text-white/40 max-w-md mx-auto mb-10 leading-relaxed">
-        Your professional freelancer profile has been successfully completed. 
+        Your professional freelancer profile has been successfully completed.
         You're now ready to discover opportunities and grow your career.
       </p>
 
       <div className="flex justify-center">
         <button
           onClick={finish}
-          className="bg-accent text-white font-bold px-12 py-4 rounded-full hover:bg-accent/90 flex items-center gap-3 transition-all shadow-2xl shadow-accent/20"
+          className="bg-accent text-white font-bold px-12 py-2.5 rounded-full hover:bg-accent/90 flex items-center justify-center transition-all"
         >
           Explore Dashboard
-          <FiArrowRight />
         </button>
       </div>
     </motion.div>

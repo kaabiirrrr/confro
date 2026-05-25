@@ -3,17 +3,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
     User, MapPin, Star, ShieldCheck, Mail, Phone,
-    Globe, Calendar, Briefcase, Award, CheckCircle2,
+    Globe, Calendar, Award, CheckCircle2,
     ExternalLink, MessageSquare, Heart, Share2,
     ChevronRight, ArrowLeft, AlertCircle,
-    X, Check, Clock, FileText, Camera, IndianRupee,
+    X, Check, Clock, FileText, Camera, IndianRupee, Pencil,
     TrendingUp, Zap, Cpu
 } from 'lucide-react';
 
 import { formatINR, convertToUSD, USD_TO_INR } from '../utils/currencyUtils';
 import { profileApi } from '../services/profileApi';
 import ProfileImageModal from '../components/dashboard/client/settings/ProfileImageModal';
-import { getIdentityStatus } from '../services/apiService';
+import { getIdentityStatus, getUserPresence } from '../services/apiService';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../context/ProfileContext';
 import { toast } from 'react-hot-toast';
@@ -30,7 +30,9 @@ const FreelancerProfilePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user: currentUser, refreshProfile, role } = useAuth();
-    const { refetch: refetchProfileContext } = useProfile();
+    const { refetch: refetchProfileContext, status } = useProfile();
+
+    const [isOnline, setIsOnline] = useState(false);
 
     const [loading, setLoading] = useState(true);
     const [profile, setProfile] = useState(null);
@@ -43,6 +45,11 @@ const FreelancerProfilePage = () => {
     // Edit Mode State
     const [editSection, setEditSection] = useState(null); // 'header', 'about', 'skills', 'contact', 'basic'
     const [editData, setEditData] = useState({});
+
+    // Work History editor state
+    const [showWorkForm, setShowWorkForm] = useState(false);
+    const [workForm, setWorkForm] = useState({ company: '', role: '', start_date: '', end_date: '', description: '' });
+    const [savingWork, setSavingWork] = useState(false);
 
     // IDV State (Only for own profile)
     const [idvStatus, setIdvStatus] = useState(null);
@@ -63,9 +70,18 @@ const FreelancerProfilePage = () => {
 
     useEffect(() => {
         if (id) {
-            fetchProfile();
+            fetchProfile(true);
             fetchReliability();
             fetchRisk();
+            getUserPresence(id)
+                .then(res => {
+                    if (res?.success) {
+                        setIsOnline(res.data?.online ?? false);
+                    }
+                })
+                .catch(err => {
+                    logger.error('Error fetching presence', err);
+                });
         }
     }, [id]);
 
@@ -88,9 +104,11 @@ const FreelancerProfilePage = () => {
     };
 
 
-    const fetchProfile = async () => {
+    const fetchProfile = async (showFullLoader = false) => {
         try {
-            setLoading(true);
+            if (showFullLoader) {
+                setLoading(true);
+            }
             const response = await profileApi.getPublicProfile(id);
             if (response.success) {
                 const data = response.data;
@@ -109,6 +127,9 @@ const FreelancerProfilePage = () => {
                     experience_years: data.experience_years || '',
                     hourly_rate: Number(data.hourly_rate) || 0,
                     work_hours: data.work_hours || null,
+                    // Resume and portfolio from documents step
+                    resume_url: data.resume_url || null,
+                    portfolio_files: Array.isArray(data.portfolio_files) ? data.portfolio_files : [],
                 });
             } else {
                 logger.error('API returned success:false', response);
@@ -118,7 +139,9 @@ const FreelancerProfilePage = () => {
             logger.error('Error fetching profile', error);
             setProfile(null);
         } finally {
-            setLoading(false);
+            if (showFullLoader) {
+                setLoading(false);
+            }
         }
     };
 
@@ -127,8 +150,11 @@ const FreelancerProfilePage = () => {
             setUploading(true);
             const payload = { ...editData };
 
+            // Build step_data for experience fields
+            let experienceYears = null;
             if (payload.experience !== undefined || payload.experience_years !== undefined) {
                 const exp = payload.experience || payload.experience_years;
+                experienceYears = exp;
                 payload.step_data = {
                     ...(profile?.step_data || {}),
                     professional_info: {
@@ -141,21 +167,75 @@ const FreelancerProfilePage = () => {
             delete payload.experience_years;
             delete payload.years_of_experience;
 
+            // Convert INR hourly rate to USD for backend
+            let hourlyRateUSD = null;
             if (payload.hourly_rate) {
-                payload.hourly_rate = convertToUSD(payload.hourly_rate);
+                hourlyRateUSD = convertToUSD(payload.hourly_rate);
+                payload.hourly_rate = hourlyRateUSD;
             }
 
             const res = await profileApi.updateProfile(payload);
             if (res.success) {
                 toast.success('Profile updated successfully');
                 setEditSection(null);
-                fetchProfile();
-                refetchProfileContext(); // Sync global UI
+
+                // Patch local state without a full re-fetch (prevents page-level re-render)
+                setProfile(prev => {
+                    if (!prev) return prev;
+                    const patch = { ...editData };
+                    if (hourlyRateUSD !== null) patch.hourly_rate = hourlyRateUSD;
+                    if (experienceYears !== null) patch.experience_years = experienceYears;
+                    // Remove raw edit keys not on profile
+                    delete patch.experience;
+                    delete patch.years_of_experience;
+                    return { ...prev, ...patch };
+                });
+
+                refetchProfileContext(); // Sync global UI (navbar avatar etc.)
             }
         } catch {
             toast.error('Update failed. Please try again.');
         } finally {
             setUploading(false);
+        }
+    };
+
+    // Save a new work history entry to the experience column
+    const handleAddWorkEntry = async () => {
+        if (!workForm.company.trim() || !workForm.role.trim()) {
+            toast.error('Company and role are required');
+            return;
+        }
+        try {
+            setSavingWork(true);
+            const newEntry = { ...workForm };
+            const updatedExperience = [newEntry, ...(profile.experience || [])];
+            const res = await profileApi.updateProfile({ experience: updatedExperience });
+            if (res.success) {
+                toast.success('Work history added');
+                setProfile(prev => prev ? { ...prev, experience: updatedExperience } : prev);
+                setWorkForm({ company: '', role: '', start_date: '', end_date: '', description: '' });
+                setShowWorkForm(false);
+                refetchProfileContext();
+            }
+        } catch {
+            toast.error('Failed to save work entry');
+        } finally {
+            setSavingWork(false);
+        }
+    };
+
+    // Delete a work history entry by index
+    const handleDeleteWorkEntry = async (index) => {
+        try {
+            const updatedExperience = (profile.experience || []).filter((_, i) => i !== index);
+            const res = await profileApi.updateProfile({ experience: updatedExperience });
+            if (res.success) {
+                toast.success('Entry removed');
+                setProfile(prev => prev ? { ...prev, experience: updatedExperience } : prev);
+            }
+        } catch {
+            toast.error('Failed to remove entry');
         }
     };
 
@@ -220,6 +300,14 @@ const FreelancerProfilePage = () => {
         }
     };
 
+    const isOwnProfile = currentUser?.id && profile ? currentUser.id === (profile.user_id || profile.id) : false;
+
+    useEffect(() => {
+        if (isOwnProfile) {
+            const val = status?.online_for_messages ?? currentUser?.profile?.online_for_messages ?? true;
+            setIsOnline(val);
+        }
+    }, [isOwnProfile, status?.online_for_messages, currentUser?.profile?.online_for_messages]);
 
     if (loading) {
 
@@ -248,7 +336,7 @@ const FreelancerProfilePage = () => {
         );
     }
 
-    const isOwnProfile = currentUser?.id === (profile.user_id || profile.id);
+
 
 
     return (
@@ -265,8 +353,8 @@ const FreelancerProfilePage = () => {
             <div className="max-w-[1480px] mx-auto px-4 md:px-6">
 
                 {/* 1. TOP HEADER SECTION */}
-                <div className="mb-8 md:mb-12 bg-transparent border-none shadow-none">
-                    <div className="flex flex-col md:flex-row px-4 sm:px-6 md:px-0 py-3 sm:py-5 md:py-10 gap-4 md:gap-12 items-start">
+                <div className="mb-4 md:mb-6 bg-transparent border-none shadow-none">
+                    <div className="flex flex-col md:flex-row px-4 sm:px-6 md:px-0 pt-3 sm:pt-5 md:pt-10 pb-2 sm:pb-3 md:pb-4 gap-4 md:gap-12 items-start">
                         {/* Profile Image & Mobile Header Info Container */}
                         <div className="flex flex-col gap-3 md:gap-12 w-full md:w-auto items-start md:items-start shrink-0">
                             <div className="flex flex-row items-center justify-center sm:justify-start gap-4 sm:gap-6 w-full md:w-auto">
@@ -290,8 +378,11 @@ const FreelancerProfilePage = () => {
 
                                 {/* Mobile Name Only (Next to Avatar) */}
                                 <div className="md:hidden flex flex-col pt-1">
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 flex-wrap">
                                         <h1 className="text-xl font-bold text-slate-950 dark:text-white leading-tight">{profile.name}</h1>
+                                        {isOnline && (
+                                            <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)] animate-pulse shrink-0" title="Online" />
+                                        )}
                                         {profile.is_verified && (
                                             <ShieldCheck size={18} className="text-blue-500 shrink-0" />
                                         )}
@@ -301,8 +392,13 @@ const FreelancerProfilePage = () => {
 
                             {/* Mobile-Only Title & Rate (Full Width Below Avatar/Name) */}
                             <div className="md:hidden w-full space-y-2 mt-2 flex flex-col items-center">
-                                <div className="w-full pb-2 border-b border-slate-900/5 dark:border-white/5 flex justify-center text-center">
+                                <div className="w-full pb-3 border-b border-slate-900/5 dark:border-white/5 flex flex-col items-center justify-center text-center gap-2">
                                     <p className="text-slate-950 dark:text-white font-semibold text-sm leading-relaxed">{profile.title || 'Professional Freelancer'}</p>
+                                    {profile.category && (
+                                        <span className="px-2.5 py-1 bg-accent/10 border border-accent/20 text-accent rounded-full text-[10px] font-bold uppercase tracking-widest">
+                                            {profile.category}
+                                        </span>
+                                    )}
                                 </div>
                                 <div className="flex items-center justify-center gap-3 flex-wrap">
                                     <span className="text-accent text-sm font-bold">₹{Number(profile.hourly_rate || 0).toLocaleString('en-IN')}/hr</span>
@@ -327,7 +423,7 @@ const FreelancerProfilePage = () => {
                                             <div className="flex gap-3">
                                                 <button
                                                     onClick={() => navigate('/freelancer/messages', { state: { recipientId: profile.id } })}
-                                                    className="flex-1 flex items-center justify-center gap-2 py-3 bg-accent text-primary rounded-full font-bold text-xs uppercase tracking-widest shadow-lg shadow-accent/10"
+                                                    className="flex-1 flex items-center justify-center gap-2 py-3 bg-accent text-primary rounded-full font-bold text-xs uppercase tracking-widest"
                                                 >
                                                     <MessageSquare size={16} /> Message
                                                 </button>
@@ -349,30 +445,16 @@ const FreelancerProfilePage = () => {
 
                         {/* Name and Header Info Column */}
                         <div className="flex-1 flex flex-col pt-2 w-full relative">
-                            {editSection === 'header' ? (
-                                <div className="space-y-4 max-w-xl">
-                                    <input
-                                        className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-4 py-2 w-full text-slate-950 dark:text-white outline-none focus:border-accent"
-                                        value={editData.name || ''}
-                                        onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                                        placeholder="Full Name"
-                                    />
-                                    <input
-                                        className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-4 py-2 w-full text-accent outline-none focus:border-accent"
-                                        value={editData.title || ''}
-                                        onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                                        placeholder="Professional Title"
-                                    />
-                                    <div className="flex gap-2">
-                                        <button onClick={handleUpdateProfile} className="px-4 py-1.5 bg-accent text-primary rounded-lg text-xs font-bold">Save</button>
-                                        <button onClick={() => setEditSection(null)} className="px-4 py-1.5 bg-white/5 rounded-lg text-xs font-bold">Cancel</button>
-                                    </div>
-                                </div>
-                            ) : (
                                 <div className="hidden md:flex flex-col sm:flex-row items-center sm:items-start justify-between mb-2">
                                     <div className="space-y-1 text-left">
                                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
                                             <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-slate-950 dark:text-white">{profile.name}</h1>
+                                            {isOnline && (
+                                                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 shadow-lg shadow-blue-500/5 mt-1 ml-1 scale-110">
+                                                    <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse" />
+                                                    <span className="text-[11px] font-black text-blue-500 uppercase tracking-[0.1em]">Online</span>
+                                                </div>
+                                            )}
                                             {profile.has_availability_badge && (
                                                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 shadow-lg shadow-emerald-500/5 mt-1 ml-1 scale-110">
                                                     <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] animate-pulse" />
@@ -401,21 +483,38 @@ const FreelancerProfilePage = () => {
                                             )}
 
                                             {isOwnProfile && (
-                                                <button onClick={() => {
-                                                    setEditSection('header');
-                                                    setEditData({
-                                                        name: profile.name,
-                                                        title: profile.title,
-                                                        hourly_rate: Math.round((profile.hourly_rate || 0) * USD_TO_INR),
-                                                        experience: profile.step_data?.professional_info?.experience || profile.experience_years || ''
-                                                    });
-                                                }} className="p-1.5 hover:bg-white/5 rounded-lg text-white/20 hover:text-white transition">
-                                                    <FileText size={16} />
-                                                </button>
+                                                editSection === 'header' ? (
+                                                    <button
+                                                        onClick={() => setEditSection(null)}
+                                                        className="p-1 text-slate-900/40 dark:text-white/30 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
+                                                        title="Cancel editing"
+                                                    >
+                                                        <X size={15} />
+                                                    </button>
+                                                ) : (
+                                                    <button onClick={() => {
+                                                        setEditSection('header');
+                                                        setEditData({
+                                                            name: profile.name,
+                                                            title: profile.title,
+                                                            hourly_rate: Math.round((profile.hourly_rate || 0) * USD_TO_INR),
+                                                            experience: profile.step_data?.professional_info?.experience || profile.experience_years || ''
+                                                        });
+                                                    }} className="p-1 text-slate-900/40 dark:text-white/30 hover:text-accent dark:hover:text-accent transition-colors" title="Edit header">
+                                                        <Pencil size={15} />
+                                                    </button>
+                                                )
                                             )}
                                         </div>
-                                        <div className="flex flex-wrap items-center justify-start gap-x-4 gap-y-1">
-                                            <p className="text-accent text-lg font-medium">{profile.title || 'Professional Freelancer'}</p>
+                                        <div className="flex flex-wrap items-center justify-start gap-x-4 gap-y-2">
+                                            <div className="flex items-center gap-3">
+                                                <p className="text-accent text-lg font-medium">{profile.title || 'Professional Freelancer'}</p>
+                                                {profile.category && (
+                                                    <span className="px-2.5 py-1 bg-accent/10 border border-accent/20 text-accent rounded-full text-[10px] font-bold uppercase tracking-widest">
+                                                        {profile.category}
+                                                    </span>
+                                                )}
+                                            </div>
                                             <div className="hidden sm:block w-px h-4 bg-white/10" />
                                             <div className="flex items-center gap-1.5 text-slate-900/60 dark:text-white/60 text-lg font-bold">
                                                 <IndianRupee size={16} className="text-accent" />
@@ -425,7 +524,7 @@ const FreelancerProfilePage = () => {
                                                 <>
                                                     <div className="hidden sm:block w-px h-4 bg-white/10" />
                                                     <div className="flex items-center gap-1.5 text-slate-900/60 dark:text-white/60 text-lg font-bold">
-                                                        <Briefcase size={18} className="text-accent" />
+                                                        <img src="/Icons/icons8-bag-100.png" alt="Experience" className="w-5 h-5 object-contain shrink-0" />
                                                         <span>{profile.experience_years}+ Years Exp.</span>
                                                     </div>
                                                 </>
@@ -454,10 +553,9 @@ const FreelancerProfilePage = () => {
                                         </div>
                                     </div>
                                 </div>
-                            )}
 
                             {editSection === 'header' && (
-                                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl bg-secondary p-6 rounded-2xl border border-border">
+                                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 max-w-2xl pt-2 pb-4">
                                     <div className="space-y-1">
                                         <label className="text-[10px] text-white/30 uppercase font-bold">Full Name</label>
                                         <input
@@ -491,9 +589,9 @@ const FreelancerProfilePage = () => {
                                             onChange={(e) => setEditData({ ...editData, experience: e.target.value })}
                                         />
                                     </div>
-                                    <div className="col-span-1 sm:col-span-2 flex gap-2 pt-2">
-                                        <button onClick={handleUpdateProfile} className="px-6 py-2 bg-accent text-primary rounded-xl text-xs font-bold uppercase tracking-widest">Update Header</button>
-                                        <button onClick={() => setEditSection(null)} className="px-6 py-2 bg-white/10 rounded-xl text-xs font-bold uppercase tracking-widest">Cancel</button>
+                                    <div className="col-span-1 sm:col-span-2 flex justify-end gap-3 pt-2">
+                                        <button onClick={handleUpdateProfile} className="px-6 py-2 bg-accent text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-accent/90 hover:scale-[1.02] transition-all">Update Header</button>
+                                        <button onClick={() => setEditSection(null)} className="px-6 py-2 bg-white/10 text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-white/20 hover:scale-[1.02] transition-all">Cancel</button>
                                     </div>
                                 </div>
                             )}
@@ -537,88 +635,102 @@ const FreelancerProfilePage = () => {
                                 </div>
                             </div>
 
-                            <div className="mt-6 md:mt-12 flex flex-col sm:flex-row items-end justify-between gap-4 md:gap-6">
-                                {/* Risk Indicator (Client Only OR Admin) */}
-                                {(role === 'CLIENT' || role === 'SUPER_ADMIN' || role === 'ADMIN') && risk ? (
-                                    <div className="space-y-2 flex flex-col items-center sm:items-start">
-                                        <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-950/50 dark:text-white/30">Assurance Check</p>
-                                        <div className="flex items-center gap-3">
-                                            <div className={`px-3 py-1.5 rounded-xl border flex items-center gap-2 transition-all duration-500 shadow-sm ${risk.riskLevel === 'high' ? 'bg-rose-500/10 border-rose-500/30 text-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.1)]' :
-                                                risk.riskLevel === 'medium' ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' :
-                                                    risk.riskLevel === 'low' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500' :
-                                                        'bg-slate-900/5 dark:bg-white/5 border-slate-900/10 dark:border-white/10 text-slate-950/50 dark:text-white/50'
-                                                }`}>
-                                                {risk.riskLevel === 'high' || risk.riskLevel === 'medium' ? <AlertCircle size={14} /> : <ShieldCheck size={14} />}
-                                                <span className="text-[11px] font-black uppercase tracking-wider">
-                                                    {risk.label || 'New Freelancer'}
-                                                </span>
-                                            </div>
-                                            {risk.isPreliminary && (
-                                                <span className="px-2 py-1 bg-accent/10 border border-accent/20 text-accent rounded-lg text-[9px] font-bold uppercase tracking-widest">Preliminary</span>
-                                            )}
-                                            {risk.confidence > 0 && (
-                                                <div className="flex flex-col">
-                                                    <span className="text-[9px] text-slate-900/20 dark:text-white/20 font-bold uppercase tracking-tighter">Confidence</span>
-                                                    <span className="text-[10px] text-slate-900/40 dark:text-white/40 font-black">{Math.round(risk.confidence * 100)}%</span>
+                            {/* Render only if there is content to show to prevent huge empty vertical gap */}
+                            {(((role === 'CLIENT' || role === 'SUPER_ADMIN' || role === 'ADMIN') && risk) || !isOwnProfile || (isOwnProfile && !profile.profile_completed)) && (
+                                <div className="mt-4 md:mt-6 flex flex-col sm:flex-row items-end justify-between gap-4 md:gap-6">
+                                    {/* Risk Indicator (Client Only OR Admin) */}
+                                    {(role === 'CLIENT' || role === 'SUPER_ADMIN' || role === 'ADMIN') && risk ? (
+                                        <div className="space-y-2 flex flex-col items-center sm:items-start">
+                                            <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-950/50 dark:text-white/30">Assurance Check</p>
+                                            <div className="flex items-center gap-3">
+                                                <div className={`px-3 py-1.5 rounded-xl border flex items-center gap-2 transition-all duration-500 shadow-sm ${risk.riskLevel === 'high' ? 'bg-rose-500/10 border-rose-500/30 text-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.1)]' :
+                                                    risk.riskLevel === 'medium' ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' :
+                                                        risk.riskLevel === 'low' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500' :
+                                                            'bg-slate-900/5 dark:bg-white/5 border-slate-900/10 dark:border-white/10 text-slate-950/50 dark:text-white/50'
+                                                    }`}>
+                                                    {risk.riskLevel === 'high' || risk.riskLevel === 'medium' ? <AlertCircle size={14} /> : <ShieldCheck size={14} />}
+                                                    <span className="text-[11px] font-black uppercase tracking-wider">
+                                                        {risk.label || 'New Freelancer'}
+                                                    </span>
                                                 </div>
-                                            )}
+                                                {risk.isPreliminary && (
+                                                    <span className="px-2 py-1 bg-accent/10 border border-accent/20 text-accent rounded-lg text-[9px] font-bold uppercase tracking-widest">Preliminary</span>
+                                                )}
+                                                {risk.confidence > 0 && (
+                                                    <div className="flex flex-col">
+                                                        <span className="text-[9px] text-slate-900/20 dark:text-white/20 font-bold uppercase tracking-tighter">Confidence</span>
+                                                        <span className="text-[10px] text-slate-900/40 dark:text-white/40 font-black">{Math.round(risk.confidence * 100)}%</span>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                ) : <div />}
+                                    ) : <div />}
 
-                                {/* Action Buttons Row */}
-                                {!isOwnProfile ? (
-                                    <div className="flex items-center gap-3">
-                                        <button
-                                            onClick={() => navigate('/freelancer/messages', { state: { recipientId: profile.id } })}
-                                            className="flex items-center gap-2 px-6 py-3 bg-accent text-white hover:scale-[1.02] hover:brightness-110 transition-all rounded-full font-bold text-xs uppercase tracking-widest active:scale-[0.98]"
-                                        >
-                                            <MessageSquare size={16} /> Send message
-                                        </button>
-                                        <button className="flex items-center gap-2 px-8 py-3 bg-white/[0.05] dark:bg-white/[0.02] text-slate-950 dark:text-white border border-slate-900/10 dark:border-white/10 hover:bg-white/[0.1] hover:scale-[1.02] rounded-full font-bold text-xs uppercase tracking-widest transition-all backdrop-blur-md active:scale-[0.98]">
-                                            <Check size={16} className="text-accent" /> Contacts
-                                        </button>
-                                        <button
-                                            onClick={() => toast.success('Report submitted successfully. Our safety team will review it.')}
-                                            className="p-3 text-slate-950/30 dark:text-white/30 hover:text-rose-500 transition-all"
-                                            title="Report User"
-                                        >
-                                            <AlertCircle size={20} />
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <button
-                                        onClick={() => navigate('/freelancer/setup-profile')}
-                                        className="w-full md:w-auto px-8 py-3 bg-accent/10 border border-accent/20 hover:bg-accent/20 text-accent rounded-full font-bold text-xs uppercase tracking-widest transition"
-                                    >
-                                        Complete Profile Wizard
-                                    </button>
-                                )}
-                            </div>
+                                    {/* Action Buttons Row */}
+                                    {!isOwnProfile ? (
+                                        <div className="flex items-center gap-3">
+                                            <button
+                                                onClick={() => navigate('/freelancer/messages', { state: { recipientId: profile.id } })}
+                                                className="flex items-center gap-2 px-6 py-3 bg-accent text-white hover:scale-[1.02] hover:brightness-110 transition-all rounded-full font-bold text-xs uppercase tracking-widest active:scale-[0.98]"
+                                            >
+                                                <MessageSquare size={16} /> Send message
+                                            </button>
+                                            <button className="flex items-center gap-2 px-8 py-3 bg-white/[0.05] dark:bg-white/[0.02] text-slate-950 dark:text-white border border-slate-900/10 dark:border-white/10 hover:bg-white/[0.1] hover:scale-[1.02] rounded-full font-bold text-xs uppercase tracking-widest transition-all backdrop-blur-md active:scale-[0.98]">
+                                                <Check size={16} className="text-accent" /> Contacts
+                                            </button>
+                                            <button
+                                                onClick={() => toast.success('Report submitted successfully. Our safety team will review it.')}
+                                                className="p-3 text-slate-950/30 dark:text-white/30 hover:text-rose-500 transition-all"
+                                                title="Report User"
+                                            >
+                                                <AlertCircle size={20} />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        !profile.profile_completed && (
+                                            <button
+                                                onClick={() => navigate('/freelancer/setup-profile')}
+                                                className="w-full md:w-auto px-8 py-3 bg-accent/10 border border-accent/20 hover:bg-accent/20 text-accent rounded-full font-bold text-xs uppercase tracking-widest transition"
+                                            >
+                                                Complete Profile Wizard
+                                            </button>
+                                        )
+                                    )}
+                                </div>
+                            )}
 
-                            {/* Tab Selection Row */}
-                            <div className="flex items-center w-full mt-8 md:mt-12 border-b border-slate-900/10 dark:border-white/10">
-                                {[
-                                    { id: 'about', label: 'About', icon: <User size={16} /> },
-                                    { id: 'timeline', label: 'Portfolio', icon: <Clock size={16} /> }
-                                ].map(tab => (
-                                    <button
-                                        key={tab.id}
-                                        onClick={() => setActiveTab(tab.id === 'timeline' ? 'portfolio' : 'about')}
-                                        className={`flex-1 flex items-center justify-center gap-2 pb-4 md:pb-6 text-sm font-bold tracking-tight transition-all relative ${(activeTab === 'about' && tab.id === 'about') || (activeTab === 'portfolio' && tab.id === 'timeline')
-                                            ? 'text-slate-950 dark:text-white' : 'text-slate-900/40 dark:text-white/40 hover:text-slate-900/60 dark:hover:text-white/60'
-                                            }`}
-                                    >
-                                        {tab.id === 'about' ? <User size={16} /> : <Award size={16} />}
-                                        {tab.label}
-                                        {((activeTab === 'about' && tab.id === 'about') || (activeTab === 'portfolio' && tab.id === 'timeline')) && (
-                                            <motion.div layoutId="headerTab" className="absolute bottom-0 left-0 w-full h-0.5 bg-accent" />
-                                        )}
-                                    </button>
-                                ))}
-                            </div>
                         </div>
                     </div>
+                </div>
+
+                {/* Tab Selection Row — full width, outside the padded header card */}
+                <div className="flex items-center w-full border-b border-slate-900/10 dark:border-white/10 mb-8 md:mb-12">
+                    {[
+                        { id: 'about', label: 'About', img: '/Icons/icons8-user-100.png' },
+                        { id: 'resume', label: 'Resume', img: '/Icons/icons8-bag-80.png' }
+                    ].map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id === 'resume' ? 'resume' : 'about')}
+                            className={`flex-1 flex items-center justify-center gap-2 py-4 md:py-6 text-sm font-bold tracking-tight transition-all relative ${(activeTab === 'about' && tab.id === 'about') || (activeTab === 'resume' && tab.id === 'resume')
+                                ? 'text-slate-950 dark:text-white' : 'text-slate-900/40 dark:text-white/40 hover:text-slate-900/60 dark:hover:text-white/60'
+                                }`}
+                        >
+                            <img
+                                src={tab.img}
+                                alt={tab.label}
+                                className={`w-5 h-5 object-contain transition-all ${
+                                    (activeTab === 'about' && tab.id === 'about') || (activeTab === 'resume' && tab.id === 'resume')
+                                        ? 'opacity-100'
+                                        : 'opacity-40'
+                                }`}
+                            />
+                            {tab.label}
+                            {((activeTab === 'about' && tab.id === 'about') || (activeTab === 'resume' && tab.id === 'resume')) && (
+                                <motion.div layoutId="headerTab" className="absolute bottom-0 left-0 w-full h-0.5 bg-accent" />
+                            )}
+                        </button>
+                    ))}
                 </div>
 
                 {/* Relationship Intelligence Section (Trust Graph v2) */}
@@ -633,8 +745,8 @@ const FreelancerProfilePage = () => {
                 {/* 2. BOTTOM CONTENT GRID */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
 
-                    {/* Left Sidebar (4/12) */}
-                    <aside className="lg:col-span-4 space-y-12">
+                    {/* Left Sidebar (4/12) — hidden on Resume tab */}
+                    <aside className={`space-y-12 ${activeTab === 'resume' ? 'hidden' : 'lg:col-span-4'}`}>
                         {/* Work Section */}
                         <div className="space-y-6">
                             {(role === 'CLIENT' || role === 'SUPER_ADMIN' || role === 'ADMIN') && risk && !risk.isNew && (
@@ -687,17 +799,97 @@ const FreelancerProfilePage = () => {
                                 </motion.div>
                             )}
                             {/* Work History section header */}
-                            <div className="space-y-1.5 mb-8">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-1 h-1 rounded-full bg-accent/40" />
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-white/30">Experience</h3>
+                            <div className="space-y-1.5 mb-6">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-1 h-1 rounded-full bg-accent/40" />
+                                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-white/30">Experience</h3>
+                                    </div>
+                                    {isOwnProfile && (
+                                        <button
+                                            onClick={() => { setShowWorkForm(f => !f); setWorkForm({ company: '', role: '', start_date: '', end_date: '', description: '' }); }}
+                                            className="p-1 text-slate-900/40 dark:text-white/30 hover:text-accent dark:hover:text-accent transition-colors"
+                                            title="Add work history entry"
+                                        >
+                                            {showWorkForm ? <X size={15} /> : <Pencil size={15} />}
+                                        </button>
+                                    )}
                                 </div>
                                 <h1 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Work History</h1>
                             </div>
+
+                            {/* Add Work Entry Form (own profile) */}
+                            {isOwnProfile && showWorkForm && (
+                                <div className="mb-6 space-y-3">
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div className="col-span-2 space-y-1">
+                                            <label className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold">Company *</label>
+                                            <input
+                                                className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-3 py-2 w-full text-sm text-slate-950 dark:text-white outline-none focus:border-accent"
+                                                placeholder="e.g. Google"
+                                                value={workForm.company}
+                                                onChange={e => setWorkForm(p => ({ ...p, company: e.target.value }))}
+                                            />
+                                        </div>
+                                        <div className="col-span-2 space-y-1">
+                                            <label className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold">Role / Title *</label>
+                                            <input
+                                                className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-3 py-2 w-full text-sm text-slate-950 dark:text-white outline-none focus:border-accent"
+                                                placeholder="e.g. Frontend Developer"
+                                                value={workForm.role}
+                                                onChange={e => setWorkForm(p => ({ ...p, role: e.target.value }))}
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold">Start Date</label>
+                                            <input
+                                                type="month"
+                                                className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-3 py-2 w-full text-sm text-slate-950 dark:text-white outline-none focus:border-accent"
+                                                value={workForm.start_date}
+                                                onChange={e => setWorkForm(p => ({ ...p, start_date: e.target.value }))}
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold">End Date</label>
+                                            <input
+                                                type="month"
+                                                className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-3 py-2 w-full text-sm text-slate-950 dark:text-white outline-none focus:border-accent"
+                                                placeholder="Leave blank if current"
+                                                value={workForm.end_date}
+                                                onChange={e => setWorkForm(p => ({ ...p, end_date: e.target.value }))}
+                                            />
+                                        </div>
+                                        <div className="col-span-2 space-y-1">
+                                            <label className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold">Description</label>
+                                            <textarea
+                                                className="bg-slate-900/5 dark:bg-primary/50 border border-slate-900/10 dark:border-white/10 rounded-xl px-3 py-2 w-full text-sm text-slate-950 dark:text-white outline-none focus:border-accent resize-none min-h-[72px]"
+                                                placeholder="Brief description of your role..."
+                                                value={workForm.description}
+                                                onChange={e => setWorkForm(p => ({ ...p, description: e.target.value }))}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-end gap-2 pt-1">
+                                        <button
+                                            onClick={handleAddWorkEntry}
+                                            disabled={savingWork}
+                                            className="px-5 py-2 bg-accent text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-accent/90 hover:scale-[1.02] transition-all disabled:opacity-50"
+                                        >
+                                            {savingWork ? 'Saving…' : 'Add Entry'}
+                                        </button>
+                                        <button
+                                            onClick={() => setShowWorkForm(false)}
+                                            className="px-5 py-2 bg-slate-900/5 dark:bg-white/5 text-slate-950 dark:text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-slate-900/10 dark:hover:bg-white/10 transition-all"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="space-y-8">
                                 {profile.experience && profile.experience.length > 0 ? (
                                     profile.experience.map((exp, i) => {
-                                        // Wizard may store different field names
                                         const company = exp.company || exp.organization || exp.employer || exp.companyName || '';
                                         const role = exp.role || exp.position || exp.title || exp.jobTitle || '';
                                         const startDate = exp.start_date || exp.startDate || exp.from || '';
@@ -713,9 +905,20 @@ const FreelancerProfilePage = () => {
                                                             {startDate}{startDate && ' — '}{endDate || (startDate ? 'Present' : '')}
                                                         </p>
                                                     </div>
-                                                    <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider ${i === 0 ? 'bg-accent/20 text-accent border border-accent/20' : 'bg-slate-900/5 dark:bg-white/5 text-slate-900/40 dark:text-white/40 border border-slate-900/5 dark:border-white/5'}`}>
-                                                        {i === 0 ? 'Current' : 'Past'}
-                                                    </span>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider ${i === 0 ? 'bg-accent/20 text-accent border border-accent/20' : 'bg-slate-900/5 dark:bg-white/5 text-slate-900/40 dark:text-white/40 border border-slate-900/5 dark:border-white/5'}`}>
+                                                            {endDate ? 'Past' : 'Current'}
+                                                        </span>
+                                                        {isOwnProfile && (
+                                                            <button
+                                                                onClick={() => handleDeleteWorkEntry(i)}
+                                                                className="p-0.5 text-slate-900/20 dark:text-white/20 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
+                                                                title="Remove entry"
+                                                            >
+                                                                <X size={13} />
+                                                            </button>
+                                                        )}
+                                                    </div>
                                                 </div>
                                                 {description && (
                                                     <p className="text-xs text-slate-900/50 dark:text-white/50 leading-relaxed mt-1">{description}</p>
@@ -724,15 +927,17 @@ const FreelancerProfilePage = () => {
                                         );
                                     })
                                 ) : profile.experience_years ? (
-                                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-900/[0.03] dark:bg-white/[0.03] border border-slate-900/5 dark:border-white/5">
-                                        <Briefcase size={20} className="text-accent shrink-0" />
+                                    <div className="flex items-center gap-3 py-2">
+                                        <img src="/Icons/icons8-bag-100.png" alt="Experience" className="w-6 h-6 object-contain shrink-0" />
                                         <div>
                                             <p className="text-sm font-bold text-slate-900 dark:text-white">{profile.experience_years}+ Years Experience</p>
-                                            <p className="text-xs text-slate-900/40 dark:text-white/40">No detailed work history added yet</p>
+                                            <p className="text-xs text-slate-900/40 dark:text-white/40">{isOwnProfile ? 'Click the pencil icon above to add detailed entries' : 'No detailed work history added yet'}</p>
                                         </div>
                                     </div>
                                 ) : (
-                                    <p className="text-sm text-slate-900/30 dark:text-white/30 font-medium italic">No experience details added yet.</p>
+                                    <p className="text-sm text-slate-900/30 dark:text-white/30 font-medium italic">
+                                        {isOwnProfile ? 'Click the pencil icon above to add your work history' : 'No experience details added yet.'}
+                                    </p>
                                 )}
                             </div>
                         </div>
@@ -748,16 +953,27 @@ const FreelancerProfilePage = () => {
                                     </div>
                                     <h1 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Technical Skills</h1>
                                 </div>
-                                {isOwnProfile && editSection !== 'skills' && (
-                                    <button
-                                        onClick={() => {
-                                            setEditSection('skills');
-                                            setEditData({ skills: profile.skills || [] });
-                                        }}
-                                        className="text-[10px] font-bold text-accent uppercase tracking-widest hover:underline"
-                                    >
-                                        Edit
-                                    </button>
+                                {isOwnProfile && (
+                                    editSection === 'skills' ? (
+                                        <button
+                                            onClick={() => setEditSection(null)}
+                                            className="p-1 text-slate-900/40 dark:text-white/30 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
+                                            title="Cancel editing skills"
+                                        >
+                                            <X size={15} />
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={() => {
+                                                setEditSection('skills');
+                                                setEditData({ skills: profile.skills || [] });
+                                            }}
+                                            className="p-1 text-slate-900/40 dark:text-white/30 hover:text-accent dark:hover:text-accent transition-colors"
+                                            title="Edit skills"
+                                        >
+                                            <Pencil size={15} />
+                                        </button>
+                                    )
                                 )}
                             </div>
 
@@ -769,9 +985,9 @@ const FreelancerProfilePage = () => {
                                         onChange={(e) => setEditData({ ...editData, skills: e.target.value.split(',').map(s => s.trim()).filter(s => s !== '') })}
                                         placeholder="React, Node.js, Design (Comma separated)"
                                     />
-                                    <div className="flex gap-2">
-                                        <button onClick={handleUpdateProfile} className="px-3 py-1 bg-accent text-primary rounded-lg text-[10px] font-bold uppercase tracking-widest">Save</button>
-                                        <button onClick={() => setEditSection(null)} className="px-3 py-1 bg-slate-900/5 dark:bg-white/5 rounded-lg text-[10px] font-bold uppercase tracking-widest">Cancel</button>
+                                    <div className="flex justify-end gap-3 pt-2">
+                                        <button onClick={handleUpdateProfile} className="px-5 py-2 bg-accent text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-accent/90 hover:scale-[1.02] transition-all">Save</button>
+                                        <button onClick={() => setEditSection(null)} className="px-5 py-2 bg-slate-900/5 dark:bg-white/5 text-slate-950 dark:text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-slate-900/10 dark:hover:bg-white/10 hover:scale-[1.02] transition-all">Cancel</button>
                                     </div>
                                 </div>
                             ) : (
@@ -819,33 +1035,44 @@ const FreelancerProfilePage = () => {
                         )}
                     </aside>
 
-                    {/* Main Panel (8/12) */}
-                    <main className="lg:col-span-8 space-y-16">
+                    {/* Main Panel (8/12 or full-width on resume tab) */}
+                    <main className={`space-y-16 ${activeTab === 'resume' ? 'lg:col-span-12' : 'lg:col-span-8'}`}>
                         {activeTab === 'about' ? (
                             <>
                                 {/* Section: Contact Information */}
                                 <div className="space-y-8">
                                     <div className="flex items-center justify-between pb-4 border-b border-slate-900/5 dark:border-white/5">
                                         <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-slate-900/30 dark:text-white/30">Contact Information</h3>
-                                        {isOwnProfile && editSection !== 'contact' && (
-                                            <button
-                                                onClick={() => {
-                                                    setEditSection('contact');
-                                                    setEditData({
-                                                        phone: profile.phone || '',
-                                                        location: profile.location || '',
-                                                        website: profile.website || ''
-                                                    });
-                                                }}
-                                                className="text-[10px] font-bold text-accent uppercase tracking-widest hover:underline"
-                                            >
-                                                Edit
-                                            </button>
+                                        {isOwnProfile && (
+                                            editSection === 'contact' ? (
+                                                <button
+                                                    onClick={() => setEditSection(null)}
+                                                    className="p-1 text-slate-900/40 dark:text-white/30 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
+                                                    title="Cancel editing contact"
+                                                >
+                                                    <X size={15} />
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={() => {
+                                                        setEditSection('contact');
+                                                        setEditData({
+                                                            phone: profile.phone || '',
+                                                            location: profile.location || '',
+                                                            website: profile.website || ''
+                                                        });
+                                                    }}
+                                                    className="p-1 text-slate-900/40 dark:text-white/30 hover:text-accent dark:hover:text-accent transition-colors"
+                                                    title="Edit contact info"
+                                                >
+                                                    <Pencil size={15} />
+                                                </button>
+                                            )
                                         )}
                                     </div>
 
                                     {editSection === 'contact' ? (
-                                        <div className="grid grid-cols-1 gap-4 max-w-xl">
+                                        <div className="grid grid-cols-1 gap-4 w-full">
                                             <div className="space-y-1">
                                                 <label className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold">Phone</label>
                                                 <input
@@ -870,22 +1097,22 @@ const FreelancerProfilePage = () => {
                                                     onChange={(e) => setEditData({ ...editData, website: e.target.value })}
                                                 />
                                             </div>
-                                            <div className="flex gap-2 pt-2">
-                                                <button onClick={handleUpdateProfile} className="px-4 py-2 bg-accent text-primary rounded-lg text-xs font-bold uppercase tracking-widest">Save</button>
-                                                <button onClick={() => setEditSection(null)} className="px-4 py-2 bg-slate-900/5 dark:bg-white/5 rounded-lg text-xs font-bold uppercase tracking-widest">Cancel</button>
+                                            <div className="flex justify-end gap-3 pt-2 w-full">
+                                                <button onClick={handleUpdateProfile} className="px-6 py-2 bg-accent text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-accent/90 hover:scale-[1.02] transition-all">Save</button>
+                                                <button onClick={() => setEditSection(null)} className="px-6 py-2 bg-slate-900/5 dark:bg-white/5 text-slate-950 dark:text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-slate-900/10 dark:hover:bg-white/10 hover:scale-[1.02] transition-all">Cancel</button>
                                             </div>
                                         </div>
                                     ) : (
                                         <div className="flex flex-col gap-6">
-                                            <div className="flex flex-row items-center justify-between sm:justify-start sm:gap-12">
-                                                <div className="text-sm font-bold text-slate-900/40 dark:text-gray-400">Address:</div>
+                                            <div className="flex flex-row items-center justify-between sm:justify-start">
+                                                <div className="text-sm font-bold text-slate-900/40 dark:text-gray-400 w-24 sm:w-28 shrink-0">Address:</div>
                                                 <div className="text-sm font-bold text-slate-900/60 dark:text-white/60 leading-relaxed uppercase tracking-widest text-right sm:text-left">
                                                     {profile.location || 'Not Provided'}
                                                 </div>
                                             </div>
 
-                                            <div className="flex flex-row items-center justify-between sm:justify-start sm:gap-12">
-                                                <div className="text-sm font-bold text-slate-900/40 dark:text-gray-400">Site:</div>
+                                            <div className="flex flex-row items-center justify-between sm:justify-start">
+                                                <div className="text-sm font-bold text-slate-900/40 dark:text-gray-400 w-24 sm:w-28 shrink-0">Site:</div>
                                                 <div className="text-sm font-bold text-accent italic text-right sm:text-left">{profile.website || 'Not Provided'}</div>
                                             </div>
                                         </div>
@@ -897,7 +1124,7 @@ const FreelancerProfilePage = () => {
                                     <motion.div
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        className="relative p-8 rounded-[32px] bg-transparent border border-accent/10 overflow-hidden group"
+                                        className="relative p-8 rounded-xl bg-transparent border border-accent/10 overflow-hidden group"
                                     >
                                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <Cpu size={120} className="text-accent" />
@@ -931,10 +1158,6 @@ const FreelancerProfilePage = () => {
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <p className="text-[9px] text-slate-900/20 dark:text-white/20 font-medium italic">
-                                                Powered by Groq LLaMA 3.3 — Updated every 12 hours based on work activity logs.
-                                            </p>
                                         </div>
                                     </motion.div>
                                 )}
@@ -944,24 +1167,35 @@ const FreelancerProfilePage = () => {
                                 <div className="space-y-8">
                                     <div className="flex items-center justify-between pb-4 border-b border-slate-900/5 dark:border-white/5">
                                         <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-slate-900/30 dark:text-white/30">Basic Information</h3>
-                                        {isOwnProfile && editSection !== 'basic' && (
-                                            <button
-                                                onClick={() => {
-                                                    setEditSection('basic');
-                                                    setEditData({
-                                                        dob: profile.dob || '',
-                                                        gender: profile.gender || ''
-                                                    });
-                                                }}
-                                                className="text-[10px] font-bold text-accent uppercase tracking-widest hover:underline"
-                                            >
-                                                Edit
-                                            </button>
+                                        {isOwnProfile && (
+                                            editSection === 'basic' ? (
+                                                <button
+                                                    onClick={() => setEditSection(null)}
+                                                    className="p-1 text-slate-900/40 dark:text-white/30 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
+                                                    title="Cancel editing basic info"
+                                                >
+                                                    <X size={15} />
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={() => {
+                                                        setEditSection('basic');
+                                                        setEditData({
+                                                            dob: profile.dob || '',
+                                                            gender: profile.gender || ''
+                                                        });
+                                                    }}
+                                                    className="p-1 text-slate-900/40 dark:text-white/30 hover:text-accent dark:hover:text-accent transition-colors"
+                                                    title="Edit basic info"
+                                                >
+                                                    <Pencil size={15} />
+                                                </button>
+                                            )
                                         )}
                                     </div>
 
                                     {editSection === 'basic' ? (
-                                        <div className="grid grid-cols-1 gap-4 max-w-xl">
+                                        <div className="grid grid-cols-1 gap-4 w-full">
                                             <div className="space-y-1">
                                                 <label className="text-[10px] text-slate-900/30 dark:text-white/30 uppercase font-bold">Birthday</label>
                                                 <input
@@ -986,20 +1220,20 @@ const FreelancerProfilePage = () => {
                                                     className="w-full"
                                                 />
                                             </div>
-                                            <div className="flex gap-2 pt-2">
-                                                <button onClick={handleUpdateProfile} className="px-4 py-2 bg-accent text-primary rounded-lg text-xs font-bold uppercase tracking-widest">Save</button>
-                                                <button onClick={() => setEditSection(null)} className="px-4 py-2 bg-slate-900/5 dark:bg-white/5 rounded-lg text-xs font-bold uppercase tracking-widest">Cancel</button>
+                                            <div className="flex justify-end gap-3 pt-2 w-full">
+                                                <button onClick={handleUpdateProfile} className="px-6 py-2 bg-accent text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-accent/90 hover:scale-[1.02] transition-all">Save</button>
+                                                <button onClick={() => setEditSection(null)} className="px-6 py-2 bg-slate-900/5 dark:bg-white/5 text-slate-950 dark:text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-slate-900/10 dark:hover:bg-white/10 hover:scale-[1.02] transition-all">Cancel</button>
                                             </div>
                                         </div>
                                     ) : (
                                         <div className="flex flex-col gap-6">
-                                            <div className="flex flex-row items-center justify-between sm:justify-start sm:gap-12">
-                                                <div className="text-sm font-bold text-slate-900/40 dark:text-gray-400">Birthday:</div>
+                                            <div className="flex flex-row items-center justify-between sm:justify-start">
+                                                <div className="text-sm font-bold text-slate-900/40 dark:text-gray-400 w-24 sm:w-28 shrink-0">Birthday:</div>
                                                 <div className="text-sm font-bold text-slate-900/60 dark:text-white/60 text-right sm:text-left">{profile.dob ? new Date(profile.dob).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Not Provided'}</div>
                                             </div>
 
-                                            <div className="flex flex-row items-center justify-between sm:justify-start sm:gap-12">
-                                                <div className="text-sm font-bold text-slate-900/40 dark:text-gray-400">Gender:</div>
+                                            <div className="flex flex-row items-center justify-between sm:justify-start">
+                                                <div className="text-sm font-bold text-slate-900/40 dark:text-gray-400 w-24 sm:w-28 shrink-0">Gender:</div>
                                                 <div className="text-sm font-bold text-slate-900/60 dark:text-white/60 text-right sm:text-left">{profile.gender || 'Not Provided'}</div>
                                             </div>
                                         </div>
@@ -1010,16 +1244,27 @@ const FreelancerProfilePage = () => {
                                 <div className="space-y-6 pt-8">
                                     <div className="flex items-center justify-between">
                                         <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-slate-900/30 dark:text-white/30">About Me</h3>
-                                        {isOwnProfile && editSection !== 'bio' && (
-                                            <button
-                                                onClick={() => {
-                                                    setEditSection('bio');
-                                                    setEditData({ bio: profile.bio || '' });
-                                                }}
-                                                className="text-[10px] font-bold text-accent uppercase tracking-widest hover:underline"
-                                            >
-                                                Edit
-                                            </button>
+                                        {isOwnProfile && (
+                                            editSection === 'bio' ? (
+                                                <button
+                                                    onClick={() => setEditSection(null)}
+                                                    className="p-1 text-slate-900/40 dark:text-white/30 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
+                                                    title="Cancel editing bio"
+                                                >
+                                                    <X size={15} />
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={() => {
+                                                        setEditSection('bio');
+                                                        setEditData({ bio: profile.bio || '' });
+                                                    }}
+                                                    className="p-1 text-slate-900/40 dark:text-white/30 hover:text-accent dark:hover:text-accent transition-colors"
+                                                    title="Edit bio"
+                                                >
+                                                    <Pencil size={15} />
+                                                </button>
+                                            )
                                         )}
                                     </div>
 
@@ -1031,9 +1276,9 @@ const FreelancerProfilePage = () => {
                                                 onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
                                                 placeholder="Write something about yourself..."
                                             />
-                                            <div className="flex gap-2 pt-2">
-                                                <button onClick={handleUpdateProfile} className="px-6 py-2 bg-accent text-primary rounded-lg text-xs font-bold uppercase tracking-widest">Save Bio</button>
-                                                <button onClick={() => setEditSection(null)} className="px-6 py-2 bg-slate-900/5 dark:bg-white/5 rounded-lg text-xs font-bold uppercase tracking-widest">Cancel</button>
+                                            <div className="flex justify-end gap-3 pt-2">
+                                                <button onClick={handleUpdateProfile} className="px-6 py-2 bg-accent text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-accent/90 hover:scale-[1.02] transition-all">Save Bio</button>
+                                                <button onClick={() => setEditSection(null)} className="px-6 py-2 bg-slate-900/5 dark:bg-white/5 text-slate-950 dark:text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-slate-900/10 dark:hover:bg-white/10 hover:scale-[1.02] transition-all">Cancel</button>
                                             </div>
                                         </div>
                                     ) : (
@@ -1043,35 +1288,34 @@ const FreelancerProfilePage = () => {
                                     )}
                                 </div>
                             </>
-                        ) : (
-                            /* Portfolio Tab Content */
-                            <div className="grid grid-cols-1 gap-12">
-                                {profile.portfolio && profile.portfolio.length > 0 ? (
-                                    profile.portfolio.map((p, i) => (
-                                        <div key={i} className="aspect-video bg-slate-900/5 dark:bg-white/5 rounded-3xl overflow-hidden border border-slate-900/5 dark:border-white/5 group relative shadow-2xl">
-                                            {p.url || p.image ? (
-                                                <img src={p.url || p.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-slate-900/20 dark:text-white/5">
-                                                    <Award size={64} />
-                                                </div>
-                                            )}
-                                            <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
-                                                <div>
-                                                    <h4 className="text-lg font-bold text-white">{p.title}</h4>
-                                                    <p className="text-xs text-white/60 mt-1">{p.description || 'Project details'}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))
+                        ) : activeTab === 'resume' ? (
+                            /* Resume Tab Content — full width, no sidebar */
+                            <div className="flex flex-col items-center justify-center py-16">
+                                {profile.resume_url ? (
+                                    <>
+                                        <img 
+                                            src="/Icons/ChatGPT Image May 23, 2026, 09_47_55 AM.png" 
+                                            alt="Professional Resume Illustration" 
+                                            className="w-64 md:w-80 h-auto object-contain mb-8 rounded-2xl opacity-90"
+                                        />
+                                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Professional Resume</h3>
+                                        <p className="text-sm text-slate-900/50 dark:text-white/50 mb-10 max-w-md text-center">
+                                            This freelancer has uploaded a verified resume. View or download it to see their full work history.
+                                        </p>
+                                        <a
+                                            href={profile.resume_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="px-8 py-2 bg-accent text-white font-bold rounded-full hover:bg-accent/90 hover:scale-[1.03] transition-all text-xs uppercase tracking-widest"
+                                        >
+                                            View Resume
+                                        </a>
+                                    </>
                                 ) : (
-                                    <div className="col-span-2 py-32 text-center bg-slate-900/5 dark:bg-white/5 rounded-3xl border border-dashed border-slate-900/10 dark:border-white/10">
-                                        <Award size={48} className="mx-auto text-slate-900/10 dark:text-white/10 mb-4" />
-                                        <p className="text-slate-900/30 dark:text-white/30 font-bold uppercase tracking-widest text-xs">No projects in portfolio</p>
-                                    </div>
+                                    <p className="text-slate-900/30 dark:text-white/30 font-bold uppercase tracking-widest text-xs">No resume uploaded</p>
                                 )}
                             </div>
-                        )}
+                        ) : null}
                     </main>
                 </div>
             </div>
@@ -1108,7 +1352,7 @@ const FreelancerProfilePage = () => {
                                 <div className="pt-8">
                                     <button
                                         onClick={() => setShowVerifyModal(false)}
-                                        className="w-full py-4 bg-accent text-primary rounded-2xl font-black uppercase tracking-widest hover:bg-white transition-all shadow-xl shadow-accent/10"
+                                        className="w-full py-4 bg-accent text-primary rounded-2xl font-black uppercase tracking-widest hover:bg-white transition-all"
                                     >
                                         Got it, I'll Check
                                     </button>

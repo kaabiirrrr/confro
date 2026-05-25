@@ -126,7 +126,7 @@ const NotificationDropdown = ({ role }) => {
                     backdrop-filter: blur(24px) saturate(180%);
                     -webkit-backdrop-filter: blur(24px) saturate(180%);
                     border: 1px solid var(--color-dropdown-border);
-                    border-radius: 20px;
+                    border-radius: 12px;
                     overflow: hidden;
                     z-index: 9999;
                     animation: nd-slideIn 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;

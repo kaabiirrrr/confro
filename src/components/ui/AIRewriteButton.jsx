@@ -88,7 +88,7 @@ export default function AIRewriteButton({ field, value, context = {}, onApply, c
   const handleDiscard = () => setSuggestion(null);
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className={`relative ${className}`}>
       <div className="space-y-3">
         {/* Trigger button - shown only if no suggestion */}
         {!suggestion && (
@@ -97,7 +97,7 @@ export default function AIRewriteButton({ field, value, context = {}, onApply, c
               type="button"
               onClick={handleGenerate}
               disabled={loading}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent/10 border border-accent/20 text-accent text-[11px] font-bold uppercase tracking-widest hover:bg-accent/20 transition-all disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-medium hover:bg-accent/20 transition-all disabled:opacity-50"
             >
               {loading ? (
                 <>
@@ -106,47 +106,58 @@ export default function AIRewriteButton({ field, value, context = {}, onApply, c
                 </>
               ) : (
                 <>
-                  <img src="/Icons/White-AI-Connect.png" alt="AI" className="w-3.5 h-3.5 object-contain" />
-                  Rewrite with AI
+                  <span className="w-3.5 h-3.5 bg-accent inline-block" style={{ maskImage: 'url(/Icons/White-AI-Connect.png)', maskSize: 'contain', maskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskImage: 'url(/Icons/White-AI-Connect.png)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
+                  Rewrite with Connect AI
                 </>
               )}
             </button>
           </div>
         )}
 
-        {/* Suggestion preview - always full width below the trigger line */}
+        {/* Suggestion preview - Modal */}
         {suggestion && (
-          <div className="rounded-xl border border-accent/30 bg-secondary/50 backdrop-blur-md p-4 space-y-3 shadow-lg shadow-black/5 animate-in fade-in slide-in-from-top-2 duration-300">
-            <div className="flex items-center justify-between mb-1">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-accent/10 rounded-lg">
-                  <img src="/Icons/White-AI-Connect.png" alt="AI" className="w-4 h-4 object-contain" />
+          <div className="fixed inset-0 z-[100] flex items-start justify-center pt-24 px-4 pb-4 bg-black/60 backdrop-blur-sm" onClick={handleDiscard}>
+            <div 
+              onClick={(e) => e.stopPropagation()} 
+              className="w-full max-w-2xl rounded-xl border border-white/10 bg-secondary p-5 sm:p-6 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center -mt-0.5">
+                    <span className="w-5 h-5 bg-accent inline-block" style={{ maskImage: 'url(/Icons/White-AI-Connect.png)', maskSize: 'contain', maskRepeat: 'no-repeat', maskPosition: 'center', WebkitMaskImage: 'url(/Icons/White-AI-Connect.png)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', WebkitMaskPosition: 'center' }} />
+                  </div>
+                  <span className="text-accent text-[11px] font-bold uppercase tracking-widest mt-0.5">Connect AI Suggestion</span>
                 </div>
-                <span className="text-accent text-[10px] font-bold uppercase tracking-widest">AI Suggestion</span>
+                <button 
+                  onClick={handleDiscard}
+                  className="text-white/30 hover:text-accent transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
-              <button 
-                onClick={handleDiscard}
-                className="text-white/30 hover:text-white/60 transition-colors text-[10px] font-medium uppercase tracking-wider"
-              >
-                Cancel
-              </button>
-            </div>
-            <p className="text-light-text text-sm leading-relaxed whitespace-pre-wrap">{suggestion}</p>
-            <div className="flex gap-3 pt-1">
-              <button
-                type="button"
-                onClick={handleApply}
-                className="flex-1 py-2.5 bg-accent text-white text-xs font-bold rounded-xl hover:bg-accent/90 transition shadow-lg shadow-accent/20"
-              >
-                Apply Changes
-              </button>
-              <button
-                type="button"
-                onClick={handleDiscard}
-                className="flex-1 py-2.5 bg-white/5 border border-white/10 text-white/50 text-xs font-bold rounded-xl hover:bg-white/10 transition"
-              >
-                Discard
-              </button>
+              
+              <div className="bg-primary/50 border border-white/5 rounded-xl p-4 max-h-[50vh] overflow-y-auto">
+                <p className="text-light-text text-sm leading-relaxed whitespace-pre-wrap">{suggestion}</p>
+              </div>
+              
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleDiscard}
+                  className="flex-1 py-2.5 sm:py-3 bg-white/5 border border-white/10 text-white font-bold text-xs sm:text-sm rounded-full hover:bg-white/10 transition-all"
+                >
+                  Discard
+                </button>
+                <button
+                  type="button"
+                  onClick={handleApply}
+                  className="flex-1 py-2.5 sm:py-3 bg-accent text-white font-bold text-xs sm:text-sm rounded-full hover:bg-accent/90 transition-all"
+                >
+                  Apply Changes
+                </button>
+              </div>
             </div>
           </div>
         )}

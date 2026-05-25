@@ -16,6 +16,7 @@ import { checkProfileCompletion } from './utils/authUtils';
 import { RealtimeProvider } from './context/RealtimeContext';
 import { logger } from './utils/logger';
 import AIAssistant from './components/shared/AIAssistant';
+import { ADMIN_ROLES } from './utils/roles';
 
 
 /* Landing Components */
@@ -226,6 +227,7 @@ const AnnouncementsManagement = lazy(() => import("./admin/components/dashboard/
 const LotteryAdminPage = lazy(() => import("./admin/pages/LotteryAdminPage"));
 const ConnectsManagementPage = lazy(() => import("./admin/pages/ConnectsManagementPage"));
 const TreasuryPage = lazy(() => import("./admin/pages/TreasuryPage"));
+const SalesProposalsPage = lazy(() => import("./admin/pages/SalesProposalsPage"));
 
 /* Loading Component */
 const LoadingSpinner = () => <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader /></div>;
@@ -331,6 +333,12 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Intercept recovery links that might have fallen back to the default Site URL
+    if (location.pathname === '/' && window.location.hash.includes('type=recovery')) {
+      navigate('/reset-password' + window.location.hash, { replace: true });
+      return;
+    }
+
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     const publicRoutes = [
       '/', '/login', '/signup', '/forgot-password', '/reset-password',
@@ -534,13 +542,14 @@ function App() {
                         </Route>
 
                         {/* Admin Dashboard */}
-                        <Route element={<ProtectedRoute allowedRoles={['SUPER_ADMIN', 'ADMIN', 'MODERATOR', 'FINANCE_ADMIN', 'SUPPORT_ADMIN']} />}>
+                        <Route element={<ProtectedRoute allowedRoles={ADMIN_ROLES} />}>
                           <Route path="/admin" element={<AdminLayout />}>
                             <Route index element={<Navigate to="dashboard" replace />} />
                             <Route path="dashboard" element={<AdminDashboard />} />
                             <Route path="users" element={<UsersPage />} />
                             <Route path="jobs" element={<JobsPage />} />
                             <Route path="proposals" element={<ProposalsPage />} />
+                            <Route path="sales-proposals" element={<SalesProposalsPage />} />
                             <Route path="contracts" element={<ContractsPage />} />
                             <Route path="payments" element={<PaymentsPage />} />
                             <Route path="treasury" element={<TreasuryPage />} />

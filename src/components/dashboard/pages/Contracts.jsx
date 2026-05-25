@@ -88,23 +88,23 @@ const Contracts = () => {
       </div>
 
       {/* Quick Stats */}
-      <div className="flex flex-wrap items-start justify-between gap-4 sm:gap-6 w-full py-2">
-        <div className="transition-all">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-light-text/30 mb-2">Active Work</p>
-          <div className="flex items-center gap-3">
-            <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">{contracts.filter(c => c.status === 'ACTIVE' || c.status === 'IN_PROGRESS').length}</p>
-            <div className="px-2 py-0.5 rounded-full text-emerald-400 text-[9px] font-bold uppercase tracking-widest flex items-center gap-1">
-              <div className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" /> Live
+      <div className="grid grid-cols-3 gap-3 sm:gap-4 w-full">
+        <div className="border border-slate-200 dark:border-white/5 rounded-2xl px-3 sm:px-6 py-3 sm:py-5">
+          <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2 whitespace-nowrap">Active Work</p>
+          <div className="flex items-center gap-1.5 sm:gap-3">
+            <p className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{contracts.filter(c => c.status === 'ACTIVE' || c.status === 'IN_PROGRESS').length}</p>
+            <div className="text-emerald-500 dark:text-emerald-400 text-[7px] sm:text-[9px] font-bold uppercase tracking-widest flex items-center gap-1">
+              <div className="w-1 h-1 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" /> Live
             </div>
           </div>
         </div>
-        <div className="transition-all">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-light-text/30 mb-2">Total Earnings</p>
-          <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">{formatINR(contracts.filter(c => c.status === 'COMPLETED').reduce((acc, c) => acc + Number(c.agreed_rate || 0), 0))}</p>
+        <div className="border border-slate-200 dark:border-white/5 rounded-2xl px-3 sm:px-6 py-3 sm:py-5">
+          <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2 whitespace-nowrap">Total Earnings</p>
+          <p className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{formatINR(contracts.filter(c => c.status === 'COMPLETED').reduce((acc, c) => acc + Number(c.agreed_rate || 0), 0))}</p>
         </div>
-        <div className="transition-all">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-light-text/30 mb-2">Completed</p>
-          <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">{contracts.filter(c => c.status === 'COMPLETED').length} Projects</p>
+        <div className="border border-slate-200 dark:border-white/5 rounded-2xl px-3 sm:px-6 py-3 sm:py-5">
+          <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2 whitespace-nowrap">Completed</p>
+          <p className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{contracts.filter(c => c.status === 'COMPLETED').length} Projects</p>
         </div>
       </div>
 
@@ -127,9 +127,9 @@ const Contracts = () => {
       </div>
 
       {filteredContracts.length === 0 ? (
-        <div className="bg-transparent border border-white/10 rounded-2xl p-8 sm:p-16 text-center">
-          <div className="w-14 h-14 sm:w-20 sm:h-20 bg-transparent rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
-            <FileText className="w-7 h-7 sm:w-10 sm:h-10 text-white/10" />
+        <div className="p-8 sm:p-16 text-center">
+          <div className="flex items-center justify-center mx-auto mb-4 sm:mb-6">
+            <img src="/Icons/empty-jobs.png" alt="No contracts" className="w-40 h-40 object-contain" />
           </div>
           <h3 className="text-base sm:text-xl font-bold text-white mb-2">No contracts found</h3>
           <p className="text-light-text/40 text-xs sm:text-[14px] max-w-sm mx-auto mb-6 sm:mb-8 leading-relaxed">
@@ -149,7 +149,7 @@ const Contracts = () => {
             const clientAvatar = contract.client?.avatar_url;
 
             return (
-              <div key={contract.id} className="border border-white/5 rounded-2xl bg-transparent p-4 sm:p-6 hover:border-accent transition-all duration-300 group">
+              <div key={contract.id} className="border border-slate-200 dark:border-white/5 rounded-2xl bg-transparent p-4 sm:p-6 hover:border-accent dark:hover:border-accent transition-all duration-300 group">
                 <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:items-center">
                   {/* Left Info */}
                   <div className="flex-1 min-w-0 space-y-3 sm:space-y-4">

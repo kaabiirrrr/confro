@@ -100,7 +100,7 @@ const Hero = () => {
             <motion.button
               whileTap={{ scale: 0.9 }}
               whileHover={{ scale: 1.1 }}
-              className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-blue-500 rounded-full flex-shrink-0"
+              className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-accent rounded-full flex-shrink-0"
             >
               <FiArrowRight className="text-white" size={14} />
             </motion.button>

@@ -118,17 +118,38 @@ function JobCard({ job, isSaved = false, onToggleSave, searchQuery = "" }) {
       </div>
 
       {/* Client Info */}
-      <div className="flex justify-between items-start sm:items-center pt-3 sm:pt-4 border-t border-white/5 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-light-text/20">
-        <div className="flex items-center gap-1.5 mt-0.5 sm:mt-0">
-          <Star size={11} className="text-yellow-500/80 fill-yellow-500/20" />
-          <span className="text-light-text/30 whitespace-nowrap">
-            {job.client?.rating ? `${job.client.rating} (${job.client.reviews_count || 0})` : "NEW CLIENT"}
-          </span>
+      <div className="flex justify-between items-center pt-3 sm:pt-4 border-t border-white/5">
+        <div className="flex items-center gap-2.5">
+          {job.client?.avatar_url ? (
+            <img src={job.client.avatar_url} alt="Client" className="w-7 h-7 rounded-full object-cover ring-1 ring-white/10" />
+          ) : (
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-accent/20 to-accent/5 flex items-center justify-center text-[11px] text-accent font-bold ring-1 ring-accent/20">
+              {(job.client?.name?.[0] || job.client?.company_name?.[0] || "C").toUpperCase()}
+            </div>
+          )}
+          <div className="flex flex-col">
+            <span className="text-[11px] text-light-text/50 font-semibold leading-tight">
+              {job.client?.name || job.client?.company_name || "Client"}
+            </span>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              {(job.client?.rating && job.client.rating > 0) ? (
+                <>
+                  <Star size={10} className="text-yellow-400 fill-yellow-400" />
+                  <span className="text-[10px] font-bold text-yellow-400/90">{Number(job.client.rating).toFixed(1)}</span>
+                  <span className="text-[9px] text-light-text/25 font-medium">({job.client.reviews_count || 0})</span>
+                </>
+              ) : (
+                <span className="text-[9px] text-light-text/20 font-medium italic">New client</span>
+              )}
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1 sm:gap-4 text-right">
-          <span className="opacity-80 break-words text-right max-w-[150px] sm:max-w-none">{job.client?.location || job.client?.country || "INTL"}</span>
-          <span className="flex items-center gap-1 text-accent/40 font-extrabold whitespace-nowrap">
-            PROPOSALS: <span className="text-light-text/40">{job.proposal_count ?? job.proposals?.length ?? 0}</span>
+        <div className="flex flex-col items-end gap-1">
+          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-light-text/20 break-words text-right max-w-[150px] sm:max-w-none">
+            {job.client?.location || job.client?.country || "INTL"}
+          </span>
+          <span className="flex items-center gap-1 text-[9px] sm:text-[10px] text-accent/40 font-extrabold uppercase tracking-widest whitespace-nowrap">
+            Proposals: <span className="text-light-text/40">{job.proposal_count ?? job.proposals?.length ?? 0}</span>
           </span>
         </div>
       </div>

@@ -28,7 +28,7 @@ const ConfirmModal = ({
   if (!isOpen) return null;
 
   const modalContent = (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-6 bg-slate-950/30 dark:bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[99999] flex items-start justify-center pt-12 p-6 bg-slate-950/30 dark:bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-300">
       
       {/* Container - Using theme-aware glass pane */}
       <div 

@@ -9,7 +9,7 @@ import './BestMatchesTab.css';
  * BestMatchesTab — AI-powered personalized job feed.
  * Replaces the old "Recent Jobs as Best Matches" fallback.
  */
-const BestMatchesTab = () => {
+const BestMatchesTab = ({ filters = {}, searchQuery = '' }) => {
     const [recs, setRecs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isColdStart, setIsColdStart] = useState(false);
@@ -51,6 +51,44 @@ const BestMatchesTab = () => {
         fetchRecs(nextPage);
     };
 
+    // ── Apply client-side filters & search ───────────────────
+    const filteredRecs = recs.filter(job => {
+        // Search query
+        if (searchQuery.trim()) {
+            const q = searchQuery.trim().toLowerCase();
+            const matchesSearch =
+                (job.title || '').toLowerCase().includes(q) ||
+                (job.description || '').toLowerCase().includes(q) ||
+                (job.skills || []).some(s => s.toLowerCase().includes(q)) ||
+                (job.category || '').toLowerCase().includes(q);
+            if (!matchesSearch) return false;
+        }
+
+        // Experience level
+        if (filters.experience_level?.length > 0) {
+            const jobExp = (job.experience_level || '').toLowerCase();
+            const matches = filters.experience_level.some(fl => jobExp.includes(fl) || fl.includes(jobExp));
+            if (!matches) return false;
+        }
+
+        // Budget type / job type
+        if (filters.budget_type?.length > 0) {
+            const jobType = (job.budget_type || '').toLowerCase();
+            const matches = filters.budget_type.some(fl => jobType.includes(fl) || fl.includes(jobType));
+            if (!matches) return false;
+        }
+
+        // Budget range
+        if (filters.budget_min && job.budget !== null && job.budget !== undefined) {
+            if (Number(job.budget) < Number(filters.budget_min)) return false;
+        }
+        if (filters.budget_max && job.budget !== null && job.budget !== undefined) {
+            if (Number(job.budget) > Number(filters.budget_max)) return false;
+        }
+
+        return true;
+    });
+
     // ── Cold start state ──────────────────────────────────────
     if (isColdStart) {
         return (
@@ -68,7 +106,7 @@ const BestMatchesTab = () => {
     // ── Empty state ───────────────────────────────────────────
     if (!loading && recs.length === 0) {
         return (
-            <div className="bmt-root">
+            <div className="bmt-root w-full flex flex-col items-center justify-center">
                 <div className="bmt-empty">
                     <span className="bmt-empty-icon">🎯</span>
                     <h3 className="bmt-empty-title">No matches yet</h3>
@@ -83,6 +121,21 @@ const BestMatchesTab = () => {
         );
     }
 
+    // ── Filtered empty state ──────────────────────────────────
+    if (!loading && recs.length > 0 && filteredRecs.length === 0) {
+        return (
+            <div className="w-full flex flex-col items-center justify-center text-center">
+                <img
+                    src="/ChatGPT Image May 24, 2026, 04_29_37 PM.png"
+                    alt="No matches"
+                    className="w-60 h-60 object-contain"
+                />
+                <h3 className="text-lg font-black text-slate-800 dark:text-white mb-2">No matches for these filters</h3>
+                <p className="text-slate-400 dark:text-white/30 text-sm font-medium max-w-xs">Try adjusting or clearing your filters to see more results.</p>
+            </div>
+        );
+    }
+
     return (
         <div className="bmt-root">
             {/* Feed */}
@@ -91,9 +144,9 @@ const BestMatchesTab = () => {
                 <div className="bmt-feed-header flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
                     <div className="w-full sm:w-auto">
                         <div className="bmt-feed-meta flex justify-between sm:justify-start w-full">
-                            <span className="bmt-ai-label flex items-center gap-1.5 bg-indigo-50 dark:bg-indigo-500/15 border border-indigo-200 dark:border-indigo-400/25 text-indigo-700 dark:text-indigo-300">
-                                <img src="/Icons/AI-Connect.png" alt="Connect AI" className="w-3.5 h-3.5 object-contain dark:hidden" />
-                                <img src="/Icons/White-AI-Connect.png" alt="Connect AI" className="w-3.5 h-3.5 object-contain hidden dark:block" />
+                            <span className="bmt-ai-label flex items-center gap-1 bg-indigo-50 dark:bg-indigo-500/15 border border-indigo-200 dark:border-indigo-400/25 text-indigo-700 dark:text-indigo-300">
+                                <img src="/Icons/AI-Connect.png" alt="Connect AI" className="w-3 h-3 object-contain dark:hidden" />
+                                <img src="/Icons/White-AI-Connect.png" alt="Connect AI" className="w-3 h-3 object-contain hidden dark:block" />
                                 CONNECT AI POWERED
                             </span>
                             <span className="bmt-count text-slate-800 dark:text-slate-200">{total} personalized matches</span>
@@ -102,7 +155,7 @@ const BestMatchesTab = () => {
                     </div>
                     <button
                         onClick={() => setShowHowItWorks(true)}
-                        className="text-slate-600 dark:text-white/40 hover:text-accent dark:hover:text-accent transition-colors flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 px-3 py-1.5 rounded-full self-end sm:self-auto shrink-0"
+                        className="w-full sm:w-auto text-slate-600 dark:text-white/40 hover:text-accent dark:hover:text-accent transition-colors flex items-center justify-center gap-1.5 text-xs font-bold uppercase tracking-widest bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 px-3 py-2 sm:py-1.5 rounded-full self-end sm:self-auto shrink-0"
                     >
                         <Info size={14} /> How it works
                     </button>
@@ -110,7 +163,7 @@ const BestMatchesTab = () => {
 
                 {/* Job cards */}
                 <div className="bmt-jobs-grid">
-                    {recs.map((job) => (
+                    {filteredRecs.map((job) => (
                         <JobMatchCard
                             key={job.id}
                             job={job}
@@ -143,7 +196,13 @@ const BestMatchesTab = () => {
                         <button className="absolute top-4 right-4 text-slate-400 dark:text-light-text/40 hover:text-accent dark:hover:text-accent transition-colors" onClick={() => setShowHowItWorks(false)}>
                             <X size={20} />
                         </button>
-                        <h4 className="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white mb-5">How matching works</h4>
+                        <div className="flex flex-col gap-2 mb-5 pr-6">
+                            <div className="flex items-center gap-1.5">
+                                <img src="/Icons/White-AI-Connect.png" alt="Connect AI" className="w-4 h-4 object-contain opacity-80 brightness-0 dark:brightness-100" />
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-light-text/40">Connect AI</span>
+                            </div>
+                            <h4 className="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white m-0">How matching works</h4>
+                        </div>
                         <ul className="flex flex-col gap-3">
                             <li className="flex items-center gap-3 text-[13.5px] text-slate-600 dark:text-light-text/60"><span className="text-lg">🛠</span> Skills alignment <span className="ml-auto font-medium">30%</span></li>
                             <li className="flex items-center gap-3 text-[13.5px] text-slate-600 dark:text-light-text/60"><span className="text-lg">🛡</span> Trust & reliability <span className="ml-auto font-medium">22%</span></li>

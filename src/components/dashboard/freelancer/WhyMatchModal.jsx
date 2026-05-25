@@ -83,8 +83,11 @@ const WhyMatchModal = ({ isOpen, onClose, job, recommendation }) => {
             <div className="wmm-modal bg-secondary rounded-xl" ref={modalRef}>
                 {/* Header */}
                 <div className="wmm-header">
-                    <div className="wmm-header-left">
-                        <span className="wmm-ai-icon">⚡</span>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-1.5">
+                            <img src="/Icons/White-AI-Connect.png" alt="Connect AI" className="w-4 h-4 object-contain opacity-80 brightness-0 dark:brightness-100" />
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-light-text/40">Connect AI</span>
+                        </div>
                         <div>
                             <h2 className="wmm-title">Why we recommended this job</h2>
                             <p className="wmm-subtitle">{job?.title || 'Job'}</p>

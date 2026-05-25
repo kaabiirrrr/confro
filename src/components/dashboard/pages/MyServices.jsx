@@ -109,7 +109,7 @@ export default function MyServices() {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search for services or keywords..."
-          className="w-full bg-secondary border border-border rounded-xl pl-10 sm:pl-12 pr-4 py-3 sm:py-3.5 text-xs sm:text-sm text-light-text focus:outline-none focus:border-accent/40 shadow-sm transition-all placeholder:text-light-text/20"
+          className="w-full bg-secondary border border-border rounded-xl pl-10 sm:pl-12 pr-4 py-3 sm:py-3.5 text-xs sm:text-sm text-light-text focus:outline-none focus:border-accent/40 transition-all placeholder:text-light-text/20"
         />
         {search && (
           <button onClick={() => setSearch("")}
@@ -138,10 +138,8 @@ export default function MyServices() {
             {[1, 2, 3].map(i => <div key={i} className="animate-pulse bg-transparent border border-white/5 rounded-2xl h-[180px]" />)}
           </div>
         ) : services.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 bg-transparent border border-white/5 rounded-[24px] sm:rounded-[40px] text-center px-4">
-            <div className="mx-auto mb-6 text-white/20">
-              <Package size={32} strokeWidth={1.5} />
-            </div>
+          <div className="flex flex-col items-center justify-center py-24 text-center px-4">
+            <img src="/ChatGPT Image May 25, 2026, 12_15_53 AM.png" alt="No services" className="w-[200px] h-[200px] object-contain" />
             <h3 className="text-base sm:text-lg font-bold text-white/30 mb-2 uppercase tracking-widest leading-none">No services yet</h3>
             <p className="text-white/20 text-xs sm:text-sm mb-10 max-w-sm mx-auto font-medium">Create your first service to start receiving orders from clients.</p>
             <button onClick={() => navigate('/freelancer/services/new')}
@@ -159,7 +157,7 @@ export default function MyServices() {
                 s.tags?.some(t => t.toLowerCase().includes(search.toLowerCase()))
               )
               .map(svc => (
-                <div key={svc.id} className="group p-5 bg-transparent border border-white/10 rounded-2xl hover:border-accent transition-all shadow-sm hover:shadow-2xl hover:shadow-accent/5 flex flex-col md:flex-row gap-6">
+                <div key={svc.id} className="group p-5 bg-transparent border border-white/10 rounded-2xl hover:border-accent transition-all flex flex-col md:flex-row gap-6">
                   {/* Left: Thumbnail (Find Work style integrated) */}
                   <div className="w-full md:w-64 h-40 md:h-auto rounded-xl overflow-hidden bg-transparent border border-white/5 shrink-0 relative">
                     {svc.images?.[0] ? (
@@ -292,10 +290,8 @@ export default function MyServices() {
         loading ? (
           <div className="space-y-4">{[1, 2, 3].map(i => <div key={i} className="animate-pulse bg-transparent border border-white/10 rounded-3xl h-24" />)}</div>
         ) : orders.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 bg-transparent border border-white/5 rounded-[24px] sm:rounded-[40px] text-center px-4">
-            <div className="mx-auto mb-6 text-white/20">
-              <ShoppingBag size={32} strokeWidth={1.5} />
-            </div>
+          <div className="flex flex-col items-center justify-center py-24 text-center px-4">
+            <img src="/ChatGPT Image May 25, 2026, 12_15_53 AM.png" alt="No orders" className="w-[200px] h-[200px] object-contain mb-6 opacity-90" />
             <h3 className="text-base sm:text-lg font-bold text-white/30 mb-2 uppercase tracking-widest leading-none">No orders yet</h3>
             <p className="text-white/20 text-xs sm:text-sm max-w-sm mx-auto font-medium">Orders from clients will appear here once they purchase your services.</p>
           </div>

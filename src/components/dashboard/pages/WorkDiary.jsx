@@ -186,20 +186,20 @@ const WorkDiary = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8 sm:mb-16">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-16">
         {[
           { label: 'Total Period Hours', value: `${totalHours.toFixed(1)} hrs` },
           { label: 'Estimated Earnings', value: formatINR(estimatedEarnings) },
           { label: 'Current Rate', value: `${formatINR(selectedContract?.agreed_rate || 0)}/hr` },
           { label: 'Logged Entries', value: entries.length }
         ].map((stat, i) => (
-          <div key={i} className="bg-transparent border border-white/5 p-4 sm:p-8 rounded-[16px] sm:rounded-[24px] space-y-3 sm:space-y-6 hover:border-accent/30 transition-all group">
-            <div className="w-15 h-15 sm:w-15 sm:h-15 rounded-xl flex items-center justify-center p-2 sm:p-2.5 group-hover:scale-110 transition-transform">
+          <div key={i} className="bg-transparent border border-slate-200 dark:border-white/5 p-3 sm:p-5 rounded-xl space-y-2 sm:space-y-4 hover:border-accent/30 transition-all group">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center p-1.5 group-hover:scale-110 transition-transform">
               <img src="/Icons/credit.png" alt="icon" className="w-full h-full object-contain filter invert opacity-80" />
             </div>
             <div>
-              <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-light-text/30 mb-1 sm:mb-2">{stat.label}</p>
-              <h4 className="text-xl sm:text-3xl font-bold text-white tracking-tighter">{stat.value}</h4>
+              <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-light-text/30 mb-0.5 sm:mb-1">{stat.label}</p>
+              <h4 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white tracking-tighter">{stat.value}</h4>
             </div>
           </div>
         ))}
@@ -284,7 +284,7 @@ const WorkDiary = () => {
             </form>
           </div>
         ) : (
-          <div className="bg-transparent border border-white/10 rounded-[24px] sm:rounded-[40px] overflow-hidden shadow-sm">
+          <div className="bg-transparent border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden shadow-sm">
             {/* Desktop table header */}
             <div className="hidden sm:grid grid-cols-[1fr_1fr_120px_130px_100px] gap-4 px-10 py-6 border-b border-white/5 text-[10px] font-bold text-light-text/20 uppercase tracking-widest">
               <span>Date / Project</span>
@@ -361,7 +361,7 @@ const WorkDiary = () => {
         )}
 
         {/* Guidelines */}
-        <div className="mt-6 sm:mt-12 border border-white/5 rounded-[20px] sm:rounded-[32px] p-5 sm:p-8 flex items-center justify-between bg-white/[0.01] overflow-hidden">
+        <div className="mt-6 sm:mt-12 border border-slate-200 dark:border-white/5 rounded-xl p-5 sm:p-8 flex items-center justify-between bg-white/[0.01] overflow-hidden">
           <div className="space-y-1">
             <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-1 sm:mb-2 opacity-30">Active Accountability</p>
             <p className="text-xs sm:text-[15px] text-light-text/40 leading-relaxed font-medium max-w-xl">

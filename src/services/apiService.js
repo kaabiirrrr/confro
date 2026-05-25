@@ -135,6 +135,11 @@ export const getOnlineUsers = async () => {
     return data;
 };
 
+export const getUserPresence = async (userId) => {
+    const { data } = await api.get(`/api/presence/${userId}`);
+    return data;
+};
+
 export const getMyConversations = async () => {
     const { data } = await api.get(`/api/conversations`);
     return data;
@@ -366,8 +371,13 @@ export const changePassword = async (passwords) => {
     return data;
 };
 
-export const deleteAccount = async (reason) => {
-    const { data } = await api.delete(`/api/profile/delete-account`, { data: { reason } });
+export const sendDeleteAccountOTP = async () => {
+    const { data } = await api.post(`/api/profile/delete-account/send-otp`, {});
+    return data;
+};
+
+export const deleteAccount = async (otp, confirmPhrase, reason) => {
+    const { data } = await api.delete(`/api/profile/delete-account`, { data: { otp, confirmPhrase, reason } });
     return data;
 };
 
@@ -609,9 +619,16 @@ export const getTeamMembers = async (teamId) => {
 // â”€â”€â”€ FIND WORK (FREELANCER) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export const findWorkJobs = async (filters = {}) => {
-    const clean = Object.fromEntries(Object.entries(filters).filter(([, v]) => v !== '' && v != null));
-    const params = new URLSearchParams(clean).toString();
-    const { data } = await api.get(`/api/jobs/find-work?${params}`);
+    const params = new URLSearchParams();
+    Object.entries(filters).forEach(([k, v]) => {
+        if (v === '' || v == null) return;
+        if (Array.isArray(v)) {
+            if (v.length > 0) params.append(k, v.join(','));
+        } else {
+            params.append(k, v);
+        }
+    });
+    const { data } = await api.get(`/api/jobs/find-work?${params.toString()}`);
     return data;
 };
 
@@ -681,6 +698,24 @@ export const getMyServiceOrders = async () => {
 
 export const updateServiceOrderStatus = async (id, status) => {
     const { data } = await api.patch(`/api/services/orders/${id}/status`, { status });
+    return data;
+};
+
+// ─── SERVICE REVIEWS ──────────────────────────────────────────────────────────
+
+export const getServiceReviews = async (serviceId, page = 1) => {
+    const { data } = await api.get(`/api/services/${serviceId}/reviews?page=${page}&limit=10`);
+    return data;
+};
+
+export const createServiceReview = async (payload) => {
+    // payload: { order_id, rating, comment }
+    const { data } = await api.post(`/api/services/reviews`, payload);
+    return data;
+};
+
+export const getOrderReviewStatus = async (orderId) => {
+    const { data } = await api.get(`/api/services/orders/${orderId}/review-status`);
     return data;
 };
 
@@ -900,6 +935,24 @@ export const deleteProblem = async (id) => {
     return data;
 };
 
+// --- MEMBERSHIP SALES/CUSTOM PROPOSALS ---
+
+export const getAdminSalesProposals = async (status = '') => {
+    const { data } = await api.get(`/api/admin/sales-proposals?status=${status}`);
+    return data;
+};
+
+export const updateSalesProposalStatus = async (id, status) => {
+    const { data } = await api.patch(`/api/admin/sales-proposals/${id}`, { status });
+    return data;
+};
+
+export const deleteSalesProposal = async (id) => {
+    const { data } = await api.delete(`/api/admin/sales-proposals/${id}`);
+    return data;
+};
+
+
 // --- FAQ ---
 
 export const getPublishedFAQs = async () => {
@@ -928,6 +981,21 @@ export const deleteFAQ = async (id) => {
 };
 
 // --- REVIEWS ---
+
+export const createProjectReview = async (payload) => {
+    const { data } = await api.post(`/api/reviews/create`, payload);
+    return data;
+};
+
+export const getContractReviews = async (contractId) => {
+    const { data } = await api.get(`/api/reviews/contract/${contractId}`);
+    return data;
+};
+
+export const createSiteReview = async (payload) => {
+    const { data } = await api.post(`/api/site-reviews`, payload);
+    return data;
+};
 
 export const getAdminProjectReviews = async () => {
     const { data } = await api.get(`/api/admin/reviews/project`);

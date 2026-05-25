@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { FaLinkedinIn, FaInstagram, FaGithub, FaFacebookF } from "react-icons/fa";
+import { FaLinkedinIn, FaInstagram, FaGithub, FaFacebookF, FaMediumM, FaDev, FaProductHunt, FaEnvelope } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { X, MapPin, Download, Mail, Globe, Zap, Star, ChevronRight, ArrowLeft } from "lucide-react";
 import {
   AboutTab,
@@ -188,6 +189,10 @@ const TeamMemberProfileModal = ({ member, onClose }) => {
                   {[
                     { href: member.github,    Icon: FaGithub },
                     { href: member.linkedin,  Icon: FaLinkedinIn },
+                    { href: member.twitter,   Icon: FaXTwitter },
+                    { href: member.medium,    Icon: FaMediumM },
+                    { href: member.devto,     Icon: FaDev },
+                    { href: member.producthunt, Icon: FaProductHunt },
                     { href: member.instagram, Icon: FaInstagram },
                     { href: member.facebook,  Icon: FaFacebookF },
                   ].filter(s => s.href).map(({ href, Icon }, i) => (
@@ -266,6 +271,10 @@ const TeamMemberProfileModal = ({ member, onClose }) => {
               {[
                 { href: member.github,    Icon: FaGithub,    label: "GitHub" },
                 { href: member.linkedin,  Icon: FaLinkedinIn, label: "LinkedIn" },
+                { href: member.twitter,   Icon: FaXTwitter, label: "X" },
+                { href: member.medium,    Icon: FaMediumM, label: "Medium" },
+                { href: member.devto,     Icon: FaDev, label: "Dev.to" },
+                { href: member.producthunt, Icon: FaProductHunt, label: "Product Hunt" },
                 { href: member.instagram, Icon: FaInstagram, label: "Instagram" },
               ].filter(s => s.href).map(({ href, Icon, label }, i) => (
                 <a key={i} href={href} target="_blank" rel="noopener noreferrer"

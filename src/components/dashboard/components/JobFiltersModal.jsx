@@ -45,7 +45,7 @@ const FILTER_SECTIONS = [
 
 export default function JobFiltersModal({ isOpen, onClose, currentFilters, onApply, stats }) {
   const [tempFilters, setTempFilters] = useState(currentFilters || {});
-  const [expandedSections, setExpandedSections] = useState(['experience_level', 'budget_type']);
+  const [expandedSections, setExpandedSections] = useState(FILTER_SECTIONS.map(s => s.id));
 
   useEffect(() => {
     if (isOpen) setTempFilters(currentFilters || {});
@@ -88,7 +88,7 @@ export default function JobFiltersModal({ isOpen, onClose, currentFilters, onApp
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-end">
+    <div className="fixed inset-0 z-[100] flex items-stretch justify-end">
       {/* Backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -103,14 +103,15 @@ export default function JobFiltersModal({ isOpen, onClose, currentFilters, onApp
         animate={{ x: 0 }}
         exit={{ x: '100%' }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-        className="relative w-full max-w-[400px] h-full bg-secondary border-l border-white/5 flex flex-col shadow-2xl"
+        className="relative w-[calc(100vw-64px)] sm:w-[85vw] max-w-[360px] bg-secondary border-l border-white/5 flex flex-col shadow-2xl"
+        style={{ height: '100dvh', minHeight: '100vh' }}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-6 border-b border-white/5">
           <h2 className="text-[15px] font-semibold text-white tracking-tight">Filter Jobs</h2>
           <button
             onClick={onClose}
-            className="text-white/40 hover:text-white transition-colors"
+            className="text-white/40 hover:text-accent transition-colors"
           >
             <X size={18} strokeWidth={1.5} />
           </button>
@@ -124,7 +125,7 @@ export default function JobFiltersModal({ isOpen, onClose, currentFilters, onApp
                 onClick={() => toggleSection(section.id)}
                 className="flex items-center justify-between w-full group mb-3"
               >
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-[#64748B] group-hover:text-white transition-colors">
+                <span className="text-[10px] font-semibold uppercase tracking-widest text-[#64748B] group-hover:text-accent transition-colors">
                   {section.title}
                 </span>
                 <ChevronDown 
@@ -160,21 +161,21 @@ export default function JobFiltersModal({ isOpen, onClose, currentFilters, onApp
                                 checked={isChecked}
                                 onChange={() => handleCheckboxChange(section.id, option.id)}
                               />
-                              <div className={`w-[18px] h-[18px] rounded-[4px] border flex items-center justify-center transition-all duration-200 ${
-                                isChecked 
-                                  ? 'bg-transparent border-white/40' 
-                                  : 'bg-transparent border-white/10 group-hover:border-white/30'
+                              <div className={`w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                                isChecked
+                                  ? 'border-accent bg-transparent'
+                                  : 'border-white/20 bg-transparent group-hover:border-accent/50'
                               }`}>
                                 {isChecked && (
-                                  <motion.div 
+                                  <motion.div
                                     initial={{ scale: 0 }}
                                     animate={{ scale: 1 }}
-                                    className="w-2.5 h-2.5 bg-white/70 rounded-[2px]"
+                                    className="w-2.5 h-2.5 rounded-full bg-accent"
                                   />
                                 )}
                               </div>
                             </div>
-                            <span className={`text-[13px] transition-colors leading-none pt-0.5 ${isChecked ? 'text-white font-medium' : 'text-[#94A3B8] group-hover:text-white'}`}>
+                            <span className={`text-[13px] transition-colors leading-none pt-0.5 ${isChecked ? 'text-accent font-medium' : 'text-[#94A3B8] group-hover:text-accent'}`}>
                               {option.label}
                             </span>
                           </div>
@@ -229,10 +230,10 @@ export default function JobFiltersModal({ isOpen, onClose, currentFilters, onApp
         </div>
 
         {/* Footer Actions */}
-        <div className="p-6 border-t border-white/5 bg-secondary flex items-center gap-3 mt-auto">
+        <div className="px-6 pt-4 pb-6 border-t border-white/5 bg-secondary flex items-center gap-3 shrink-0">
           <button
             onClick={clearAll}
-            className="flex-1 h-10 text-[11px] font-bold tracking-wider border border-white/10 rounded-full hover:bg-white/5 transition-all text-[#94A3B8] hover:text-white"
+            className="flex-1 h-10 text-[11px] font-bold tracking-wider border border-white/10 rounded-full hover:bg-white/5 transition-all text-[#94A3B8] hover:text-accent"
           >
             CLEAR ALL
           </button>

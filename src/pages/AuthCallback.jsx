@@ -5,6 +5,7 @@ import { getApiUrl } from '../utils/authUtils';
 import logger from '../utils/logger';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import InfinityLoader from '../components/common/InfinityLoader';
 
 const API_URL = getApiUrl();
 
@@ -222,36 +223,8 @@ export default function AuthCallback() {
     }, [navigate]); // Stable: navigate never changes
 
     return (
-        <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '100vh',
-            background: 'var(--color-primary, #0a0a0f)',
-            gap: '16px'
-        }}>
-            <div style={{
-                width: '48px',
-                height: '48px',
-                border: '3px solid var(--color-accent, #6c63ff)',
-                borderTopColor: 'transparent',
-                borderRadius: '50%',
-                animation: 'spin 0.8s linear infinite'
-            }} />
-            <p style={{
-                color: 'var(--color-accent, #6c63ff)',
-                fontWeight: 500,
-                fontSize: '15px',
-                letterSpacing: '0.01em',
-                animation: 'pulse 1.5s ease-in-out infinite'
-            }}>
-                Securing your session...
-            </p>
-            <style>{`
-                @keyframes spin { to { transform: rotate(360deg); } }
-                @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-            `}</style>
+        <div className="min-h-screen bg-primary flex items-center justify-center">
+            <InfinityLoader fullScreen={false} text="Securing your session..." />
         </div>
     );
 }

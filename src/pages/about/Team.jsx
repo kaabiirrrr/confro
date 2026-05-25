@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { motion } from "framer-motion";
-import { FaLinkedinIn, FaInstagram, FaFacebookF, FaGithub, FaGlobe } from "react-icons/fa";
+import { FaLinkedinIn, FaInstagram, FaFacebookF, FaGithub, FaGlobe, FaMediumM, FaDev, FaProductHunt, FaEnvelope } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { ArrowRight } from "lucide-react";
 import { members } from "./teamData";
 
@@ -12,16 +13,41 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
 };
 
-const SocialIcons = ({ linkedin, instagram, facebook, github, website }) => (
+const SocialIcons = ({ linkedin, instagram, facebook, github, website, twitter, medium, devto, producthunt }) => (
   <div className="flex items-center gap-3 text-light-text/60 text-base" onClick={e => e.stopPropagation()}>
     {website && (
       <a href={website} target="_blank" rel="noopener noreferrer">
         <FaGlobe className="hover:text-accent transition cursor-pointer" />
       </a>
     )}
+    {github && (
+      <a href={github} target="_blank" rel="noopener noreferrer">
+        <FaGithub className="hover:text-accent transition cursor-pointer" />
+      </a>
+    )}
     {linkedin && (
       <a href={linkedin} target="_blank" rel="noopener noreferrer">
         <FaLinkedinIn className="hover:text-accent transition cursor-pointer" />
+      </a>
+    )}
+    {twitter && (
+      <a href={twitter} target="_blank" rel="noopener noreferrer">
+        <FaXTwitter className="hover:text-accent transition cursor-pointer" />
+      </a>
+    )}
+    {medium && (
+      <a href={medium} target="_blank" rel="noopener noreferrer">
+        <FaMediumM className="hover:text-accent transition cursor-pointer" />
+      </a>
+    )}
+    {devto && (
+      <a href={devto} target="_blank" rel="noopener noreferrer">
+        <FaDev className="hover:text-accent transition cursor-pointer" />
+      </a>
+    )}
+    {producthunt && (
+      <a href={producthunt} target="_blank" rel="noopener noreferrer">
+        <FaProductHunt className="hover:text-accent transition cursor-pointer" />
       </a>
     )}
     {instagram && (
@@ -32,11 +58,6 @@ const SocialIcons = ({ linkedin, instagram, facebook, github, website }) => (
     {facebook && (
       <a href={facebook} target="_blank" rel="noopener noreferrer">
         <FaFacebookF className="hover:text-accent transition cursor-pointer" />
-      </a>
-    )}
-    {github && (
-      <a href={github} target="_blank" rel="noopener noreferrer">
-        <FaGithub className="hover:text-accent transition cursor-pointer" />
       </a>
     )}
   </div>
@@ -99,6 +120,10 @@ const Team = () => {
                     facebook={m.facebook}
                     github={m.github}
                     website={m.website}
+                    twitter={m.twitter}
+                    medium={m.medium}
+                    devto={m.devto}
+                    producthunt={m.producthunt}
                   />
                 </div>
                 <p className="text-accent mb-3 text-sm sm:text-base md:text-lg">{m.role}</p>

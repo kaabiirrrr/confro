@@ -76,29 +76,27 @@ const FreelancerBestPractices = () => {
     return (
         <div className="w-full lg:max-w-[1400px] mx-auto mt-0 pb-12 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
-            {/* Back Button and Header Section */}
-            <div className="space-y-4">
-                <Link
-                    to="/freelancer/account-health"
-                    className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm font-medium group"
-                >
-                    <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                    Back
-                </Link>
-
-                <div className="relative pt-2 pb-4 border-b border-white/10 mb-6">
-                    <div className="relative z-10 max-w-2xl flex flex-col items-start gap-4">
+            {/* Header Section */}
+            <div className="relative pt-2 pb-4 border-b border-white/10 mb-6">
+                <div className="relative z-10 max-w-2xl flex flex-col items-start gap-4">
+                    <div className="flex items-center gap-3 -ml-3 sm:-ml-4">
+                        <Link
+                            to="/freelancer/account-health"
+                            className="inline-flex items-center justify-center text-white/50 hover:text-white transition-colors group p-1"
+                        >
+                            <ChevronLeft size={20} className="group-hover:-translate-x-0.5 transition-transform" />
+                        </Link>
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
                             <Lightbulb size={16} />
                             <span>Success Guide</span>
                         </div>
-                        <h1 className="text-xl sm:text-3xl lg:text-4xl font-semibold text-white tracking-tight">
-                            Freelancer Best Practices
-                        </h1>
-                        <p className="text-white/50 text-sm font-medium leading-relaxed max-w-xl">
-                            Accelerate your freelancer growth by following proven strategies that leading top-tier talent use to secure high-value contracts and maintain a perfect reputation.
-                        </p>
                     </div>
+                    <h1 className="text-xl sm:text-3xl lg:text-4xl font-semibold text-white tracking-tight">
+                        Freelancer Best Practices
+                    </h1>
+                    <p className="text-white/50 text-sm font-medium leading-relaxed max-w-xl">
+                        Accelerate your freelancer growth by following proven strategies that leading top-tier talent use to secure high-value contracts and maintain a perfect reputation.
+                    </p>
                 </div>
             </div>
 
@@ -109,7 +107,7 @@ const FreelancerBestPractices = () => {
                     return (
                         <div
                             key={bp.id}
-                            className={`group relative bg-transparent border border-white/10 rounded-2xl p-8 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-1 ${style.border}`}
+                            className={`group relative bg-transparent border border-white/10 rounded-xl p-8 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-1 ${style.border}`}
                         >
                             {/* Background Gradient */}
                             <div className={`absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none ${style.color}`} />
@@ -147,11 +145,9 @@ const FreelancerBestPractices = () => {
             </div>
 
             {/* CTA Footer */}
-            <div className="bg-transparent border border-white/10 rounded-2xl px-5 sm:px-10 py-7 sm:py-10 flex flex-col md:flex-row gap-5 sm:gap-8 items-start md:items-center justify-between mt-8 sm:mt-12">
+            <div className="bg-transparent border border-white/10 rounded-xl px-5 sm:px-10 py-7 sm:py-10 flex flex-col md:flex-row gap-5 sm:gap-8 items-start md:items-center justify-between mt-8 sm:mt-12">
                 <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 rounded-full bg-accent/10 border border-accent/20 flex flex-col items-center justify-center relative shadow-[0_0_30px_rgba(77,199,255,0.1)]">
-                        <ShieldCheck size={32} className="text-accent" />
-                    </div>
+                    <ShieldCheck size={32} className="text-accent shrink-0" />
                     <div>
                         <h3 className="text-xl font-bold text-white mb-2">Stay Protected</h3>
                         <p className="text-white/50 text-sm font-medium">
@@ -162,7 +158,7 @@ const FreelancerBestPractices = () => {
 
                 <Link
                     to="/freelancer/account-health"
-                    className="inline-flex w-full sm:w-auto items-center justify-center px-6 py-3 bg-accent text-white text-sm font-bold rounded-xl hover:bg-accent/90 transition-all shadow-lg shadow-accent/20"
+                    className="inline-flex w-full sm:w-auto items-center justify-center px-6 py-3 bg-accent text-white text-sm font-bold rounded-full hover:bg-accent/90 transition-all mx-auto sm:mx-0"
                 >
                     Return to Account Health
                 </Link>

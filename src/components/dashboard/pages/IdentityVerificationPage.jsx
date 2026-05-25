@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import {
   ShieldCheck, BadgeCheck, Upload, CheckCircle2, Clock,
-  XCircle, AlertCircle, ArrowLeft, ArrowRight, Eye, RefreshCw, FileText
+  XCircle, AlertCircle, ArrowLeft, Eye, RefreshCw
 } from 'lucide-react';
 import { getMyDualVerification, uploadIdentityDocument, submitDualVerification, extractVerificationData } from '../../../services/apiService';
 import { toastApiError } from '../../../utils/apiErrorToast';
@@ -23,13 +23,30 @@ const BENEFITS = [
 ];
 
 // ── Upload Drop Zone ──────────────────────────────────────────
-function UploadZone({ label, url, onUpload, uploading }) {
+function UploadZone({ label, url, onUploaded }) {
   const ref = useRef(null);
   const [dragging, setDragging] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const handleFile = async (file) => {
     if (!file) return;
-    await onUpload(file);
+    if (file.size > 1 * 1024 * 1024) {
+      toast.error('File size must be under 1MB. Please compress or resize the image.');
+      return;
+    }
+    setUploading(true);
+    try {
+      const res = await uploadIdentityDocument(file);
+      const uploadedUrl = res?.data?.url ?? res?.url;
+      if (!uploadedUrl) throw new Error('No URL returned');
+      onUploaded(uploadedUrl);
+      toast.success('Uploaded');
+    } catch (err) {
+      const msg = err?.response?.data?.message || err?.message || 'Upload failed';
+      toast.error(msg);
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -91,7 +108,6 @@ export default function IdentityVerificationPage() {
   const [docType, setDocType] = useState('');
   const [frontUrl, setFrontUrl] = useState('');
   const [backUrl, setBackUrl] = useState('');
-  const [uploading, setUploading] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   
   const [extractedData, setExtractedData] = useState({
@@ -111,28 +127,6 @@ export default function IdentityVerificationPage() {
       setIdvStatus(res);
     } catch { setIdvStatus(null); }
     finally { setLoading(false); }
-  };
-
-  const handleUpload = async (field, file) => {
-    // Client-side 1MB check
-    if (file.size > 1 * 1024 * 1024) {
-      toast.error('File size must be under 1MB. Please compress or resize the image.');
-      return;
-    }
-    setUploading(field);
-    try {
-      const res = await uploadIdentityDocument(file);
-      const url = res?.data?.url ?? res?.url;
-      if (!url) throw new Error('No URL returned');
-      if (field === 'front') setFrontUrl(url);
-      else if (field === 'back') setBackUrl(url);
-      toast.success('Uploaded');
-    } catch (err) {
-      const msg = err?.response?.data?.message || err?.message || 'Upload failed';
-      toast.error(msg);
-    } finally {
-      setUploading(null);
-    }
   };
 
   const handleExtract = async () => {
@@ -223,9 +217,9 @@ export default function IdentityVerificationPage() {
           {/* NOT_STARTER */}
           {(vstatus === 'NOT_STARTED') && (
             <div className="space-y-6">
-              <div className="border border-white/10 rounded-[2rem] p-10 text-center backdrop-blur-sm bg-white/[0.01]">
-                <div className={`w-16 h-16 flex items-center justify-center mx-auto mb-5`}>
-                  <ShieldCheck size={32} className="text-accent" />
+              <div className="border border-white/10 rounded-xl p-10 text-center bg-transparent">
+                <div className="flex items-center justify-center mx-auto mb-5">
+                  <img src="/ChatGPT Image May 24, 2026, 10_03_51 PM.png" alt="IDV Badge" style={{ width: 150, height: 150, objectFit: 'contain' }} />
                 </div>
                 <h2 className="text-lg font-bold text-white mb-2">Get Your IDV Badge</h2>
                 <p className="text-white/50 text-[13px] mb-6 max-w-sm mx-auto leading-relaxed">
@@ -233,12 +227,12 @@ export default function IdentityVerificationPage() {
                 </p>
                 <button onClick={() => setStep(2)}
                   className={`flex items-center gap-2 px-6 h-10 bg-accent hover:bg-accent/80 text-white rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-widest transition mx-auto shadow-lg`}>
-                  Start Verification <ArrowRight size={14} />
+                  Start Verification
                 </button>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {BENEFITS.map(b => (
-                  <div key={b.title} className="rounded-xl p-4 text-center bg-white/[0.01]">
+                  <div key={b.title} className="rounded-xl border border-white/10 p-4 text-center bg-transparent">
                     <div className="text-xl mb-2">{b.icon}</div>
                     <p className="text-white font-semibold text-[13px] mb-0.5">{b.title}</p>
                     <p className="text-white/40 text-[11px] leading-tight">{b.desc}</p>
@@ -250,9 +244,9 @@ export default function IdentityVerificationPage() {
 
           {/* PENDING */}
           {(vstatus === 'PENDING') && (
-            <div className="border border-yellow-500/10 rounded-[2rem] p-10 text-center bg-yellow-500/[0.01]">
-              <div className="w-16 h-16 flex items-center justify-center mx-auto mb-5">
-                <Clock size={32} className="text-yellow-400" />
+            <div className="border border-yellow-500/10 rounded-xl p-10 text-center bg-transparent">
+              <div className="flex items-center justify-center mx-auto mb-5">
+                <img src="/ChatGPT Image May 24, 2026, 10_33_47 PM.png" alt="Under Review" style={{ width: 150, height: 150, objectFit: 'contain' }} />
               </div>
               <h2 className="text-lg font-bold text-white mb-2">Under Review</h2>
               <p className="text-white/50 text-[13px] mb-3 max-w-sm mx-auto leading-relaxed">
@@ -268,11 +262,11 @@ export default function IdentityVerificationPage() {
 
           {/* APPROVED */}
           {(vstatus === 'APPROVED') && (
-            <div className="border border-green-500/10 rounded-[2rem] p-10 text-center bg-green-500/[0.01]">
-              <div className="w-16 h-16 flex items-center justify-center mx-auto mb-5">
-                <BadgeCheck size={32} className="text-green-400" />
+            <div className="border border-green-500/10 rounded-xl p-10 text-center bg-transparent">
+              <div className="flex items-center justify-center mx-auto mb-5">
+                <img src="/ChatGPT Image May 24, 2026, 10_41_59 PM.png" alt="Identity Verified" style={{ width: 150, height: 150, objectFit: 'contain' }} />
               </div>
-              <h2 className="text-lg font-bold text-white mb-2">Identity Verified ✓</h2>
+              <h2 className="text-lg font-bold text-white mb-2">Identity Verified</h2>
               <p className="text-white/50 text-[13px] max-w-sm mx-auto leading-relaxed">
                 Your identity has been verified. Your IDV badge is now visible on your profile.
               </p>
@@ -281,7 +275,7 @@ export default function IdentityVerificationPage() {
 
           {/* REJECTED */}
           {vstatus === 'REJECTED' && (
-            <div className="border border-red-500/10 rounded-[2rem] p-10 text-center bg-red-500/[0.01]">
+            <div className="border border-red-500/10 rounded-xl p-10 text-center bg-transparent">
               <div className="w-16 h-16 flex items-center justify-center mx-auto mb-5">
                 <XCircle size={32} className="text-red-400" />
               </div>
@@ -297,7 +291,7 @@ export default function IdentityVerificationPage() {
 
       {/* ── STEP 2: SELECT DOC TYPE ── */}
       {step === 2 && (
-        <div className="border border-white/10 rounded-[2rem] p-6 space-y-5 bg-white/[0.01]">
+        <div className="border border-white/10 rounded-xl p-6 space-y-5 bg-transparent">
           <div>
             <h2 className="text-white font-semibold text-base">Select Document Type</h2>
             <p className="text-white/40 text-[13px] mt-0.5">Choose the type of government-issued ID you'll be uploading</p>
@@ -305,24 +299,24 @@ export default function IdentityVerificationPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {DOC_TYPES.map(d => (
               <button key={d.value} type="button" onClick={() => setDocType(d.value)}
-                className={`p-4 rounded-xl text-left transition ${docType === d.value ? (userType === 'client' ? 'bg-accent/10 border border-accent/30' : 'bg-blue-500/10 border border-blue-500/30') : 'bg-white/[0.02] border border-transparent hover:bg-white/[0.04]'}`}>
-                <p className={`font-semibold text-sm ${docType === d.value ? (userType === 'client' ? 'text-accent' : 'text-blue-400') : 'text-white'}`}>{d.label}</p>
+                className={`p-4 rounded-xl text-left transition border ${docType === d.value ? 'border-accent bg-transparent' : 'border-white/10 bg-transparent hover:border-white/30'}`}>
+                <p className={`font-semibold text-sm ${docType === d.value ? 'text-accent' : 'text-white'}`}>{d.label}</p>
                 <p className="text-white/30 text-[11px] mt-0.5">{d.hasBack ? 'Front + Back required' : 'Single page'}</p>
               </button>
             ))}
           </div>
           <button 
             onClick={() => docType ? setStep(3) : toast.error('Select a document type')}
-            className={`flex items-center gap-2 px-6 h-10 bg-accent hover:bg-accent/80 text-white rounded-full text-[11px] font-bold uppercase tracking-widest transition shadow-lg mt-2`}
+            className={`w-full sm:w-auto flex items-center justify-center gap-2 px-6 h-10 bg-accent hover:bg-accent/80 text-white rounded-full text-[11px] font-bold uppercase tracking-widest transition shadow-lg mt-2 sm:ml-auto`}
           >
-            Continue <ArrowRight size={14} />
+            Continue
           </button>
         </div>
       )}
 
       {/* ── STEP 3: UPLOAD ── */}
       {step === 3 && (
-        <div className="border border-white/10 rounded-[2rem] p-6 space-y-6 bg-white/[0.01]">
+        <div className="border border-white/10 rounded-xl p-6 space-y-6 bg-transparent">
           <div>
             <h2 className="text-white font-semibold text-base">Upload Documents</h2>
             <p className="text-white/40 text-[13px] mt-0.5">Make sure images are clear, well-lit, and all text is readable</p>
@@ -330,10 +324,10 @@ export default function IdentityVerificationPage() {
 
           <div className={`grid gap-4 ${selectedDoc?.hasBack ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1 max-w-sm'}`}>
             <UploadZone label="Front of Document" url={frontUrl}
-              uploading={uploading === 'front'} onUpload={f => handleUpload('front', f)} />
+              onUploaded={url => setFrontUrl(url)} />
             {selectedDoc?.hasBack && (
               <UploadZone label="Back of Document" url={backUrl}
-                uploading={uploading === 'back'} onUpload={f => handleUpload('back', f)} />
+                onUploaded={url => setBackUrl(url)} />
             )}
           </div>
 
@@ -346,15 +340,15 @@ export default function IdentityVerificationPage() {
 
           <button onClick={handleExtract}
             disabled={!frontUrl || (selectedDoc?.hasBack && !backUrl)}
-            className={`flex items-center gap-2 px-6 h-10 bg-accent hover:bg-accent/80 text-white rounded-full text-[11px] font-bold uppercase tracking-widest transition disabled:opacity-40 shadow-lg`}>
-            Extract Data <ArrowRight size={14} />
+            className={`w-full sm:w-auto flex items-center justify-center gap-2 px-6 h-10 bg-accent hover:bg-accent/80 text-white rounded-full text-[11px] font-bold uppercase tracking-widest transition disabled:opacity-40 shadow-lg sm:ml-auto`}>
+            Extract Data
           </button>
         </div>
       )}
 
       {/* ── STEP 4: EXTRACTING ── */}
       {step === 4 && (
-        <div className="border border-white/10 rounded-[2rem] p-16 flex flex-col items-center justify-center text-center bg-white/[0.01]">
+        <div className="border border-white/10 rounded-xl p-16 flex flex-col items-center justify-center text-center bg-transparent">
             <InfinityLoader className="mb-4"/>
             <h2 className="text-xl font-bold text-white mb-2">Analyzing Document</h2>
             <p className="text-white/50 text-sm">Our AI is extracting data from your document using OCR...</p>
@@ -363,89 +357,90 @@ export default function IdentityVerificationPage() {
 
       {/* ── STEP 5: REVIEW / EDITABLE ── */}
       {step === 5 && (
-        <div className="border border-white/10 rounded-[2rem] p-6 bg-white/[0.01]">
-          <div className="mb-6">
-            <h2 className="text-white font-bold text-xl">Review & Confirm Details</h2>
-            <p className="text-white/50 text-sm mt-1">Please verify the extracted information. If any details are incorrect, you can edit them directly before submitting.</p>
+        <div className="border border-white/10 rounded-xl p-4 sm:p-6 bg-transparent">
+          <div className="mb-5">
+            <h2 className="text-white font-bold text-base sm:text-xl">Review & Confirm Details</h2>
+            <p className="text-white/50 text-xs sm:text-sm mt-1">Verify the extracted info. Edit anything that looks wrong before submitting.</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Form Side */}
-              <div className="space-y-4">
-                  <div>
-                      <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-1.5">Full Name</label>
-                      <input 
-                          type="text" 
-                          value={extractedData.name} 
-                          onChange={(e) => setExtractedData({...extractedData, name: e.target.value})}
-                          className="w-full bg-white/5 border border-white/10 rounded-full px-4 py-3 text-white focus:outline-none focus:border-accent transition"
-                          placeholder="e.g. John Doe"
-                      />
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                      <div>
-                          <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-1.5">Date of Birth</label>
-                          <input 
-                              type="text" 
-                              value={extractedData.dob} 
-                              onChange={(e) => setExtractedData({...extractedData, dob: e.target.value})}
-                              className="w-full bg-white/5 border border-white/10 rounded-full px-4 py-3 text-white focus:outline-none focus:border-accent transition"
-                              placeholder="DD/MM/YYYY"
-                          />
-                      </div>
-                      <div>
-                          <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-1.5">Gender</label>
-                          <select 
-                              value={extractedData.gender} 
-                              onChange={(e) => setExtractedData({...extractedData, gender: e.target.value})}
-                              className="w-full bg-[#1a1a1a] border border-white/10 rounded-full px-4 py-3 text-white focus:outline-none focus:border-accent transition appearance-none"
-                          >
-                              <option value="">Select Gender</option>
-                              <option value="Male">Male</option>
-                              <option value="Female">Female</option>
-                              <option value="Other">Other</option>
-                          </select>
-                      </div>
-                  </div>
+          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-5 lg:gap-8">
 
-                  <div>
-                      <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-1.5">
-                          {selectedDoc?.label} Number
-                      </label>
-                      <input 
-                          type="text" 
-                          value={extractedData.idNumber} 
-                          onChange={(e) => setExtractedData({...extractedData, idNumber: e.target.value})}
-                          className="w-full bg-white/5 border border-white/10 rounded-full px-4 py-3 text-white font-mono uppercase focus:outline-none focus:border-accent transition"
-                          placeholder={`Enter ${selectedDoc?.label} number`}
-                      />
-                  </div>
+            {/* Document Preview — first on mobile */}
+            <div className="lg:order-last">
+              <h3 className="text-xs font-bold text-white/50 uppercase tracking-widest mb-2">Document Preview</h3>
+              <div className="border border-white/10 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center relative group bg-black/30">
+                <img src={frontUrl} alt="Document Preview" className="w-full h-full object-contain" />
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                  <a href={frontUrl} target="_blank" rel="noopener noreferrer"
+                    className="px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white font-medium text-sm flex items-center gap-2">
+                    <Eye size={16} /> View Full
+                  </a>
+                </div>
               </div>
+            </div>
 
-              {/* Preview Side */}
+            {/* Form */}
+            <div className="lg:order-first space-y-4">
               <div>
-                  <h3 className="text-xs font-bold text-white/50 uppercase tracking-widest mb-2">Document Preview</h3>
-                  <div className="bg-black/50 border border-white/10 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center relative group">
-                        <img src={frontUrl} alt="Document Preview" className="w-full h-full object-contain" />
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                            <a href={frontUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white font-medium text-sm flex items-center gap-2">
-                                <Eye size={16} /> View Full
-                            </a>
-                        </div>
-                  </div>
+                <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-1.5">Full Name</label>
+                <input
+                  type="text"
+                  value={extractedData.name}
+                  onChange={(e) => setExtractedData({...extractedData, name: e.target.value})}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-accent transition"
+                  placeholder="e.g. John Doe"
+                />
               </div>
-          </div>
 
-          <div className="mt-8 flex justify-end">
-              <button 
-                  onClick={handleSubmit} 
-                  disabled={submitting}
-                  className={`flex items-center gap-2 px-8 py-3 bg-accent hover:bg-accent/80 text-white rounded-full text-sm font-bold uppercase tracking-widest transition shadow-xl disabled:opacity-50`}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-1.5">Date of Birth</label>
+                  <input
+                    type="text"
+                    value={extractedData.dob}
+                    onChange={(e) => setExtractedData({...extractedData, dob: e.target.value})}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-accent transition"
+                    placeholder="DD/MM/YYYY"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-1.5">Gender</label>
+                  <select
+                    value={extractedData.gender}
+                    onChange={(e) => setExtractedData({...extractedData, gender: e.target.value})}
+                    className="w-full bg-secondary border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-accent transition"
+                  >
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-1.5">
+                  {selectedDoc?.label || 'Document'} Number
+                </label>
+                <input
+                  type="text"
+                  value={extractedData.idNumber}
+                  onChange={(e) => setExtractedData({...extractedData, idNumber: e.target.value})}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-mono uppercase focus:outline-none focus:border-accent transition"
+                  placeholder={`Enter ${selectedDoc?.label || 'document'} number`}
+                />
+              </div>
+
+              <button
+                onClick={handleSubmit}
+                disabled={submitting}
+                className="w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-2 px-8 py-3 bg-accent hover:bg-accent/80 text-white rounded-full text-sm font-bold uppercase tracking-widest transition disabled:opacity-50"
               >
-                  {submitting && <InfinityLoader/>}
-                  Confirm & Submit
+                {submitting ? (
+                  <><svg className="animate-spin w-4 h-4 text-white/80" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg> Submitting...</>
+                ) : 'Confirm & Submit'}
               </button>
+            </div>
           </div>
         </div>
       )}

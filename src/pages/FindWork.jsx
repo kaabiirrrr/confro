@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import InfinityLoader from "../components/common/InfinityLoader";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams, useLocation } from "react-router-dom";
-import { SlidersHorizontal, X } from "lucide-react";
+import { Filter, X } from "lucide-react";
 import Navbar from "../components/Navbar";
 import ClientTopbar from "../layouts/components/ClientTopbar";
 import FreelancerTopbar from "../layouts/components/FreelancerTopbar";
@@ -39,10 +39,12 @@ const FindWork = () => {
   const [searchTerm, setSearchTerm] = useState(queryParam);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searching, setSearching] = useState(false);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [showMobileFilter, setShowMobileFilter] = useState(false);
   const { user, role, isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  
+
   // Direct check for token to prevent flicker if auth state hasn't fully hydrated
   const hasToken = !!localStorage.getItem('token');
   const isUserAuthenticated = isAuthenticated || hasToken;
@@ -58,11 +60,16 @@ const FindWork = () => {
 
   const fetchJobs = async () => {
     try {
-      setLoading(true);
+      if (isFirstLoad) {
+        setLoading(true);
+      } else {
+        setSearching(true);
+      }
+
       const filters = { status: 'OPEN' };
       if (selectedCategory && selectedCategory !== "All Categories") filters.category = selectedCategory;
       if (searchTerm) filters.search = searchTerm;
-      
+
       const response = await getAllJobs(filters);
       if (response.success) {
         setJobs(response.data);
@@ -72,6 +79,8 @@ const FindWork = () => {
       toast.error("Failed to load jobs");
     } finally {
       setLoading(false);
+      setSearching(false);
+      setIsFirstLoad(false);
     }
   };
 
@@ -112,7 +121,7 @@ const FindWork = () => {
             className="md:hidden relative flex items-center justify-center w-10 h-10 rounded-full text-accent hover:bg-accent/10 transition-all"
             onClick={() => setShowMobileFilter(true)}
           >
-            <SlidersHorizontal size={20} className="text-accent" />
+            <Filter size={20} className="text-accent" />
           </button>
         </div>
       </motion.div>
@@ -165,11 +174,11 @@ const FindWork = () => {
         </motion.div>
 
         {/* Job Cards */}
-        <div className="flex-1 min-w-0">
+        <div className={`flex-1 min-w-0 transition-opacity duration-300 ${searching ? 'opacity-60 pointer-events-none' : 'opacity-100'}`}>
           {loading ? (
-             <div className="flex justify-center items-center h-64">
-                <InfinityLoader/>
-             </div>
+            <div className="flex justify-center items-center h-64">
+              <InfinityLoader />
+            </div>
           ) : jobs.length > 0 ? (
             <motion.div
               variants={containerVariants}
@@ -186,10 +195,10 @@ const FindWork = () => {
                     if (role === 'CLIENT') { toast.error("Job details are accessible to freelancers."); return; }
                     navigate(`/freelancer/jobs/${job.id}`);
                   }}
-                  className="bg-transparent border border-white/10 rounded-2xl p-5 sm:p-8 hover:border-accent transition-all duration-300 cursor-pointer shadow-sm hover:shadow-2xl hover:shadow-accent/5 group"
+                  className="bg-transparent border border-white/10 rounded-2xl p-5 sm:p-8 hover:border-accent transition-all duration-300 cursor-pointer group"
                 >
                   <div className="flex justify-between items-start mb-3 sm:mb-4 gap-2">
-                    <h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-accent transition-colors">
+                    <h3 className="text-base sm:text-lg font-semibold text-light-text group-hover:text-accent transition-colors">
                       {job.title}
                     </h3>
                     <span className="text-accent font-bold text-sm sm:text-lg flex-shrink-0">
@@ -212,7 +221,8 @@ const FindWork = () => {
               ))}
             </motion.div>
           ) : (
-            <div className="text-center py-12 sm:py-24 bg-transparent rounded-2xl border border-dashed border-white/10">
+            <div className="text-center py-12 sm:py-24 bg-transparent rounded-2xl flex flex-col items-center justify-center">
+              <img src="/Icons/empty-jobs.png" alt="No jobs found" className="w-48 sm:w-64 h-auto mb-6 opacity-90" />
               <p className="text-gray-400 text-sm sm:text-lg font-light">No jobs found matching your criteria.</p>
             </div>
           )}

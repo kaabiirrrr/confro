@@ -112,22 +112,21 @@ const FreelancerPolicies = () => {
     return (
         <div className="w-full lg:max-w-[1400px] mx-auto mt-0 pb-12 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
-            {/* Back Button and Header Section */}
-            <div className="space-y-4">
-                <Link
-                    to="/freelancer/account-health"
-                    className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm font-medium group"
-                >
-                    <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                    Back
-                </Link>
-
-                <div className="relative pt-2 pb-4 border-b border-white/10 mb-6">
-                    <div className="relative z-10 max-w-2xl flex flex-col items-start gap-4">
+            {/* Header Section */}
+            <div className="relative pt-2 pb-4 border-b border-white/10 mb-6">
+                <div className="relative z-10 max-w-2xl flex flex-col items-start gap-4">
+                    <div className="flex items-center gap-3 -ml-3 sm:-ml-4">
+                        <Link
+                            to="/freelancer/account-health"
+                            className="inline-flex items-center justify-center text-white/50 hover:text-white transition-colors group p-1"
+                        >
+                            <ChevronLeft size={20} className="group-hover:-translate-x-0.5 transition-transform" />
+                        </Link>
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
                             <Lock size={16} />
                             <span>Platform Policies</span>
                         </div>
+                    </div>
                         <h1 className="text-xl sm:text-3xl lg:text-4xl font-semibold text-white tracking-tight">
                             Policies & Guidelines
                         </h1>
@@ -136,7 +135,6 @@ const FreelancerPolicies = () => {
                         </p>
                     </div>
                 </div>
-            </div>
 
             <div className="flex flex-col md:flex-row gap-6 md:gap-14 items-start">
 

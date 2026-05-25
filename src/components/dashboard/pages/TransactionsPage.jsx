@@ -121,9 +121,9 @@ const TransactionsPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 border border-border p-4 sm:p-5 rounded-xl sm:rounded-2xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 border border-slate-200 dark:border-border p-4 sm:p-5 rounded-xl">
         <div>
-          <label className="block text-[10px] font-bold uppercase tracking-widest text-light-text/30 mb-2 ml-1">Start Date</label>
+          <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2 ml-1">Start Date</label>
           <CustomDatePicker
             value={filters.from}
             onChange={(val) => handleFilterChange('from', val)}
@@ -132,7 +132,7 @@ const TransactionsPage = () => {
         </div>
 
         <div>
-          <label className="block text-[10px] font-bold uppercase tracking-widest text-light-text/30 mb-2 ml-1">End Date</label>
+          <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2 ml-1">End Date</label>
           <CustomDatePicker
             value={filters.to}
             onChange={(val) => handleFilterChange('to', val)}
@@ -141,7 +141,7 @@ const TransactionsPage = () => {
         </div>
 
         <div>
-          <label className="block text-[10px] font-bold uppercase tracking-widest text-light-text/30 mb-2 ml-1">Status</label>
+          <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2 ml-1">Status</label>
           <CustomDropdown
             options={[
               { label: 'All Statuses', value: '' },
@@ -157,7 +157,7 @@ const TransactionsPage = () => {
         </div>
 
         <div>
-          <label className="block text-[10px] font-bold uppercase tracking-widest text-light-text/30 mb-2 ml-1">Contract</label>
+          <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2 ml-1">Contract</label>
           <CustomDropdown
             options={[
               { label: 'All Active Contracts', value: '' },
@@ -178,42 +178,42 @@ const TransactionsPage = () => {
           {[1, 2, 3, 4, 5].map(i => <div key={i} className="animate-pulse bg-transparent border border-border rounded-2xl h-20" />)}
         </div>
       ) : paged.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-20 bg-transparent border border-border border-dashed rounded-2xl text-center">
-          <Receipt className="w-12 h-12 text-light-text/10 mb-4" />
-          <h3 className="text-lg font-semibold text-light-text/40 mb-2">No transactions found</h3>
-          <p className="text-light-text/20 text-sm">Adjust your filters to broaden your search</p>
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <img src="/Icons/empty-jobs.png" alt="No transactions" className="w-40 h-40 object-contain mb-4 sm:mb-6" />
+          <h3 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white mb-2">No transactions found</h3>
+          <p className="text-slate-400 dark:text-light-text/20 text-xs sm:text-sm">Adjust your filters to broaden your search</p>
         </div>
       ) : (
         <>
-          <div className="bg-transparent border border-border rounded-2xl overflow-hidden shadow-sm">
+          <div className="bg-transparent border border-slate-200 dark:border-border rounded-xl overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
             {/* Table Header */}
-            <div className="grid grid-cols-[120px_1fr_1fr_120px_140px] gap-4 px-4 sm:px-6 py-3 sm:py-4 border-b border-border/50 text-[9px] sm:text-[10px] text-light-text/30 font-bold uppercase tracking-widest min-w-[500px]">
+            <div className="grid grid-cols-[120px_1fr_1fr_120px_140px] gap-4 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-100 dark:border-border/50 text-[9px] sm:text-[10px] text-slate-400 dark:text-light-text/30 font-bold uppercase tracking-widest min-w-[500px] bg-slate-50 dark:bg-transparent">
               <span>Date</span>
               <span>Project / Reference</span>
               <span>Payer</span>
               <span className="text-right">Amount</span>
               <span className="text-right">Status</span>
             </div>
-            <div className="divide-y divide-border/30 min-w-[500px]">
+            <div className="divide-y divide-slate-100 dark:divide-border/30 min-w-[500px]">
               {paged.map((tx, i) => {
                 const sender = tx.sender_name || tx.payer_name || tx.client_name || '—';
                 return (
-                  <div key={tx.id ?? i} className="grid grid-cols-[120px_1fr_1fr_120px_140px] gap-4 px-4 sm:px-6 py-3 sm:py-4 hover:bg-white/5 transition-all items-center group">
-                    <span className="text-light-text/40 text-xs font-medium">{fmtDate(tx.created_at ?? tx.date)}</span>
+                  <div key={tx.id ?? i} className="grid grid-cols-[120px_1fr_1fr_120px_140px] gap-4 px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 dark:hover:bg-white/5 transition-all items-center group">
+                    <span className="text-slate-500 dark:text-light-text/40 text-xs font-medium">{fmtDate(tx.created_at ?? tx.date)}</span>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-white text-xs sm:text-sm font-semibold truncate group-hover:text-accent transition-colors tracking-tight">
+                      <span className="text-slate-900 dark:text-white text-xs sm:text-sm font-semibold truncate group-hover:text-accent transition-colors tracking-tight">
                         {tx.contract_title || tx.contract?.title || tx.job?.title || `Contract #${String(tx.contract_id).slice(-4)}`}
                       </span>
-                      <span className="text-light-text/20 text-[10px] font-medium tracking-widest uppercase mt-0.5">ID: {String(tx.id).toUpperCase().slice(-8)}</span>
+                      <span className="text-slate-400 dark:text-light-text/20 text-[10px] font-medium tracking-widest uppercase mt-0.5">ID: {String(tx.id).toUpperCase().slice(-8)}</span>
                     </div>
                     <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                       <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent text-xs font-medium shrink-0 border border-accent/20">
                         {sender[0]?.toUpperCase()}
                       </div>
-                      <span className="text-light-text/60 text-xs sm:text-sm font-medium truncate tracking-tight">{sender}</span>
+                      <span className="text-slate-600 dark:text-light-text/60 text-xs sm:text-sm font-medium truncate tracking-tight">{sender}</span>
                     </div>
-                    <span className="text-right text-white font-semibold text-sm sm:text-base">{fmtINR(tx.amount)}</span>
+                    <span className="text-right text-slate-900 dark:text-white font-semibold text-sm sm:text-base">{fmtINR(tx.amount)}</span>
                     <div className="flex justify-end"><StatusBadge status={tx.status} /></div>
                   </div>
                 );
@@ -224,13 +224,13 @@ const TransactionsPage = () => {
 
           {/* Pagination Controls */}
           {pages > 1 && (
-            <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-widest text-light-text/40 pt-8 border-t border-border">
+            <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/40 pt-8 border-t border-slate-200 dark:border-border">
               <span>{filteredRows.length} TRANSACTIONS</span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => handleFilterChange('page', filters.page - 1)}
                   disabled={filters.page <= 1}
-                  className="p-2 rounded-xl border border-border bg-transparent text-light-text/40 hover:text-light-text hover:bg-white/5 disabled:opacity-30 transition-all"
+                  className="p-2 rounded-xl border border-slate-200 dark:border-border bg-transparent text-slate-400 dark:text-light-text/40 hover:text-slate-900 dark:hover:text-light-text hover:bg-slate-50 dark:hover:bg-white/5 disabled:opacity-30 transition-all"
                 >
                   <ChevronLeft size={18} />
                 </button>
@@ -240,7 +240,7 @@ const TransactionsPage = () => {
                 <button
                   onClick={() => handleFilterChange('page', filters.page + 1)}
                   disabled={filters.page >= pages}
-                  className="p-2 rounded-xl border border-border bg-transparent text-light-text/40 hover:text-light-text hover:bg-white/5 disabled:opacity-30 transition-all"
+                  className="p-2 rounded-xl border border-slate-200 dark:border-border bg-transparent text-slate-400 dark:text-light-text/40 hover:text-slate-900 dark:hover:text-light-text hover:bg-slate-50 dark:hover:bg-white/5 disabled:opacity-30 transition-all"
                 >
                   <ChevronRight size={18} />
                 </button>

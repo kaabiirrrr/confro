@@ -88,9 +88,9 @@ export default function FreelancerDirectContracts() {
       {loading && contracts.length === 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{[1, 2, 3, 4].map(i => <SkeletonCard key={i} />)}</div>
       ) : contracts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-14 sm:py-24 bg-transparent border border-dashed border-white/10 rounded-2xl text-center px-4">
-          <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-transparent flex items-center justify-center mb-4 sm:mb-6">
-            <img src="/Icons/icons8-empty-box-80.png" alt="No contracts" className="w-10 h-10 object-contain invert opacity-20" />
+        <div className="flex flex-col items-center justify-center py-14 sm:py-24 text-center px-4">
+          <div className="flex items-center justify-center mb-4 sm:mb-6">
+            <img src="/Icons/icons8-empty-box-80.png" alt="No contracts" className="w-20 h-20 sm:w-28 sm:h-28 object-contain" />
           </div>
           <h3 className="text-base sm:text-xl font-bold text-white mb-2">No direct contracts yet</h3>
           <p className="text-light-text/40 text-xs sm:text-[14px] max-w-sm mx-auto leading-relaxed">

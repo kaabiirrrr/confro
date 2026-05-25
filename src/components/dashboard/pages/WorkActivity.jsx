@@ -158,7 +158,7 @@ const WorkActivity = () => {
     if (contracts.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-8 rounded-3xl">
-                <AlertCircle size={48} className="text-white/20 mb-4" />
+                <img src="/Icons/empty-jobs.png" alt="No Active Jobs" style={{ width: 250, height: 250, objectFit: 'contain' }} className="mb-4" />
                 <h3 className="text-xl font-bold text-white mb-2">No Active Jobs</h3>
                 <p className="text-white/40 max-w-sm">You need an active contract to log daily work activity. Check your proposals or hired projects.</p>
             </div>

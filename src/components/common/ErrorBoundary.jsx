@@ -57,7 +57,7 @@ class ErrorBoundary extends React.Component {
                 <div className="flex justify-center">
                   <button
                     onClick={() => window.location.reload()}
-                    className="px-8 py-2.5 md:px-12 md:py-3.5 bg-accent hover:bg-accent/90 text-white rounded-full font-semibold text-sm md:text-lg transition-all duration-300 cursor-pointer min-w-[140px] md:min-w-[180px] shadow-lg shadow-accent/20 active:scale-95"
+                    className="px-8 py-2.5 md:px-12 md:py-3.5 bg-accent hover:bg-accent/90 text-white rounded-full font-semibold text-sm md:text-lg transition-all duration-300 cursor-pointer min-w-[140px] md:min-w-[180px] active:scale-95"
                   >
                     Reload
                   </button>

@@ -13,6 +13,14 @@ import InfinityLoader from '../../common/InfinityLoader';
 import OtpModal from '../../OtpModal';
 import { useOtp } from '../../../hooks/useOtp';
 import { useAuth } from '../../../context/AuthContext';
+
+// Inline button spinner — replaces InfinityLoader inside buttons
+const Spinner = () => (
+  <svg className="animate-spin w-4 h-4 text-white/80" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+  </svg>
+);
 import CustomDropdown from '../../ui/CustomDropdown';
 
 const INDIAN_BANKS = [
@@ -187,7 +195,7 @@ function AddBankModal({ onClose, onSuccess }) {
             </button>
             <button type="submit" disabled={submitting}
               className="flex-1 py-3.5 rounded-full bg-accent hover:bg-accent/90 text-white text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">
-              {submitting ? <InfinityLoader/> : 'Save Account'}
+              {submitting ? <><Spinner /> Saving...</> : 'Save Account'}
             </button>
           </div>
         </form>
@@ -311,7 +319,7 @@ function WithdrawalModal({ available, onClose, onSuccess }) {
               {METHODS.map(({ value, label }) => (
                 <button key={value} type="button"
                   onClick={() => { setMethod(value); setDetails({}); setSelectedBank(null); setErrors({}); }}
-                  className={`flex-1 py-2.5 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all ${method === value ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'text-slate-900/30 dark:text-white/30 hover:text-slate-950 dark:hover:text-white/60'}`}>
+                  className={`flex-1 py-2.5 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all ${method === value ? 'bg-accent text-white' : 'text-slate-900/30 dark:text-white/30 hover:text-slate-950 dark:hover:text-white/60'}`}>
                   {label}
                 </button>
               ))}
@@ -352,7 +360,7 @@ function WithdrawalModal({ available, onClose, onSuccess }) {
             </button>
             <button type="submit" disabled={submitting}
               className="flex-1 py-4 rounded-full bg-accent hover:bg-accent/90 text-white text-[10px] font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">
-              {submitting ? <InfinityLoader/> : amtNum >= 500 ? `Withdraw Now` : 'Continue'}
+              {submitting ? <><Spinner /> Processing...</> : amtNum >= 500 ? `Withdraw Now` : 'Continue'}
             </button>
           </div>
         </form>
@@ -489,8 +497,8 @@ export default function WithdrawalsPage() {
         </div>
         <div className="flex flex-col items-center sm:items-end gap-2 shrink-0 w-full sm:w-auto">
           <button onClick={() => setShowModal(true)} disabled={!canWithdraw || loading}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:grayscale text-white text-sm font-bold transition-all shadow-lg shadow-accent/20">
-            <Plus size={16} strokeWidth={2.5} /> Withdraw Funds
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:grayscale text-white text-sm font-bold transition-all">
+            Withdraw Funds
           </button>
           <p className="text-slate-900/20 dark:text-white/20 text-[10px] uppercase font-bold tracking-widest">Min ₹500 · 2–5 business days</p>
         </div>
@@ -499,15 +507,15 @@ export default function WithdrawalsPage() {
       {/* Stats Section */}
       {loading ? (
         <div className="space-y-5">
-          <div className="h-[140px] rounded-2xl bg-slate-900/5 dark:bg-secondary/50 animate-pulse border border-slate-900/5 dark:border-white/5" />
+          <div className="h-[140px] rounded-xl bg-slate-900/5 dark:bg-secondary/50 animate-pulse border border-slate-900/5 dark:border-white/5" />
           <div className="grid grid-cols-3 gap-5">
-            {[1,2,3].map(i => <div key={i} className="h-[100px] rounded-2xl bg-slate-900/5 dark:bg-secondary/50 animate-pulse border border-slate-900/5 dark:border-white/5" />)}
+            {[1,2,3].map(i => <div key={i} className="h-[100px] rounded-xl bg-slate-900/5 dark:bg-secondary/50 animate-pulse border border-slate-900/5 dark:border-white/5" />)}
           </div>
         </div>
       ) : (
         <div className="space-y-5">
           {/* Available — dominant card (Full width on mobile/tablet, 2/5 on large desktop) */}
-          <div className="rounded-2xl bg-slate-900/[0.02] dark:bg-transparent border border-slate-900/10 dark:border-white/10 p-6 flex flex-col justify-between min-h-[140px] relative overflow-hidden group backdrop-blur-xl">
+          <div className="rounded-xl bg-slate-900/[0.02] dark:bg-transparent border border-slate-900/10 dark:border-white/10 p-6 flex flex-col justify-between min-h-[140px] relative overflow-hidden group backdrop-blur-xl">
             <div className="absolute inset-0 bg-gradient-to-tr from-accent/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             <div className="flex items-start justify-between gap-4 relative z-10">
               <div>
@@ -534,7 +542,7 @@ export default function WithdrawalsPage() {
               { label: 'Withdrawn', value: parseFloat(balance?.total_withdrawn || 0) * USD_TO_INR },
               { label: 'Pending',   value: parseFloat(balance?.pending         || 0) * USD_TO_INR },
             ].map(({ label, value }) => (
-              <div key={label} className="rounded-2xl bg-slate-900/[0.01] dark:bg-transparent border border-slate-900/10 dark:border-white/10 p-3 sm:p-5 flex flex-col justify-between min-h-[100px] sm:min-h-[120px] backdrop-blur-sm">
+              <div key={label} className="rounded-xl bg-slate-900/[0.01] dark:bg-transparent border border-slate-900/10 dark:border-white/10 p-3 sm:p-5 flex flex-col justify-between min-h-[100px] sm:min-h-[120px] backdrop-blur-sm">
                 <p className="text-slate-900/40 dark:text-white/40 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest truncate">{label}</p>
                 <p className="text-slate-950 dark:text-white/90 text-sm sm:text-2xl font-bold tracking-tight truncate">{fmtINR(value)}</p>
               </div>
@@ -564,9 +572,9 @@ export default function WithdrawalsPage() {
           </div>
 
           {loading ? (
-            <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-20 rounded-2xl bg-slate-900/5 dark:bg-secondary/30 animate-pulse border border-slate-900/5 dark:border-white/5" />)}</div>
+            <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-20 rounded-xl bg-slate-900/5 dark:bg-secondary/30 animate-pulse border border-slate-900/5 dark:border-white/5" />)}</div>
           ) : filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 rounded-3xl border border-dashed border-slate-900/10 dark:border-white/5 bg-transparent text-center backdrop-blur-sm">
+            <div className="flex flex-col items-center justify-center py-20 rounded-xl border border-dashed border-slate-900/10 dark:border-white/5 bg-transparent text-center backdrop-blur-sm">
               <div className="w-24 h-24 flex items-center justify-center mb-2">
                 <img src="/Icons/rupee.png" alt="Rupee" className="w-16 h-16 object-contain" />
               </div>
@@ -578,7 +586,7 @@ export default function WithdrawalsPage() {
               </button>
             </div>
           ) : (
-            <div className="rounded-2xl border border-slate-900/10 dark:border-white/10 bg-transparent overflow-hidden backdrop-blur-xl">
+            <div className="rounded-xl border border-slate-900/10 dark:border-white/10 bg-transparent overflow-hidden backdrop-blur-xl">
               <div className="hidden sm:grid grid-cols-[1fr_120px_120px_120px_64px] gap-4 px-6 py-4 border-b border-slate-900/5 dark:border-white/5 bg-transparent">
                 {['Date', 'Amount', 'Method', 'Status', ''].map((h, i) => (
                   <span key={i} className={`text-[10px] font-bold text-slate-900/20 dark:text-white/20 uppercase tracking-widest ${i > 0 && i < 4 ? 'text-right' : ''}`}>{h}</span>
@@ -603,7 +611,7 @@ export default function WithdrawalsPage() {
                       <p className="hidden sm:block text-slate-900/40 dark:text-white/40 text-xs text-right capitalize font-medium">{w.method?.replace('_', ' ') || '—'}</p>
                       <div className="w-full sm:w-auto flex justify-between sm:justify-end items-center">
                         <span className="sm:hidden text-slate-900/20 dark:text-white/20 text-[10px] font-bold uppercase tracking-widest">Status</span>
-                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border shadow-sm ${cfg.cls}`}>
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${cfg.cls}`}>
                           <cfg.Icon size={10} />
                           {w.status?.toLowerCase()}
                         </span>
@@ -612,7 +620,7 @@ export default function WithdrawalsPage() {
                         {w.status === 'PENDING' && (
                           <button onClick={() => handleCancel(w.id)} disabled={cancellingId === w.id}
                             className="bg-red-500/10 hover:bg-red-500/20 text-red-400 p-2 sm:p-2 rounded-lg transition-all border border-red-500/10 sm:opacity-0 group-hover:opacity-100 flex items-center gap-2 sm:gap-0 font-bold text-[10px] sm:text-inherit">
-                            {cancellingId === w.id ? <InfinityLoader/> : <><X size={14} /><span className="sm:hidden uppercase tracking-widest">Cancel Request</span></>}
+                            {cancellingId === w.id ? <><Spinner /><span className="sm:hidden uppercase tracking-widest">Cancelling</span></> : <><X size={14} /><span className="sm:hidden uppercase tracking-widest">Cancel Request</span></>}
                           </button>
                         )}
                       </div>
@@ -627,12 +635,12 @@ export default function WithdrawalsPage() {
         <div className="space-y-6">
 
           {/* Saved Accounts */}
-          <div className="rounded-2xl border border-slate-900/10 dark:border-white/10 bg-transparent overflow-hidden backdrop-blur-xl">
+          <div className="rounded-xl border border-slate-900/10 dark:border-white/10 bg-transparent overflow-hidden backdrop-blur-xl">
             <div className="flex items-center justify-between px-5 py-4 border-b border-slate-900/5 dark:border-white/5 bg-transparent">
               <h2 className="text-slate-900/40 dark:text-white/40 text-[10px] font-bold uppercase tracking-widest">Saved Accounts</h2>
               <button onClick={() => setShowAddBank(true)}
-                className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-accent hover:text-accent/80 transition-colors">
-                <Plus size={12} strokeWidth={3} /> Add New
+                className="text-[10px] uppercase font-bold tracking-widest text-white bg-accent hover:bg-accent/90 px-4 py-1.5 rounded-full transition-all">
+                Add New
               </button>
             </div>
             {bankAccounts.length === 0 ? (
@@ -646,31 +654,34 @@ export default function WithdrawalsPage() {
                 </button>
               </div>
             ) : (
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-slate-900/5 dark:divide-white/5">
                 {bankAccounts.map(b => (
-                  <div key={b.id} className="px-5 py-4 hover:bg-slate-900/[0.02] dark:hover:bg-white/[0.02] transition-colors group">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="text-slate-900/90 dark:text-white/90 text-sm font-bold truncate tracking-tight">{b.bank_name}</p>
-                          {b.is_default && (
-                            <span className="px-1.5 py-0.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[8px] font-bold uppercase tracking-widest shrink-0">DEFAULT</span>
-                          )}
-                        </div>
-                        <p className="text-slate-900/20 dark:text-white/20 text-[10px] font-mono tracking-wider">•••• {b.account_number?.slice(-4)}</p>
-                        <p className="text-slate-900/40 dark:text-white/40 text-[10px] uppercase font-bold tracking-wide mt-1">{b.account_holder}</p>
-                      </div>
-                      <div className="flex flex-col items-end gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
-                        {!b.is_default && (
-                          <button onClick={() => handleSetDefault(b.id)} className="text-[9px] font-bold uppercase tracking-widest text-slate-900/30 dark:text-white/30 hover:text-accent transition-colors">
-                            Default
-                          </button>
-                        )}
-                        <button onClick={() => handleDeleteBank(b.id)} disabled={deletingBankId === b.id}
-                          className="text-[9px] font-bold uppercase tracking-widest text-red-400/40 hover:text-red-400 transition-colors">
-                          {deletingBankId === b.id ? <InfinityLoader/> : 'Delete'}
+                  <div key={b.id} className="px-5 py-4 hover:bg-slate-900/[0.02] dark:hover:bg-white/[0.02] transition-colors">
+                    {/* Top row: bank name + DEFAULT badge on right */}
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <p className="text-slate-900/90 dark:text-white/90 text-sm font-bold tracking-tight">{b.bank_name}</p>
+                      {b.is_default && (
+                        <span className="px-2 py-0.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[8px] font-bold uppercase tracking-widest shrink-0">DEFAULT</span>
+                      )}
+                    </div>
+                    {/* Account number */}
+                    <p className="text-slate-900/30 dark:text-white/30 text-[11px] font-mono tracking-wider mb-1">•••• {b.account_number?.slice(-4)}</p>
+                    {/* Account holder */}
+                    <p className="text-slate-900/50 dark:text-white/50 text-[10px] uppercase font-bold tracking-wide mb-3">{b.account_holder}</p>
+                    {/* Bottom row: set default (left) + delete (right) */}
+                    <div className="flex items-center justify-between">
+                      {!b.is_default ? (
+                        <button onClick={() => handleSetDefault(b.id)}
+                          className="text-[9px] font-bold uppercase tracking-widest text-slate-900/30 dark:text-white/30 hover:text-accent transition-colors border border-slate-900/10 dark:border-white/10 hover:border-accent/30 px-2.5 py-1 rounded-md">
+                          Set Default
                         </button>
-                      </div>
+                      ) : (
+                        <span />
+                      )}
+                      <button onClick={() => handleDeleteBank(b.id)} disabled={deletingBankId === b.id}
+                        className="text-[9px] font-bold uppercase tracking-widest text-white bg-red-500 hover:bg-red-600 disabled:opacity-50 px-3 py-1.5 rounded-full transition-all flex items-center gap-1">
+                        {deletingBankId === b.id ? <><Spinner /> Removing...</> : 'Delete'}
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -679,7 +690,7 @@ export default function WithdrawalsPage() {
           </div>
 
           {/* Payout Info */}
-          <div className="rounded-2xl border border-slate-900/10 dark:border-white/10 bg-transparent p-6 space-y-4 backdrop-blur-xl">
+          <div className="rounded-xl border border-slate-900/10 dark:border-white/10 bg-transparent p-6 space-y-4 backdrop-blur-xl">
             <h2 className="text-slate-900/40 dark:text-white/40 text-[10px] font-bold uppercase tracking-widest">Payout Info</h2>
             <div className="space-y-3">
               {[

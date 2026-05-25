@@ -12,7 +12,7 @@ const SettingsCard = ({
   iconClassName = ""
 }) => {
   return (
-    <div className={`glass-card rounded-3xl ${padding} relative overflow-hidden group w-full max-w-full ${className}`}>
+    <div className={`glass-card rounded-xl ${padding} relative overflow-hidden group w-full max-w-full ${className}`}>
       {/* Decorative Gradient Background */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
 

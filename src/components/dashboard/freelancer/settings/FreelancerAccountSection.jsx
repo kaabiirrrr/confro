@@ -7,7 +7,7 @@ import { toastApiError } from "../../../../utils/apiErrorToast";
 import Avatar from "../../../Avatar";
 
 const FreelancerAccountSection = ({ onOpenImageModal, updatedAvatar }) => {
-  const { profile } = useAuth();
+  const { profile, setProfile } = useAuth();
   const [edit, setEdit] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -17,14 +17,29 @@ const FreelancerAccountSection = ({ onOpenImageModal, updatedAvatar }) => {
     email:     profile?.email || '',
   });
 
+  React.useEffect(() => {
+    if (profile) {
+      setForm({
+        firstName: profile.name?.split(' ')[0] || '',
+        lastName: profile.name?.split(' ').slice(1).join(' ') || '',
+        email: profile.email || '',
+      });
+    }
+  }, [profile]);
+
   const profileImage = updatedAvatar || profile?.avatar_url || null;
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSave = async () => {
+    const updatedName = `${form.firstName} ${form.lastName}`.trim();
     setSaving(true);
     try {
-      await updateMyProfile({ name: `${form.firstName} ${form.lastName}`.trim() });
+      await updateMyProfile({ name: updatedName });
+      setProfile(prev => ({
+        ...prev,
+        name: updatedName
+      }));
       toast.success('Profile saved');
       setEdit(false);
     } catch (err) {
@@ -53,9 +68,10 @@ const FreelancerAccountSection = ({ onOpenImageModal, updatedAvatar }) => {
           {!edit && (
             <button
               onClick={() => setEdit(true)}
-              className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2 text-sm font-semibold shadow-sm"
+              className="text-white/40 hover:text-accent transition-colors p-1 mt-1"
+              aria-label="Edit Profile"
             >
-              <Pencil size={14} /> Edit Profile
+              <Pencil size={18} />
             </button>
           )}
         </div>
@@ -64,7 +80,6 @@ const FreelancerAccountSection = ({ onOpenImageModal, updatedAvatar }) => {
         <div className="sm:hidden flex flex-col items-center text-center mb-6 gap-3 px-2 w-full min-w-0">
           {/* Avatar */}
           <div onClick={onOpenImageModal} className="cursor-pointer group/avatar relative">
-            <div className="absolute -inset-1.5 bg-gradient-to-tr from-accent to-transparent rounded-full opacity-20 blur-sm" />
             <div className="relative rounded-full p-1 bg-white/5 border border-white/10">
               <Avatar
                 src={profileImage}
@@ -103,7 +118,6 @@ const FreelancerAccountSection = ({ onOpenImageModal, updatedAvatar }) => {
           {/* Avatar (Desktop only) */}
           <div className="hidden sm:flex shrink-0 flex-col items-center lg:items-start gap-4 mx-auto lg:mx-0">
             <div onClick={onOpenImageModal} className="cursor-pointer group/avatar relative">
-              <div className="absolute -inset-1 bg-gradient-to-tr from-accent to-transparent rounded-full opacity-20 blur-sm group-hover/avatar:opacity-40 transition-opacity" />
               <div className="relative rounded-full p-1 bg-white/5 border border-white/10">
                 <Avatar
                   src={profileImage}
@@ -142,7 +156,7 @@ const FreelancerAccountSection = ({ onOpenImageModal, updatedAvatar }) => {
                   <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Email Address</p>
                   <div className="flex items-center justify-center sm:justify-end gap-2 min-w-0 flex-1 w-full overflow-hidden">
                     <p className="text-white text-sm sm:text-base font-medium tracking-tight truncate min-w-0">{form.email || "No email"}</p>
-                    <CheckCircle2 size={14} className="text-green-500/50 shrink-0" />
+                    <CheckCircle2 size={14} className="text-green-500 shrink-0" />
                   </div>
                 </div>
               </div>
@@ -189,19 +203,19 @@ const FreelancerAccountSection = ({ onOpenImageModal, updatedAvatar }) => {
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div className="flex flex-col sm:flex-row sm:justify-end items-stretch sm:items-center gap-3">
+                  <button
+                    onClick={() => setEdit(false)}
+                    className="w-full sm:w-auto h-12 px-6 rounded-full border border-white/10 text-white/40 hover:text-white text-sm font-bold transition-colors flex items-center justify-center"
+                  >
+                    Discard
+                  </button>
                   <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="w-full sm:w-auto h-11 px-8 rounded-full bg-accent text-white font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shadow-lg shadow-accent/20"
+                    className="w-full sm:w-auto h-11 px-8 rounded-full bg-accent text-white font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
                   >
                     {saving ? 'Processing...' : 'Save Changes'}
-                  </button>
-                  <button
-                    onClick={() => setEdit(false)}
-                    className="w-full sm:w-auto h-12 px-6 rounded-full border border-white/10 text-white/40 hover:text-white text-sm font-bold transition-colors flex items-center justify-center gap-2"
-                  >
-                    <X size={14} /> Discard
                   </button>
                 </div>
               </div>

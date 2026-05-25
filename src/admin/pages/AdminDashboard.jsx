@@ -55,10 +55,10 @@ const AdminDashboard = () => {
 
     if (error) {
         return (
-            <div className="p-8 text-rose-100 bg-rose-500/10 border border-rose-500/20 rounded-2xl m-6 text-center">
+            <div className="p-8 text-rose-700 dark:text-rose-100 bg-rose-500/10 border border-rose-500/20 rounded-2xl m-6 text-center">
                 <Shield className="mx-auto mb-4 text-rose-500" size={32} />
                 <h3 className="text-lg font-bold mb-2">Access Error</h3>
-                <p className="text-sm opacity-60">{error}</p>
+                <p className="text-sm opacity-80">{error}</p>
             </div>
         );
     }

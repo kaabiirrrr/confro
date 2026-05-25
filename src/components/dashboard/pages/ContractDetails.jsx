@@ -25,7 +25,8 @@ import {
   Plus,
   Terminal,
   Box,
-  FileText
+  FileText,
+  Star
 } from 'lucide-react';
 import { formatINR } from '../../../utils/currencyUtils';
 import { 
@@ -39,7 +40,9 @@ import {
   regenerateSkimmerPlan,
   fundFakeEscrow,
   releaseFakeEscrow,
-  getFakeEscrowTransactions
+  getFakeEscrowTransactions,
+  createProjectReview,
+  getContractReviews
 } from '../../../services/apiService';
 import { toast } from 'react-hot-toast';
 import InfinityLoader from '../../common/InfinityLoader';
@@ -80,6 +83,60 @@ const ContractDetails = () => {
 
   const [fundModal, setFundModal] = useState({ isOpen: false });
   const [releaseModal, setReleaseModal] = useState({ isOpen: false, tx: null });
+
+  // Review/Rating State
+  const [reviewState, setReviewState] = useState({
+    existingReviews: [],
+    rating: 0,
+    hoverRating: 0,
+    comment: '',
+    submitting: false,
+    submitted: false,
+    loaded: false
+  });
+
+  const fetchContractReviews = useCallback(async () => {
+    try {
+      const res = await getContractReviews(id);
+      if (res.success) {
+        const myReview = (res.data || []).find(r => r.reviewer_id === user?.id);
+        setReviewState(prev => ({
+          ...prev,
+          existingReviews: res.data || [],
+          submitted: !!myReview,
+          rating: myReview?.rating || 0,
+          comment: myReview?.comment || '',
+          loaded: true
+        }));
+      }
+    } catch {
+      setReviewState(prev => ({ ...prev, loaded: true }));
+    }
+  }, [id, user?.id]);
+
+  const handleSubmitReview = async () => {
+    if (reviewState.rating < 1) {
+      toast.error('Please select a rating');
+      return;
+    }
+    setReviewState(prev => ({ ...prev, submitting: true }));
+    try {
+      const res = await createProjectReview({
+        contract_id: id,
+        rating: reviewState.rating,
+        comment: reviewState.comment
+      });
+      if (res.success) {
+        toast.success('Review submitted successfully!');
+        setReviewState(prev => ({ ...prev, submitted: true, submitting: false }));
+        fetchContractReviews();
+      }
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Failed to submit review';
+      toast.error(msg);
+      setReviewState(prev => ({ ...prev, submitting: false }));
+    }
+  };
 
   const fetchFakeEscrow = useCallback(async () => {
     if (import.meta.env.VITE_ESCROW_MODE !== 'FAKE') return;
@@ -144,6 +201,12 @@ const ContractDetails = () => {
   useEffect(() => {
     fetchContractDetails();
   }, [id]);
+
+  useEffect(() => {
+    if (contract?.status === 'COMPLETED') {
+      fetchContractReviews();
+    }
+  }, [contract?.status, fetchContractReviews]);
 
   const handleMemberUpdate = async (memberId, updates) => {
     try {
@@ -415,6 +478,129 @@ const ContractDetails = () => {
                 )}
            </div>
       </div>
+
+      {/* REVIEW / FEEDBACK PANEL (Completed Contracts Only) */}
+      {contract.status === 'COMPLETED' && (
+        <div className="bg-transparent border border-white/5 rounded-[30px] md:rounded-[40px] p-6 md:p-8 mb-8 backdrop-blur-2xl">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
+            <div className="text-center sm:text-left">
+              <h3 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+                <Star size={20} className="text-yellow-400" /> Project Feedback
+              </h3>
+              <p className="text-[10px] text-light-text/30 font-bold uppercase tracking-[0.2em] mt-1">
+                Rate your experience with this project
+              </p>
+            </div>
+            {reviewState.submitted && (
+              <span className="px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[10px] font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-1.5">
+                <CheckCircle size={12} /> Review Submitted
+              </span>
+            )}
+          </div>
+
+          {reviewState.submitted ? (
+            /* Show existing reviews */
+            <div className="space-y-4">
+              {reviewState.existingReviews.map(review => (
+                <div key={review.id} className="p-5 border border-white/5 rounded-2xl bg-white/[0.02]">
+                  <div className="flex items-center gap-3 mb-3">
+                    {review.reviewer?.avatar_url ? (
+                      <img src={review.reviewer.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover ring-1 ring-white/10" />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent text-xs font-bold">
+                        {review.reviewer?.name?.[0] || '?'}
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <p className="text-sm text-white font-semibold">{review.reviewer?.name || 'User'}</p>
+                      <p className="text-[10px] text-light-text/30 font-bold uppercase tracking-widest">
+                        {new Date(review.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map(star => (
+                        <Star
+                          key={star}
+                          size={14}
+                          className={star <= review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-white/10'}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  {review.comment && (
+                    <p className="text-xs text-light-text/50 leading-relaxed italic pl-11">"{review.comment}"</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            /* Rating submission form */
+            <div className="space-y-6">
+              {/* Star Rating */}
+              <div className="flex flex-col items-center gap-4 py-4">
+                <p className="text-xs text-light-text/40 font-bold uppercase tracking-widest">How was your experience?</p>
+                <div className="flex items-center gap-2">
+                  {[1, 2, 3, 4, 5].map(star => (
+                    <button
+                      key={star}
+                      type="button"
+                      onMouseEnter={() => setReviewState(prev => ({ ...prev, hoverRating: star }))}
+                      onMouseLeave={() => setReviewState(prev => ({ ...prev, hoverRating: 0 }))}
+                      onClick={() => setReviewState(prev => ({ ...prev, rating: star }))}
+                      className="transition-all duration-200 hover:scale-125 active:scale-95 p-1"
+                    >
+                      <Star
+                        size={32}
+                        className={`transition-all duration-200 ${
+                          star <= (reviewState.hoverRating || reviewState.rating)
+                            ? 'text-yellow-400 fill-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.4)]'
+                            : 'text-white/10 hover:text-white/20'
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+                {reviewState.rating > 0 && (
+                  <p className="text-xs text-yellow-400/80 font-bold uppercase tracking-widest animate-in fade-in duration-300">
+                    {['', 'Poor', 'Below Average', 'Good', 'Very Good', 'Excellent'][reviewState.rating]}
+                  </p>
+                )}
+              </div>
+
+              {/* Comment */}
+              <div>
+                <label className="text-[10px] text-light-text/30 font-bold uppercase tracking-widest mb-2 block">Your Feedback (Optional)</label>
+                <textarea
+                  value={reviewState.comment}
+                  onChange={(e) => setReviewState(prev => ({ ...prev, comment: e.target.value }))}
+                  placeholder="Share your experience working on this project..."
+                  rows={3}
+                  maxLength={500}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-white/20 focus:border-accent/30 focus:ring-1 focus:ring-accent/20 outline-none resize-none transition-all"
+                />
+                <p className="text-[10px] text-light-text/20 mt-1 text-right">{reviewState.comment.length}/500</p>
+              </div>
+
+              {/* Submit */}
+              <button
+                onClick={handleSubmitReview}
+                disabled={reviewState.submitting || reviewState.rating < 1}
+                className={`w-full py-3.5 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${
+                  reviewState.rating >= 1
+                    ? 'bg-accent text-white hover:bg-accent/90 shadow-lg shadow-accent/20 active:scale-[0.98]'
+                    : 'bg-white/5 text-white/20 cursor-not-allowed border border-white/5'
+                }`}
+              >
+                {reviewState.submitting ? (
+                  <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Submitting...</>
+                ) : (
+                  <><Star size={14} /> Submit Review</>
+                )}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Main Content Areas */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">

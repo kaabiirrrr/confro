@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Search, Filter, Briefcase, ChevronLeft, ChevronRight
+  Search, Filter, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { findWorkJobs, toggleSaveJob } from '../../../services/apiService';
@@ -35,7 +35,9 @@ export default function FreelancerFindWork() {
     budgetType: '',
     minBudget: '',
     maxBudget: '',
-    skills: []
+    skills: [],
+    proposalRange: [],
+    duration: [],
   });
 
   const debounceRef = useRef(null);
@@ -53,10 +55,13 @@ export default function FreelancerFindWork() {
     }
   }, []);
 
+  const loadRef = useRef(load);
+  loadRef.current = load;
+
   useEffect(() => {
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      load({
+      loadRef.current({
         tab,
         page,
         search,
@@ -65,14 +70,15 @@ export default function FreelancerFindWork() {
         budget_type: filters.budgetType,
         min_budget: filters.minBudget,
         max_budget: filters.maxBudget,
-        skill: filters.skills.join(','),
+        skill: (filters.skills || []).join(','),
         limit: 20
       });
     }, 300);
     return () => clearTimeout(debounceRef.current);
-  }, [tab, page, search, filters, load]);
+  }, [tab, page, search, filters]); // load is stable via ref
 
-  useEffect(() => { setPage(1); }, [tab, search, filters]);
+  // Reset to page 1 when tab or search changes (NOT filters — handled by sidebar apply)
+  useEffect(() => { setPage(1); }, [tab, search]);
 
   // ── Real-time job updates ─────────────────────────────────────────────────
   const handleNewJob = useCallback((job) => {
@@ -119,7 +125,9 @@ export default function FreelancerFindWork() {
       budgetType: '',
       minBudget: '',
       maxBudget: '',
-      skills: []
+      skills: [],
+      proposalRange: [],
+      duration: [],
     });
     setPage(1);
   };
@@ -143,7 +151,7 @@ export default function FreelancerFindWork() {
     }
   };
 
-  const filterCount = [filters.category, filters.expLevel, filters.budgetType, filters.minBudget, filters.maxBudget, ...filters.skills].filter(Boolean).length;
+  const filterCount = [filters.category, filters.expLevel, filters.budgetType, filters.minBudget, filters.maxBudget, ...(filters.skills || []), ...(filters.proposalRange || []), ...(filters.duration || [])].filter(Boolean).length;
 
   return (
     <div className="max-w-[1480px] w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6 pb-10 animate-in fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight">
@@ -197,14 +205,23 @@ export default function FreelancerFindWork() {
 
       {/* ── BEST MATCHES: Full AI Feed ─────────────────────── */}
       {tab === 'best_matches' ? (
-        <BestMatchesTab />
+        <BestMatchesTab filters={{
+          experience_level: filters.expLevel ? [filters.expLevel] : [],
+          budget_type: filters.budgetType ? [filters.budgetType] : [],
+          budget_min: filters.minBudget,
+          budget_max: filters.maxBudget,
+        }} searchQuery={search} />
       ) : loading ? (
         <div className="space-y-4">
           {[1, 2, 3].map(i => <div key={i} className="animate-pulse bg-transparent border border-border rounded-2xl h-44" />)}
         </div>
       ) : jobs.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 bg-transparent border border-border rounded-2xl text-center">
-          <Briefcase className="w-12 h-12 text-light-text/10 mb-3" />
+          <img
+            src="/ChatGPT Image May 24, 2026, 04_29_37 PM.png"
+            alt="No jobs found"
+            className="w-20 h-20 object-contain mb-4 opacity-70"
+          />
           <h3 className="text-lg font-semibold text-light-text/60 mb-1">No jobs found</h3>
           <p className="text-light-text/30 text-sm">Try adjusting your filters or check back later.</p>
         </div>

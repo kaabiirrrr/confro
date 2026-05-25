@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { toast } from "react-hot-toast";
 import { profileApi } from "../../../services/profileApi";
+import InfinityLoader from "../../common/InfinityLoader";
 
 export default function StepProfessional({ next, back }) {
 
@@ -87,8 +88,8 @@ export default function StepProfessional({ next, back }) {
       className="space-y-3 sm:space-y-6"
     >
       {loading ? (
-        <div className="flex justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
+        <div className="py-12">
+          <InfinityLoader text="Loading your info..." />
         </div>
       ) : (
         <div className="space-y-3 sm:space-y-6">
@@ -154,21 +155,19 @@ export default function StepProfessional({ next, back }) {
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 sm:gap-5 pt-2 sm:pt-4">
+          <div className="flex justify-between gap-3 sm:gap-5 pt-2 sm:pt-4">
             <button
               onClick={back}
-              className="flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 text-white/40 hover:text-white transition-colors text-xs sm:text-sm font-semibold"
+              className="flex items-center justify-center px-6 sm:px-8 py-2 sm:py-2.5 border border-white/20 rounded-full text-white/60 hover:text-white hover:bg-white/5 transition-colors text-xs sm:text-sm font-semibold"
             >
-              <FiArrowLeft />
               Back
             </button>
 
             <button
               onClick={handleNext}
-              className="bg-accent text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-full hover:bg-accent/90 flex items-center gap-2 sm:gap-3 transition-all shadow-xl shadow-accent/10 text-sm sm:text-base"
+              className="bg-accent text-white font-bold px-6 sm:px-10 py-2 sm:py-2.5 rounded-full hover:bg-accent/90 flex items-center justify-center transition-all text-sm sm:text-base"
             >
               Continue
-              <FiArrowRight />
             </button>
           </div>
         </div>

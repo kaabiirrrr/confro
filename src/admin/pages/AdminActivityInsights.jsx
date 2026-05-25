@@ -119,7 +119,7 @@ const AdminActivityInsights = () => {
             </section>
 
             {/* Recent Detailed Activity Table */}
-            <div className="bg-transparent border border-white/10 rounded-[24px] sm:rounded-[40px] p-5 sm:p-10 backdrop-blur-xl mb-8 overflow-hidden">
+            <div className="bg-transparent border border-white/10 rounded-xl p-5 sm:p-10 backdrop-blur-xl mb-8 overflow-hidden">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
                     <div>
                         <h3 className="text-lg sm:text-xl font-black text-slate-950 dark:text-white tracking-tight flex items-center gap-2">

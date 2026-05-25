@@ -126,29 +126,28 @@ const AdminProfilePage = () => {
             {/* Header */}
             <div className="flex items-start sm:items-center justify-between gap-3">
                 <div>
-                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                         <img src="/Icons/icons8-account-male-96.png" alt="Profile" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
                         My Profile
                     </h1>
-                    <p className="text-white/40 text-xs mt-1">Manage your admin account settings and preferences</p>
+                    <p className="text-slate-500 dark:text-white/40 text-xs mt-1">Manage your admin account settings and preferences</p>
                 </div>
                 {!editMode ? (
                     <button
                         onClick={() => setEditMode(true)}
                         className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-accent/10 border border-accent/20 text-accent rounded-xl text-xs sm:text-sm font-medium hover:bg-accent/20 transition flex-shrink-0"
                     >
-                        <Edit3 size={14} />
+                        <Edit3 size={16} />
                         <span className="hidden sm:inline">Edit Profile</span>
                         <span className="sm:hidden">Edit</span>
                     </button>
                 ) : (
                     <button
                         onClick={() => { setEditMode(false); setShowPasswordField(false); }}
-                        className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/5 border border-white/10 text-white/60 rounded-xl text-xs sm:text-sm font-medium hover:text-white transition flex-shrink-0"
+                        className="flex items-center justify-center p-1.5 sm:p-2 text-slate-500 dark:text-white/60 hover:text-accent dark:hover:text-accent transition flex-shrink-0"
+                        title="Cancel"
                     >
-                        <X size={14} />
-                        <span className="hidden sm:inline">Cancel</span>
-                        <span className="sm:hidden">✕</span>
+                        <X size={24} />
                     </button>
                 )}
             </div>
@@ -159,7 +158,7 @@ const AdminProfilePage = () => {
                 <div className="lg:col-span-1 space-y-4">
 
                     {/* Avatar Card */}
-                    <div className="bg-transparent border border-white/10 rounded-2xl p-6 flex flex-col items-center text-center space-y-4">
+                    <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 flex flex-col items-center text-center space-y-4 shadow-sm">
                         {/* Photo */}
                         <div className="relative group">
                             <div
@@ -203,8 +202,8 @@ const AdminProfilePage = () => {
                         </div>
 
                         <div>
-                            <h2 className="text-xl font-bold text-white">{profile?.name || 'Admin'}</h2>
-                            <p className="text-white/50 text-sm">{profile?.email}</p>
+                            <h2 className="text-xl font-bold text-slate-900 dark:text-white">{profile?.name || 'Admin'}</h2>
+                            <p className="text-slate-500 dark:text-white/50 text-sm">{profile?.email}</p>
                         </div>
 
                         {/* Role Badge */}
@@ -220,8 +219,8 @@ const AdminProfilePage = () => {
                     </div>
 
                     {/* Account Info Card */}
-                    <div className="bg-transparent border border-white/10 rounded-2xl p-5 space-y-4">
-                        <h3 className="text-sm font-semibold text-white/80 uppercase tracking-wider">Account Info</h3>
+                    <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 space-y-4 shadow-sm">
+                        <h3 className="text-sm font-semibold text-slate-600 dark:text-white/80 uppercase tracking-wider">Account Info</h3>
 
                         <InfoRow
                             icon={<Shield size={15} />}
@@ -249,8 +248,8 @@ const AdminProfilePage = () => {
                 {/* Right: Edit Form */}
                 <div className="lg:col-span-2 space-y-4">
 
-                    <form onSubmit={handleSave} className="bg-transparent border border-white/10 rounded-2xl p-6 space-y-5">
-                        <h3 className="text-lg font-semibold text-white">
+                    <form onSubmit={handleSave} className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 space-y-5 shadow-sm">
+                        <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
                             {editMode ? 'Edit Profile Details' : 'Profile Details'}
                         </h3>
 
@@ -316,29 +315,31 @@ const AdminProfilePage = () => {
 
                         {/* Save button */}
                         {editMode && (
-                            <button
-                                type="submit"
-                                disabled={isSaving}
-                                className="flex items-center gap-2 px-6 py-2.5 bg-accent hover:bg-accent/90 text-white font-medium rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {isSaving ? (
-                                    <>
-                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                        Saving...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Save size={16} />
-                                        Save Changes
-                                    </>
-                                )}
-                            </button>
+                            <div className="flex justify-end sm:justify-start">
+                                <button
+                                    type="submit"
+                                    disabled={isSaving}
+                                    className="flex items-center gap-2 px-6 py-2.5 bg-accent hover:bg-accent/90 text-white font-medium rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {isSaving ? (
+                                        <>
+                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            Saving...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Save size={16} />
+                                            Save Changes
+                                        </>
+                                    )}
+                                </button>
+                            </div>
                         )}
                     </form>
 
                     {/* Login Activity Card */}
-                    <div className="bg-transparent border border-white/10 rounded-2xl p-6 space-y-4">
-                        <h3 className="text-lg font-semibold text-white">Login Activity</h3>
+                    <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 space-y-4 shadow-sm">
+                        <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Login Activity</h3>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <ActivityCard
@@ -376,9 +377,9 @@ const AdminProfilePage = () => {
 // Sub-components
 const FormField = ({ icon, label, value, onChange, disabled, type = 'text', placeholder }) => (
     <div>
-        <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-1.5">{label}</label>
+        <label className="block text-xs font-medium text-slate-500 dark:text-white/50 uppercase tracking-wider mb-1.5">{label}</label>
         <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30">{icon}</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30">{icon}</span>
             <input
                 type={type}
                 value={value}
@@ -386,8 +387,8 @@ const FormField = ({ icon, label, value, onChange, disabled, type = 'text', plac
                 disabled={disabled}
                 placeholder={placeholder}
                 className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-sm transition ${disabled
-                    ? 'bg-white/2 border-white/5 text-white/40 cursor-default'
-                    : 'bg-transparent border-white/10 text-white focus:outline-none focus:border-accent'
+                    ? 'bg-slate-50 dark:bg-white/2 border-slate-200 dark:border-white/5 text-slate-500 dark:text-white/40 cursor-default'
+                    : 'bg-white dark:bg-transparent border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:border-accent'
                     }`}
             />
         </div>
@@ -396,28 +397,28 @@ const FormField = ({ icon, label, value, onChange, disabled, type = 'text', plac
 
 const InfoRow = ({ icon, label, value }) => (
     <div className="flex items-start justify-between gap-3">
-        <span className="flex items-center gap-2 text-white/40 text-xs shrink-0">
+        <span className="flex items-center gap-2 text-slate-500 dark:text-white/40 text-xs shrink-0">
             {icon}
             {label}
         </span>
-        <span className="text-white text-xs text-right">{value || '—'}</span>
+        <span className="text-slate-800 dark:text-white text-xs text-right">{value || '—'}</span>
     </div>
 );
 
 const ActivityCard = ({ title, value, icon, color }) => {
     const colorMap = {
         accent: 'text-accent bg-accent/10',
-        green: 'text-green-400 bg-green-500/10',
-        blue: 'text-blue-400 bg-blue-500/10',
-        red: 'text-red-400 bg-red-500/10',
+        green: 'text-green-600 dark:text-green-400 bg-green-500/10',
+        blue: 'text-blue-600 dark:text-blue-400 bg-blue-500/10',
+        red: 'text-red-600 dark:text-red-400 bg-red-500/10',
     };
     return (
-        <div className="bg-transparent border border-white/5 rounded-xl p-4">
+        <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/5 rounded-xl p-4 shadow-sm">
             <div className={`${colorMap[color].split(' ')[0]} mb-3`}>
                 {icon}
             </div>
-            <p className="text-white/40 text-xs uppercase tracking-wider">{title}</p>
-            <p className="text-white font-medium text-sm mt-1">{value}</p>
+            <p className="text-slate-500 dark:text-white/40 text-xs uppercase tracking-wider">{title}</p>
+            <p className="text-slate-900 dark:text-white font-medium text-sm mt-1">{value}</p>
         </div>
     );
 };

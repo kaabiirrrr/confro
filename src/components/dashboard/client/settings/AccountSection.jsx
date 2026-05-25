@@ -9,7 +9,7 @@ import Avatar from "../../../Avatar";
 import { supabase } from "../../../../lib/supabase";
 
 const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
-  const { profile } = useAuth();
+  const { profile, setProfile } = useAuth();
 
   const [edit, setEdit] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -35,9 +35,14 @@ const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSave = async () => {
+    const updatedName = `${form.firstName} ${form.lastName}`.trim();
     setSaving(true);
     try {
-      await updateMyProfile({ name: `${form.firstName} ${form.lastName}`.trim() });
+      await updateMyProfile({ name: updatedName });
+      setProfile(prev => ({
+        ...prev,
+        name: updatedName
+      }));
       toast.success('Profile saved');
       setEdit(false);
     } catch (err) {
@@ -202,19 +207,19 @@ const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div className="flex flex-col sm:flex-row sm:justify-end items-stretch sm:items-center gap-3">
+                  <button
+                    onClick={() => setEdit(false)}
+                    className="w-full sm:w-auto h-12 px-6 rounded-full border border-white/10 text-white/40 hover:text-white text-sm font-bold transition-colors flex items-center justify-center"
+                  >
+                    Discard
+                  </button>
                   <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="w-full sm:w-auto h-12 px-8 rounded-full bg-accent text-white font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shadow-lg shadow-accent/20"
+                    className="w-full sm:w-auto h-12 px-8 rounded-full bg-accent text-white font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
                   >
                     {saving ? 'Processing...' : 'Save Changes'}
-                  </button>
-                  <button
-                    onClick={() => setEdit(false)}
-                    className="w-full sm:w-auto h-12 px-6 rounded-full border border-white/10 text-white/40 hover:text-white text-sm font-bold transition-colors flex items-center justify-center gap-2"
-                  >
-                    <X size={14} /> Discard
                   </button>
                 </div>
               </div>

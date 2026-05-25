@@ -17,7 +17,7 @@ export default function ProfileCompletionBar({ percentage }) {
                 <span className="text-sm font-medium opacity-80">Profile Completion</span>
                 <span className="text-sm font-bold" style={{ color }}>{percentage}%</span>
             </div>
-            <div className="w-full bg-primary h-2 rounded-full overflow-hidden">
+            <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                 <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${percentage}%` }}

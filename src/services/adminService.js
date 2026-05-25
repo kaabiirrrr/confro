@@ -360,3 +360,24 @@ export const fetchConnectLedger = async (params = {}) => {
     const response = await api.get(`/api/admin/connects/ledger`, { params });
     return response.data;
 };
+
+// --- Enterprise RBAC & IAM System ---
+export const fetchAdminPermissions = async () => {
+    const response = await api.get(`/api/admin/rbac/permissions`);
+    return response.data;
+};
+
+export const fetchAdminRoles = async () => {
+    const response = await api.get(`/api/admin/rbac/roles`);
+    return response.data;
+};
+
+export const updateRolePermissions = async (roleId, permissions) => {
+    const response = await api.put(`/api/admin/rbac/roles/${roleId}/permissions`, { permissions });
+    return response.data;
+};
+
+export const fetchRBACLogs = async () => {
+    const response = await api.get(`/api/admin/rbac/logs`);
+    return response.data;
+};

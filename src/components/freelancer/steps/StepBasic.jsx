@@ -8,24 +8,25 @@ import AIRewriteButton from '../../ui/AIRewriteButton';
 import CustomDropdown from "../../ui/CustomDropdown";
 import CustomDatePicker from "../../ui/CustomDatePicker";
 import { countries } from "../../../utils/countries";
+import ProfileImageModal from "../../dashboard/client/settings/ProfileImageModal";
 
-export default function StepBasic({ next }) {
+export default function StepBasic({ next, status }) {
   const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
-    fullName: "",
-    title: "",
-    bio: "",
-    country: "",
-    city: "",
-    dob: "",
-    gender: ""
+    fullName: status?.step_data?.basic_info?.fullName || status?.name || "",
+    title: status?.step_data?.basic_info?.title || status?.title || "",
+    bio: status?.step_data?.basic_info?.bio || status?.bio || "",
+    country: status?.step_data?.basic_info?.country || "",
+    city: status?.step_data?.basic_info?.city || "",
+    dob: status?.step_data?.basic_info?.dob || "",
+    gender: status?.step_data?.basic_info?.gender || ""
   });
 
-  const [avatarFile, setAvatarFile] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(status?.avatar_url || null);
   const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -34,52 +35,10 @@ export default function StepBasic({ next }) {
     });
   };
 
-  const handleAvatarSelect = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    // Validate file type
-    const validTypes = ["image/jpeg", "image/png", "image/webp"];
-    if (!validTypes.includes(file.type)) {
-      setErrors({ ...errors, avatar: "Only JPG, PNG, or WebP images are allowed" });
-      return;
-    }
-
-    // Validate file size (20MB max)
-    if (file.size > 20 * 1024 * 1024) {
-      setErrors({ ...errors, avatar: "Image must be less than 20MB" });
-      return;
-    }
-
-    setAvatarFile(file);
-    setErrors({ ...errors, avatar: null });
-
-    // Generate preview
-    const reader = new FileReader();
-    reader.onload = (e) => setAvatarPreview(e.target.result);
-    reader.readAsDataURL(file);
-  };
-
-  const uploadAvatar = async () => {
-    if (!avatarFile) return null;
-
-    try {
-      const res = await profileApi.uploadAvatar(avatarFile);
-      if (res.success) {
-        return res.data.avatar_url;
-      }
-      return null;
-    } catch (err) {
-      console.error("Avatar upload error:", err.message);
-      toast.error("Photo upload failed");
-      return null;
-    }
-  };
-
   const validate = () => {
     let newErrors = {};
 
-    if (!avatarFile && !avatarPreview)
+    if (!avatarPreview)
       newErrors.avatar = "Profile photo is required";
 
     if (!formData.fullName.trim())
@@ -116,21 +75,15 @@ export default function StepBasic({ next }) {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
 
-      // Upload avatar via backend (non-blocking)
-      let avatarUrl = null;
-      if (avatarFile) {
-        avatarUrl = await uploadAvatar();
-      }
-
       // Save to localStorage
       const user = JSON.parse(localStorage.getItem("user")) || {};
       user.basicInfo = formData;
-      if (avatarUrl) user.avatar_url = avatarUrl;
+      if (avatarPreview) user.avatar_url = avatarPreview;
       localStorage.setItem("user", JSON.stringify(user));
 
       // Save step data to backend
       const stepData = { ...formData };
-      if (avatarUrl) stepData.avatar_url = avatarUrl;
+      if (avatarPreview) stepData.avatar_url = avatarPreview;
 
       await profileApi.updateStepStatus("basic_info", stepData);
 
@@ -151,15 +104,15 @@ export default function StepBasic({ next }) {
       className="space-y-3 sm:space-y-6"
     >
       <div>
-        <h2 className="text-xl font-bold text-white mb-1">Basic Information</h2>
-        <p className="text-white/40 text-sm">Tell clients who you are and where you work from.</p>
+        <h2 className="text-lg font-bold text-white mb-0.5">Basic Information</h2>
+        <p className="text-white/40 text-xs">Tell clients who you are and where you work from.</p>
       </div>
 
       {/* Profile Photo Upload */}
       <div className="flex items-center gap-3 sm:gap-6 group">
         <div
-          onClick={() => fileInputRef.current?.click()}
-          className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-white/5 cursor-pointer hover:border-accent/40 transition-all flex-shrink-0 bg-white/[0.02] flex items-center justify-center"
+          onClick={() => setIsImageModalOpen(true)}
+          className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-4 border-white/5 cursor-pointer hover:border-accent/40 transition-all flex-shrink-0 bg-white/[0.02] flex items-center justify-center"
         >
           {avatarPreview ? (
             <img
@@ -172,32 +125,30 @@ export default function StepBasic({ next }) {
           )}
 
           <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <FiCamera className="text-2xl text-white" />
+            <FiCamera className="text-xl text-white" />
           </div>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            className="hidden"
-            onChange={handleAvatarSelect}
-          />
         </div>
 
-        <div className="space-y-0 sm:space-y-1">
-          <p className="text-sm sm:text-lg font-semibold text-white">Profile Photo <span className="text-red-400 text-sm">*</span></p>
-          <p className="text-[10px] sm:text-sm text-white/30">
+        <ProfileImageModal 
+          isOpen={isImageModalOpen} 
+          onClose={() => setIsImageModalOpen(false)} 
+          onImageSelect={(url) => { setAvatarPreview(url); setErrors({ ...errors, avatar: null }); }} 
+        />
+
+        <div className="space-y-0">
+          <p className="text-sm font-semibold text-white">Profile Photo <span className="text-red-400 text-xs">*</span></p>
+          <p className="text-[10px] text-white/30">
             A clear photo builds trust with clients.
           </p>
           {errors.avatar && (
-            <p className="text-red-400 text-xs mt-2 font-medium">{errors.avatar}</p>
+            <p className="text-red-400 text-xs mt-1 font-medium">{errors.avatar}</p>
           )}
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-x-3 sm:gap-x-8 gap-y-3 sm:gap-y-5">
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-white/50 px-1">Full Name</label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6">
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-white/50 px-1">Full Name</label>
           <input
             name="fullName"
             value={formData.fullName}
@@ -276,11 +227,20 @@ export default function StepBasic({ next }) {
         </div>
 
         {/* Bio Section - Refined for better alignment */}
-        <div className="col-span-2 md:col-span-2 space-y-1 sm:space-y-3 pt-0 sm:pt-2">
+        <div className="col-span-2 md:col-span-2 space-y-1 sm:space-y-3 pt-4 sm:pt-6">
           <div className="flex flex-col gap-1 sm:gap-2">
-            <div className="flex items-center justify-between px-1">
-              <label className="text-sm font-medium text-white/50">Professional Bio</label>
-              <div className="w-auto">
+            <label className="text-[11px] sm:text-xs text-white/40 uppercase tracking-widest font-medium px-1">
+              Professional Bio
+            </label>
+            <div className="flex flex-col gap-2">
+              <textarea
+                name="bio"
+                value={formData.bio}
+                onChange={handleChange}
+                placeholder="Describe your background..."
+                className="bg-secondary/20 border border-white/10 p-2 sm:p-4 rounded-lg sm:rounded-2xl w-full h-20 sm:h-24 resize-none focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-xs sm:text-sm leading-tight sm:leading-relaxed"
+              />
+              <div className="flex justify-end">
                 <AIRewriteButton
                   field="bio"
                   value={formData.bio}
@@ -289,13 +249,6 @@ export default function StepBasic({ next }) {
                 />
               </div>
             </div>
-            <textarea
-              name="bio"
-              value={formData.bio}
-              onChange={handleChange}
-              placeholder="Describe your background..."
-              className="bg-secondary/20 border border-white/10 p-2 sm:p-4 rounded-lg sm:rounded-2xl w-full h-20 sm:h-36 resize-none focus:border-accent outline-none transition-all text-light-text placeholder:text-white/20 text-xs sm:text-sm leading-tight sm:leading-relaxed"
-            />
           </div>
           {errors.bio && (
             <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.bio}</p>
@@ -303,11 +256,11 @@ export default function StepBasic({ next }) {
         </div>
       </div>
 
-      <div className="flex justify-end pt-4">
+      <div className="w-full flex justify-end pt-4 mt-2">
         <button
           onClick={handleNext}
           disabled={uploading}
-          className="bg-accent text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center gap-3 transition-all shadow-xl shadow-accent/10 text-sm sm:text-base"
+          className="bg-accent text-white font-bold px-6 sm:px-8 py-2 sm:py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center gap-2 transition-all text-sm"
         >
           {uploading ? (
             <>

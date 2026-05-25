@@ -4,10 +4,18 @@ import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { profileApi } from "../../../services/profileApi";
 import { toast } from "react-hot-toast";
 import AIRewriteButton from '../../ui/AIRewriteButton';
+import CustomDropdown from '../../ui/CustomDropdown';
+import InfinityLoader from '../../common/InfinityLoader';
 
 export default function StepSkills({ next, back, wizardData = {} }) {
     const [skills, setSkills] = useState("");
+    const [category, setCategory] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const CATEGORIES = [
+        'Development & IT', 'Design & Creative', 'Writing & Translation',
+        'Marketing & SEO', 'AI Services', 'Finance & Accounting', 'Legal', 'HR',
+    ];
 
     useEffect(() => {
         const loadExistingSkills = async () => {
@@ -18,6 +26,10 @@ export default function StepSkills({ next, back, wizardData = {} }) {
                     const existingSkills = status.data?.skills || status.data?.step_data?.skills;
                     if (Array.isArray(existingSkills)) {
                         setSkills(existingSkills.join(', '));
+                    }
+                    const existingCategory = status.data?.category || status.data?.step_data?.category;
+                    if (existingCategory) {
+                        setCategory(existingCategory);
                     }
                 }
             } catch (error) {
@@ -30,13 +42,19 @@ export default function StepSkills({ next, back, wizardData = {} }) {
     }, []);
 
     const handleContinue = async () => {
+        if (!skills.trim() || !category) {
+            toast.error("Please select a category and enter at least one skill.");
+            return;
+        }
+
+        const skillsArray = skills.split(',').map(s => s.trim()).filter(Boolean);
+
         try {
-            const skillsArray = skills.split(',').map(s => s.trim()).filter(s => s);
-            await profileApi.updateStepStatus('skills', { skills: skillsArray });
+            const stepData = { skills: skillsArray, category };
+            await profileApi.updateStepStatus("skills", stepData);
             next();
-        } catch (e) {
-            console.error(e);
-            toast.error("Failed to save skills: " + (e.response?.data?.message || e.message));
+        } catch (error) {
+            toast.error("Failed to save skills");
         }
     };
 
@@ -47,17 +65,27 @@ export default function StepSkills({ next, back, wizardData = {} }) {
             className="space-y-6"
         >
             {loading ? (
-                <div className="flex justify-center py-12">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
+                <div className="py-12">
+                    <InfinityLoader text="Loading your skills..." />
                 </div>
             ) : (
                 <>
                     <div>
-                        <h2 className="text-xl font-bold text-white mb-1">Your Skills</h2>
-                        <p className="text-white/40 text-sm">List the skills that help you stand out. Separate them with commas.</p>
+                        <h2 className="text-xl font-bold text-white mb-1">Your Skills & Category</h2>
+                        <p className="text-white/40 text-sm">Select your primary category and list the skills that help you stand out.</p>
                     </div>
 
-            <div className="space-y-3 pt-2">
+            <div className="space-y-5 pt-2">
+                <div className="flex flex-col gap-2 relative z-50">
+                    <label className="text-sm font-medium text-white/50 px-1">Primary Category</label>
+                    <CustomDropdown
+                        options={CATEGORIES}
+                        value={category}
+                        onChange={setCategory}
+                        placeholder="Select your primary category"
+                    />
+                </div>
+
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between px-1">
                         <label className="text-sm font-medium text-white/50">Skills</label>
@@ -65,7 +93,7 @@ export default function StepSkills({ next, back, wizardData = {} }) {
                             <AIRewriteButton
                                 field="skills"
                                 value={skills}
-                                context={{ title: wizardData.title || '', bio: wizardData.bio || '' }}
+                                context={{ title: wizardData.title || '', bio: wizardData.bio || '', category }}
                                 onApply={(val) => setSkills(val)}
                             />
                         </div>
@@ -79,16 +107,16 @@ export default function StepSkills({ next, back, wizardData = {} }) {
                 </div>
             </div>
 
-            <div className="flex justify-end gap-3 sm:gap-5 pt-2 sm:pt-4">
-                <button onClick={back} className="flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 text-white/40 hover:text-white transition-colors text-xs sm:text-sm font-semibold">
-                    <FiArrowLeft /> Back
+            <div className="flex justify-between gap-3 sm:gap-5 pt-2 sm:pt-4">
+                <button onClick={back} className="flex items-center justify-center px-6 sm:px-8 py-2 sm:py-2.5 border border-white/20 rounded-full text-white/60 hover:text-white hover:bg-white/5 transition-colors text-xs sm:text-sm font-semibold">
+                    Back
                 </button>
                 <button
                     onClick={handleContinue}
-                    disabled={!skills.trim()}
-                    className="bg-accent text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-full hover:bg-accent/90 disabled:opacity-30 flex items-center gap-3 transition-all shadow-xl shadow-accent/10 text-sm sm:text-base"
+                    disabled={!skills.trim() || !category}
+                    className="bg-accent text-white font-bold px-6 sm:px-10 py-2 sm:py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-30 flex items-center justify-center transition-all text-sm sm:text-base"
                 >
-                    Continue <FiArrowRight />
+                    Continue
                 </button>
             </div>
             </>

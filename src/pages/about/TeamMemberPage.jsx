@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaLinkedinIn, FaInstagram, FaGithub, FaFacebookF } from "react-icons/fa";
+import { FaLinkedinIn, FaInstagram, FaGithub, FaFacebookF, FaMediumM, FaDev, FaProductHunt, FaEnvelope } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { ArrowLeft, MapPin, Download, Mail, ExternalLink, Zap, ChevronRight, Globe } from "lucide-react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -17,7 +18,7 @@ const BADGE = {
   cto: { bg: "rgba(168,85,247,0.1)", color: "#a855f7", border: "rgba(168,85,247,0.25)", label: "CTO" },
   cpo: { bg: "rgba(236,72,153,0.1)", color: "#ec4899", border: "rgba(236,72,153,0.25)", label: "CPO" },
   cmo: { bg: "rgba(249,115,22,0.1)", color: "#f97316", border: "rgba(249,115,22,0.25)", label: "CMO" },
-  "growth-lead": { bg: "rgba(249,115,22,0.1)", color: "#f97316", border: "rgba(249,115,22,0.25)", label: "GROWTH LEAD" },
+  cgo: { bg: "rgba(249,115,22,0.1)", color: "#f97316", border: "rgba(249,115,22,0.25)", label: "CGO" },
   coo: { bg: "rgba(20,184,166,0.1)", color: "#14b8a6", border: "rgba(20,184,166,0.25)", label: "COO" },
 };
 
@@ -138,7 +139,7 @@ export default function TeamMemberPage() {
                     className="team-avatar-img img-hover-zoom"
                     style={{
                       width: 200, height: 220, objectFit: "cover",
-                      objectPosition: member.position?.replace("object-[", "").replace("]", "") || "50% 30%",
+                      objectPosition: member.position?.replace("object-[", "").replace("]", "").replace(/_/g, " ") || "50% 30%",
                       borderRadius: 10, border: "3px solid #38bdf8",
                       cursor: "pointer", transition: "transform 0.3s ease"
                     }}
@@ -150,7 +151,7 @@ export default function TeamMemberPage() {
                   className="team-avatar-img"
                   style={{
                     width: 200, height: 220, objectFit: "cover",
-                    objectPosition: member.position?.replace("object-[", "").replace("]", "") || "50% 30%",
+                    objectPosition: member.position?.replace("object-[", "").replace("]", "").replace(/_/g, " ") || "50% 30%",
                     borderRadius: 10, border: "3px solid #38bdf8",
                   }}
                 />
@@ -168,6 +169,10 @@ export default function TeamMemberPage() {
                     {member.website && <a href={member.website} target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-text-muted)", textDecoration: "none", fontSize: 15 }}><Globe size={15} /></a>}
                     {member.github && <a href={member.github} target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-text-muted)", textDecoration: "none", fontSize: 15 }}><FaGithub /></a>}
                     {member.linkedin && <a href={member.linkedin} target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-text-muted)", textDecoration: "none", fontSize: 15 }}><FaLinkedinIn /></a>}
+                    {member.twitter && <a href={member.twitter} target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-text-muted)", textDecoration: "none", fontSize: 15 }}><FaXTwitter /></a>}
+                    {member.medium && <a href={member.medium} target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-text-muted)", textDecoration: "none", fontSize: 15 }}><FaMediumM /></a>}
+                    {member.devto && <a href={member.devto} target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-text-muted)", textDecoration: "none", fontSize: 15 }}><FaDev /></a>}
+                    {member.producthunt && <a href={member.producthunt} target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-text-muted)", textDecoration: "none", fontSize: 15 }}><FaProductHunt /></a>}
                     {member.instagram && <a href={member.instagram} target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-text-muted)", textDecoration: "none", fontSize: 15 }}><FaInstagram /></a>}
                     {member.facebook && <a href={member.facebook} target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-text-muted)", textDecoration: "none", fontSize: 15 }}><FaFacebookF /></a>}
                   </div>
@@ -234,7 +239,10 @@ export default function TeamMemberPage() {
               background: "rgba(56,189,248,0.05)",
               display: "flex", gap: 14, alignItems: "flex-start"
             }}>
-              <Zap size={18} color="#38bdf8" style={{ marginTop: 2, flexShrink: 0 }} />
+              <div style={{ marginTop: 0, flexShrink: 0, width: 22, height: 22 }}>
+                <img src="/Icons/White-AI-Connect.png" alt="AI Connect" className="hidden dark:block w-full h-full object-contain" />
+                <img src="/Icons/AI-Connect.png" alt="AI Connect" className="block dark:hidden w-full h-full object-contain" />
+              </div>
               <div>
                 <p style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.14em", color: "#38bdf8", margin: "0 0 6px" }}>AI SUMMARY</p>
                 <p style={{ fontSize: 14, color: "var(--color-text-secondary)", lineHeight: 1.7, margin: 0 }}>{member.aiSummary}</p>
@@ -351,7 +359,7 @@ export default function TeamMemberPage() {
                     <motion.div key={i}
                       initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.1 }}
-                      style={{ background: "transparent", border: "1px solid var(--color-border)", borderRadius: 10, overflow: "hidden" }}
+                      style={{ background: "transparent", border: "1px solid var(--color-border)", borderRadius: 10, overflow: "hidden", display: "flex", flexDirection: "column" }}
                     >
                       {/* Project thumbnail */}
                       {p.image ? (
@@ -361,7 +369,7 @@ export default function TeamMemberPage() {
                       ) : (
                         <div style={{ height: 160, background: `linear-gradient(135deg, rgba(56,189,248,0.2), rgba(168,85,247,0.15))`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>🚀</div>
                       )}
-                      <div style={{ padding: "16px 18px" }}>
+                      <div style={{ padding: "16px 18px", flex: 1, display: "flex", flexDirection: "column" }}>
                         {/* Title + Tech on one line, wrapping if necessary, showing full name */}
                         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, flexWrap: "wrap" }}>
                           <h4 style={{ fontSize: 15, fontWeight: 700, margin: 0 }}>{p.title}</h4>
@@ -369,9 +377,9 @@ export default function TeamMemberPage() {
                             {p.techStack}
                           </span>
                         </div>
-                        <p style={{ fontSize: 12, color: "var(--color-text-muted)", lineHeight: 1.6, marginBottom: 14 }}>{p.desc}</p>
+                        <p style={{ fontSize: 12, color: "var(--color-text-muted)", lineHeight: 1.6, marginBottom: 14, textAlign: "justify" }}>{p.desc}</p>
                         {/* Full-width 2-col fully rounded buttons */}
-                        <div style={{ display: "grid", gridTemplateColumns: p.demo && p.github ? "1fr 1fr" : "1fr", gap: 8 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: p.demo && p.github ? "1fr 1fr" : "1fr", gap: 8, marginTop: "auto" }}>
                           {p.demo ? (
                             <a href={p.demo} target="_blank" rel="noopener noreferrer"
                               style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 12, fontWeight: 700, padding: "9px 0", borderRadius: 99, background: "rgba(56,189,248,0.12)", color: "#38bdf8", textDecoration: "none", border: "1px solid rgba(56,189,248,0.25)" }}>

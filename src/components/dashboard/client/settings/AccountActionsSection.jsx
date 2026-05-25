@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { Search, X, AlertTriangle } from "lucide-react";
+import { Search, X, AlertTriangle, Copy, Check, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../../../context/AuthContext";
-import { deleteAccount } from "../../../../services/apiService";
+import { deleteAccount, sendDeleteAccountOTP } from "../../../../services/apiService";
 import { toast } from "react-hot-toast";
 import { toastApiError } from "../../../../utils/apiErrorToast";
-import InfinityLoader from "../../../common/InfinityLoader";
 import SettingsCard from "../../../ui/SettingsCard";
 
 const CLOSE_REASONS = [
@@ -29,24 +28,62 @@ const AccountActionsSection = () => {
   const [reason, setReason] = useState("");
   // Step 2 — confirm
   const [step, setStep] = useState(1); // 1 = reason, 2 = confirm
-  const [password, setPassword] = useState("");
+
+  const [otp, setOtp] = useState("");
+  const [confirmPhrase, setConfirmPhrase] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  const [sendingOtp, setSendingOtp] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const expectedPhrase = `delete-account/${profile?.email || 'user@example.com'}`;
 
   const resetModal = () => {
     setShowCloseModal(false);
     setStep(1);
     setReason("");
-    setPassword("");
+    setOtp("");
+    setConfirmPhrase("");
+    setCopied(false);
+  };
+
+  const handleSendOtp = async () => {
+    if (!reason) {
+      toast.error("Please select a reason");
+      return;
+    }
+    setSendingOtp(true);
+    try {
+      await sendDeleteAccountOTP();
+      toast.success("Verification code sent to your email");
+      setStep(2);
+    } catch (err) {
+      toastApiError(err, "Failed to send verification code");
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
+  const handleCopyPhrase = () => {
+    navigator.clipboard.writeText(expectedPhrase);
+    setCopied(true);
+    toast.success("Copied to clipboard!");
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleCloseAccount = async () => {
-    if (!password.trim()) {
-      toast.error("Please enter your password to confirm");
+    if (!otp.trim()) {
+      toast.error("Please enter the verification code");
       return;
     }
+    if (confirmPhrase.trim() !== expectedPhrase) {
+      toast.error("Confirmation phrase does not match");
+      return;
+    }
+
     setIsDeleting(true);
     try {
-      const res = await deleteAccount(reason);
+      const res = await deleteAccount(otp.trim(), confirmPhrase.trim(), reason);
       if (res.success !== false) {
         toast.success("Account closed. We're sorry to see you go.");
         resetModal();
@@ -162,9 +199,7 @@ const AccountActionsSection = () => {
               <div className="p-8 lg:p-10">
                 <div className="flex justify-between items-center mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-transparent flex items-center justify-center">
-                      <AlertTriangle size={20} className="text-red-500" />
-                    </div>
+                    <AlertTriangle size={22} className="text-red-500" />
                     <div>
                       <h2 className="text-xl font-black text-white tracking-tight">Close Account</h2>
                       <p className="text-white/30 text-xs mt-0.5">Step {step} of 2</p>
@@ -212,10 +247,12 @@ const AccountActionsSection = () => {
                         Cancel
                       </button>
                       <button
-                        onClick={() => { if (!reason) { toast.error("Please select a reason"); return; } setStep(2); }}
-                        className="flex-1 h-12 rounded-full bg-red-600/80 text-white font-bold text-sm hover:bg-red-600 transition-all"
+                        onClick={handleSendOtp}
+                        disabled={sendingOtp || !reason}
+                        className="flex-1 h-12 rounded-full bg-red-600/80 text-white font-bold text-sm hover:bg-red-600 transition-all flex items-center justify-center gap-2"
                       >
-                        Continue
+                        {sendingOtp && <Loader2 className="w-4 h-4 animate-spin" />}
+                        Send Code & Continue
                       </button>
                     </div>
                   </div>
@@ -228,20 +265,50 @@ const AccountActionsSection = () => {
                       <p className="text-white/40 text-[10px] leading-relaxed">All your jobs, contracts, and payment history will be permanently deleted. This cannot be undone.</p>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                      <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] mb-1">Closing Account</p>
-                      <p className="text-white font-medium">{profile?.email || "your account"}</p>
+                    <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20">
+                      <p className="text-red-400 text-xs font-semibold mb-1 uppercase tracking-wider">Verify Email Identity</p>
+                      <p className="text-white/40 text-[10px] leading-relaxed">
+                        We sent a 6-digit confirmation code to <strong className="text-white/80">{profile?.email}</strong>.
+                      </p>
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] pl-1">Confirm with your password</label>
+                      <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] pl-1">Verification Code</label>
                       <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-full text-white outline-none focus:border-red-500/40 transition-all placeholder:text-white/10"
+                        type="text"
+                        value={otp}
+                        maxLength={6}
+                        onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
+                        placeholder="Enter 6-digit code"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-red-500/40 focus:bg-white/[0.07] transition-all placeholder:text-white/20 placeholder:tracking-normal placeholder:font-sans placeholder:text-sm text-center tracking-[0.25em] font-mono text-base"
                       />
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-3">
+                      <div>
+                        <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] mb-1">To confirm deletion, copy and paste this phrase:</p>
+                        <div className="flex items-center justify-between bg-black/30 border border-white/5 px-3 py-2.5 rounded-lg">
+                          <code className="text-red-400 font-mono text-xs select-all break-all">{expectedPhrase}</code>
+                          <button
+                            type="button"
+                            onClick={handleCopyPhrase}
+                            className="text-white/40 hover:text-white transition-colors p-1"
+                            title="Copy phrase"
+                          >
+                            {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <input
+                          type="text"
+                          value={confirmPhrase}
+                          onChange={e => setConfirmPhrase(e.target.value)}
+                          placeholder="Paste the confirmation phrase here"
+                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-red-500/40 focus:bg-white/[0.07] transition-all placeholder:text-white/20 placeholder:font-sans placeholder:text-sm text-center font-mono text-xs"
+                        />
+                      </div>
                     </div>
 
                     <div className="flex gap-3 pt-2">
@@ -253,10 +320,10 @@ const AccountActionsSection = () => {
                       </button>
                       <button
                         onClick={handleCloseAccount}
-                        disabled={isDeleting}
-                        className="flex-1 h-12 rounded-full bg-red-600 text-white font-black text-[11px] uppercase tracking-widest hover:bg-red-500 transition-all shadow-lg shadow-red-600/20 disabled:opacity-50 flex items-center justify-center gap-2"
+                        disabled={isDeleting || otp.length < 6 || confirmPhrase !== expectedPhrase}
+                        className="flex-1 h-12 rounded-full bg-red-600 text-white font-black text-[11px] uppercase tracking-widest hover:bg-red-500 transition-all disabled:opacity-30 disabled:hover:bg-red-600 disabled:scale-100 flex items-center justify-center gap-2"
                       >
-                        {isDeleting ? <><InfinityLoader/> Closing...</> : "Permanently Close"}
+                        {isDeleting ? <><Loader2 className="w-4 h-4 animate-spin"/> Closing...</> : "Permanently Close"}
                       </button>
                     </div>
                   </div>

@@ -68,7 +68,7 @@
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  border-radius: 24px;
+  border-radius: 12px;
   overflow: hidden;
   font-family: 'Inter', -apple-system, sans-serif;
   animation: ai-appear 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;

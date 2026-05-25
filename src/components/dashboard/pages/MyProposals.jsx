@@ -108,8 +108,8 @@ const MyProposals = () => {
           </div>
         ) : filteredProposals.length === 0 ? (
           <div className="text-center py-20 bg-transparent">
-            <div className="w-20 h-20 flex items-center justify-center mx-auto mb-6">
-              <img src="/Icons/icons8-empty-box-80.png" alt="No proposals" className="w-10 h-10 object-contain" />
+            <div className="flex items-center justify-center mx-auto mb-6">
+              <img src="/Icons/icons8-empty-box-80.png" alt="No proposals" className="w-[100px] h-[100px] object-contain" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No {activeTab.toLowerCase()} proposals</h3>
             <p className="text-[14px] text-light-text/40 max-w-sm mx-auto mb-8 leading-relaxed">
@@ -120,10 +120,9 @@ const MyProposals = () => {
             {activeTab === 'Active' && (
               <button
                 onClick={() => navigate("/freelancer/find-work")}
-                className="inline-flex items-center gap-2 px-5 h-9 bg-accent text-white text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-accent/90 transition shadow-lg shadow-accent/20 active:scale-95"
+                className="inline-flex items-center gap-2 px-5 h-9 bg-accent text-white text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-accent/90 transition active:scale-95"
               >
                 Browse Jobs
-                <ChevronRight size={12} />
               </button>
             )}
           </div>

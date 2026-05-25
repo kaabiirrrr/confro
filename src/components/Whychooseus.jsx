@@ -35,10 +35,10 @@ const WhyChooseUs = () => {
           viewport={{ once: true }}
           className="text-center mb-24 relative z-10"
         >
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-light-text tracking-tight">
             WHY CHOOSE US?
           </h2>
-          <p className="text-gray-400 mt-4 max-w-2xl mx-auto text-sm sm:text-lg">
+          <p className="text-light-text/60 mt-4 max-w-2xl mx-auto text-sm sm:text-lg">
             Choose us for unmatched quality, exceptional service, and a commitment
             to exceeding your expectations every time.
           </p>
@@ -80,10 +80,10 @@ const WhyChooseUs = () => {
               <FiShare2 size={26} />
             </div>
             <div>
-              <h3 className="text-lg sm:text-2xl font-bold text-white tracking-wide">
+              <h3 className="text-lg sm:text-2xl font-bold text-light-text tracking-wide">
                 SEAMLESS COLLABORATION
               </h3>
-              <p className="text-gray-400 mt-3 text-sm sm:text-lg leading-relaxed max-w-[520px]">
+              <p className="text-light-text/60 mt-3 text-sm sm:text-lg leading-relaxed max-w-[520px]">
                 Our user-friendly platform ensures a seamless collaboration
                 experience. Communicate with freelancers, share files, and
                 track project progress effortlessly.
@@ -97,14 +97,14 @@ const WhyChooseUs = () => {
             whileHover={{ scale: 1.03 }}
             className="ml-0 md:ml-24 bg-secondary rounded-[30px] px-6 md:px-12 py-8 md:py-10 flex items-start gap-6"
           >
-            <div className="w-16 h-16 flex-shrink-0 rounded-full bg-[#0b1d33] flex items-center justify-center text-accent">
+            <div className="w-16 h-16 flex-shrink-0 rounded-full bg-primary flex items-center justify-center text-accent">
               <FiUsers size={26} />
             </div>
             <div>
-              <h3 className="text-lg sm:text-2xl font-bold text-white tracking-wide">
+              <h3 className="text-lg sm:text-2xl font-bold text-light-text tracking-wide">
                 SUPPORT AND COMMUNITY
               </h3>
-              <p className="text-gray-300 mt-3 text-sm sm:text-lg leading-relaxed max-w-[520px]">
+              <p className="text-light-text/70 mt-3 text-sm sm:text-lg leading-relaxed max-w-[520px]">
                 Join a vibrant community of freelancers and clients who are
                 passionate about their work. Our support team is available
                 to assist you whenever you need help or have questions.
@@ -122,10 +122,10 @@ const WhyChooseUs = () => {
               <FiShield size={26} />
             </div>
             <div>
-              <h3 className="text-lg sm:text-2xl font-bold text-white tracking-wide">
+              <h3 className="text-lg sm:text-2xl font-bold text-light-text tracking-wide">
                 SECURE AND RELIABLE
               </h3>
-              <p className="text-gray-400 mt-3 text-sm sm:text-lg leading-relaxed max-w-[520px]">
+              <p className="text-light-text/60 mt-3 text-sm sm:text-lg leading-relaxed max-w-[520px]">
                 Your safety and security are our top priorities. We implement
                 robust measures to protect your data and financial transactions.
               </p>

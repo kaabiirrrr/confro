@@ -20,7 +20,7 @@ import Card from "../../ui/Card";
 
 export default function BuyConnects() {
     const { loading: authLoading, isAuthenticated } = useAuth();
-    const { balance: contextBalance, refetch: refetchProfile } = useProfile();
+    const { balance: contextBalance, refetch: refetchProfile, setBalance: setContextBalance } = useProfile();
     const navigate = useNavigate();
     
     const [loading, setLoading] = useState(false);
@@ -148,6 +148,13 @@ export default function BuyConnects() {
                     });
                     if (vRes.success) {
                         toast.success("Purchase successful!");
+                        if (vRes.data?.balance !== undefined) {
+                            setBalance(vRes.data.balance);
+                            if (setContextBalance) setContextBalance(vRes.data.balance);
+                        }
+                        if (refetchProfile) {
+                            refetchProfile().catch(err => console.error(err));
+                        }
                         navigate('/freelancer/dashboard');
                     } else { toast.error("Verification failed"); }
                 },
@@ -193,7 +200,7 @@ export default function BuyConnects() {
 
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 sm:gap-10 mt-8">
                 {/* Main Content */}
-                <Card className="xl:col-span-8 p-6 sm:p-10 space-y-8 sm:space-y-10 shadow-2xl">
+                <Card className="xl:col-span-8 p-6 sm:p-10 space-y-8 sm:space-y-10">
                     
                     {/* Available Connects */}
                     <div className="space-y-2">
@@ -275,15 +282,15 @@ export default function BuyConnects() {
                             Buy Connects Now
                         </Button>
                         <div className="flex items-center gap-2">
-                            <Shield size={14} className="text-slate-300 dark:text-white/10" />
-                            <p className="text-[10px] font-black text-slate-300 dark:text-white/20 uppercase tracking-widest">Secure Razorpay Checkout</p>
+                            <Shield size={14} className="text-slate-400 dark:text-white/10" />
+                            <p className="text-[10px] font-black text-slate-400 dark:text-white/20 uppercase tracking-widest">Secure Razorpay Checkout</p>
                         </div>
                     </div>
                 </Card>
 
                 {/* Sidebar Info */}
                 <div className="xl:col-span-4 space-y-6 sm:space-y-8">
-                    <div className="bg-accent/5 border border-accent/10 rounded-[24px] p-6 sm:p-8 space-y-6 relative overflow-hidden group">
+                    <div className="border border-slate-200 dark:border-accent/10 rounded-[24px] p-6 sm:p-8 space-y-6 relative overflow-hidden group">
                         <div className="absolute -right-4 -top-4 opacity-[0.05] group-hover:rotate-12 transition-transform duration-700">
                             <RefreshCw size={120} className="text-accent" />
                         </div>
@@ -298,7 +305,7 @@ export default function BuyConnects() {
                         </Button>
                     </div>
 
-                    <div className="bg-slate-50 dark:bg-white/[0.02] rounded-[24px] p-6 sm:p-8 border border-slate-100 dark:border-white/5 space-y-4">
+                    <div className="rounded-[24px] p-6 sm:p-8 border border-slate-200 dark:border-white/5 space-y-4">
                         <div className="flex items-center gap-2 mb-2">
                             <CreditCard size={14} className="text-accent" />
                             <h4 className="text-[10px] font-black text-slate-900 dark:text-white/60 uppercase tracking-widest">Safe Billing</h4>

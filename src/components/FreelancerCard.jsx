@@ -116,7 +116,7 @@ const FreelancerCard = ({
   return (
     <motion.div
       whileHover={{ y: -4 }}
-      className="h-full bg-transparent border border-white/10 rounded-2xl p-4 sm:p-5 hover:border-accent/40 transition-all shadow-sm group flex flex-col gap-3 sm:gap-4 relative"
+      className="h-full bg-transparent border border-white/10 rounded-2xl p-4 sm:p-5 hover:border-accent/40 transition-all group flex flex-col gap-3 sm:gap-4 relative"
     >
       {/* Save Button */}
       {showSave && (
@@ -190,14 +190,10 @@ const FreelancerCard = ({
           </div>
         </div>
 
-        {hourly_rate != null ? (
+        {hourly_rate != null && (
           <div className="text-right flex-shrink-0 ml-1">
-            <p className="text-white font-black text-base sm:text-lg leading-none">{formatINR(Number(hourly_rate))}</p>
+            <p className="text-light-text font-black text-base sm:text-lg leading-none">{formatINR(Number(hourly_rate))}</p>
             <p className="text-light-text/30 text-[10px] uppercase font-bold tracking-widest mt-1">/hr</p>
-          </div>
-        ) : (
-          <div className="text-right flex-shrink-0 ml-1">
-            <p className="text-light-text/20 text-[10px] uppercase font-bold tracking-widest">{profile_completed ? "Contact\nfor rate" : "Rate\nnot set"}</p>
           </div>
         )}
       </div>
@@ -251,7 +247,7 @@ const FreelancerCard = ({
           <div className="flex gap-3">
             <button
               onClick={handleMessage}
-              className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-white/5 text-white/70 border border-white/10 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all shadow-sm"
+              className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-white/5 text-white/70 border border-white/10 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all"
             >
               <MessageSquare size={14} />
               Message

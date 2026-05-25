@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { profileApi } from "../../services/profileApi";
 import { useProfileCompletion } from "../../hooks/useProfileCompletion";
@@ -62,16 +62,16 @@ export default function ClientProfileWizard() {
         setFinishing(true);
         try {
             logger.log("[ClientProfileWizard] Finalizing client profile...");
-            
+
             // 1. Persist 'finish' status to backend
             await profileApi.updateStepStatus('finish', {});
-            
+
             // 2. Clear local step tracking
             localStorage.removeItem("clientProfileStep");
 
             // 3. Force-refresh global auth state
             await refreshProfile();
-            
+
             logger.log("[ClientProfileWizard] Profile finalized. Navigating to dashboard...");
             navigate("/client/dashboard", { replace: true });
         } catch (error) {
@@ -83,11 +83,22 @@ export default function ClientProfileWizard() {
     };
 
     if (loading || finishing) {
-        return <InfinityLoader text={finishing ? "Completing your setup..." : "Loading client setup..."}/>;
+        return <InfinityLoader text={finishing ? "Completing your setup..." : "Loading client setup..."} />;
     }
 
     return (
-        <div className="min-h-screen bg-primary flex justify-center py-24 px-6">
+        <div className="min-h-screen bg-primary flex flex-col items-center pt-20 pb-6 sm:pt-24 sm:pb-12 px-4 sm:px-6">
+            {/* Absolute Logo Header like Navbar */}
+            <div className="absolute top-6 left-6 sm:top-8 sm:left-10 z-50">
+                <Link to="/" className="inline-flex items-center gap-2 group shrink-0">
+                    <img
+                        src="/Logo2.png"
+                        alt="Connect - Freelance Marketplace Logo"
+                        className="h-7 sm:h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                    />
+                </Link>
+            </div>
+
             <div className="w-full max-w-4xl">
                 <div className="mb-4">
                     <div className="flex justify-between items-end mb-4">
@@ -103,7 +114,7 @@ export default function ClientProfileWizard() {
                 </div>
 
                 <div className="relative mt-4">
-                    {step === 1 && <StepBasic next={next} />}
+                    {step === 1 && <StepBasic next={next} status={status} />}
                     {step === 2 && <StepCompany next={next} back={back} />}
                     {step === 3 && <StepPersonal next={next} back={back} />}
                     {step === 4 && <StepContact next={next} back={back} />}

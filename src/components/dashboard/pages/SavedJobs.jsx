@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Briefcase, ChevronRight } from 'lucide-react';
 import { findWorkJobs, toggleSaveJob } from '../../../services/apiService';
 import { toastApiError } from '../../../utils/apiErrorToast';
 import { toast } from 'react-hot-toast';
@@ -67,17 +66,15 @@ export default function SavedJobs() {
           ))}
         </div>
       ) : jobs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-14 sm:py-24 bg-transparent border border-white/5 rounded-[24px] sm:rounded-[40px] text-center px-4">
-          <div className="mx-auto mb-5 sm:mb-8 text-white/20">
-            <Briefcase className="w-8 h-8 sm:w-12 sm:h-12" />
-          </div>
+        <div className="flex flex-col items-center justify-center  text-center px-4">
+          <img src="/Icons/empty-jobs.png" alt="No saved jobs" className="w-[200px] h-[200px] object-contain mb-5 sm:mb-8 opacity-80" />
           <h3 className="text-base sm:text-xl font-bold text-white/30 mb-2 uppercase tracking-widest leading-none">No saved jobs yet</h3>
           <p className="text-white/20 text-xs sm:text-sm mb-6 sm:mb-10 max-w-xs mx-auto font-medium">Browse jobs and save the ones you're interested in to see them here.</p>
           <button
             onClick={() => navigate('/freelancer/find-work')}
             className="flex items-center h-9 sm:h-10 gap-2 sm:gap-3 px-5 sm:px-6 bg-accent text-white rounded-full text-[10px] font-black uppercase tracking-[0.2em] hover:bg-accent/90 transition"
           >
-            Browse Jobs <ChevronRight size={14} />
+            Browse Jobs 
           </button>
         </div>
       ) : (

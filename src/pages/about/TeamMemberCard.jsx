@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FaLinkedinIn, FaInstagram, FaGithub } from "react-icons/fa";
+import { FaLinkedinIn, FaInstagram, FaGithub, FaMediumM, FaDev, FaProductHunt, FaEnvelope } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { MapPin, ArrowRight } from "lucide-react";
 
 /* ── Role badge colour map ─────────────────────────────────────── */
@@ -9,7 +10,7 @@ const ROLE_STYLES = {
   cto:          "bg-blue-500/10   text-blue-500   border-blue-500/30",
   cpo:          "bg-pink-500/10   text-pink-500   border-pink-500/30",
   cmo:          "bg-orange-500/10 text-orange-500 border-orange-500/30",
-  "growth-lead": "bg-orange-500/10 text-orange-500 border-orange-500/30",
+  cgo:          "bg-orange-500/10 text-orange-500 border-orange-500/30",
   coo:          "bg-teal-500/10   text-teal-500   border-teal-500/30",
 };
 
@@ -36,8 +37,8 @@ const TeamMemberCard = ({ member, onViewProfile }) => {
       onClick={() => onViewProfile(member)}
       className="relative bg-card-bg rounded-2xl overflow-hidden cursor-pointer group"
       style={{
-        border:     "2px solid var(--color-light-text)",
-        boxShadow:  "6px 6px 0px var(--color-light-text)",
+        border:     "2px solid var(--color-border)",
+        boxShadow:  "6px 6px 0px var(--color-hover)",
         transition: "box-shadow 0.2s ease, border-color 0.2s ease",
       }}
       onMouseEnter={e => {
@@ -45,8 +46,8 @@ const TeamMemberCard = ({ member, onViewProfile }) => {
         e.currentTarget.style.borderColor = "var(--color-accent)";
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.boxShadow   = "6px 6px 0px var(--color-light-text)";
-        e.currentTarget.style.borderColor = "var(--color-light-text)";
+        e.currentTarget.style.boxShadow = "6px 6px 0px var(--color-hover)";
+        e.currentTarget.style.borderColor = "var(--color-border)";
       }}
     >
       {/* ── Top-right badge strip ─────────────────────────────── */}
@@ -129,6 +130,34 @@ const TeamMemberCard = ({ member, onViewProfile }) => {
                   onClick={e => e.stopPropagation()}
                   className="text-text-muted hover:text-accent transition-colors">
                   <FaLinkedinIn size={15} />
+                </a>
+              )}
+              {member.twitter && (
+                <a href={member.twitter} target="_blank" rel="noopener noreferrer"
+                  onClick={e => e.stopPropagation()}
+                  className="text-text-muted hover:text-accent transition-colors">
+                  <FaXTwitter size={15} />
+                </a>
+              )}
+              {member.medium && (
+                <a href={member.medium} target="_blank" rel="noopener noreferrer"
+                  onClick={e => e.stopPropagation()}
+                  className="text-text-muted hover:text-accent transition-colors">
+                  <FaMediumM size={15} />
+                </a>
+              )}
+              {member.devto && (
+                <a href={member.devto} target="_blank" rel="noopener noreferrer"
+                  onClick={e => e.stopPropagation()}
+                  className="text-text-muted hover:text-accent transition-colors">
+                  <FaDev size={15} />
+                </a>
+              )}
+              {member.producthunt && (
+                <a href={member.producthunt} target="_blank" rel="noopener noreferrer"
+                  onClick={e => e.stopPropagation()}
+                  className="text-text-muted hover:text-accent transition-colors">
+                  <FaProductHunt size={15} />
                 </a>
               )}
               {member.instagram && (

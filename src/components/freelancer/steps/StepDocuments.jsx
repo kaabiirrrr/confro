@@ -107,8 +107,10 @@ export default function StepDocuments({ next, back }) {
 
         <div
           onClick={() => document.getElementById(`file-input-${type}`)?.click()}
-          className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-2 sm:p-6 cursor-pointer transition-all group ${
-            documents[type] ? 'border-accent/40 bg-accent/5' : 'border-white/5 hover:border-white/20 bg-white/[0.01]'
+          className={`flex flex-col items-center justify-center border rounded-xl p-4 sm:p-6 cursor-pointer transition-all duration-300 group ${
+            documents[type] 
+              ? 'border-accent bg-accent/10 shadow-[0_0_15px_rgba(59,130,246,0.15)]' 
+              : 'border-white/10 bg-secondary/30 hover:bg-secondary/50 hover:border-accent/50 shadow-inner shadow-black/20'
           }`}
         >
           <div className="flex flex-col items-center gap-2">
@@ -123,8 +125,8 @@ export default function StepDocuments({ next, back }) {
               </>
             ) : (
               <>
-                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent/10 group-hover:text-accent transition-colors">
-                  <FiUploadCloud className="text-xl" />
+                <div className="flex items-center justify-center group-hover:text-accent transition-colors mb-1">
+                  <FiUploadCloud className="text-2xl text-white/40 group-hover:text-accent" />
                 </div>
                 <p className="text-[10px] font-medium text-white/20 group-hover:text-white/40 transition-colors uppercase tracking-widest">
                   {allowMultiple ? 'Select Files' : 'Upload File'}
@@ -173,31 +175,27 @@ export default function StepDocuments({ next, back }) {
         </p>
       </div>
 
-      <div className="flex justify-end gap-3 sm:gap-5 pt-2 sm:pt-4">
+      <div className="flex justify-between gap-3 sm:gap-5 pt-2 sm:pt-4">
         <button
           onClick={back}
           disabled={loading}
-          className="flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 text-white/40 hover:text-white transition-colors text-xs sm:text-sm font-semibold"
+          className="flex items-center justify-center px-6 sm:px-8 py-2 sm:py-2.5 border border-white/20 rounded-full text-white/60 hover:text-white hover:bg-white/5 transition-colors text-xs sm:text-sm font-semibold"
         >
-          <FiArrowLeft />
           Back
         </button>
 
         <button
           disabled={!requiredCompleted || loading}
           onClick={handleContinue}
-          className="bg-accent text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-full hover:bg-accent/90 disabled:opacity-30 flex items-center gap-2 sm:gap-3 transition-all shadow-xl shadow-accent/10 text-sm sm:text-base"
+          className="bg-accent text-white font-bold px-6 sm:px-10 py-2 sm:py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-30 flex items-center justify-center transition-all text-sm sm:text-base"
         >
           {loading ? (
             <>
-              <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-primary border-t-transparent" />
+              <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-primary border-t-transparent mr-2" />
               Uploading...
             </>
           ) : (
-            <>
-              Continue
-              <FiArrowRight />
-            </>
+            "Continue"
           )}
         </button>
       </div>
