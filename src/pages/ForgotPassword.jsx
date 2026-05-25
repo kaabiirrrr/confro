@@ -41,19 +41,19 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="min-h-screen bg-primary flex items-center md:items-start md:pt-[12vh] justify-center p-6 font-sans selection:bg-accent/30 relative">
-            {/* Topbar Logo matching Navbar */}
-            <div className="absolute top-0 left-0 w-full h-14 md:h-20 px-14 md:px-16 flex items-center z-50">
+        <div className="min-h-screen bg-primary flex items-center md:items-start md:pt-[14vh] justify-center p-6 pt-20 font-sans selection:bg-accent/30 relative">
+            {/* Topbar Logo — sticky */}
+            <div className="fixed top-0 left-0 w-full h-14 md:h-16 px-6 md:px-14 flex items-center z-50 bg-primary/80 backdrop-blur-md border-b border-white/5">
                 <Link to="/" className="flex items-center group" aria-label="Connect Home">
                     <img
                         src="/Logo-LightMode-trimmed.png"
                         alt="Connect"
-                        className="h-9 md:h-12 object-contain block dark:hidden transition-all duration-300"
+                        className="h-8 md:h-10 object-contain block dark:hidden transition-all duration-300"
                     />
                     <img
                         src="/Logo2.png"
                         alt="Connect"
-                        className="h-8 md:h-10 object-contain hidden dark:block transition-all duration-300"
+                        className="h-7 md:h-9 object-contain hidden dark:block transition-all duration-300"
                     />
                 </Link>
             </div>

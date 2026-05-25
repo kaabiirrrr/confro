@@ -200,6 +200,7 @@ export default function JobDetail() {
                         <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md ${role.status === 'filled' ? 'bg-red-500/10 text-red-400' : 'bg-green-500/10 text-green-500 dark:text-green-400'}`}>
                           {role.status === 'filled' ? 'Filled' : `${role.positions - role.filled_positions} Left`}
                         </span>
+                        
                       </div>
                       <p className="text-xs text-slate-400 dark:text-white/40 line-clamp-2 mb-4 h-10">{role.description || 'No specific role description provided.'}</p>
                       <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100 dark:border-white/5">
