@@ -52,7 +52,7 @@ const ProfileMenu = () => {
   const displayAvatar = status?.avatar_url || profile?.avatar_url || user?.user_metadata?.avatar_url || null;
 
   return (
-    <div className="absolute top-[calc(100%+12px)] right-0 max-sm:left-0 max-sm:right-0 max-sm:mx-2 sm:w-[300px] p-1 bg-secondary border border-border rounded-2xl shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200 fixed-mobile-menu">
+    <div className="absolute top-[calc(100%+12px)] right-0 max-sm:left-0 max-sm:right-0 max-sm:mx-2 sm:w-[300px] p-1 bg-secondary border border-border rounded-xl z-50 animate-in fade-in slide-in-from-top-2 duration-200 fixed-mobile-menu">
       <div className="w-full">
 
         {/* USER INFO */}
@@ -61,7 +61,7 @@ const ProfileMenu = () => {
             src={displayAvatar}
             name={displayName}
             size="w-10 h-10 sm:w-16 sm:h-16"
-            className="flex-shrink-0 shadow-lg border-2 border-border"
+            className="flex-shrink-0 border-2 border-border"
           />
           <div>
             <h3 className="font-semibold text-sm sm:text-base text-light-text">

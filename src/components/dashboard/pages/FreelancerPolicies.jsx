@@ -165,7 +165,7 @@ const FreelancerPolicies = () => {
                 </div>
 
                 {/* Main Content Area */}
-                <div className="flex-1 bg-transparent border border-white/10 rounded-2xl p-5 sm:p-8 md:p-10 min-h-[300px] sm:min-h-[500px] shadow-2xl backdrop-blur-sm">
+                <div className="flex-1 bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-8 md:p-10 min-h-[300px] sm:min-h-[500px] backdrop-blur-sm">
                     <div className="flex items-center gap-3 sm:gap-5 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-white/10">
                         <div className="w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center shrink-0">
                             {activePolicy.slug?.includes('privacy') || activePolicy.title?.toLowerCase().includes('privacy') ? (

@@ -41,8 +41,8 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="min-h-screen bg-primary flex items-center md:items-start md:pt-[14vh] justify-center p-6 pt-20 font-sans selection:bg-accent/30 relative">
-            {/* Topbar Logo — sticky */}
+        <div className="min-h-screen bg-primary flex flex-col font-sans selection:bg-accent/30">
+            {/* Sticky navbar */}
             <div className="fixed top-0 left-0 w-full h-14 md:h-16 px-6 md:px-14 flex items-center z-50 bg-primary/80 backdrop-blur-md border-b border-white/5">
                 <Link to="/" className="flex items-center group" aria-label="Connect Home">
                     <img
@@ -58,11 +58,13 @@ const ForgotPassword = () => {
                 </Link>
             </div>
 
+            {/* Centered content — fills remaining height below navbar */}
+            <div className="flex-1 flex items-center justify-center px-6 pt-14 md:pt-16">
             <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.28, ease: 'easeOut' }}
-                className="w-full max-w-[440px] p-8 sm:p-10"
+                className="w-full max-w-[440px] py-8"
             >
                 <AnimatePresence mode="wait">
                     {!submitted ? (
@@ -164,6 +166,7 @@ const ForgotPassword = () => {
                     )}
                 </AnimatePresence>
             </motion.div>
+            </div>
         </div>
     );
 };
