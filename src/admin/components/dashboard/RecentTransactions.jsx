@@ -110,7 +110,7 @@ const RecentTransactions = () => {
                             <tr>
                                 <td colSpan={5} className="py-8 text-center text-slate-400 dark:text-white/40">
                                     <div className="flex items-center justify-center gap-2">
-                                        <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                                        <InfinityLoader size={16} inline />
                                         <span>Syncing transactions...</span>
                                     </div>
                                 </td>

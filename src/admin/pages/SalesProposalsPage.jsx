@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
-import { FileText, Clock, CheckCircle2, AlertCircle, XCircle, Trash2, Edit3, Sparkles, X, Plus, Search, Filter } from 'lucide-react';
+import { FileText, Clock, CheckCircle2, AlertCircle, XCircle, Trash2, Edit3, Sparkles, X, Plus, Search, Filter, RefreshCw, FileDown } from 'lucide-react';
 import { getAdminSalesProposals, updateSalesProposalStatus, deleteSalesProposal } from '../../services/apiService';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomDropdown from '../../components/ui/CustomDropdown';
+import { exportTableToPDF } from '../utils/exportPDF';
+import InfinityLoader from '../../components/common/InfinityLoader';
 
 const SalesProposalsPage = () => {
     const [proposals, setProposals] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filterStatus, setFilterStatus] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
     
     // Modal states
     const [isActionModalOpen, setIsActionModalOpen] = useState(false);
@@ -150,22 +154,59 @@ const SalesProposalsPage = () => {
         });
     };
 
-    const filteredProposals = proposals.filter(p => 
-        p.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        p.needs.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredProposals = proposals.filter(p => {
+        const matchSearch = p.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
+            p.needs.toLowerCase().includes(searchQuery.toLowerCase());
+        const d = p.created_at ? new Date(p.created_at) : null;
+        const matchFrom = !dateFrom || (d && d >= new Date(dateFrom));
+        const matchTo = !dateTo || (d && d <= new Date(dateTo + 'T23:59:59'));
+        return matchSearch && matchFrom && matchTo;
+    });
+
+    const handleExportPDF = () => {
+        if (filteredProposals.length === 0) { toast.error('No proposals to export'); return; }
+        exportTableToPDF({
+            title: 'Custom Proposals Requests',
+            columns: ['Email', 'Status', 'Custom Price', 'Connects', 'Duration', 'Submitted'],
+            rows: filteredProposals.map(p => [
+                p.profile?.name ? `${p.profile.name} (${p.email})` : p.email,
+                p.status || '—',
+                p.custom_price ? `₹${p.custom_price}` : '—',
+                p.custom_connects || '—',
+                p.custom_duration || '—',
+                p.created_at ? new Date(p.created_at).toLocaleDateString() : '—',
+            ]),
+            filename: 'sales_proposals',
+            filters: {
+                Status: filterStatus || 'All',
+                ...(searchQuery && { Search: searchQuery }),
+                ...(dateFrom && { From: dateFrom }),
+                ...(dateTo && { To: dateTo }),
+            },
+        });
+    };
 
     return (
         <div className="space-y-6 pb-10">
             {/* Header */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-transparent">
-                <div>
-                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
-                        <FileText size={24} className="text-accent" /> Custom Proposals Requests
-                    </h1>
-                    <p className="text-white/40 text-xs mt-1">
-                        View custom plans requests submitted by enterprise users and create specialized proposals for them
-                    </p>
+                <div className="flex items-center justify-between w-full md:w-auto">
+                    <div>
+                        <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
+                            <FileText size={24} className="text-accent" /> Custom Proposals Requests
+                        </h1>
+                        <p className="text-white/40 text-xs mt-1">
+                            View custom plans requests submitted by enterprise users and create specialized proposals for them
+                        </p>
+                    </div>
+                    {/* Mobile-only Refresh Button */}
+                    <button
+                        onClick={loadProposals}
+                        className="md:hidden flex-shrink-0 w-10 h-10 flex items-center justify-center text-white/40 hover:text-accent transition-all group"
+                        title="Refresh"
+                    >
+                        <RefreshCw size={18} className={loading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                    </button>
                 </div>
             </div>
 
@@ -200,26 +241,63 @@ const SalesProposalsPage = () => {
                     ))}
                 </div>
 
-                {/* Search */}
-                <div className="relative w-full sm:w-80 pb-3">
-                    <div className="relative">
-                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30" size={16} />
+                {/* Dates & Export */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto pb-3">
+                    {/* Dates */}
+                    <div className="flex gap-3 w-full sm:w-auto">
                         <input
-                            type="text"
-                            placeholder="Search by email or needs..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-white/[0.03] border border-white/10 rounded-full pl-10 pr-4 py-2 text-white text-xs focus:outline-none focus:border-accent/50 transition-all placeholder:text-white/20"
+                            type="date"
+                            value={dateFrom}
+                            onChange={e => setDateFrom(e.target.value)}
+                            title="From date"
+                            className="flex-1 sm:flex-none bg-transparent border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-accent transition-all sm:w-36"
                         />
+                        <input
+                            type="date"
+                            value={dateTo}
+                            onChange={e => setDateTo(e.target.value)}
+                            title="To date"
+                            className="flex-1 sm:flex-none bg-transparent border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-accent transition-all sm:w-36"
+                        />
+                    </div>
+                    {/* Export */}
+                    <div className="flex gap-3 w-full sm:w-auto">
+                        <button
+                            onClick={handleExportPDF}
+                            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 bg-accent hover:bg-accent/90 text-white rounded-xl text-xs font-bold transition-all whitespace-nowrap"
+                        >
+                            <FileDown size={14} />
+                            Export PDF
+                        </button>
                     </div>
                 </div>
             </div>
 
+            {/* Search Bar Row */}
+            <div className="flex items-center gap-3 w-full">
+                <div className="relative flex-1">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" size={16} />
+                    <input
+                        type="text"
+                        placeholder="Search by email or needs..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full h-12 bg-transparent border border-white/10 rounded-xl pl-11 pr-4 text-white text-sm focus:outline-none focus:border-accent transition-all shadow-inner"
+                    />
+                </div>
+                <button
+                    onClick={loadProposals}
+                    className="hidden md:flex flex-shrink-0 w-12 h-12 items-center justify-center text-white/40 hover:text-accent transition-all group"
+                    title="Refresh"
+                >
+                    <RefreshCw size={18} className={loading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                </button>
+            </div>
+
             {/* Content List */}
             {loading ? (
-                <div className="py-20 text-center">
-                    <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <span className="text-white/20 text-xs font-medium">Fetching proposal requests...</span>
+                <div className="py-20 flex justify-center">
+                    <InfinityLoader fullScreen={false} text="Fetching proposal requests…" />
                 </div>
             ) : filteredProposals.length === 0 ? (
                 <div className="text-center py-20 border border-white/5 rounded-2xl bg-white/[0.01]">
@@ -231,28 +309,48 @@ const SalesProposalsPage = () => {
                     {filteredProposals.map((proposal) => (
                         <div
                             key={proposal.id}
-                            className="bg-transparent border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all duration-200"
+                            className="bg-transparent border border-white/5 rounded-xl p-5 hover:border-white/10 transition-all duration-200"
                         >
-                            <div className="flex flex-row items-center justify-between gap-4 border-b border-white/5 pb-4 mb-4">
-                                <div className="space-y-1 min-w-0 flex-1">
-                                    <h3 className="text-sm font-bold text-white leading-tight break-words">{proposal.email}</h3>
-                                    <span className="text-[10px] text-white/30 flex items-center gap-1">
-                                        Submitted on: {formatDate(proposal.created_at)}
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-2 shrink-0">
-                                    {getStatusBadge(proposal.status)}
+                            <div className="border-b border-white/5 pb-4 mb-4">
+                                {/* Row: avatar + name/email | edit + delete */}
+                                <div className="flex items-center justify-between gap-3">
+                                    {/* Left: avatar + name/email */}
+                                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                                        {proposal.profile?.avatar_url ? (
+                                            <img
+                                                src={proposal.profile.avatar_url}
+                                                alt={proposal.profile.name || proposal.email}
+                                                className="w-8 h-8 rounded-full object-cover border border-white/10 flex-shrink-0 self-center"
+                                            />
+                                        ) : (
+                                            <div className="w-8 h-8 rounded-full bg-accent/20 border border-accent/20 flex items-center justify-center text-accent font-bold text-sm flex-shrink-0 self-center">
+                                                {(proposal.profile?.name || proposal.email || '?')[0].toUpperCase()}
+                                            </div>
+                                        )}
+                                        <div className="min-w-0 flex flex-col justify-center gap-0.5">
+                                            {proposal.profile?.name && (
+                                                <p className="text-sm font-bold text-white leading-none truncate">{proposal.profile.name}</p>
+                                            )}
+                                            <p className={`leading-none truncate ${proposal.profile?.name ? 'text-[11px] text-white/40' : 'text-sm font-bold text-white'}`}>
+                                                {proposal.email}
+                                            </p>
+                                            <span className="text-[10px] text-white/30 leading-none">
+                                                Submitted on: {formatDate(proposal.created_at)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    {/* Right: edit + delete inline */}
                                     <div className="flex items-center gap-1 shrink-0">
                                         <button
                                             onClick={() => handleOpenActionModal(proposal)}
-                                            className="p-1 text-white/50 hover:text-accent transition-colors"
+                                            className="p-1.5 text-white/50 hover:text-accent transition-colors"
                                             title="Update & Custom Offer"
                                         >
                                             <Edit3 size={14} />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(proposal.id)}
-                                            className="p-1 text-white/50 hover:text-rose-400 transition-colors"
+                                            className="p-1.5 text-white/50 hover:text-rose-400 transition-colors"
                                             title="Delete Request"
                                         >
                                             <Trash2 size={14} />
@@ -309,6 +407,11 @@ const SalesProposalsPage = () => {
                                         </div>
                                     </div>
                                 )}
+
+                                {/* Status badge — bottom right */}
+                                <div className="flex justify-end pt-2">
+                                    {getStatusBadge(proposal.status)}
+                                </div>
                             </div>
                         </div>
                     ))}

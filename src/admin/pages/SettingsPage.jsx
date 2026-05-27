@@ -66,8 +66,8 @@ const SettingsPage = () => {
                 <p className="text-slate-500 dark:text-white/40 text-xs mt-1">Configure global platform parameters, commission rates, and maintenance modes</p>
             </div>
 
-            <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl overflow-visible sm:overflow-hidden shadow-sm">
-                <div className="p-6 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] rounded-t-xl sm:rounded-none">
+            <div className="bg-transparent border border-slate-200 dark:border-white/10 rounded-xl overflow-visible sm:overflow-hidden">
+                <div className="p-6 border-b border-slate-200 dark:border-white/10 bg-transparent rounded-t-xl sm:rounded-none">
                     <div className="flex items-center gap-3">
                         <Settings2 className="text-accent" />
                         <div>
@@ -95,7 +95,7 @@ const SettingsPage = () => {
                                 type="text"
                                 value={settings.platform_commission}
                                 onChange={(e) => setSettings({ ...settings, platform_commission: e.target.value })}
-                                className="flex-1 sm:flex-none w-full sm:w-24 bg-white dark:bg-primary border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2 text-slate-900 dark:text-white focus:border-accent outline-none"
+                                className="flex-1 sm:flex-none w-full sm:w-24 bg-transparent border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2 text-slate-900 dark:text-white focus:border-accent outline-none"
                             />
                             <button
                                 onClick={() => handleSave('platform_commission', settings.platform_commission, 'Global commission rate for contracts')}
@@ -141,8 +141,8 @@ const SettingsPage = () => {
             </div>
 
             {/* Admin Account Settings */}
-            <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden shadow-sm">
-                <div className="p-6 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02]">
+            <div className="bg-transparent border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden">
+                <div className="p-6 border-b border-slate-200 dark:border-white/10 bg-transparent">
                     <div className="flex items-center gap-3">
                         <Users className="text-accent" />
                         <div>
@@ -160,7 +160,7 @@ const SettingsPage = () => {
                                 type="email"
                                 placeholder="Enter new email"
                                 id="adminEmail"
-                                className="w-full bg-white dark:bg-primary border border-slate-200 dark:border-white/10 rounded-lg px-4 py-2 text-slate-900 dark:text-white focus:border-accent outline-none"
+                                className="w-full bg-transparent border border-slate-200 dark:border-white/10 rounded-lg px-4 py-2 text-slate-900 dark:text-white focus:border-accent outline-none"
                             />
                         </div>
                         <div>
@@ -169,7 +169,7 @@ const SettingsPage = () => {
                                 type="password"
                                 placeholder="Enter new password"
                                 id="adminPassword"
-                                className="w-full bg-white dark:bg-primary border border-slate-200 dark:border-white/10 rounded-lg px-4 py-2 text-slate-900 dark:text-white focus:border-accent outline-none"
+                                className="w-full bg-transparent border border-slate-200 dark:border-white/10 rounded-lg px-4 py-2 text-slate-900 dark:text-white focus:border-accent outline-none"
                             />
                         </div>
                     </div>
@@ -199,7 +199,7 @@ const SettingsPage = () => {
                                 }
                             }}
                             disabled={isSaving}
-                            className="bg-accent hover:bg-accent/90 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+                            className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
                         >
                             Save Account Changes
                         </button>

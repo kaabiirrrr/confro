@@ -60,18 +60,18 @@ function CreateDrawForm({ onCreated }) {
     }
   };
 
-  const inputCls = "w-full bg-transparent border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-accent transition-colors";
+  const inputCls = "w-full bg-transparent border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-slate-800 dark:text-white text-sm placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-accent transition-colors";
 
   return (
-    <form onSubmit={handleSubmit} className="bg-transparent border border-white/10 rounded-2xl p-6 space-y-5">
-      <h2 className="text-white font-semibold text-base flex items-center gap-2">
+    <form onSubmit={handleSubmit} className="bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 space-y-5">
+      <h2 className="text-slate-800 dark:text-white font-semibold text-base flex items-center gap-2">
         <Plus size={16} className="text-accent" /> Create Lottery Draw
       </h2>
 
       {/* Month + Year */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1.5">Month</label>
+          <label className="block text-slate-500 dark:text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1.5">Month</label>
           <CustomDropdown
             value={form.month}
             onChange={(val) => setForm(p => ({ ...p, month: val }))}
@@ -82,23 +82,23 @@ function CreateDrawForm({ onCreated }) {
           />
         </div>
         <div>
-          <label className="block text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1.5">Year</label>
+          <label className="block text-slate-500 dark:text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1.5">Year</label>
           <input type="number" value={form.year} onChange={set('year')} min={2024} max={2030} className={inputCls} />
         </div>
       </div>
 
       {/* Prizes */}
       <div className="space-y-3">
-        <label className="block text-white/40 text-[10px] font-bold uppercase tracking-widest">Prize Amounts (₹)</label>
+        <label className="block text-slate-500 dark:text-white/40 text-[10px] font-bold uppercase tracking-widest">Prize Amounts (₹)</label>
         {[
           { key: 'prize_1st', label: '🥇 1st Prize', required: true },
           { key: 'prize_2nd', label: '🥈 2nd Prize' },
           { key: 'prize_3rd', label: '🥉 3rd Prize' },
         ].map(({ key, label, required }) => (
           <div key={key} className="flex items-center gap-3">
-            <span className="text-sm text-white/50 w-24 shrink-0">{label}</span>
+            <span className="text-sm text-slate-500 dark:text-white/50 w-24 shrink-0">{label}</span>
             <div className="relative flex-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30 text-sm">₹</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30 text-sm">₹</span>
               <input
                 type="number" min={1} step={1}
                 value={form[key]} onChange={set(key)}
@@ -156,14 +156,14 @@ function DrawCard({ draw, onRun, onViewWinners, onDelete }) {
   };
 
   return (
-    <div className={`border rounded-2xl p-5 space-y-4 transition-all ${
-      isCompleted ? 'border-green-500/20 bg-green-500/[0.02]' : 'border-white/10 bg-transparent'
+    <div className={`border rounded-2xl p-5 space-y-4 transition-all bg-transparent ${
+      isCompleted ? 'border-green-200 dark:border-green-500/20' : 'border-slate-200 dark:border-white/10'
     }`}>
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Calendar size={14} className="text-white/40" />
-            <p className="text-white font-semibold text-sm">{monthLabel}</p>
+            <Calendar size={14} className="text-slate-400 dark:text-white/40" />
+            <p className="text-slate-800 dark:text-white font-semibold text-sm">{monthLabel}</p>
             <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border ${
               isCompleted
                 ? 'bg-green-500/10 border-green-500/20 text-green-400'
@@ -172,14 +172,14 @@ function DrawCard({ draw, onRun, onViewWinners, onDelete }) {
               {isCompleted ? 'Completed' : 'Pending'}
             </span>
           </div>
-          <div className="flex items-center gap-4 text-white/40 text-xs">
+          <div className="flex items-center gap-4 text-slate-400 dark:text-white/40 text-xs">
             <span className="flex items-center gap-1"><Users size={11} /> {draw.total_participants ?? 0} participants</span>
             <span className="flex items-center gap-1"><Ticket size={11} /> {draw.total_tickets ?? 0} tickets</span>
           </div>
         </div>
         <div className="text-right shrink-0">
           <p className="text-accent font-bold text-sm">₹{p1.toLocaleString()}</p>
-          <p className="text-white/30 text-[10px]">1st prize</p>
+          <p className="text-slate-400 dark:text-white/30 text-[10px]">1st prize</p>
         </div>
       </div>
 
@@ -190,9 +190,9 @@ function DrawCard({ draw, onRun, onViewWinners, onDelete }) {
           { label: '🥈 2nd', amount: p2 },
           { label: '🥉 3rd', amount: p3 },
         ].filter(p => p.amount > 0).map(p => (
-          <div key={p.label} className="flex-1 bg-white/[0.03] rounded-xl px-3 py-2 text-center">
-            <p className="text-white/40 text-[10px]">{p.label}</p>
-            <p className="text-white text-sm font-semibold">₹{p.amount?.toLocaleString()}</p>
+          <div key={p.label} className="flex-1 bg-transparent border border-slate-100 dark:border-white/5 rounded-xl px-3 py-2 text-center">
+            <p className="text-slate-400 dark:text-white/40 text-[10px]">{p.label}</p>
+            <p className="text-slate-800 dark:text-white text-sm font-semibold">₹{p.amount?.toLocaleString()}</p>
           </div>
         ))}
       </div>
@@ -207,7 +207,7 @@ function DrawCard({ draw, onRun, onViewWinners, onDelete }) {
         )}
         {isCompleted && (
           <button onClick={() => onViewWinners(draw.id)}
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/10 text-white/60 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors">
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5 text-xs font-medium transition-colors">
             <Trophy size={13} /> View Winners
           </button>
         )}
@@ -240,49 +240,48 @@ function WinnersModal({ drawId, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.85)' }}
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
       onClick={onClose}>
       <motion.div onClick={e => e.stopPropagation()}
         initial={{ opacity: 0, scale: 0.96, y: 12 }} animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96 }} transition={{ duration: 0.2 }}
-        className="w-full max-w-[560px] rounded-2xl overflow-hidden shadow-2xl"
-        style={{ background: '#0d1117', border: '1px solid rgba(255,255,255,0.1)' }}>
+        className="w-full max-w-[560px] bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden shadow-2xl">
 
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-          <h2 className="text-white font-semibold flex items-center gap-2">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-white/10">
+          <h2 className="text-slate-800 dark:text-white font-semibold flex items-center gap-2">
             <Trophy size={16} className="text-yellow-400" /> Lottery Winners
           </h2>
-          <button onClick={onClose} className="text-white/40 hover:text-white transition text-lg leading-none">✕</button>
+          <button onClick={onClose} className="text-slate-400 dark:text-white/40 hover:text-slate-700 dark:hover:text-white transition text-lg leading-none">✕</button>
         </div>
 
         <div className="p-6">
           {loading ? (
             <div className="flex justify-center py-8"><InfinityLoader/></div>
           ) : winners.length === 0 ? (
-            <p className="text-white/40 text-sm text-center py-8">No winners found</p>
+            <p className="text-slate-400 dark:text-white/40 text-sm text-center py-8">No winners found</p>
           ) : (
             <table className="w-full text-left">
               <thead>
-                <tr className="text-white/40 text-[10px] uppercase tracking-widest border-b border-white/5">
+                <tr className="text-slate-400 dark:text-white/40 text-[10px] uppercase tracking-widest border-b border-slate-100 dark:border-white/5">
                   <th className="pb-3">Position</th>
                   <th className="pb-3">User</th>
                   <th className="pb-3">Tickets</th>
                   <th className="pb-3 text-right">Reward</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                 {winners.map((w, i) => {
-                  const pos = POSITION_STYLE[w.position] || { label: `#${w.position}`, cls: 'text-white/50' };
+                  const pos = POSITION_STYLE[w.position] || { label: `#${w.position}`, cls: 'text-slate-400 dark:text-white/50' };
                   return (
-                    <tr key={i} className="hover:bg-white/[0.02] transition-colors">
+                    <tr key={i} className="hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
                       <td className="py-3.5">
                         <span className={`font-bold text-sm ${pos.cls}`}>{pos.label}</span>
                       </td>
                       <td className="py-3.5">
-                        <p className="text-white text-sm font-medium">{w.user?.name || 'Unknown'}</p>
-                        <p className="text-white/40 text-xs">{w.user?.email}</p>
+                        <p className="text-slate-800 dark:text-white text-sm font-medium">{w.user?.name || 'Unknown'}</p>
+                        <p className="text-slate-400 dark:text-white/40 text-xs">{w.user?.email}</p>
                       </td>
-                      <td className="py-3.5 text-white/60 text-sm">{w.tickets_count ?? '—'}</td>
+                      <td className="py-3.5 text-slate-500 dark:text-white/60 text-sm">{w.tickets_count ?? '—'}</td>
                       <td className="py-3.5 text-right">
                         <span className="text-accent font-bold text-sm">{formatINR(w.reward_amount)}</span>
                       </td>
@@ -346,13 +345,13 @@ export default function LotteryAdminPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2 sm:gap-3">
             <Ticket size={24} className="text-accent" /> Lottery Management
           </h1>
-          <p className="text-white/40 text-xs mt-1">Create and manage monthly lottery draws</p>
+          <p className="text-slate-500 dark:text-white/40 text-xs mt-1">Create and manage monthly lottery draws</p>
         </div>
         <button onClick={loadDraws}
-          className="p-2 rounded-xl text-white/40 hover:text-white transition">
+          className="p-2 rounded-xl text-slate-400 dark:text-white/40 hover:text-slate-700 dark:hover:text-white transition">
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
         </button>
       </div>
@@ -364,13 +363,13 @@ export default function LotteryAdminPage() {
 
         {/* Draws list */}
         <div className="space-y-4">
-          <h2 className="text-white font-semibold text-sm">All Draws</h2>
+          <h2 className="text-slate-800 dark:text-white font-semibold text-sm">All Draws</h2>
           {loading ? (
             <div className="flex justify-center py-16"><InfinityLoader/></div>
           ) : draws.length === 0 ? (
-            <div className="border border-dashed border-white/10 rounded-2xl py-16 text-center">
-              <Ticket size={28} className="text-white/10 mx-auto mb-3" />
-              <p className="text-white/30 text-sm">No draws created yet</p>
+            <div className="border border-dashed border-slate-200 dark:border-white/10 rounded-2xl py-16 text-center">
+              <Ticket size={28} className="text-slate-300 dark:text-white/10 mx-auto mb-3" />
+              <p className="text-slate-400 dark:text-white/30 text-sm">No draws created yet</p>
             </div>
           ) : (
             <div className="space-y-3">

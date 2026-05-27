@@ -44,7 +44,7 @@ const LiveActivityFeed = () => {
     };
 
     return (
-        <div className="bg-transparent border border-white/10 rounded-xl overflow-hidden shadow-sm flex flex-col h-full">
+        <div className="bg-transparent border border-white/10 rounded-xl overflow-hidden flex flex-col h-full">
             <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-transparent">
                 <h3 className="text-white font-medium flex items-center gap-2 text-sm uppercase tracking-wider">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>

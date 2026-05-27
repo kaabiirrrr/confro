@@ -228,6 +228,7 @@ const LotteryAdminPage = lazy(() => import("./admin/pages/LotteryAdminPage"));
 const ConnectsManagementPage = lazy(() => import("./admin/pages/ConnectsManagementPage"));
 const TreasuryPage = lazy(() => import("./admin/pages/TreasuryPage"));
 const SalesProposalsPage = lazy(() => import("./admin/pages/SalesProposalsPage"));
+const UserMonitoringPage = lazy(() => import("./admin/pages/UserMonitoringPage"));
 
 /* Loading Component */
 const LoadingSpinner = () => <div className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center min-h-screen w-full"><InfinityLoader /></div>;
@@ -563,6 +564,7 @@ function App() {
                             <Route path="admin-management" element={<AdminManagementPage />} />
                             <Route path="admin-logs" element={<LogsPage />} />
                             <Route path="insights" element={<AdminActivityInsights />} />
+                            <Route path="monitoring" element={<UserMonitoringPage />} />
                             <Route path="logs" element={<Navigate to="/admin/admin-logs" replace />} />
                             <Route path="skills" element={<SkillsPage />} />
                             <Route path="offers" element={<OffersPage />} />

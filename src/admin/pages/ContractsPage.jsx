@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Eye, XCircle, AlertTriangle, X, IndianRupee, Calendar, Clock, User, Mail, Briefcase, FileText } from 'lucide-react';
+import { Search, Eye, XCircle, AlertTriangle, X, IndianRupee, Calendar, Clock, User, Mail, Briefcase, FileText, FileDown, RefreshCw } from 'lucide-react';
 import { formatINR } from '../../utils/currencyUtils';
 import Button from '../../components/ui/Button';
 import * as adminService from '../../services/adminService';
@@ -8,6 +8,7 @@ import CustomDropdown from '../../components/ui/CustomDropdown';
 import InfinityLoader from '../../components/common/InfinityLoader';
 import RelationshipIntelligence from '../../components/profile/RelationshipIntelligence';
 import { useAuth } from '../../context/AuthContext';
+import { exportTableToPDF } from '../utils/exportPDF';
 
 const ContractsPage = () => {
     const { user } = useAuth();
@@ -15,6 +16,8 @@ const ContractsPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [statusFilter, setStatusFilter] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
     const [selectedContract, setSelectedContract] = useState(null);
     const [isCancelling, setIsCancelling] = useState(false);
     const [showRequirements, setShowRequirements] = useState(false);
@@ -63,6 +66,38 @@ const ContractsPage = () => {
         }
     };
 
+    const handleExportPDF = () => {
+        const dateFiltered = contracts.filter(c => {
+            const d = new Date(c.created_at);
+            if (dateFrom && d < new Date(dateFrom)) return false;
+            if (dateTo && d > new Date(dateTo + 'T23:59:59')) return false;
+            return true;
+        });
+        const result = dateFiltered.filter(c =>
+            (c.job?.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (c.client?.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (c.freelancer?.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (c.client?.profiles?.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (c.freelancer?.profiles?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        if (result.length === 0) { toast.error('No data to export'); return; }
+        exportTableToPDF({
+            title: 'Active Contracts',
+            filename: 'contracts',
+            columns: ['Job Title', 'Client', 'Freelancer', 'Amount', 'Status', 'Date'],
+            rows: result.map(c => [
+                c.job?.title || 'Deleted',
+                c.client?.profiles?.name || c.client?.email || 'N/A',
+                c.freelancer?.profiles?.name || c.freelancer?.email || 'N/A',
+                `₹${parseFloat(c.agreed_rate || 0).toLocaleString('en-IN')}`,
+                c.status,
+                new Date(c.created_at).toLocaleDateString()
+            ]),
+            filters: { Status: statusFilter || 'All', From: dateFrom || '—', To: dateTo || '—' }
+        });
+        toast.success('PDF exported');
+    };
+
     const filteredContracts = contracts.filter(c =>
         (c.job?.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
         (c.client?.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -75,17 +110,17 @@ const ContractsPage = () => {
         if (!isOpen) return null;
         return (
             <div className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm pt-8 sm:pt-12 overflow-y-auto no-scrollbar">
-                <div className="bg-primary border border-white/10 w-full max-w-2xl overflow-hidden rounded-2xl shadow-2xl flex flex-col my-auto sm:my-0">
-                    <div className="px-6 py-4 flex items-center justify-between">
-                        <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <div className="bg-white dark:bg-primary border border-slate-200 dark:border-white/10 w-full max-w-2xl overflow-hidden rounded-2xl shadow-2xl flex flex-col my-auto sm:my-0">
+                    <div className="px-6 py-4 flex items-center justify-between border-b border-slate-100 dark:border-white/5">
+                        <h3 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
                             {icon && <img src={icon} alt="" className="w-5 h-5 object-contain" />}
                             {title}
                         </h3>
-                        <button onClick={onClose} className="p-2 text-white/40 hover:text-accent transition-colors">
+                        <button onClick={onClose} className="p-2 text-slate-400 dark:text-white/40 hover:text-accent transition-colors">
                             <X size={20} />
                         </button>
                     </div>
-                    <div className="p-6 pt-0 overflow-y-auto custom-scrollbar">
+                    <div className="p-6 pt-4 overflow-y-auto custom-scrollbar">
                         {children}
                     </div>
                 </div>
@@ -95,42 +130,95 @@ const ContractsPage = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
-                <div>
-                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-                        <img src="/Icons/icons8-contract-60.png" alt="Contracts" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
-                        Active Contracts
-                    </h1>
-                    <p className="text-white/40 text-xs mt-1">Monitor and manage all ongoing agreements between clients and freelancers</p>
-                </div>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-                    <div className="relative w-full sm:w-80">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
-                        <input
-                            type="text"
-                            placeholder="Search contracts..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white text-xs focus:outline-none focus:border-accent transition-all shadow-inner"
-                        />
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <div className="flex items-center justify-between w-full md:w-auto">
+                    <div>
+                        <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                            <img src="/Icons/icons8-contract-60.png" alt="Contracts" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
+                            Active Contracts
+                        </h1>
+                        <p className="text-white/40 text-xs mt-1">Monitor and manage all ongoing agreements between clients and freelancers</p>
                     </div>
-                    <CustomDropdown
-                        options={[
-                            { label: 'All Statuses', value: '' },
-                            { label: 'Active', value: 'ACTIVE' },
-                            { label: 'Completed', value: 'COMPLETED' },
-                            { label: 'Cancelled', value: 'CANCELLED' },
-                            { label: 'Disputed', value: 'DISPUTED' }
-                        ]}
-                        value={statusFilter}
-                        onChange={(val) => setStatusFilter(val)}
-                        variant="transparent"
-                        className="w-full sm:w-44"
-                    />
+                    {/* Mobile-only Refresh Button */}
+                    <button
+                        onClick={fetchContracts}
+                        className="md:hidden flex-shrink-0 w-10 h-10 flex items-center justify-center text-white/40 hover:text-accent transition-all group"
+                        title="Refresh"
+                    >
+                        <RefreshCw size={18} className={isLoading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                    </button>
+                </div>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                    {/* Dates */}
+                    <div className="flex gap-3 w-full sm:w-auto">
+                        <div className="relative flex-1">
+                            <input
+                                type="date"
+                                value={dateFrom}
+                                onChange={(e) => setDateFrom(e.target.value)}
+                                className="w-full h-10 px-3 bg-transparent border border-white/10 rounded-xl text-xs text-white/70 focus:outline-none focus:border-accent [color-scheme:dark]"
+                            />
+                            <span className="absolute -top-2 left-2 px-1 bg-transparent text-[9px] text-white/30 uppercase tracking-widest">From</span>
+                        </div>
+                        <div className="relative flex-1">
+                            <input
+                                type="date"
+                                value={dateTo}
+                                onChange={(e) => setDateTo(e.target.value)}
+                                className="w-full h-10 px-3 bg-transparent border border-white/10 rounded-xl text-xs text-white/70 focus:outline-none focus:border-accent [color-scheme:dark]"
+                            />
+                            <span className="absolute -top-2 left-2 px-1 bg-transparent text-[9px] text-white/30 uppercase tracking-widest">To</span>
+                        </div>
+                    </div>
+                    {/* CustomDropdown & Export */}
+                    <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                        <div className="w-full sm:w-auto sm:flex-initial">
+                            <CustomDropdown
+                                options={[
+                                    { label: 'All Statuses', value: '' },
+                                    { label: 'Active', value: 'ACTIVE' },
+                                    { label: 'Completed', value: 'COMPLETED' },
+                                    { label: 'Cancelled', value: 'CANCELLED' },
+                                    { label: 'Disputed', value: 'DISPUTED' }
+                                ]}
+                                value={statusFilter}
+                                onChange={(val) => setStatusFilter(val)}
+                                variant="transparent"
+                                className="w-full sm:w-44"
+                            />
+                        </div>
+                        <button
+                            onClick={handleExportPDF}
+                            className="w-full sm:w-auto sm:flex-initial flex items-center justify-center gap-2 h-10 px-4 bg-accent hover:bg-accent/90 text-white rounded-xl text-xs font-bold transition-all active:scale-95 shrink-0"
+                        >
+                            <FileDown size={14} /> Export PDF
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div className="bg-transparent border border-white/10 rounded-xl overflow-hidden shadow-sm">
+            {/* Search Bar Row */}
+            <div className="flex items-center gap-3 w-full">
+                <div className="relative flex-1">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" size={16} />
+                    <input
+                        type="text"
+                        placeholder="Search contracts..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full h-12 bg-transparent border border-white/10 rounded-xl pl-11 pr-4 text-white text-sm focus:outline-none focus:border-accent transition-all shadow-inner"
+                    />
+                </div>
+                <button
+                    onClick={fetchContracts}
+                    className="hidden md:flex flex-shrink-0 w-12 h-12 items-center justify-center text-white/40 hover:text-accent transition-all group"
+                    title="Refresh"
+                >
+                    <RefreshCw size={18} className={isLoading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                </button>
+            </div>
+
+            <div className="bg-transparent border border-white/10 rounded-xl overflow-hidden">
                 <div className="overflow-x-auto admin-table-wrap">
                     <table className="w-full text-left text-sm text-white/70">
                         <thead className="border-b border-white/10 text-white/90">
@@ -193,10 +281,12 @@ const ContractsPage = () => {
                                         </td>
                                         <td className="px-6 py-4 font-bold text-accent">{formatINR(contract.agreed_rate)}</td>
                                         <td className="px-6 py-4 text-center">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${contract.status === 'ACTIVE' ? 'bg-green-500/10 text-green-400' :
+                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                contract.status === 'ACTIVE' ? 'bg-green-500/10 text-green-400' :
                                                 contract.status === 'DISPUTED' ? 'bg-red-500/10 text-red-400' :
-                                                    'bg-white/10 text-white/60'
-                                                }`}>
+                                                contract.status === 'PENDING' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' :
+                                                'bg-white/10 text-white/60'
+                                            }`}>
                                                 {contract.status}
                                             </span>
                                         </td>
@@ -246,49 +336,58 @@ const ContractsPage = () => {
                 icon="/Icons/icons8-contract-60.png"
             >
                 {selectedContract && (
-                    <div className="space-y-6">
+                    <div className="space-y-5">
+                        {/* Contract ID + Status */}
                         <div className="flex items-center justify-between">
                             <div>
-                                <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">Contract ID</h4>
-                                <p className="text-xs font-mono text-white/60">{selectedContract.id}</p>
+                                <h4 className="text-slate-400 dark:text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">Contract ID</h4>
+                                <p className="text-xs font-mono text-slate-500 dark:text-white/60">{selectedContract.id}</p>
                             </div>
                             <div className="text-right">
-                                <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">Status</h4>
-                                <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${selectedContract.status === 'ACTIVE' ? 'bg-green-500/10 text-green-400' :
-                                    selectedContract.status === 'DISPUTED' ? 'bg-red-500/10 text-red-400' :
-                                        'bg-white/10 text-white/60'
-                                    }`}>
+                                <h4 className="text-slate-400 dark:text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">Status</h4>
+                                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
+                                    selectedContract.status === 'ACTIVE'
+                                        ? 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20'
+                                        : selectedContract.status === 'DISPUTED'
+                                        ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20'
+                                        : selectedContract.status === 'PENDING'
+                                        ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
+                                        : 'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-white/60 border-slate-200 dark:border-white/10'
+                                }`}>
                                     {selectedContract.status}
                                 </span>
                             </div>
                         </div>
 
+                        {/* Project Title */}
                         <div>
-                            <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">Project Title</h4>
-                            <p className="text-base sm:text-xl font-bold text-white leading-tight">{selectedContract.job?.title || 'Deleted Job'}</p>
+                            <h4 className="text-slate-400 dark:text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">Project Title</h4>
+                            <p className="text-base sm:text-xl font-bold text-slate-800 dark:text-white leading-tight">{selectedContract.job?.title || 'Deleted Job'}</p>
                         </div>
 
+                        {/* Rate + Date */}
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="py-4">
-                                <p className="text-[10px] text-white/30 uppercase font-bold tracking-wider mb-1">Agreed Rate</p>
-                                <div className="flex items-center gap-2 text-white font-semibold text-xs sm:text-base">
-                                    <span className="text-accent text-lg sm:text-xl font-black">{formatINR(selectedContract.agreed_rate)}</span>
+                            <div className="border border-slate-200 dark:border-white/10 rounded-xl p-4">
+                                <p className="text-[10px] text-slate-400 dark:text-white/30 uppercase font-bold tracking-wider mb-1">Agreed Rate</p>
+                                <div className="flex items-center gap-1 text-accent font-black text-lg sm:text-xl">
+                                    <span>{formatINR(selectedContract.agreed_rate)}</span>
                                 </div>
                             </div>
-                            <div className="py-4">
-                                <p className="text-[10px] text-white/30 uppercase font-bold tracking-wider mb-1">Agreement Date</p>
-                                <div className="flex items-center gap-2 text-white font-semibold text-xs sm:text-base">
+                            <div className="border border-slate-200 dark:border-white/10 rounded-xl p-4">
+                                <p className="text-[10px] text-slate-400 dark:text-white/30 uppercase font-bold tracking-wider mb-1">Agreement Date</p>
+                                <div className="flex items-center gap-2 text-slate-700 dark:text-white font-semibold text-sm">
                                     <Calendar size={14} className="text-accent" />
-                                    <span className="text-sm">{new Date(selectedContract.created_at).toLocaleDateString()}</span>
+                                    <span>{new Date(selectedContract.created_at).toLocaleDateString()}</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-6 pt-4 border-t border-white/10">
+                        {/* Client + Freelancer */}
+                        <div className="grid grid-cols-2 gap-4 pt-2 border-t border-slate-100 dark:border-white/5">
                             <div>
-                                <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-3">Client</h4>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full overflow-hidden bg-accent/10 flex items-center justify-center text-accent border border-white/10 shrink-0">
+                                <h4 className="text-slate-400 dark:text-white/40 text-[10px] font-bold uppercase tracking-widest mb-3">Client</h4>
+                                <div className="flex items-center gap-3 border border-slate-200 dark:border-white/10 rounded-xl p-3">
+                                    <div className="w-10 h-10 rounded-full overflow-hidden bg-accent/10 flex items-center justify-center text-accent border border-slate-200 dark:border-white/10 shrink-0">
                                         {selectedContract.client?.profiles?.avatar_url ? (
                                             <img
                                                 src={selectedContract.client.profiles.avatar_url}
@@ -300,17 +399,17 @@ const ContractsPage = () => {
                                         )}
                                     </div>
                                     <div className="min-w-0">
-                                        <p className="text-white font-bold text-xs sm:text-sm leading-tight truncate">
+                                        <p className="text-slate-800 dark:text-white font-bold text-xs sm:text-sm leading-tight truncate">
                                             {selectedContract.client?.profiles?.name || selectedContract.client?.name || 'Client'}
                                         </p>
-                                        <p className="text-white/40 text-[10px] truncate mt-0.5">{selectedContract.client?.email}</p>
+                                        <p className="text-slate-400 dark:text-white/40 text-[10px] truncate mt-0.5">{selectedContract.client?.email}</p>
                                     </div>
                                 </div>
                             </div>
                             <div>
-                                <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-3">Freelancer</h4>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full overflow-hidden bg-accent/10 flex items-center justify-center text-accent border border-white/10 shrink-0">
+                                <h4 className="text-slate-400 dark:text-white/40 text-[10px] font-bold uppercase tracking-widest mb-3">Freelancer</h4>
+                                <div className="flex items-center gap-3 border border-slate-200 dark:border-white/10 rounded-xl p-3">
+                                    <div className="w-10 h-10 rounded-full overflow-hidden bg-accent/10 flex items-center justify-center text-accent border border-slate-200 dark:border-white/10 shrink-0">
                                         {selectedContract.freelancer?.profiles?.avatar_url ? (
                                             <img
                                                 src={selectedContract.freelancer.profiles.avatar_url}
@@ -322,10 +421,10 @@ const ContractsPage = () => {
                                         )}
                                     </div>
                                     <div className="min-w-0">
-                                        <p className="text-white font-bold text-xs sm:text-sm leading-tight truncate">
+                                        <p className="text-slate-800 dark:text-white font-bold text-xs sm:text-sm leading-tight truncate">
                                             {selectedContract.freelancer?.profiles?.name || selectedContract.freelancer?.name || 'Freelancer'}
                                         </p>
-                                        <p className="text-white/40 text-[10px] truncate mt-0.5">{selectedContract.freelancer?.email}</p>
+                                        <p className="text-slate-400 dark:text-white/40 text-[10px] truncate mt-0.5">{selectedContract.freelancer?.email}</p>
                                     </div>
                                 </div>
                             </div>

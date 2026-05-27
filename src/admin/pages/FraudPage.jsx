@@ -3,7 +3,7 @@ import {
     UserSearch, AlertTriangle, ShieldCheck, ShieldAlert, Clock, Mail,
     Users, TrendingUp, Link2, Zap, Filter, ChevronDown, ChevronUp,
     Eye, Flag, Lock, Ban, RefreshCcw, X, Activity, FileWarning,
-    ShieldX, AlertCircle, CheckCircle2, Timer, MapPin, Loader2
+    ShieldX, AlertCircle, CheckCircle2, Timer, MapPin, Loader2, FileDown
 } from 'lucide-react';
 import {
     fetchSuspiciousUsers, fetchUserFraudTimeline,
@@ -11,6 +11,7 @@ import {
 } from '../../services/adminService';
 import toast from 'react-hot-toast';
 import InfinityLoader from '../../components/common/InfinityLoader';
+import { exportTableToPDF } from '../utils/exportPDF';
 
 // ─── Risk Colour Helpers ───────────────────────────────────────────────────
 const riskConfig = {
@@ -359,6 +360,28 @@ const FraudPage = () => {
         return matchSearch && matchRisk;
     });
 
+    const handleExportPDF = () => {
+        if (filtered.length === 0) { toast.error('No fraud data to export'); return; }
+        exportTableToPDF({
+            title: 'Fraud Detection Report',
+            columns: ['User', 'Email', 'Risk Level', 'Risk Score', 'Warnings', 'Reports', 'Status'],
+            rows: filtered.map(u => [
+                u.name || '—',
+                u.email || '—',
+                u.riskLevel || '—',
+                `${u.riskScore ?? 0}/100`,
+                String(u.warning_count || 0),
+                String(u.reportCount || 0),
+                u.is_banned ? 'Banned' : u.is_restricted ? 'Frozen' : u.fraud_flag ? 'Fraud' : 'Active',
+            ]),
+            filename: 'fraud_detection',
+            filters: {
+                'Risk Level': riskFilter === 'ALL' ? 'All' : riskFilter,
+                ...(searchTerm && { Search: searchTerm }),
+            },
+        });
+    };
+
     return (
         <div className="space-y-6">
             {/* Page header */}
@@ -440,10 +463,7 @@ const FraudPage = () => {
             {/* User cards list */}
             <div className="space-y-3 relative">
                 {loading ? (
-                    <div className="py-20 text-center text-white/40 flex flex-col items-center gap-3">
-                        <Loader2 size={28} className="animate-spin text-rose-500/50" />
-                        <span className="text-sm">Analyzing platform activity...</span>
-                    </div>
+                    <InfinityLoader fullScreen={false} text="Analyzing platform activity..." />
                 ) : filtered.length === 0 ? (
                     <div className="bg-transparent border border-white/10 rounded-2xl p-12 text-center space-y-4">
                         <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto">

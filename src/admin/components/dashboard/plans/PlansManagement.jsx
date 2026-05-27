@@ -133,10 +133,10 @@ const PlansManagement = () => {
   return (
     <div className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header */}
-      <div className="flex justify-between items-center border border-white/10 rounded-2xl px-4 sm:px-5 py-3 sm:py-4">
+      <div className="flex justify-between items-center border border-slate-200 dark:border-white/10 rounded-2xl px-4 sm:px-5 py-3 sm:py-4 bg-transparent">
         <div>
-          <h1 className="text-sm sm:text-lg font-bold text-white tracking-tight">Membership Plans Management</h1>
-          <p className="text-white/40 text-[10px] sm:text-xs mt-0.5">Manage platform pricing and dynamic offers.</p>
+          <h1 className="text-sm sm:text-lg font-bold text-slate-800 dark:text-white tracking-tight">Membership Plans Management</h1>
+          <p className="text-slate-500 dark:text-white/40 text-[10px] sm:text-xs mt-0.5">Manage platform pricing and dynamic offers.</p>
         </div>
         {isSuperAdmin && (
           <button
@@ -154,21 +154,21 @@ const PlansManagement = () => {
         {plans.map((plan) => (
           <div
             key={plan.id}
-            className={`relative border rounded-2xl p-5 transition-all duration-200 ${plan.is_published
-              ? 'border-white/10 hover:border-white/20'
-              : 'border-white/5 opacity-60 border-dashed'
+            className={`relative border rounded-2xl p-5 transition-all duration-200 bg-transparent ${plan.is_published
+              ? 'border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
+              : 'border-slate-200 dark:border-white/5 opacity-60 border-dashed'
               }`}
           >
             {/* Popular badge */}
             {plan.is_popular && (
-              <div className="absolute -top-3 right-5 bg-accent text-primary text-[9px] font-black px-3 py-0.5 rounded-full uppercase tracking-widest">
+              <div className="absolute -top-3 right-5 bg-accent text-white text-[9px] font-black px-3 py-0.5 rounded-full uppercase tracking-widest">
                 Popular
               </div>
             )}
 
             {/* Unpublished badge */}
             {!plan.is_published && (
-              <div className="absolute -top-3 left-5 bg-white/10 text-white/50 text-[9px] font-black px-3 py-0.5 rounded-full uppercase tracking-widest">
+              <div className="absolute -top-3 left-5 bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-white/50 text-[9px] font-black px-3 py-0.5 rounded-full uppercase tracking-widest">
                 Draft
               </div>
             )}
@@ -176,7 +176,7 @@ const PlansManagement = () => {
             {/* Card Header */}
             <div className="flex justify-between items-start mb-3">
               <div>
-                <h3 className="text-sm font-bold text-white leading-tight">{plan.name}</h3>
+                <h3 className="text-sm font-bold text-slate-800 dark:text-white leading-tight">{plan.name}</h3>
                 <span className="text-[9px] uppercase font-bold tracking-widest text-accent px-1.5 py-0.5 bg-accent/10 rounded-md mt-1 inline-block">
                   {plan.duration === 'monthly' ? 'Monthly' : 'Yearly'}
                 </span>
@@ -184,23 +184,22 @@ const PlansManagement = () => {
               <div className="flex gap-1.5">
                 {isSuperAdmin && (
                   <>
-                    {/* Publish Toggle */}
                     <button
                       onClick={() => handleTogglePublish(plan)}
                       title={plan.is_published ? 'Unpublish (hide from users)' : 'Publish (show to users)'}
-                      className="p-1.5 text-white/40 hover:text-emerald-400 transition-colors"
+                      className="p-1.5 text-slate-400 dark:text-white/40 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
                     >
                       {plan.is_published ? <Eye size={16} /> : <EyeOff size={16} />}
                     </button>
                     <button
                       onClick={() => handleOpenModal(plan)}
-                      className="p-1.5 text-white/40 hover:text-white transition-colors"
+                      className="p-1.5 text-slate-400 dark:text-white/40 hover:text-slate-700 dark:hover:text-white transition-colors"
                     >
                       <Edit2 size={16} />
                     </button>
                     <button
                       onClick={() => handleDelete(plan.id)}
-                      className="p-1.5 text-white/40 hover:text-rose-400 transition-colors"
+                      className="p-1.5 text-slate-400 dark:text-white/40 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -212,12 +211,12 @@ const PlansManagement = () => {
             {/* Pricing */}
             <div className="mb-4">
               {plan.original_price > plan.offer_price && (
-                <p className="line-through text-white/30 text-xs mb-0.5">₹{plan.original_price}</p>
+                <p className="line-through text-slate-400 dark:text-white/30 text-xs mb-0.5">₹{plan.original_price}</p>
               )}
               <div className="flex items-end gap-1.5">
-                <p className="text-2xl font-black text-white">₹{plan.offer_price}</p>
+                <p className="text-2xl font-black text-slate-800 dark:text-white">₹{plan.offer_price}</p>
                 {plan.discount_percentage > 0 && (
-                  <span className="text-[10px] font-bold text-emerald-400 mb-0.5">
+                  <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 mb-0.5">
                     Save {plan.discount_percentage}%
                   </span>
                 )}
@@ -225,19 +224,19 @@ const PlansManagement = () => {
             </div>
 
             {/* Features */}
-            <div className="space-y-1.5 border-t border-white/5 pt-3">
-              <h4 className="text-[9px] font-black uppercase tracking-widest text-white/25 mb-2">Features Included</h4>
+            <div className="space-y-1.5 border-t border-slate-100 dark:border-white/5 pt-3">
+              <h4 className="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-white/25 mb-2">Features Included</h4>
               {plan.features.map((feature, i) => (
                 <div key={i} className="flex items-start gap-2">
                   <CheckCircle2 size={12} className="text-accent shrink-0 mt-0.5" />
-                  <span className="text-xs text-white/60 leading-tight">{feature}</span>
+                  <span className="text-xs text-slate-600 dark:text-white/60 leading-tight">{feature}</span>
                 </div>
               ))}
             </div>
           </div>
         ))}
         {plans.length === 0 && (
-          <div className="col-span-full py-16 text-center text-white/30 border border-white/5 border-dashed rounded-2xl text-sm">
+          <div className="col-span-full py-16 text-center text-slate-400 dark:text-white/30 border border-slate-200 dark:border-white/5 border-dashed rounded-2xl text-sm">
             No plans found. Create one to get started.
           </div>
         )}
@@ -258,25 +257,25 @@ const PlansManagement = () => {
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="relative w-full max-w-lg border border-white/10 rounded-2xl p-6 shadow-2xl overflow-y-auto max-h-[90vh] bg-secondary"
+              className="relative w-full max-w-lg border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-2xl overflow-y-auto max-h-[90vh] bg-transparent"
             >
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-4 right-4 p-1.5 text-white/50 hover:text-accent transition-colors"
+                className="absolute top-4 right-4 p-1.5 text-slate-400 dark:text-white/50 hover:text-accent transition-colors"
               >
                 <X size={16} />
               </button>
 
-              <h2 className="text-base font-bold text-white mb-5">
+              <h2 className="text-base font-bold text-slate-800 dark:text-white mb-5">
                 {editingPlan ? 'Edit Plan' : 'Create New Plan'}
               </h2>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-widest text-white/40 pl-1 block mb-1.5">Plan Name</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-white/40 pl-1 block mb-1.5">Plan Name</label>
                   <input
                     required type="text"
-                    className="w-full bg-secondary border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm focus:border-accent/50 outline-none transition-all placeholder:text-white/20"
+                    className="w-full bg-transparent border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-slate-800 dark:text-white text-sm focus:border-accent/50 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-white/20"
                     placeholder="e.g. Professional Membership"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -285,20 +284,20 @@ const PlansManagement = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[10px] font-black uppercase tracking-widest text-white/40 pl-1 block mb-1.5">Original Price (₹)</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-white/40 pl-1 block mb-1.5">Original Price (₹)</label>
                     <input
                       required type="number" min="0"
-                      className="w-full bg-secondary border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm focus:border-accent/50 outline-none transition-all placeholder:text-white/20"
+                      className="w-full bg-transparent border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-slate-800 dark:text-white text-sm focus:border-accent/50 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-white/20"
                       placeholder="2000"
                       value={formData.original_price}
                       onChange={(e) => setFormData({ ...formData, original_price: e.target.value })}
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-black uppercase tracking-widest text-white/40 pl-1 block mb-1.5">Offer Price (₹)</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-white/40 pl-1 block mb-1.5">Offer Price (₹)</label>
                     <input
                       required type="number" min="0"
-                      className="w-full bg-secondary border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm focus:border-accent/50 outline-none transition-all placeholder:text-white/20"
+                      className="w-full bg-transparent border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-slate-800 dark:text-white text-sm focus:border-accent/50 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-white/20"
                       placeholder="1499"
                       value={formData.offer_price}
                       onChange={(e) => setFormData({ ...formData, offer_price: e.target.value })}
@@ -308,7 +307,7 @@ const PlansManagement = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[10px] font-black uppercase tracking-widest text-white/40 pl-1 block mb-1.5">Duration</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-white/40 pl-1 block mb-1.5">Duration</label>
                     <CustomDropdown
                       options={[
                         { label: 'Monthly', value: 'monthly' },
@@ -320,23 +319,23 @@ const PlansManagement = () => {
                     />
                   </div>
                   <div className="flex flex-col justify-end">
-                    <label className="flex items-center gap-2.5 bg-secondary py-2.5 px-3 rounded-xl border border-white/10 cursor-pointer hover:bg-white/8 transition-colors">
+                    <label className="flex items-center gap-2.5 bg-slate-50 dark:bg-secondary py-2.5 px-3 rounded-xl border border-slate-200 dark:border-white/10 cursor-pointer hover:bg-slate-100 dark:hover:bg-white/8 transition-colors">
                       <input
                         type="checkbox"
-                        className="w-3.5 h-3.5 rounded border-white/20 text-accent"
+                        className="w-3.5 h-3.5 rounded border-slate-300 dark:border-white/20 text-accent"
                         checked={formData.is_popular}
                         onChange={(e) => setFormData({ ...formData, is_popular: e.target.checked })}
                       />
-                      <span className="text-xs font-semibold text-white/60">Mark as Popular</span>
+                      <span className="text-xs font-semibold text-slate-600 dark:text-white/60">Mark as Popular</span>
                     </label>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-widest text-white/40 pl-1 block mb-1.5">Features (One per line)</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-white/40 pl-1 block mb-1.5">Features (One per line)</label>
                   <textarea
                     rows={4}
-                    className="w-full bg-secondary border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm focus:border-accent/50 outline-none transition-all placeholder:text-white/20 resize-none"
+                    className="w-full bg-slate-50 dark:bg-secondary border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-slate-800 dark:text-white text-sm focus:border-accent/50 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-white/20 resize-none"
                     placeholder={"80 Connects per month\nVerified Pro Badge\nPriority Support"}
                     value={formData.features}
                     onChange={(e) => setFormData({ ...formData, features: e.target.value })}
@@ -344,10 +343,10 @@ const PlansManagement = () => {
                 </div>
 
                 <div className="pt-2 flex justify-end gap-2">
-                  <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2 rounded-full text-xs font-bold text-white/50 hover:text-white hover:bg-white/5 transition-colors">
+                  <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2 rounded-full text-xs font-bold text-slate-500 dark:text-white/50 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
                     Cancel
                   </button>
-                  <button type="submit" className="px-5 py-2 rounded-full text-xs font-bold bg-accent text-white hover:text-primary hover:bg-white transition-all shadow-lg">
+                  <button type="submit" className="px-5 py-2 rounded-full text-xs font-bold bg-accent text-white hover:bg-accent/90 transition-all shadow-lg">
                     {editingPlan ? 'Save Changes' : 'Create Plan'}
                   </button>
                 </div>

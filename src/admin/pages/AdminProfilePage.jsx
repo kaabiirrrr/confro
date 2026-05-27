@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Camera, User, Mail, Phone, Shield, Clock, CheckCircle, Save, Key, Edit3, X, Database, RefreshCw } from 'lucide-react';
 import { fetchAdminProfile, updateAdminProfile, uploadAdminAvatar } from '../../services/adminService';
 import { toast } from 'react-hot-toast';
+import InfinityLoader from '../../components/common/InfinityLoader';
 
 const AdminProfilePage = () => {
     const [profile, setProfile] = useState(null);
@@ -114,9 +115,7 @@ const AdminProfilePage = () => {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-96">
-                <div className="w-10 h-10 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-            </div>
+            <InfinityLoader />
         );
     }
 
@@ -158,7 +157,7 @@ const AdminProfilePage = () => {
                 <div className="lg:col-span-1 space-y-4">
 
                     {/* Avatar Card */}
-                    <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 flex flex-col items-center text-center space-y-4 shadow-sm">
+                    <div className="bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 flex flex-col items-center text-center space-y-4">
                         {/* Photo */}
                         <div className="relative group">
                             <div
@@ -219,7 +218,7 @@ const AdminProfilePage = () => {
                     </div>
 
                     {/* Account Info Card */}
-                    <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 space-y-4 shadow-sm">
+                    <div className="bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 space-y-4">
                         <h3 className="text-sm font-semibold text-slate-600 dark:text-white/80 uppercase tracking-wider">Account Info</h3>
 
                         <InfoRow
@@ -248,7 +247,7 @@ const AdminProfilePage = () => {
                 {/* Right: Edit Form */}
                 <div className="lg:col-span-2 space-y-4">
 
-                    <form onSubmit={handleSave} className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 space-y-5 shadow-sm">
+                    <form onSubmit={handleSave} className="bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 space-y-5">
                         <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
                             {editMode ? 'Edit Profile Details' : 'Profile Details'}
                         </h3>
@@ -319,7 +318,7 @@ const AdminProfilePage = () => {
                                 <button
                                     type="submit"
                                     disabled={isSaving}
-                                    className="flex items-center gap-2 px-6 py-2.5 bg-accent hover:bg-accent/90 text-white font-medium rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-accent hover:bg-accent/90 text-white font-medium rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isSaving ? (
                                         <>
@@ -338,7 +337,7 @@ const AdminProfilePage = () => {
                     </form>
 
                     {/* Login Activity Card */}
-                    <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 space-y-4 shadow-sm">
+                    <div className="bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 space-y-4">
                         <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Login Activity</h3>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -413,7 +412,7 @@ const ActivityCard = ({ title, value, icon, color }) => {
         red: 'text-red-600 dark:text-red-400 bg-red-500/10',
     };
     return (
-        <div className="bg-white dark:bg-transparent border border-slate-200 dark:border-white/5 rounded-xl p-4 shadow-sm">
+        <div className="bg-transparent border border-slate-200 dark:border-white/5 rounded-xl p-4">
             <div className={`${colorMap[color].split(' ')[0]} mb-3`}>
                 {icon}
             </div>

@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Users, UserPlus, Download } from 'lucide-react';
+import { Users, UserPlus, FileDown, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 import UsersTable from '../components/UsersTable';
 import * as adminService from '../../services/adminService';
+import { sendProfileReminder } from '../../services/adminService';
 import { toast } from 'react-hot-toast';
 import ConfirmModal from '../../components/shared/ConfirmModal';
 import AddUserModal from '../components/AddUserModal';
+import { exportTableToPDF } from '../utils/exportPDF';
 
 
 const UsersPage = () => {
@@ -18,16 +20,23 @@ const UsersPage = () => {
     });
     const [filters, setFilters] = useState({
         search: '',
-        role: ''
+        role: '',
+        completion: '',
+        strikes: ''
     });
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [confirmModal, setConfirmModal] = useState({ isOpen: false, userId: null });
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
 
     const loadUsers = useCallback(async () => {
         setLoading(true);
         try {
             const result = await adminService.fetchUsers({
-                ...filters,
+                search: filters.search,
+                role: filters.role,
+                completion: filters.completion,
+                strikes: filters.strikes,
                 limit: pagination.limit,
                 offset: pagination.offset
             });
@@ -44,7 +53,7 @@ const UsersPage = () => {
         } finally {
             setLoading(false);
         }
-    }, [filters, pagination.limit, pagination.offset]);
+    }, [filters.search, filters.role, filters.completion, filters.strikes, pagination.limit, pagination.offset]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -68,6 +77,12 @@ const UsersPage = () => {
                     result = await adminService.resetUserPassword(userId);
                     if (result.success) {
                         toast.success('Password reset email sent to user');
+                    }
+                    break;
+                case 'SEND_PROFILE_REMINDER':
+                    result = await sendProfileReminder(userId);
+                    if (result.success) {
+                        toast.success(result.message || 'Profile reminder email sent');
                     }
                     break;
                 case 'DELETE':
@@ -104,28 +119,26 @@ const UsersPage = () => {
             toast.error('No users to export');
             return;
         }
-
-        const headers = ['Name', 'Email', 'Role', 'Status', 'Joined'];
-        const csvRows = users.map(user => [
-            `"${user.profiles?.name || 'N/A'}"`,
-            `"${user.email}"`,
-            `"${user.role}"`,
-            `"${user.is_suspended ? 'Suspended' : 'Active'}"`,
-            `"${new Date(user.created_at).toLocaleDateString()}"`
-        ]);
-
-        const csvContent = [headers.join(','), ...csvRows.map(row => row.join(','))].join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.setAttribute('hidden', '');
-        a.setAttribute('href', url);
-        a.setAttribute('download', `users_export_${new Date().toISOString().split('T')[0]}.csv`);
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-        toast.success('Users list exported successfully');
+        exportTableToPDF({
+            title: 'Users Management',
+            columns: ['Name', 'Email', 'Role', 'Status', 'Joined'],
+            rows: users.map(u => [
+                u.profiles?.name || 'N/A',
+                u.email,
+                u.role,
+                u.is_suspended ? 'Suspended' : 'Active',
+                new Date(u.created_at).toLocaleDateString(),
+            ]),
+            filename: 'users_export',
+            filters: {
+                Role: filters.role || 'All',
+                Status: filters.strikes ? `Strikes: ${filters.strikes}` : 'All',
+                Completion: filters.completion || 'All',
+                ...(filters.search && { Search: filters.search }),
+                ...(dateFrom && { From: dateFrom }),
+                ...(dateTo && { To: dateTo }),
+            },
+        });
     };
 
     const handleAddUser = () => {
@@ -169,21 +182,38 @@ const UsersPage = () => {
                     <p className="text-white/40 text-xs mt-1">Monitor account activity, roles, and security status.</p>
                 </motion.div>
 
-                <div className="flex items-center justify-between gap-3 w-full sm:w-auto sm:justify-start">
-                    <button 
-                        onClick={handleExportUsers}
-                        className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-transparent hover:bg-white/10 text-white px-4 py-2.5 rounded-full border border-white/10 transition-all text-xs sm:text-sm font-medium"
-                    >
-                        <Download size={14} />
-                        Export
-                    </button>
-                    <button 
-                        onClick={handleAddUser}
-                        className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-accent hover:bg-accent/90 text-white px-4 py-2.5 rounded-full transition-all text-xs sm:text-sm font-bold"
-                    >
-                        <img src="/Icons/icons8-user-100.png" alt="Add User" className="w-4 h-4 object-contain brightness-0 invert" />
-                        Add User
-                    </button>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                    <div className="flex gap-3 w-full sm:w-auto">
+                        <input
+                            type="date"
+                            value={dateFrom}
+                            onChange={e => setDateFrom(e.target.value)}
+                            title="Joined from"
+                            className="flex-1 sm:flex-none bg-transparent border border-white/10 rounded-xl px-3 py-1.5 text-white text-xs focus:outline-none focus:border-accent transition-all sm:w-36"
+                        />
+                        <input
+                            type="date"
+                            value={dateTo}
+                            onChange={e => setDateTo(e.target.value)}
+                            title="Joined to"
+                            className="flex-1 sm:flex-none bg-transparent border border-white/10 rounded-xl px-3 py-1.5 text-white text-xs focus:outline-none focus:border-accent transition-all sm:w-36"
+                        />
+                    </div>
+                    <div className="flex gap-3 w-full sm:w-auto">
+                        <button 
+                            onClick={handleExportUsers}
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-accent hover:bg-accent/90 text-white px-6 py-1.5 rounded-full transition-all text-xs sm:text-sm font-bold"
+                        >
+                            <FileDown size={14} />
+                            Export PDF
+                        </button>
+                        <button 
+                            onClick={handleAddUser}
+                            className="flex-1 sm:flex-none flex items-center justify-center bg-accent hover:bg-accent/90 text-white px-6 py-1.5 rounded-full transition-all text-xs sm:text-sm font-bold"
+                        >
+                            Add User
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -201,6 +231,7 @@ const UsersPage = () => {
                     filters={filters}
                     onFilterChange={(newFilters) => {
                         setFilters(newFilters);
+                        // Reset pagination whenever any filter changes
                         setPagination(prev => ({ ...prev, offset: 0 }));
                     }}
                     onPageChange={(newOffset) => setPagination(prev => ({ ...prev, offset: newOffset }))}

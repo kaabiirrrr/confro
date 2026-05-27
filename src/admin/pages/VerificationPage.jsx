@@ -87,12 +87,21 @@ const VerificationPage = () => {
         <div className="space-y-6">
             <div className="flex flex-col gap-3 sm:gap-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                        <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-                            <img src="/Icons/icons8-verification-100.png" alt="Verification" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
-                            Identity Verification
-                        </h1>
-                        <p className="text-white/40 text-xs mt-1">Review and approve identity documents for freelancers and clients</p>
+                    <div className="flex items-center justify-between w-full md:w-auto">
+                        <div>
+                            <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                                <img src="/Icons/icons8-verification-100.png" alt="Verification" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
+                                Identity Verification
+                            </h1>
+                            <p className="text-white/40 text-xs mt-1">Review and approve identity documents for freelancers and clients</p>
+                        </div>
+                        {/* Mobile-only Refresh Button */}
+                        <button
+                            onClick={loadRequests}
+                            className="md:hidden w-10 h-10 flex items-center justify-center text-white/60 hover:text-accent transition group flex-shrink-0"
+                        >
+                            <RefreshCw size={16} className={loading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                        </button>
                     </div>
                     <div className="flex items-center gap-2 w-full sm:w-auto">
                         <div className="relative flex-1 sm:w-64">
@@ -107,7 +116,7 @@ const VerificationPage = () => {
                         </div>
                         <button
                             onClick={loadRequests}
-                            className="w-10 h-10 flex items-center justify-center hover:bg-white/5 rounded-xl text-white/60 transition group flex-shrink-0 border border-white/10"
+                            className="hidden md:flex w-10 h-10 items-center justify-center hover:bg-white/5 rounded-xl text-white/60 transition group flex-shrink-0"
                         >
                             <RefreshCw size={16} className={loading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
                         </button>

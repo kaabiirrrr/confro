@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import {
     Search, CornerUpLeft, RefreshCw,
-    TrendingUp, CreditCard, Users, Zap, Banknote, IndianRupee
+    TrendingUp, CreditCard, Users, Zap, Banknote, IndianRupee, FileDown
 } from 'lucide-react';
 import { formatINR } from '../../utils/currencyUtils';
 import * as adminService from '../../services/adminService';
 import { toast } from 'react-hot-toast';
 import CustomDropdown from '../../components/ui/CustomDropdown';
 import InfinityLoader from '../../components/common/InfinityLoader';
+import { exportTableToPDF } from '../utils/exportPDF';
 
 const COMMISSION_RATE = 0.03; // 3%
 
@@ -42,6 +43,8 @@ const PaymentsPage = () => {
     const [revenueLoading, setRevenueLoading] = useState(true);
     const [statusFilter, setStatusFilter] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
 
     useEffect(() => {
         fetchPayments();
@@ -80,6 +83,40 @@ const PaymentsPage = () => {
         (p.payee?.email || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const handleExportPDF = () => {
+        const dateFiltered = payments.filter(p => {
+            const d = new Date(p.created_at);
+            if (dateFrom && d < new Date(dateFrom)) return false;
+            if (dateTo && d > new Date(dateTo + 'T23:59:59')) return false;
+            return true;
+        });
+        const result = dateFiltered.filter(p =>
+            (p.id || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (p.payer?.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (p.payee?.email || '').toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        if (result.length === 0) { toast.error('No data to export'); return; }
+        exportTableToPDF({
+            title: 'Transaction History',
+            filename: 'payments',
+            columns: ['Txn ID', 'Date', 'Payer', 'Payee', 'Amount', 'Commission', 'Status'],
+            rows: result.map(p => {
+                const amt = parseFloat(p.amount) || 0;
+                return [
+                    (p.id || '').slice(0, 8).toUpperCase(),
+                    new Date(p.created_at).toLocaleDateString(),
+                    p.payer?.email || 'N/A',
+                    p.payee?.email || 'N/A',
+                    formatINR(amt),
+                    fmtCommission(amt * COMMISSION_RATE),
+                    (p.status || '').toUpperCase()
+                ];
+            }),
+            filters: { Status: statusFilter || 'All', From: dateFrom || '—', To: dateTo || '—' }
+        });
+        toast.success('PDF exported');
+    };
+
     // Fallback: compute from payments list if API not ready
     const releasedTotal = payments
         .filter(p => p.status === 'released')
@@ -112,9 +149,9 @@ const PaymentsPage = () => {
                     <p className="text-white/40 text-xs mt-1">Platform earnings across all revenue streams · 3% commission</p>
                 </div>
                 <button onClick={() => { fetchPayments(); fetchRevenue(); }}
-                    className="p-2 text-white/60 hover:text-accent transition-colors"
+                    className="md:hidden p-2 text-white/60 hover:text-accent transition-colors"
                     title="Refresh">
-                    <RefreshCw size={18} className={(isLoading || revenueLoading) ? "animate-spin" : ""} />
+                    <RefreshCw size={18} className={(isLoading || revenueLoading) ? "animate-spin text-accent" : ""} />
                 </button>
             </div>
 
@@ -201,30 +238,74 @@ const PaymentsPage = () => {
                         </h2>
                         <p className="text-white/40 text-[10px] uppercase tracking-widest mt-0.5">Protocol Audit Log · All Financial Movements</p>
                     </div>
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-                        <div className="relative w-full sm:w-80">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
-                            <input
-                                type="text"
-                                placeholder="Search by ID or email..."
-                                value={searchTerm}
-                                onChange={e => setSearchTerm(e.target.value)}
-                                className="w-full bg-transparent border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-xs focus:outline-none focus:border-accent transition-all shadow-inner"
-                            />
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                        {/* Dates */}
+                        <div className="flex gap-3 w-full sm:w-auto">
+                            <div className="relative flex-1 sm:w-36">
+                                <input
+                                    type="date"
+                                    value={dateFrom}
+                                    onChange={(e) => setDateFrom(e.target.value)}
+                                    className="w-full h-10 px-3 bg-transparent border border-white/10 rounded-xl text-xs text-white/70 focus:outline-none focus:border-accent [color-scheme:dark]"
+                                />
+                                <span className="absolute -top-2 left-2 px-1 bg-transparent text-[9px] text-white/30 uppercase tracking-widest">From</span>
+                            </div>
+                            <div className="relative flex-1 sm:w-36">
+                                <input
+                                    type="date"
+                                    value={dateTo}
+                                    onChange={(e) => setDateTo(e.target.value)}
+                                    className="w-full h-10 px-3 bg-transparent border border-white/10 rounded-xl text-xs text-white/70 focus:outline-none focus:border-accent [color-scheme:dark]"
+                                />
+                                <span className="absolute -top-2 left-2 px-1 bg-transparent text-[9px] text-white/30 uppercase tracking-widest">To</span>
+                            </div>
                         </div>
-                        <CustomDropdown
-                            options={[
-                                { label: 'All Statuses', value: '' },
-                                { label: 'In Escrow', value: 'escrow' },
-                                { label: 'Released', value: 'released' },
-                                { label: 'Refunded', value: 'refunded' },
-                            ]}
-                            value={statusFilter}
-                            onChange={val => setStatusFilter(val)}
-                            variant="transparent"
-                            className="w-full sm:w-44"
+
+                        {/* CustomDropdown & Export */}
+                        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                            <div className="w-full sm:w-auto sm:flex-initial">
+                                <CustomDropdown
+                                    options={[
+                                        { label: 'All Statuses', value: '' },
+                                        { label: 'In Escrow', value: 'escrow' },
+                                        { label: 'Released', value: 'released' },
+                                        { label: 'Refunded', value: 'refunded' },
+                                    ]}
+                                    value={statusFilter}
+                                    onChange={val => setStatusFilter(val)}
+                                    variant="transparent"
+                                    className="w-full sm:w-44"
+                                />
+                            </div>
+                            <button
+                                onClick={handleExportPDF}
+                                className="w-full sm:w-auto sm:flex-initial flex items-center justify-center gap-2 h-10 px-4 bg-accent hover:bg-accent/90 text-white rounded-xl text-xs font-bold transition-all active:scale-95 shrink-0"
+                            >
+                                <FileDown size={14} /> Export PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Search Bar Row */}
+                <div className="flex items-center gap-3 w-full mb-6">
+                    <div className="relative flex-1">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" size={16} />
+                        <input
+                            type="text"
+                            placeholder="Search by ID or email..."
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                            className="w-full h-12 bg-transparent border border-white/10 rounded-xl pl-11 pr-4 text-white text-sm focus:outline-none focus:border-accent transition-all shadow-inner"
                         />
                     </div>
+                    <button
+                        onClick={() => { fetchPayments(); fetchRevenue(); }}
+                        className="hidden md:flex flex-shrink-0 w-12 h-12 items-center justify-center text-white/40 hover:text-accent transition-all group"
+                        title="Refresh"
+                    >
+                        <RefreshCw size={18} className={(isLoading || revenueLoading) ? "animate-spin text-accent" : "group-hover:rotate-180 transition-transform duration-500"} />
+                    </button>
                 </div>
 
                 <div className="bg-transparent border border-white/10 rounded-xl overflow-hidden">

@@ -6,7 +6,7 @@ import {
     BarChart3, Bell, ShieldAlert, Settings, LogOut,
     ShieldCheck, HandCoins, ScrollText, Tag, Megaphone, UserSearch,
     UserCircle, Sun, Moon, HelpCircle, Menu, X, Ticket, Link as LinkIcon,
-    Landmark
+    Landmark, Activity
 } from 'lucide-react';
 
 import { useTheme } from '../../context/ThemeContext';
@@ -116,6 +116,7 @@ const AdminLayout = () => {
         { path: '/admin/trust-graph', icon: <img src="/Icons/icons8-trust-64.png" alt="TrustGraph Intelligence" className="w-6 h-6 object-contain" />, label: 'TrustGraph Intelligence', roles: ['SUPER_ADMIN', 'ADMIN'] },
         { path: '/admin/admin-management', icon: <img src="/Icons/icons8-critical-thinking-80.png" alt="Admin Management" className="w-6 h-6 object-contain" />, label: 'Admin Management', roles: ['SUPER_ADMIN'] },
         { path: '/admin/insights', icon: <img src="/Icons/icons8-leader-100.png" alt="Admin Insights" className="w-6 h-6 object-contain" />, label: 'Admin Insights', roles: ['SUPER_ADMIN'] },
+        { path: '/admin/monitoring', icon: <Activity size={18} className="text-accent" />, label: 'User Monitoring', roles: ['SUPER_ADMIN', 'ADMIN'] },
         { path: '/admin/admin-logs', icon: <img src="/Icons/icons8-logs-64.png" alt="Admin Logs" className="w-6 h-6 object-contain" />, label: 'Admin Logs', roles: ['SUPER_ADMIN'] },
         { path: '/admin/plans', icon: <img src="/Icons/icons8-membership-card-100.png" alt="Plans" className="w-6 h-6 object-contain" />, label: 'Membership Plans', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
         { path: '/admin/lottery', icon: <Ticket size={18} className="text-accent" />, label: 'Lottery', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },

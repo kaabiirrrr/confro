@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Search, Info, CheckCircle, XCircle, ShieldAlert, UserX, UserCheck, Trash2, Clock, AlertTriangle } from 'lucide-react';
+import { Search, Info, CheckCircle, XCircle, ShieldAlert, UserX, UserCheck, Trash2, Clock, AlertTriangle, FileDown, RefreshCw } from 'lucide-react';
 import * as adminService from '../../services/adminService';
 import { toast } from 'react-hot-toast';
 import CustomDropdown from '../../components/ui/CustomDropdown';
 import { motion, AnimatePresence } from 'framer-motion';
 import InfinityLoader from '../../components/common/InfinityLoader';
+import { exportTableToPDF } from '../utils/exportPDF';
 
 const ModerationPage = () => {
     const [activeTab, setActiveTab] = useState('reports'); // reports, violations, offenders
@@ -14,6 +15,8 @@ const ModerationPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [statusFilter, setStatusFilter] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
 
     useEffect(() => {
         loadData();
@@ -76,19 +79,108 @@ const ModerationPage = () => {
         }
     };
 
+    // ── Date-filtered data ────────────────────────────────────
+    const applyDateFilter = (items, dateField = 'created_at') => {
+        return items.filter(item => {
+            const q = searchTerm.toLowerCase();
+            const matchSearch = !q ||
+                (item.reported?.profiles?.name || item.user?.name || item.name || '').toLowerCase().includes(q) ||
+                (item.reporter?.profiles?.name || '').toLowerCase().includes(q) ||
+                (item.reason || item.message || '').toLowerCase().includes(q);
+            const d = item[dateField] ? new Date(item[dateField]) : null;
+            const matchFrom = !dateFrom || (d && d >= new Date(dateFrom));
+            const matchTo = !dateTo || (d && d <= new Date(dateTo + 'T23:59:59'));
+            return matchSearch && matchFrom && matchTo;
+        });
+    };
+
+    const filteredReports = applyDateFilter(reports);
+    const filteredViolations = applyDateFilter(violations);
+    const filteredOffenders = offenders.filter(item => {
+        const q = searchTerm.toLowerCase();
+        return !q || (item.name || '').toLowerCase().includes(q);
+    });
+
+    const handleExportPDF = () => {
+        const filters = {
+            Tab: activeTab === 'reports' ? 'User Reports' : activeTab === 'violations' ? 'AI Violations' : 'Offenders',
+            Status: statusFilter || 'All',
+            ...(dateFrom && { From: dateFrom }),
+            ...(dateTo && { To: dateTo }),
+            ...(searchTerm && { Search: searchTerm }),
+        };
+
+        if (activeTab === 'reports') {
+            const rows = filteredReports.map(r => [
+                r.reported?.profiles?.name || 'Unknown',
+                r.reporter?.profiles?.name || 'Anonymous',
+                r.reason || '—',
+                r.status || '—',
+                r.created_at ? new Date(r.created_at).toLocaleDateString() : '—',
+            ]);
+            exportTableToPDF({
+                title: 'Moderation — User Reports',
+                columns: ['Target', 'Reporter', 'Reason', 'Status', 'Date'],
+                rows,
+                filename: 'moderation_reports',
+                filters,
+            });
+        } else if (activeTab === 'violations') {
+            const rows = filteredViolations.map(v => [
+                v.user?.name || 'System User',
+                v.message || 'Blocked Attempt',
+                v.severity || '—',
+                v.created_at ? new Date(v.created_at).toLocaleString() : '—',
+                'AI-MOD-LAMA3',
+            ]);
+            exportTableToPDF({
+                title: 'Moderation — AI Violations',
+                columns: ['User', 'Flagged Content', 'Severity', 'Time', 'Detection'],
+                rows,
+                filename: 'moderation_violations',
+                filters,
+            });
+        } else {
+            const rows = filteredOffenders.map(o => [
+                o.name || '—',
+                `${o.warning_count || 0} / 5`,
+                o.is_banned ? 'BANNED' : o.is_restricted ? 'RESTRICTED' : 'ACTIVE',
+            ]);
+            exportTableToPDF({
+                title: 'Moderation — Offenders List',
+                columns: ['User', 'Strikes', 'Status'],
+                rows,
+                filename: 'moderation_offenders',
+                filters,
+            });
+        }
+    };
+
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            {/* ── Row 1: Title + Description LEFT | Refresh RIGHT ── */}
+            <div className="flex items-center justify-between gap-4">
                 <div>
                     <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
                         <ShieldAlert className="text-accent w-6 h-6 sm:w-8 sm:h-8" />
-                        Revenue Protection & Moderation
+                        Revenue Protection &amp; Moderation
                     </h1>
                     <p className="text-white/40 text-xs mt-1">
                         Track and enforce platform trust, safety, and communication policies
                     </p>
                 </div>
+                <button
+                    onClick={loadData}
+                    className="flex-shrink-0 p-2 text-white/40 hover:text-accent transition-all group"
+                    title="Refresh"
+                >
+                    <RefreshCw size={18} className={isLoading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                </button>
+            </div>
 
+            {/* ── Row 2: Tabs LEFT | Date + Dropdown + Export RIGHT ── */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                {/* Tabs */}
                 <div className="flex items-center border-b border-white/10 w-full sm:w-auto overflow-x-auto no-scrollbar">
                     {[
                         { id: 'reports', label: 'User Reports', icon: Info },
@@ -98,9 +190,9 @@ const ModerationPage = () => {
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-2 px-3 py-3 sm:px-6 sm:py-4 text-[10px] sm:text-xs font-medium transition-all relative whitespace-nowrap uppercase tracking-widest ${activeTab === tab.id ? 'text-accent' : 'text-white/30 hover:text-white/60'
-                                }`}
+                            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 py-3 sm:px-6 sm:py-4 text-[10px] sm:text-xs font-medium transition-all relative whitespace-nowrap uppercase tracking-widest ${activeTab === tab.id ? 'text-accent' : 'text-white/30 hover:text-white/60'}`}
                         >
+                            <tab.icon size={12} className="opacity-60" />
                             {tab.label}
                             {activeTab === tab.id && (
                                 <motion.div
@@ -111,42 +203,84 @@ const ModerationPage = () => {
                         </button>
                     ))}
                 </div>
+
+                {/* Filters + Export */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                    {activeTab !== 'offenders' && (
+                        <div className="flex gap-3 w-full sm:w-auto">
+                            <div className="relative flex-1 sm:w-36">
+                                <input
+                                    type="date"
+                                    value={dateFrom}
+                                    onChange={e => setDateFrom(e.target.value)}
+                                    className="w-full h-10 px-3 bg-transparent border border-white/10 rounded-xl text-xs text-white/70 focus:outline-none focus:border-accent [color-scheme:dark]"
+                                />
+                                <span className="absolute -top-2 left-2 px-1 bg-transparent text-[9px] text-white/30 uppercase tracking-widest">From</span>
+                            </div>
+                            <div className="relative flex-1 sm:w-36">
+                                <input
+                                    type="date"
+                                    value={dateTo}
+                                    onChange={e => setDateTo(e.target.value)}
+                                    className="w-full h-10 px-3 bg-transparent border border-white/10 rounded-xl text-xs text-white/70 focus:outline-none focus:border-accent [color-scheme:dark]"
+                                />
+                                <span className="absolute -top-2 left-2 px-1 bg-transparent text-[9px] text-white/30 uppercase tracking-widest">To</span>
+                            </div>
+                        </div>
+                    )}
+                    <div className="flex gap-3 w-full sm:w-auto">
+                        {activeTab !== 'offenders' && (
+                            <div className="flex-1 sm:w-48">
+                                <CustomDropdown
+                                    options={activeTab === 'reports' ? [
+                                        { label: 'All Statuses', value: '' },
+                                        { label: 'Pending', value: 'PENDING' },
+                                        { label: 'Investigating', value: 'INVESTIGATING' },
+                                        { label: 'Action Taken', value: 'ACTION_TAKEN' }
+                                    ] : [
+                                        { label: 'All Severity', value: '' },
+                                        { label: 'High Severity', value: 'HIGH' },
+                                        { label: 'Medium Severity', value: 'MEDIUM' }
+                                    ]}
+                                    value={statusFilter}
+                                    onChange={(val) => setStatusFilter(val)}
+                                    variant="transparent"
+                                    className="w-full"
+                                />
+                            </div>
+                        )}
+                        <button
+                            onClick={handleExportPDF}
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 h-10 px-4 bg-accent hover:bg-accent/90 text-white rounded-xl text-xs font-bold transition-all active:scale-95 shrink-0"
+                        >
+                            <FileDown size={14} /> Export PDF
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <div className="flex flex-row gap-2 items-center justify-between">
-                <div className="relative flex-1 sm:w-80">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={14} />
+            {/* Search Bar Row */}
+            <div className="flex items-center gap-3 w-full">
+                <div className="relative flex-1">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" size={16} />
                     <input
                         type="text"
                         placeholder={`Search ${activeTab}...`}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2 text-white text-[11px] font-medium focus:outline-none focus:border-accent transition-all shadow-inner"
+                        className="w-full h-12 bg-transparent border border-white/10 rounded-xl pl-11 pr-4 text-white text-sm focus:outline-none focus:border-accent transition-all shadow-inner"
                     />
                 </div>
-                {activeTab !== 'offenders' && (
-                    <div className="w-32 sm:w-48">
-                        <CustomDropdown
-                            options={activeTab === 'reports' ? [
-                                { label: 'All Statuses', value: '' },
-                                { label: 'Pending', value: 'PENDING' },
-                                { label: 'Investigating', value: 'INVESTIGATING' },
-                                { label: 'Action Taken', value: 'ACTION_TAKEN' }
-                            ] : [
-                                { label: 'All Severity', value: '' },
-                                { label: 'High Severity', value: 'HIGH' },
-                                { label: 'Medium Severity', value: 'MEDIUM' }
-                            ]}
-                            value={statusFilter}
-                            onChange={(val) => setStatusFilter(val)}
-                            variant="transparent"
-                            className="w-full"
-                        />
-                    </div>
-                )}
+                <button
+                    onClick={loadData}
+                    className="hidden md:flex flex-shrink-0 w-12 h-12 items-center justify-center text-white/40 hover:text-accent transition-all group"
+                    title="Refresh"
+                >
+                    <RefreshCw size={18} className={isLoading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                </button>
             </div>
 
-            <div className="border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+            <div className="border border-white/10 rounded-xl overflow-hidden">
                 <div className="overflow-x-auto min-h-[400px]">
                     <AnimatePresence mode="wait">
                         <motion.table
@@ -189,10 +323,10 @@ const ModerationPage = () => {
                                     <tr><td colSpan="5" className="px-6 py-20 text-center text-white/40">
                                         <InfinityLoader fullScreen={false} text="Loading data..."/>
                                     </td></tr>
-                                ) : (activeTab === 'reports' ? reports : activeTab === 'violations' ? violations : offenders).length === 0 ? (
+                                ) : (activeTab === 'reports' ? filteredReports : activeTab === 'violations' ? filteredViolations : filteredOffenders).length === 0 ? (
                                     <tr><td colSpan="5" className="px-6 py-20 text-center text-white/20 text-[11px] italic">No {activeTab} found.</td></tr>
                                 ) : (
-                                    (activeTab === 'reports' ? reports : activeTab === 'violations' ? violations : offenders).map(item => (
+                                    (activeTab === 'reports' ? filteredReports : activeTab === 'violations' ? filteredViolations : filteredOffenders).map(item => (
                                         <tr key={item.id || item.user_id} className="hover:bg-white/[0.02] transition-colors group">
                                             {activeTab === 'reports' && (
                                                 <>

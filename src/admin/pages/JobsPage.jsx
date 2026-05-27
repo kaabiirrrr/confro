@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Eye, Trash2, CheckSquare, XCircle, X, Briefcase, IndianRupee, User, Mail, Calendar, Clock } from 'lucide-react';
+import { Search, Eye, Trash2, CheckSquare, XCircle, X, Briefcase, IndianRupee, User, Mail, Calendar, Clock, FileDown, RefreshCw } from 'lucide-react';
 import { formatINR } from '../../utils/currencyUtils';
 import Button from '../../components/ui/Button';
 import * as adminService from '../../services/adminService';
 import { toast } from 'react-hot-toast';
 import CustomDropdown from '../../components/ui/CustomDropdown';
 import InfinityLoader from '../../components/common/InfinityLoader';
+import { exportTableToPDF } from '../utils/exportPDF';
 
 const JobsPage = () => {
     const [jobs, setJobs] = useState([]);
@@ -13,6 +14,8 @@ const JobsPage = () => {
     const [statusFilter, setStatusFilter] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedJob, setSelectedJob] = useState(null);
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
 
     useEffect(() => {
         fetchJobs();
@@ -74,11 +77,38 @@ const JobsPage = () => {
         }
     };
 
-    const filteredJobs = jobs.filter(j =>
-        (j.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (j.client?.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (j.client?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredJobs = jobs.filter(j => {
+        const matchSearch =
+            (j.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (j.client?.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (j.client?.name || '').toLowerCase().includes(searchTerm.toLowerCase());
+        const d = j.created_at ? new Date(j.created_at) : null;
+        const matchFrom = !dateFrom || (d && d >= new Date(dateFrom));
+        const matchTo = !dateTo || (d && d <= new Date(dateTo + 'T23:59:59'));
+        return matchSearch && matchFrom && matchTo;
+    });
+
+    const handleExportPDF = () => {
+        if (filteredJobs.length === 0) { toast.error('No jobs to export'); return; }
+        exportTableToPDF({
+            title: 'Job Posts Moderation',
+            columns: ['Title', 'Client', 'Budget', 'Status', 'Posted'],
+            rows: filteredJobs.map(j => [
+                j.title || '—',
+                j.client?.profiles?.name || j.client?.name || '—',
+                formatINR(j.budget_amount || j.budget || 0),
+                j.status || '—',
+                j.created_at ? new Date(j.created_at).toLocaleDateString() : '—',
+            ]),
+            filename: 'jobs_moderation',
+            filters: {
+                Status: statusFilter || 'All',
+                ...(searchTerm && { Search: searchTerm }),
+                ...(dateFrom && { From: dateFrom }),
+                ...(dateTo && { To: dateTo }),
+            },
+        });
+    };
 
     const Modal = ({ isOpen, onClose, title, children, icon }) => {
         if (!isOpen) return null;
@@ -105,42 +135,90 @@ const JobsPage = () => {
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-                <div>
-                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-                        <img src="/Icons/icons8-bag-100.png" alt="Jobs" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
-                        Job Posts Moderation
-                    </h1>
-                    <p className="text-white/40 text-xs mt-1">Review and manage all job postings across the platform</p>
+                <div className="flex items-center justify-between w-full md:w-auto">
+                    <div>
+                        <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                            <img src="/Icons/icons8-bag-100.png" alt="Jobs" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
+                            Job Posts Moderation
+                        </h1>
+                        <p className="text-white/40 text-xs mt-1">Review and manage all job postings across the platform</p>
+                    </div>
+                    {/* Mobile-only Refresh Button */}
+                    <button
+                        onClick={fetchJobs}
+                        className="md:hidden flex-shrink-0 w-10 h-10 flex items-center justify-center text-white/40 hover:text-accent transition-all group"
+                        title="Refresh"
+                    >
+                        <RefreshCw size={18} className={isLoading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                    </button>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-                    <div className="relative w-full sm:w-80">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                    <div className="flex gap-3 w-full sm:w-auto">
                         <input
-                            type="text"
-                            placeholder="Search jobs..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white text-xs focus:outline-none focus:border-accent transition-all shadow-inner"
+                            type="date"
+                            value={dateFrom}
+                            onChange={e => setDateFrom(e.target.value)}
+                            title="From date"
+                            className="flex-1 sm:flex-none bg-transparent border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-accent transition-all sm:w-36"
+                        />
+                        <input
+                            type="date"
+                            value={dateTo}
+                            onChange={e => setDateTo(e.target.value)}
+                            title="To date"
+                            className="flex-1 sm:flex-none bg-transparent border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-accent transition-all sm:w-36"
                         />
                     </div>
-                    <CustomDropdown
-                        options={[
-                            { label: 'All Statuses', value: '' },
-                            { label: 'Open', value: 'OPEN' },
-                            { label: 'In Progress', value: 'IN_PROGRESS' },
-                            { label: 'Completed', value: 'COMPLETED' },
-                            { label: 'Cancelled', value: 'CANCELLED' }
-                        ]}
-                        value={statusFilter}
-                        onChange={(val) => setStatusFilter(val)}
-                        variant="transparent"
-                        className="w-full sm:w-40"
-                    />
+                    <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                        <div className="w-full sm:w-auto sm:flex-initial">
+                            <CustomDropdown
+                                options={[
+                                    { label: 'All Statuses', value: '' },
+                                    { label: 'Open', value: 'OPEN' },
+                                    { label: 'In Progress', value: 'IN_PROGRESS' },
+                                    { label: 'Completed', value: 'COMPLETED' },
+                                    { label: 'Cancelled', value: 'CANCELLED' }
+                                ]}
+                                value={statusFilter}
+                                onChange={(val) => setStatusFilter(val)}
+                                variant="transparent"
+                                className="w-full sm:w-40"
+                            />
+                        </div>
+                        <button
+                            onClick={handleExportPDF}
+                            className="w-full sm:w-auto sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 bg-accent hover:bg-accent/90 text-white rounded-xl text-xs font-bold transition-all whitespace-nowrap"
+                        >
+                            <FileDown size={14} />
+                            Export PDF
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div className="bg-transparent border border-white/10 rounded-xl overflow-hidden shadow-sm">
+            {/* Search Bar Row */}
+            <div className="flex items-center gap-3 w-full">
+                <div className="relative flex-1">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" size={16} />
+                    <input
+                        type="text"
+                        placeholder="Search jobs..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full h-12 bg-transparent border border-white/10 rounded-xl pl-11 pr-4 text-white text-sm focus:outline-none focus:border-accent transition-all shadow-inner"
+                    />
+                </div>
+                <button
+                    onClick={fetchJobs}
+                    className="hidden md:flex flex-shrink-0 w-12 h-12 items-center justify-center text-white/40 hover:text-accent transition-all group"
+                    title="Refresh"
+                >
+                    <RefreshCw size={18} className={isLoading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                </button>
+            </div>
+
+            <div className="bg-transparent border border-white/10 rounded-xl overflow-hidden">
                 <div className="overflow-x-auto admin-table-wrap">
                     <table className="w-full text-left text-sm text-white/70">
                         <thead className="border-b border-white/10 text-white/90">

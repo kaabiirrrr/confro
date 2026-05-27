@@ -1,16 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Download, CheckCircle, Clock, Filter, Mail, User, Tag, Eye, UserPlus, AlertCircle } from 'lucide-react';
+import { Download, CheckCircle, Clock, Filter, Mail, User, Tag, Eye, UserPlus, AlertCircle, FileDown, Search, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchAllTicketsAdmin, updateTicketStatusAdmin, assignTicketAdmin } from '../../services/supportService';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import CustomDropdown from '../../components/ui/CustomDropdown';
 import InfinityLoader from '../../components/common/InfinityLoader';
+import { exportTableToPDF } from '../utils/exportPDF';
 
 const SupportTicketsPage = () => {
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [statusFilter, setStatusFilter] = useState('all');
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
 
     const loadTickets = useCallback(async () => {
@@ -66,37 +70,128 @@ const SupportTicketsPage = () => {
         });
     };
 
+    const handleExportPDF = () => {
+        const result = tickets.filter(t => {
+            const d = new Date(t.created_at);
+            if (dateFrom && d < new Date(dateFrom)) return false;
+            if (dateTo && d > new Date(dateTo + 'T23:59:59')) return false;
+            return true;
+        });
+        if (result.length === 0) { toast.error('No data to export'); return; }
+        exportTableToPDF({
+            title: 'Support Tickets',
+            filename: 'support_tickets',
+            columns: ['User', 'Email', 'Subject', 'Category', 'Priority', 'Status', 'Date'],
+            rows: result.map(t => [
+                t.profiles?.name || 'Unknown',
+                t.profiles?.email || 'N/A',
+                t.subject || '',
+                t.category || '',
+                t.priority || '',
+                t.status?.replace('_', ' ') || '',
+                new Date(t.created_at).toLocaleDateString()
+            ]),
+            filters: { Status: statusFilter === 'all' ? 'All' : statusFilter, From: dateFrom || '—', To: dateTo || '—' }
+        });
+        toast.success('PDF exported');
+    };
+
+    const filteredTickets = tickets.filter(t => {
+        if (!searchTerm.trim()) return true;
+        const q = searchTerm.toLowerCase();
+        return (
+            (t.profiles?.name || '').toLowerCase().includes(q) ||
+            (t.profiles?.email || '').toLowerCase().includes(q) ||
+            (t.subject || '').toLowerCase().includes(q) ||
+            (t.category || '').toLowerCase().includes(q)
+        );
+    });
+
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             {/* Header section */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-6">
-                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
-                        <img src="/Icons/icons8-question-mark-100.png" alt="Support Tickets" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
-                        Support Tickets
-                    </h1>
-                    <p className="text-white/40 text-xs mt-1">Manage and resolve user-submitted help and support requests.</p>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <motion.div 
+                    initial={{ opacity: 0, x: -20 }} 
+                    animate={{ opacity: 1, x: 0 }}
+                    className="flex items-center justify-between w-full md:w-auto"
+                >
+                    <div>
+                        <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                            <img src="/Icons/icons8-question-mark-100.png" alt="Support Tickets" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
+                            Support Tickets
+                        </h1>
+                        <p className="text-white/40 text-xs mt-1">Manage and resolve user-submitted help and support requests.</p>
+                    </div>
+                    {/* Mobile-only Refresh Button */}
+                    <button
+                        onClick={loadTickets}
+                        className="md:hidden flex-shrink-0 w-10 h-10 flex items-center justify-center text-white/40 hover:text-accent transition-all group"
+                        title="Refresh"
+                    >
+                        <RefreshCw size={18} className={loading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                    </button>
                 </motion.div>
 
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-                    <CustomDropdown
-                        options={[
-                            { label: 'All Status', value: 'all' },
-                            { label: 'Pending', value: 'pending' },
-                            { label: 'In Progress', value: 'in_progress' },
-                            { label: 'Resolved', value: 'resolved' },
-                            { label: 'Rejected', value: 'rejected' }
-                        ]}
-                        value={statusFilter}
-                        onChange={(val) => setStatusFilter(val)}
-                        variant="transparent"
-                        className="w-full sm:w-44"
-                    />
-                    <button className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white px-5 py-2.5 rounded-full border border-white/10 transition-all text-xs sm:text-sm font-bold active:scale-95">
-                        <Download size={14} />
-                        Export
-                    </button>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                    {/* Dates: Row 1 on mobile */}
+                    <div className="flex gap-3 w-full sm:w-auto order-1 sm:order-2">
+                        <div className="relative flex-1 sm:w-36">
+                            <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
+                                className="w-full h-10 px-3 bg-transparent border border-white/10 rounded-xl text-xs text-white/70 focus:outline-none focus:border-accent [color-scheme:dark]" />
+                            <span className="absolute -top-2 left-2 px-1 bg-transparent text-[9px] text-white/30 uppercase tracking-widest">From</span>
+                        </div>
+                        <div className="relative flex-1 sm:w-36">
+                            <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
+                                className="w-full h-10 px-3 bg-transparent border border-white/10 rounded-xl text-xs text-white/70 focus:outline-none focus:border-accent [color-scheme:dark]" />
+                            <span className="absolute -top-2 left-2 px-1 bg-transparent text-[9px] text-white/30 uppercase tracking-widest">To</span>
+                        </div>
+                    </div>
+
+                    {/* CustomDropdown & Export: Row 2 on mobile */}
+                    <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto order-2 sm:order-3">
+                        <div className="w-full sm:w-auto sm:flex-initial">
+                            <CustomDropdown
+                                options={[
+                                    { label: 'All Status', value: 'all' },
+                                    { label: 'Pending', value: 'pending' },
+                                    { label: 'In Progress', value: 'in_progress' },
+                                    { label: 'Resolved', value: 'resolved' },
+                                    { label: 'Rejected', value: 'rejected' }
+                                ]}
+                                value={statusFilter}
+                                onChange={(val) => setStatusFilter(val)}
+                                variant="transparent"
+                                className="w-full sm:w-44"
+                            />
+                        </div>
+                        <button onClick={handleExportPDF}
+                            className="w-full sm:w-auto sm:flex-initial flex items-center justify-center gap-2 h-10 px-4 bg-accent hover:bg-accent/90 text-white rounded-xl text-xs font-bold transition-all active:scale-95 shrink-0">
+                            <FileDown size={14} /> Export PDF
+                        </button>
+                    </div>
                 </div>
+            </div>
+
+            {/* Search Bar Row */}
+            <div className="flex items-center gap-3 w-full">
+                <div className="relative flex-1">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" size={16} />
+                    <input
+                        type="text"
+                        placeholder="Search tickets..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full h-12 bg-transparent border border-white/10 rounded-xl pl-11 pr-4 text-white text-sm focus:outline-none focus:border-accent transition-all shadow-inner"
+                    />
+                </div>
+                <button
+                    onClick={loadTickets}
+                    className="hidden md:flex flex-shrink-0 w-12 h-12 items-center justify-center text-white/40 hover:text-accent transition-all group"
+                    title="Refresh"
+                >
+                    <RefreshCw size={18} className={loading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                </button>
             </div>
 
             {/* Mobile Card List — only visible on mobile */}
@@ -108,7 +203,7 @@ const SupportTicketsPage = () => {
                 ) : tickets.length === 0 ? (
                     <p className="text-center text-white/40 py-12 font-medium">No support tickets found.</p>
                 ) : (
-                    tickets.map((ticket) => (
+                    filteredTickets.map((ticket) => (
                         <motion.div
                             key={ticket.id}
                             initial={{ opacity: 0 }}
@@ -173,7 +268,7 @@ const SupportTicketsPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="hidden sm:block bg-transparent border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+                className="hidden sm:block bg-transparent border border-white/10 rounded-xl overflow-hidden"
             >
                 <div className="overflow-x-auto admin-table-wrap">
                     <table className="w-full text-left">
@@ -202,7 +297,7 @@ const SupportTicketsPage = () => {
                                         </td>
                                     </tr>
                                 ) : (
-                                    tickets.map((ticket) => (
+                                    filteredTickets.map((ticket) => (
                                         <motion.tr
                                             key={ticket.id}
                                             initial={{ opacity: 0 }}

@@ -163,6 +163,7 @@ export default function IdentityVerificationPage() {
         userType,
         documentType: docType,
         documentUrl: frontUrl,
+        documentBackUrl: backUrl || null,
         extractedName: extractedData.name,
         extractedDob: extractedData.dob,
         extractedGender: extractedData.gender,
@@ -366,17 +367,30 @@ export default function IdentityVerificationPage() {
           <div className="flex flex-col lg:grid lg:grid-cols-2 gap-5 lg:gap-8">
 
             {/* Document Preview — first on mobile */}
-            <div className="lg:order-last">
+            <div className="lg:order-last space-y-3">
               <h3 className="text-xs font-bold text-white/50 uppercase tracking-widest mb-2">Document Preview</h3>
               <div className="border border-white/10 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center relative group bg-black/30">
-                <img src={frontUrl} alt="Document Preview" className="w-full h-full object-contain" />
+                <img src={frontUrl} alt="Front" className="w-full h-full object-contain" />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
                   <a href={frontUrl} target="_blank" rel="noopener noreferrer"
                     className="px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white font-medium text-sm flex items-center gap-2">
                     <Eye size={16} /> View Full
                   </a>
                 </div>
+                <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white/60 text-[10px] font-bold text-center py-1.5 uppercase tracking-widest">Front</div>
               </div>
+              {backUrl && (
+                <div className="border border-white/10 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center relative group bg-black/30">
+                  <img src={backUrl} alt="Back" className="w-full h-full object-contain" />
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                    <a href={backUrl} target="_blank" rel="noopener noreferrer"
+                      className="px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white font-medium text-sm flex items-center gap-2">
+                      <Eye size={16} /> View Full
+                    </a>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white/60 text-[10px] font-bold text-center py-1.5 uppercase tracking-widest">Back</div>
+                </div>
+              )}
             </div>
 
             {/* Form */}

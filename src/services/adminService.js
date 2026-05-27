@@ -2,9 +2,9 @@ import api from '../lib/api';
 
 
 export const fetchUsers = async (params = {}) => {
-    const { role, search, limit = 50, offset = 0 } = params;
+    const { role, search, limit = 50, offset = 0, completion = '', strikes = '' } = params;
     const response = await api.get(`/api/admin/users`, {
-        params: { role, search, limit, offset }
+        params: { role, search, limit, offset, completion, strikes }
     });
     return response.data;
 };
@@ -21,6 +21,11 @@ export const toggleUserStatus = async (userId, isBanned) => {
 
 export const resetUserPassword = async (userId) => {
     const response = await api.post(`/api/admin/users/${userId}/reset-password`, {});
+    return response.data;
+};
+
+export const sendProfileReminder = async (userId) => {
+    const response = await api.post(`/api/admin/users/${userId}/send-profile-reminder`, {});
     return response.data;
 };
 
@@ -105,8 +110,18 @@ export const updateAdminRole = async (adminId, role) => {
 };
 
 // --- Skills & Announcements ---
+export const fetchSkills = async () => {
+    const response = await api.get(`/api/admin/skills`);
+    return response.data;
+};
+
 export const addSkill = async (skillData) => {
     const response = await api.post(`/api/admin/skills`, skillData);
+    return response.data;
+};
+
+export const updateSkill = async (skillId, skillData) => {
+    const response = await api.put(`/api/admin/skills/${skillId}`, skillData);
     return response.data;
 };
 
@@ -116,12 +131,22 @@ export const deleteSkill = async (skillId) => {
 };
 
 export const createAnnouncement = async (announcementData) => {
-    const response = await api.post(`/api/admin/announcements`, announcementData);
+    const response = await api.post(`/api/admin/announcements/create`, announcementData);
     return response.data;
 };
 
 export const fetchAnnouncements = async () => {
     const response = await api.get(`/api/admin/announcements`);
+    return response.data;
+};
+
+export const updateAnnouncement = async (id, data) => {
+    const response = await api.patch(`/api/admin/announcements/${id}`, data);
+    return response.data;
+};
+
+export const deleteAnnouncement = async (id) => {
+    const response = await api.delete(`/api/admin/announcements/${id}`);
     return response.data;
 };
 
@@ -381,3 +406,71 @@ export const fetchRBACLogs = async () => {
     const response = await api.get(`/api/admin/rbac/logs`);
     return response.data;
 };
+
+// ─── New Analytics Features ───────────────────────────────────────────────────
+export const fetchErrorHeatmap = async () => {
+    const response = await api.get('/api/admin/analytics/error-heatmap');
+    return response.data;
+};
+
+export const fetchRecentErrors = async () => {
+    const response = await api.get('/api/admin/analytics/recent-errors');
+    return response.data;
+};
+
+export const fetchUserSessions = async () => {
+    const response = await api.get('/api/admin/analytics/sessions');
+    return response.data;
+};
+
+export const fetchUserJourney = async (userId) => {
+    const response = await api.get(`/api/admin/analytics/user-journey/${userId}`);
+    return response.data;
+};
+
+export const fetchStaleUsers = async () => {
+    const response = await api.get('/api/admin/analytics/stale-users');
+    return response.data;
+};
+
+export const fetchDropoffPoints = async () => {
+    const response = await api.get('/api/admin/analytics/dropoffs');
+    return response.data;
+};
+
+export const fetchUserInspector = async (search) => {
+    const response = await api.get('/api/admin/analytics/user-inspector', { params: { search } });
+    return response.data;
+};
+
+// ─── Realtime Presence & Activity Intelligence APIs ───────────────────────────
+export const fetchAdminPresence = async () => {
+    const response = await api.get('/api/presence/admin/admin-presence');
+    return response.data;
+};
+
+export const fetchUserPresenceList = async () => {
+    const response = await api.get('/api/presence/admin/user-presence');
+    return response.data;
+};
+
+export const fetchOnlineCounts = async () => {
+    const response = await api.get('/api/presence/admin/online-counts');
+    return response.data;
+};
+
+export const fetchAdminSessions = async () => {
+    const response = await api.get('/api/presence/admin/sessions');
+    return response.data;
+};
+
+export const revokeUserSession = async (userId, socketId = null, reason = 'force_revoke') => {
+    const response = await api.post('/api/presence/admin/revoke-session', { user_id: userId, socket_id: socketId, reason });
+    return response.data;
+};
+
+export const fetchUserSessionHistory = async (userId) => {
+    const response = await api.get(`/api/presence/admin/session-history/${userId}`);
+    return response.data;
+};
+

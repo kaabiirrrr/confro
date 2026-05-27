@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
-    Search, RefreshCw,
+    Search, RefreshCw, FileDown,
     Lock, TrendingUp, AlertCircle, ShieldAlert, Banknote, Landmark
 } from 'lucide-react';
 import { formatINR } from '../../utils/currencyUtils';
@@ -8,6 +8,7 @@ import CustomDropdown from '../../components/ui/CustomDropdown';
 import InfinityLoader from '../../components/common/InfinityLoader';
 import * as adminService from '../../services/adminService';
 import { toast } from 'react-hot-toast';
+import { exportTableToPDF } from '../utils/exportPDF';
 
 // ── Revenue stat card ─────────────────────────────────────────
 function RevenueCard({ label, value, icon: Icon, highlight, sub, alert }) {
@@ -34,6 +35,8 @@ const TreasuryPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [statusFilter, setStatusFilter] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -99,11 +102,40 @@ const TreasuryPage = () => {
     ];
     const totalEscrowBreakdown = escrowBreakdown.reduce((sum, item) => sum + item.amount, 0);
 
-    const filteredTransactions = payments.filter(p =>
-        (p.id || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (p.payer?.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (p.payee?.email || '').toLowerCase().includes(searchTerm.toLowerCase())
-    ).filter(p => statusFilter ? p.status === statusFilter : true);
+    const filteredTransactions = payments.filter(p => {
+        const matchSearch =
+            (p.id || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (p.payer?.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (p.payee?.email || '').toLowerCase().includes(searchTerm.toLowerCase());
+        const matchStatus = statusFilter ? p.status === statusFilter : true;
+        const d = p.created_at ? new Date(p.created_at) : null;
+        const matchFrom = !dateFrom || (d && d >= new Date(dateFrom));
+        const matchTo = !dateTo || (d && d <= new Date(dateTo + 'T23:59:59'));
+        return matchSearch && matchStatus && matchFrom && matchTo;
+    });
+
+    const handleExportPDF = () => {
+        if (filteredTransactions.length === 0) { toast.error('No transactions to export'); return; }
+        exportTableToPDF({
+            title: 'Treasury — Escrow Transactions',
+            columns: ['Txn ID', 'Type', 'User', 'Amount', 'Status', 'Date'],
+            rows: filteredTransactions.map(p => [
+                (p.id || '').slice(0, 8).toUpperCase(),
+                p.status === 'escrow' ? 'Escrow' : p.status === 'released' ? 'Release' : 'Refund',
+                p.payer?.email || p.payee?.email || 'N/A',
+                fmt(p.amount),
+                p.status || '—',
+                p.created_at ? new Date(p.created_at).toLocaleDateString() : '—',
+            ]),
+            filename: 'treasury_transactions',
+            filters: {
+                Status: statusFilter || 'All',
+                ...(searchTerm && { Search: searchTerm }),
+                ...(dateFrom && { From: dateFrom }),
+                ...(dateTo && { To: dateTo }),
+            },
+        });
+    };
 
     const orphanedFundsList = orphanedPayments.map(p => {
         const daysInactive = Math.floor((new Date() - new Date(p.created_at)) / (1000 * 60 * 60 * 24));
@@ -119,19 +151,37 @@ const TreasuryPage = () => {
 
     return (
         <div className="space-y-8">
-            <div className="flex justify-between items-start sm:items-center gap-3">
-                <div>
-                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-                        <Landmark className="w-6 h-6 sm:w-7 sm:h-7 text-accent" />
-                        Treasury
-                    </h1>
-                    <p className="text-white/40 text-xs mt-1">Escrow health and financial overview · Central Vault</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center justify-between w-full sm:w-auto">
+                    <div>
+                        <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                            <Landmark className="w-6 h-6 sm:w-7 sm:h-7 text-accent" />
+                            Treasury
+                        </h1>
+                        <p className="text-white/40 text-xs mt-1">Escrow health and financial overview · Central Vault</p>
+                    </div>
+                    {/* Mobile-only Refresh Button */}
+                    <button onClick={fetchData}
+                        className="sm:hidden p-2 text-white/60 hover:text-accent transition-colors flex-shrink-0"
+                        title="Refresh">
+                        <RefreshCw size={18} className={isLoading ? "animate-spin text-accent" : ""} />
+                    </button>
                 </div>
-                <button onClick={fetchData}
-                    className="p-2 text-white/60 hover:text-accent transition-colors"
-                    title="Refresh">
-                    <RefreshCw size={18} className={isLoading ? "animate-spin" : ""} />
-                </button>
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <button
+                        onClick={handleExportPDF}
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-accent hover:bg-accent/90 text-white rounded-xl text-xs font-bold transition-all whitespace-nowrap"
+                    >
+                        <FileDown size={14} />
+                        Export PDF
+                    </button>
+                    {/* Desktop-only Refresh Button */}
+                    <button onClick={fetchData}
+                        className="hidden sm:block p-2 text-white/60 hover:text-accent transition-colors flex-shrink-0"
+                        title="Refresh">
+                        <RefreshCw size={18} className={isLoading ? "animate-spin" : ""} />
+                    </button>
+                </div>
             </div>
 
             {/* ── 4 Stat Cards ── */}
@@ -213,8 +263,8 @@ const TreasuryPage = () => {
                         </h2>
                         <p className="text-white/40 text-[10px] uppercase tracking-widest mt-0.5">All Escrow Movements</p>
                     </div>
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-                        <div className="relative w-full sm:w-80">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto flex-wrap">
+                        <div className="relative w-full sm:w-64">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
                             <input
                                 type="text"
@@ -234,8 +284,25 @@ const TreasuryPage = () => {
                             value={statusFilter}
                             onChange={val => setStatusFilter(val)}
                             variant="transparent"
-                            className="w-full sm:w-44 z-50"
+                            className="w-full sm:w-40 z-50"
                         />
+                        <input
+                            type="date"
+                            value={dateFrom}
+                            onChange={e => setDateFrom(e.target.value)}
+                            title="From date"
+                            className="bg-transparent border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-accent transition-all"
+                        />
+                        <input
+                            type="date"
+                            value={dateTo}
+                            onChange={e => setDateTo(e.target.value)}
+                            title="To date"
+                            className="bg-transparent border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-accent transition-all"
+                        />
+                        {(dateFrom || dateTo) && (
+                            <button onClick={() => { setDateFrom(''); setDateTo(''); }} className="text-white/30 hover:text-white text-[10px] underline whitespace-nowrap">Clear</button>
+                        )}
                     </div>
                 </div>
 

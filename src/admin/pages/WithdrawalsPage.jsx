@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
-import { HandCoins, CheckCircle, XCircle, Clock, Search, Filter, IndianRupee, RefreshCw } from 'lucide-react';
+import { HandCoins, CheckCircle, XCircle, Clock, Search, Filter, IndianRupee, RefreshCw, FileDown } from 'lucide-react';
 import { formatINR } from '../../utils/currencyUtils';
 import { fetchWithdrawalRequests, processWithdrawal } from '../../services/adminService';
 import toast from 'react-hot-toast';
 import CustomDropdown from '../../components/ui/CustomDropdown';
 import InfinityLoader from '../../components/common/InfinityLoader';
+import { exportTableToPDF } from '../utils/exportPDF';
 
 const WithdrawalsPage = () => {
     const [withdrawals, setWithdrawals] = useState([]);
     const [loading, setLoading] = useState(true);
     const [statusFilter, setStatusFilter] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
 
     useEffect(() => {
         loadWithdrawals();
@@ -45,6 +48,37 @@ const WithdrawalsPage = () => {
         return name.includes(search) || email.includes(search);
     });
 
+    const handleExportPDF = () => {
+        const dateFiltered = withdrawals.filter(w => {
+            const d = new Date(w.requested_at || w.created_at);
+            if (dateFrom && d < new Date(dateFrom)) return false;
+            if (dateTo && d > new Date(dateTo + 'T23:59:59')) return false;
+            return true;
+        });
+        const result = dateFiltered.filter(w => {
+            const name = (w.user?.profiles[0]?.name || '').toLowerCase();
+            const email = (w.user?.email || '').toLowerCase();
+            const search = searchTerm.toLowerCase();
+            return name.includes(search) || email.includes(search);
+        });
+        if (result.length === 0) { toast.error('No data to export'); return; }
+        exportTableToPDF({
+            title: 'Withdrawal Requests',
+            filename: 'withdrawals',
+            columns: ['Freelancer', 'Email', 'Amount', 'Method', 'Status', 'Date'],
+            rows: result.map(w => [
+                w.user?.profiles[0]?.name || 'Unknown',
+                w.user?.email || '',
+                formatINR(w.amount),
+                w.payment_method?.type || 'Bank Transfer',
+                w.status,
+                new Date(w.requested_at || w.created_at).toLocaleDateString()
+            ]),
+            filters: { Status: statusFilter || 'All', From: dateFrom || '—', To: dateTo || '—' }
+        });
+        toast.success('PDF exported');
+    };
+
     const StatusBadge = ({ status }) => {
         const styles = {
             PENDING: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
@@ -60,54 +94,78 @@ const WithdrawalsPage = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-                        <img src="/Icons/icons8-withdrawal-80.png" alt="Withdrawals" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white flex items-center gap-3 sm:gap-4 tracking-tight">
+                        <img src="/Icons/icons8-withdrawal-80.png" alt="Withdrawals" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
                         Withdrawal Requests
                     </h1>
-                    <p className="text-white/40 text-xs mt-1">Manage and process freelancer payment withdrawals</p>
+                    <p className="text-slate-500 dark:text-white/40 text-xs sm:text-sm mt-1 font-medium">Manage and process freelancer payment withdrawals</p>
                 </div>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-                    <div className="relative w-full sm:w-64">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={16} />
-                        <input
-                            type="text"
-                            placeholder="Search by name or email..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-transparent border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white text-xs sm:text-sm focus:outline-none focus:border-accent transition-all shadow-inner"
-                        />
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                    {/* Dates */}
+                    <div className="flex gap-3 w-full sm:w-auto">
+                        <div className="relative flex-1">
+                            <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
+                                className="w-full h-10 px-3 bg-transparent border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-800 dark:text-white/70 focus:outline-none focus:border-accent transition-all [color-scheme:light] dark:[color-scheme:dark]" />
+                            <span className="absolute -top-2 left-2 px-1 bg-[#f7f7f5] dark:bg-[#0F172A] text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-white/30 transition-colors">From</span>
+                        </div>
+                        <div className="relative flex-1">
+                            <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
+                                className="w-full h-10 px-3 bg-transparent border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-800 dark:text-white/70 focus:outline-none focus:border-accent transition-all [color-scheme:light] dark:[color-scheme:dark]" />
+                            <span className="absolute -top-2 left-2 px-1 bg-[#f7f7f5] dark:bg-[#0F172A] text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-white/30 transition-colors">To</span>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <CustomDropdown
-                            options={[
-                                { label: 'All Status', value: '' },
-                                { label: 'Pending', value: 'PENDING' },
-                                { label: 'Approved', value: 'APPROVED' },
-                                { label: 'Rejected', value: 'REJECTED' }
-                            ]}
-                            value={statusFilter}
-                            onChange={(val) => setStatusFilter(val)}
-                            variant="transparent"
-                            className="flex-1 sm:min-w-[140px]"
-                        />
-                        <button
-                            onClick={loadWithdrawals}
-                            className="w-10 h-10 flex items-center justify-center hover:bg-white/5 rounded-xl text-white/60 transition group flex-shrink-0"
-                            title="Refresh"
-                        >
-                            <RefreshCw size={16} className={loading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                    {/* Filters & Export */}
+                    <div className="flex gap-3 w-full sm:w-auto">
+                        <div className="w-full sm:w-auto sm:flex-initial">
+                            <CustomDropdown
+                                options={[
+                                    { label: 'All Status', value: '' },
+                                    { label: 'Pending', value: 'PENDING' },
+                                    { label: 'Approved', value: 'APPROVED' },
+                                    { label: 'Rejected', value: 'REJECTED' }
+                                ]}
+                                value={statusFilter}
+                                onChange={(val) => setStatusFilter(val)}
+                                variant="transparent"
+                                className="w-full sm:min-w-[140px]"
+                            />
+                        </div>
+                        <button onClick={handleExportPDF}
+                            className="w-full sm:w-auto sm:flex-initial flex items-center justify-center gap-2 h-10 px-4 bg-accent hover:bg-accent/90 text-white rounded-xl text-xs font-bold transition-all active:scale-95 shrink-0">
+                            <FileDown size={14} /> Export PDF
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-transparent border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+            {/* Search Bar Row */}
+            <div className="flex items-center gap-3 w-full">
+                <div className="relative flex-1">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30" size={16} />
+                    <input
+                        type="text"
+                        placeholder="Search by name or email..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full h-12 bg-transparent border border-slate-200 dark:border-white/10 rounded-xl pl-11 pr-4 text-slate-800 dark:text-white text-sm focus:outline-none focus:border-accent transition-all shadow-inner"
+                    />
+                </div>
+                <button
+                    onClick={loadWithdrawals}
+                    className="hidden md:flex flex-shrink-0 w-12 h-12 items-center justify-center text-slate-400 dark:text-white/40 hover:text-accent transition-all group"
+                    title="Refresh"
+                >
+                    <RefreshCw size={18} className={loading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                </button>
+            </div>
+
+            <div className="bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden shadow-none">
                 <div className="overflow-x-auto admin-table-wrap">
                     <table className="w-full text-left">
                         <thead>
-                            <tr className="border-b border-white/10 text-white/60 text-xs uppercase tracking-wider font-semibold">
+                            <tr className="border-b border-slate-200 dark:border-white/10 text-slate-500 dark:text-white/60 text-xs uppercase tracking-wider font-semibold">
                                 <th className="px-6 py-5">Freelancer</th>
                                 <th className="px-6 py-5">Amount</th>
                                 <th className="px-6 py-5">Method</th>
@@ -116,35 +174,35 @@ const WithdrawalsPage = () => {
                                 <th className="px-6 py-5 text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                             {loading ? (
-                                <tr><td colSpan="6" className="px-6 py-12 text-center text-white/40">
+                                <tr><td colSpan="6" className="px-6 py-12 text-center text-slate-400 dark:text-white/40">
                                     <InfinityLoader fullScreen={false} text="Loading withdrawals..."/>
                                 </td></tr>
                             ) : filteredWithdrawals.length === 0 ? (
-                                <tr><td colSpan="6" className="px-6 py-12 text-center text-white/40">No results found matching your search</td></tr>
+                                <tr><td colSpan="6" className="px-6 py-12 text-center text-slate-400 dark:text-white/40">No results found matching your search</td></tr>
                             ) : filteredWithdrawals.map((w) => (
-                                <tr key={w.id} className="hover:bg-white/[0.02] transition">
+                                <tr key={w.id} className="hover:bg-slate-50 dark:hover:bg-white/[0.02] transition">
                                     <td className="px-6 py-4">
                                         <div className="flex flex-col">
-                                            <span className="text-white font-medium">{w.user?.profiles[0]?.name || 'Unknown'}</span>
-                                            <span className="text-white/40 text-xs">{w.user?.email}</span>
+                                            <span className="text-slate-800 dark:text-white font-medium">{w.user?.profiles[0]?.name || 'Unknown'}</span>
+                                            <span className="text-slate-400 dark:text-white/40 text-xs">{w.user?.email}</span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 font-medium text-white flex items-center gap-1">
-                                        <IndianRupee size={14} className="text-white/40" />
+                                    <td className="px-6 py-4 font-medium text-slate-800 dark:text-white flex items-center gap-1">
+                                        <IndianRupee size={14} className="text-slate-400 dark:text-white/40" />
                                         {formatINR(w.amount).replace('₹', '')}
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
                                             <CreditCard size={20} className="text-accent" />
-                                            <span className="text-white/60 text-sm capitalize">{w.payment_method?.type || 'Bank Transfer'}</span>
+                                            <span className="text-slate-600 dark:text-white/60 text-sm capitalize">{w.payment_method?.type || 'Bank Transfer'}</span>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
                                         <StatusBadge status={w.status} />
                                     </td>
-                                    <td className="px-6 py-4 text-white/60 text-sm">
+                                    <td className="px-6 py-4 text-slate-600 dark:text-white/60 text-sm">
                                         {new Date(w.requested_at).toLocaleDateString()}
                                     </td>
                                     <td className="px-6 py-4 text-right">
@@ -167,7 +225,7 @@ const WithdrawalsPage = () => {
                                             </div>
                                         )}
                                         {w.status !== 'PENDING' && (
-                                            <span className="text-xs text-white/20 italic">Processed</span>
+                                            <span className="text-xs text-slate-400 dark:text-white/20 italic">Processed</span>
                                         )}
                                     </td>
                                 </tr>

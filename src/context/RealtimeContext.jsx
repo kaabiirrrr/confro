@@ -10,6 +10,7 @@ import { useAuth } from './AuthContext';
 import { connectSocket, getSocket } from '../services/socketService';
 import { useNotification } from '../hooks/useNotification';
 import { logger } from '../utils/logger';
+import { usePresence } from '../hooks/usePresence';
 
 const RealtimeContext = createContext(null);
 
@@ -25,6 +26,10 @@ export function RealtimeProvider({ children }) {
   const { notify } = useNotification();
   const socketRef = useRef(null);
   const [isConnected, setIsConnected] = useState(false);
+
+  // Hook global presence and activity tracking
+  usePresence();
+
 
   // ── Listener registries (component callbacks keyed by event) ──────────────
   const listeners = useRef({
