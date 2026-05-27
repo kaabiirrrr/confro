@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchPayments } from '../../../services/adminService';
 import { formatINR } from '../../../utils/currencyUtils';
 import CustomDropdown from '../../../components/ui/CustomDropdown';
+import InfinityLoader from '../../../components/common/InfinityLoader';
 
 const RecentTransactions = () => {
     const [transactions, setTransactions] = useState([]);
