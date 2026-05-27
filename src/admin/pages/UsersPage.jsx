@@ -202,14 +202,14 @@ const UsersPage = () => {
                     <div className="flex gap-3 w-full sm:w-auto">
                         <button 
                             onClick={handleExportUsers}
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-accent hover:bg-accent/90 text-white px-6 py-1.5 rounded-full transition-all text-xs sm:text-sm font-bold"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-accent hover:bg-accent/90 text-white px-6 py-2.5 rounded-full transition-all text-xs sm:text-sm font-bold active:scale-95"
                         >
                             <FileDown size={14} />
                             Export PDF
                         </button>
                         <button 
                             onClick={handleAddUser}
-                            className="flex-1 sm:flex-none flex items-center justify-center bg-accent hover:bg-accent/90 text-white px-6 py-1.5 rounded-full transition-all text-xs sm:text-sm font-bold"
+                            className="flex-1 sm:flex-none flex items-center justify-center bg-accent hover:bg-accent/90 text-white px-6 py-2.5 rounded-full transition-all text-xs sm:text-sm font-bold active:scale-95"
                         >
                             Add User
                         </button>

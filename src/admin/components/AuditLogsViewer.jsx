@@ -98,21 +98,21 @@ const AuditLogsViewer = () => {
                             value={dateFrom}
                             onChange={e => setDateFrom(e.target.value)}
                             title="From Date"
-                            className="flex-1 sm:flex-none bg-transparent border border-slate-200 dark:border-white/10 rounded-xl px-3 h-10 text-slate-800 dark:text-white text-xs focus:outline-none focus:border-accent transition-all sm:w-36"
+                            className="flex-1 sm:flex-none bg-white dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-full px-3 py-1.5 text-slate-800 dark:text-white text-xs focus:outline-none focus:border-accent transition-all sm:w-36 [color-scheme:light] dark:[color-scheme:dark]"
                         />
                         <input
                             type="date"
                             value={dateTo}
                             onChange={e => setDateTo(e.target.value)}
                             title="To Date"
-                            className="flex-1 sm:flex-none bg-transparent border border-slate-200 dark:border-white/10 rounded-xl px-3 h-10 text-slate-800 dark:text-white text-xs focus:outline-none focus:border-accent transition-all sm:w-36"
+                            className="flex-1 sm:flex-none bg-white dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-full px-3 py-1.5 text-slate-800 dark:text-white text-xs focus:outline-none focus:border-accent transition-all sm:w-36 [color-scheme:light] dark:[color-scheme:dark]"
                         />
                     </div>
                     {/* Export: Row 2 on mobile */}
                     <div className="flex gap-3 w-full sm:w-auto order-2 sm:order-3">
                         <button 
                             onClick={handleExportPDF}
-                            className="w-full sm:w-auto justify-center h-10 px-4 bg-accent hover:bg-accent/90 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 active:scale-95 cursor-pointer whitespace-nowrap"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-accent hover:bg-accent/90 text-white px-6 py-1.5 rounded-full transition-all text-xs sm:text-sm font-bold active:scale-95 cursor-pointer whitespace-nowrap"
                         >
                             <FileDown size={14} /> Export PDF
                         </button>
@@ -126,12 +126,12 @@ const AuditLogsViewer = () => {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 placeholder="Search logs..." 
-                                className="w-full h-10 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-4 text-slate-800 dark:text-white text-xs focus:outline-none focus:border-accent transition-colors placeholder:text-slate-400 dark:placeholder:text-white/30 shadow-inner"
+                                className="w-full py-1.5 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-full pl-9 pr-4 text-slate-800 dark:text-white text-xs focus:outline-none focus:border-accent transition-colors placeholder:text-slate-400 dark:placeholder:text-white/30 shadow-inner"
                             />
                         </div>
                         <button
                             onClick={loadLogs}
-                            className="flex-shrink-0 w-10 h-10 bg-transparent rounded-xl flex items-center justify-center text-slate-400 dark:text-white/40 hover:text-accent transition group"
+                            className="flex-shrink-0 w-9 h-9 bg-transparent rounded-full flex items-center justify-center text-slate-400 dark:text-white/40 hover:text-accent transition group"
                             title="Refresh"
                         >
                             <RefreshCw size={16} className={isLoading ? 'animate-spin text-accent' : 'group-hover:rotate-180 transition-transform duration-500'} />

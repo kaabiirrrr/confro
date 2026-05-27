@@ -72,8 +72,8 @@ const LogsPage = () => {
             <div className="flex flex-col gap-8">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white flex items-center gap-3 sm:gap-4 tracking-tight">
-                            <img src="/Icons/icons8-logs-64.png" alt="Admin Logs" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
+                        <h1 className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-3 tracking-tight">
+                            <img src="/Icons/icons8-logs-64.png" alt="Admin Logs" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
                             Admin Activity Logs
                         </h1>
                         <p className="text-slate-500 dark:text-white/40 text-xs sm:text-sm mt-1 font-medium">A transparent audit trail of all administrative actions across the network</p>
