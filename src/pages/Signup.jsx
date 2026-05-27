@@ -41,35 +41,45 @@ const Signup = () => {
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 sm:mb-4">Join as a client or freelancer</h2>
         <p className="text-white/60 mb-4 sm:mb-10 text-sm sm:text-base max-w-md mx-auto">Select how you want to use the platform to get started with your account</p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6 mb-6 sm:mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 mb-6 sm:mb-10">
+          {/* Client */}
           <div 
             onClick={() => setSelectedRole('client')}
-            className={`cursor-pointer p-4 sm:p-8 rounded-2xl border transition-all flex flex-col items-center text-center ${
-              selectedRole === 'client' 
-                ? 'bg-primary/50 border-accent' 
-                : 'bg-primary/50 border-white/10 hover:border-accent'
+            className={`cursor-pointer flex flex-col items-center text-center rounded-[10px] border-2 p-4 sm:p-6 transition-all duration-300 ${
+              selectedRole === 'client'
+                ? 'border-accent bg-accent/5 opacity-100'
+                : 'border-white/10 hover:border-white/30 opacity-60 hover:opacity-90'
             }`}
           >
-            <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mb-2 sm:mb-6">
-              <img src="/Icons/icons8-user-100.png" alt="Client" className="w-10 h-10 sm:w-14 sm:h-14 object-contain" />
-            </div>
-            <h3 className="text-lg sm:text-xl font-bold text-light-text mb-1 sm:mb-2">I'm a Client</h3>
-            <p className="text-text-muted text-xs sm:text-sm leading-relaxed">I want to hire expert talent for my projects and grow my business</p>
+            <img 
+              src="/ChatGPT Image May 28, 2026, 12_38_33 AM.png" 
+              alt="Client" 
+              className="block w-full h-auto object-contain mx-auto mb-4"
+            />
+            <h3 className={`text-base sm:text-xl font-bold transition-colors w-full ${
+              selectedRole === 'client' ? 'text-accent' : 'text-light-text'
+            }`}>I'm a Client</h3>
+            <p className="text-text-muted text-xs sm:text-sm leading-relaxed mt-1 hidden sm:block">I want to hire expert talent for my projects and grow my business</p>
           </div>
 
+          {/* Freelancer */}
           <div 
             onClick={() => setSelectedRole('freelancer')}
-            className={`cursor-pointer p-4 sm:p-8 rounded-2xl border transition-all flex flex-col items-center text-center ${
-              selectedRole === 'freelancer' 
-                ? 'bg-primary/50 border-accent' 
-                : 'bg-primary/50 border-white/10 hover:border-accent'
+            className={`cursor-pointer flex flex-col items-center text-center rounded-[10px] border-2 p-4 sm:p-6 transition-all duration-300 ${
+              selectedRole === 'freelancer'
+                ? 'border-accent bg-accent/5 opacity-100'
+                : 'border-white/10 hover:border-white/30 opacity-60 hover:opacity-90'
             }`}
           >
-            <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mb-2 sm:mb-6">
-              <img src="/Icons/icons8-bag-100.png" alt="Freelancer" className="w-10 h-10 sm:w-14 sm:h-14 object-contain" />
-            </div>
-            <h3 className="text-lg sm:text-xl font-bold text-light-text mb-1 sm:mb-2">I'm a Freelancer</h3>
-            <p className="text-text-muted text-xs sm:text-sm leading-relaxed">I want to find rewarding work and offer my professional services</p>
+            <img 
+              src="/ChatGPT Image May 28, 2026, 12_36_02 AM.png" 
+              alt="Freelancer" 
+              className="block w-full h-auto object-contain mx-auto mb-4"
+            />
+            <h3 className={`text-base sm:text-xl font-bold transition-colors w-full ${
+              selectedRole === 'freelancer' ? 'text-accent' : 'text-light-text'
+            }`}>I'm a Freelancer</h3>
+            <p className="text-text-muted text-xs sm:text-sm leading-relaxed mt-1 hidden sm:block">I want to find rewarding work and offer my professional services</p>
           </div>
         </div>
 
