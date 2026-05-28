@@ -196,6 +196,15 @@ const Footer = () => {
             Designed and Developed by <span className="text-accent font-bold">Skimmers❤️‍🔥</span>
           </div>
 
+          {/* Skimmers Team Image */}
+          <div className="flex justify-center -mt-6">
+            <img
+              src="/WhatsApp_Image_2026-05-20_at_20.28.16-removebg-preview.png"
+              alt="Skimmers Team"
+              className="h-10 sm:h-11 w-auto object-contain opacity-70 dark:brightness-0 dark:invert"
+            />
+          </div>
+
         </div>
 
       </div>
