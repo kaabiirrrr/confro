@@ -193,7 +193,7 @@ const Footer = () => {
           <div className="text-[10px] sm:text-xs text-slate-950 dark:text-white font-medium max-w-xl">
             ©️ 2026 Connect Freelance. All rights reserved.
             <br className="sm:hidden" />
-            Designed and Developed by <span className="text-accent font-bold">Skimmers❤️‍🔥</span>
+            Designed and Developed by <span className="text-accent font-bold">Skimmer's❤️‍🔥</span>
           </div>
 
           {/* Skimmers Team Image */}

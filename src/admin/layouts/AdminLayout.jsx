@@ -92,6 +92,7 @@ const AdminLayout = () => {
 
     const allNavItems = [
         { path: '/admin/dashboard', icon: <img src="/Icons/icons8-dashboard-96.png" alt="Dashboard" className="w-6 h-6 object-contain" />, label: 'Dashboard', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'SUPPORT_ADMIN', 'VERIFICATION_ADMIN', 'ADMIN'] },
+        { divider: true },
         { path: '/admin/users', icon: <img src="/Icons/icons8-user-100.png" alt="Users" className="w-6 h-6 object-contain" />, label: 'Users', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
         { path: '/admin/client-verification', icon: <img src="/Icons/icons8-verification-100.png" alt="Client Verifications" className="w-6 h-6 object-contain" />, label: 'Client Verification', roles: ['SUPER_ADMIN', 'VERIFICATION_ADMIN', 'ADMIN'] },
         { path: '/admin/freelancer-verification', icon: <img src="/Icons/icons8-verification-100.png" alt="Freelancer Verifications" className="w-6 h-6 object-contain" />, label: 'Freelancer Verification', roles: ['SUPER_ADMIN', 'VERIFICATION_ADMIN', 'ADMIN'] },
@@ -99,31 +100,36 @@ const AdminLayout = () => {
         { path: '/admin/proposals', icon: <img src="/Icons/icons8-new-job-100.png" alt="Proposals" className="w-6 h-6 object-contain" />, label: 'Proposals', roles: ['SUPER_ADMIN', 'ADMIN'] },
         { path: '/admin/sales-proposals', icon: <FileText size={18} className="text-accent" />, label: 'Custom Proposals', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
         { path: '/admin/contracts', icon: <img src="/Icons/icons8-contract-60.png" alt="Contracts" className="w-6 h-6 object-contain" />, label: 'Contracts', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
+        { divider: true },
         { path: '/admin/payments', icon: <img src="/Icons/icons8-payments-64.png" alt="Revenue" className="w-6 h-6 object-contain" />, label: 'Revenue & Payments', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
         { path: '/admin/treasury', icon: <Landmark size={20} className="text-accent" />, label: 'Treasury', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
         { path: '/admin/withdrawals', icon: <img src="/Icons/icons8-withdrawal-80.png" alt="Withdrawals" className="w-6 h-6 object-contain" />, label: 'Withdrawals', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
         { path: '/admin/connects', icon: <HandCoins size={18} className="text-accent" />, label: 'Connect Economy', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
+        { divider: true },
         { path: '/admin/disputes', icon: <img src="/Icons/icons8-disputes-100.png" alt="Disputes" className="w-6 h-6 object-contain" />, label: 'Disputes', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
         { path: '/admin/reports', icon: <img src="/Icons/icons8-reports-100.png" alt="Reports" className="w-6 h-6 object-contain" />, label: 'Reports', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
         { path: '/admin/problems', icon: <img src="/Icons/icons8-problem-solution-66.png" alt="User Problems" className="w-6 h-6 object-contain" />, label: 'User Problems', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
         { path: '/admin/support-tickets', icon: <img src="/Icons/icons8-question-mark-100.png" alt="Support Tickets" className="w-6 h-6 object-contain" />, label: 'Support Tickets', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
+        { divider: true },
         { path: '/admin/skills', icon: <img src="/Icons/icons8-skills-100.png" alt="Skills" className="w-6 h-6 object-contain" />, label: 'Skills', roles: ['SUPER_ADMIN', 'ADMIN'] },
         { path: '/admin/offers', icon: <img src="/Icons/icons8-offer-100.png" alt="Offers" className="w-6 h-6 object-contain" />, label: 'Offers', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
         { path: '/admin/announcements', icon: <Megaphone size={18} className="text-blue-400" />, label: 'Announcements', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
         { path: '/admin/faqs', icon: <img src="/Icons/icons8-faq-80.png" alt="FAQ Management" className="w-6 h-6 object-contain" />, label: 'FAQ Management', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
         { path: '/admin/reviews', icon: <img src="/Icons/icons8-review-100.png" alt="Reviews" className="w-6 h-6 object-contain" />, label: 'Reviews', roles: ['SUPER_ADMIN', 'SUPPORT_ADMIN', 'ADMIN'] },
+        { divider: true },
         { path: '/admin/fraud', icon: <img src="/Icons/icons8-fraud-80.png" alt="Fraud Detection" className="w-6 h-6 object-contain" />, label: 'Fraud Detection', roles: ['SUPER_ADMIN', 'ADMIN'] },
         { path: '/admin/trust-graph', icon: <img src="/Icons/icons8-trust-64.png" alt="TrustGraph Intelligence" className="w-6 h-6 object-contain" />, label: 'TrustGraph Intelligence', roles: ['SUPER_ADMIN', 'ADMIN'] },
         { path: '/admin/admin-management', icon: <img src="/Icons/icons8-critical-thinking-80.png" alt="Admin Management" className="w-6 h-6 object-contain" />, label: 'Admin Management', roles: ['SUPER_ADMIN'] },
         { path: '/admin/insights', icon: <img src="/Icons/icons8-leader-100.png" alt="Admin Insights" className="w-6 h-6 object-contain" />, label: 'Admin Insights', roles: ['SUPER_ADMIN'] },
         { path: '/admin/monitoring', icon: <Activity size={18} className="text-accent" />, label: 'User Monitoring', roles: ['SUPER_ADMIN', 'ADMIN'] },
         { path: '/admin/admin-logs', icon: <img src="/Icons/icons8-logs-64.png" alt="Admin Logs" className="w-6 h-6 object-contain" />, label: 'Admin Logs', roles: ['SUPER_ADMIN'] },
+        { divider: true },
         { path: '/admin/plans', icon: <img src="/Icons/icons8-membership-card-100.png" alt="Plans" className="w-6 h-6 object-contain" />, label: 'Membership Plans', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
         { path: '/admin/lottery', icon: <Ticket size={18} className="text-accent" />, label: 'Lottery', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'ADMIN'] },
         { path: '/admin/settings', icon: <img src="/Icons/icons8-setting-100.png" alt="Settings" className="w-6 h-6 object-contain" />, label: 'Settings', roles: ['SUPER_ADMIN', 'FINANCE_ADMIN', 'SUPPORT_ADMIN', 'VERIFICATION_ADMIN', 'ADMIN'] },
     ];
 
-    const navItems = allNavItems.filter(item => item.roles.includes(currentRole));
+    const navItems = allNavItems.filter(item => item.divider || item.roles.includes(currentRole));
 
     return (
         <div className="flex h-screen bg-primary text-secondary overflow-hidden font-sans">
@@ -140,7 +146,8 @@ const AdminLayout = () => {
             <aside
                 className={`
                     ${isSidebarOpen ? 'w-72' : 'w-20'}
-                    bg-transparent transition-all duration-300 flex-col z-20
+                    bg-transparent border-r border-white/10
+                    transition-all duration-300 flex-col z-20
                     hidden md:flex
                 `}
             >
@@ -158,24 +165,31 @@ const AdminLayout = () => {
 
                 <nav className="flex-1 overflow-y-auto py-4 no-scrollbar">
                     <ul className="space-y-1 px-4">
-                        {navItems.map((item) => (
-                            <li key={item.path}>
-                                <NavLink
-                                    to={item.path}
-                                    onMouseEnter={(e) => handleMouseEnter(e, item.label)}
-                                    onMouseLeave={handleMouseLeave}
-                                    className={({ isActive }) =>
-                                        `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative group ${isActive
-                                            ? 'text-accent font-bold'
-                                            : 'text-slate-400 hover:text-white'
-                                        }`
-                                    }
-                                >
-                                    <span className="flex-shrink-0">{item.icon}</span>
-                                    {isSidebarOpen && <span className="whitespace-nowrap">{item.label}</span>}
-                                </NavLink>
-                            </li>
-                        ))}
+                        {navItems.map((item, idx) => {
+                            if (item.divider) {
+                                return isSidebarOpen
+                                    ? <li key={`divider-${idx}`}><hr className="border-white/10 my-2 mx-1" /></li>
+                                    : <li key={`divider-${idx}`}><hr className="border-white/10 my-2" /></li>;
+                            }
+                            return (
+                                <li key={item.path}>
+                                    <NavLink
+                                        to={item.path}
+                                        onMouseEnter={(e) => handleMouseEnter(e, item.label)}
+                                        onMouseLeave={handleMouseLeave}
+                                        className={({ isActive }) =>
+                                            `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative group ${isActive
+                                                ? 'ring-1 ring-accent text-accent font-bold'
+                                                : 'text-slate-400 hover:text-white hover:ring-1 hover:ring-white/20'
+                                            } ${!isSidebarOpen ? 'justify-center' : ''}`
+                                        }
+                                    >
+                                        <span className="flex-shrink-0">{item.icon}</span>
+                                        {isSidebarOpen && <span className="whitespace-nowrap">{item.label}</span>}
+                                    </NavLink>
+                                </li>
+                            );
+                        })}
                     </ul>
                 </nav>
 
@@ -186,8 +200,8 @@ const AdminLayout = () => {
                         onMouseLeave={handleMouseLeave}
                         className={({ isActive }) =>
                             `flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all relative group ${isActive
-                                ? 'text-accent font-bold'
-                                : 'text-slate-400 hover:text-white'
+                                ? 'ring-1 ring-accent text-accent font-bold'
+                                : 'text-slate-400 hover:text-white hover:ring-1 hover:ring-white/20'
                             } ${!isSidebarOpen ? 'justify-center' : ''}`
                         }
                     >
@@ -223,23 +237,28 @@ const AdminLayout = () => {
 
                 <nav className="flex-1 overflow-y-auto py-3 custom-scrollbar">
                     <ul className="space-y-0.5 px-3">
-                        {navItems.map((item) => (
-                            <li key={item.path}>
-                                <NavLink
-                                    to={item.path}
-                                    onClick={() => setMobileSidebarOpen(false)}
-                                    className={({ isActive }) =>
-                                        `flex items-center gap-3 px-3 py-2 rounded-xl transition-all text-sm ${isActive
-                                            ? 'text-accent font-bold bg-accent/5'
-                                            : 'text-slate-400 hover:text-white hover:bg-white/5'
-                                        }`
-                                    }
-                                >
-                                    <span className="flex-shrink-0 w-5 h-5 flex items-center justify-center">{item.icon}</span>
-                                    <span className="whitespace-nowrap">{item.label}</span>
-                                </NavLink>
-                            </li>
-                        ))}
+                        {navItems.map((item, idx) => {
+                            if (item.divider) {
+                                return <li key={`divider-${idx}`}><hr className="border-white/10 my-2 mx-1" /></li>;
+                            }
+                            return (
+                                <li key={item.path}>
+                                    <NavLink
+                                        to={item.path}
+                                        onClick={() => setMobileSidebarOpen(false)}
+                                        className={({ isActive }) =>
+                                            `flex items-center gap-3 px-3 py-2 rounded-xl transition-all text-sm ${isActive
+                                                ? 'ring-1 ring-accent text-accent font-bold'
+                                                : 'text-slate-400 hover:text-white hover:ring-1 hover:ring-white/20'
+                                            }`
+                                        }
+                                    >
+                                        <span className="flex-shrink-0 w-5 h-5 flex items-center justify-center">{item.icon}</span>
+                                        <span className="whitespace-nowrap">{item.label}</span>
+                                    </NavLink>
+                                </li>
+                            );
+                        })}
                     </ul>
                 </nav>
 
