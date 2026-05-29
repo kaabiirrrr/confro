@@ -175,30 +175,21 @@ export default function StepDocuments({ next, back }) {
         </p>
       </div>
 
-      <div className="flex justify-between gap-3 sm:gap-5 pt-2 sm:pt-4">
-        <button
-          onClick={back}
-          disabled={loading}
-          className="flex items-center justify-center px-6 sm:px-8 py-2 sm:py-2.5 border border-white/20 rounded-full text-white/60 hover:text-white hover:bg-white/5 transition-colors text-xs sm:text-sm font-semibold"
-        >
-          Back
-        </button>
-
-        <button
-          disabled={!requiredCompleted || loading}
-          onClick={handleContinue}
-          className="bg-accent text-white font-bold px-6 sm:px-10 py-2 sm:py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-30 flex items-center justify-center transition-all text-sm sm:text-base"
-        >
-          {loading ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-primary border-t-transparent mr-2" />
-              Uploading...
-            </>
-          ) : (
-            "Continue"
-          )}
+      <div className="hidden sm:flex justify-between gap-3 sm:gap-5 pt-2 sm:pt-4">
+        <button onClick={back} disabled={loading} className="flex items-center justify-center px-6 sm:px-8 py-2 sm:py-2.5 border border-white/20 rounded-full text-white/60 hover:text-white hover:bg-white/5 transition-colors text-xs sm:text-sm font-semibold">Back</button>
+        <button disabled={!requiredCompleted || loading} onClick={handleContinue} className="bg-accent text-white font-bold px-6 sm:px-10 py-2 sm:py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-30 flex items-center justify-center transition-all text-sm sm:text-base">
+          {loading ? (<><div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-primary border-t-transparent mr-2" />Uploading...</>) : "Continue"}
         </button>
       </div>
+
+      {/* Mobile fixed bottom buttons */}
+      <div className="fixed sm:hidden bottom-0 left-0 right-0 z-40 bg-primary border-t border-white/5 px-4 py-3 flex gap-3">
+        <button onClick={back} disabled={loading} className="flex-1 flex items-center justify-center py-2.5 border border-white/20 rounded-full text-white/60 text-xs font-semibold">Back</button>
+        <button disabled={!requiredCompleted || loading} onClick={handleContinue} className="flex-1 bg-accent text-white font-bold py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-30 flex items-center justify-center text-sm">
+          {loading ? <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent" /> : "Continue"}
+        </button>
+      </div>
+      <div className="h-16 sm:hidden" />
     </motion.div>
   );
 }

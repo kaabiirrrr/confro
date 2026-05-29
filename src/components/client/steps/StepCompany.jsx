@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FiBriefcase, FiArrowLeft, FiArrowRight, FiGlobe } from "react-icons/fi";
+import { FiGlobe } from "react-icons/fi";
 import { profileApi } from "../../../services/profileApi";
 import toast from "react-hot-toast";
 import CustomDropdown from "../../ui/CustomDropdown";
+import InfinityLoader from "../../common/InfinityLoader";
 
 const INDUSTRIES = [
   "Technology & Software",
@@ -27,6 +28,7 @@ const COMPANY_SIZES = [
 
 export default function StepCompany({ next, back }) {
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [formData, setFormData] = useState({
     companyName: "",
     companySize: "",
@@ -34,6 +36,26 @@ export default function StepCompany({ next, back }) {
     website: ""
   });
   const [errors, setErrors] = useState({});
+
+  // Pre-fill from existing profile data
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await profileApi.getClientProfile();
+        if (res?.data) {
+          const d = res.data;
+          setFormData({
+            companyName: d.company_name || d.step_data?.company_info?.companyName || "",
+            companySize: d.company_size ? String(d.company_size) : d.step_data?.company_info?.companySize || "",
+            industry: d.industry || d.step_data?.company_info?.industry || "",
+            website: d.company_website || d.website || d.step_data?.company_info?.website || ""
+          });
+        }
+      } catch (_) {}
+      finally { setInitialLoading(false); }
+    };
+    load();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -50,7 +72,6 @@ export default function StepCompany({ next, back }) {
 
   const handleContinue = async () => {
     if (!validate()) return;
-
     try {
       setLoading(true);
       await profileApi.updateStepStatus("company_info", formData);
@@ -62,32 +83,36 @@ export default function StepCompany({ next, back }) {
     }
   };
 
+  if (initialLoading) {
+    return <div className="py-12"><InfinityLoader text="Loading..." /></div>;
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
-      className="space-y-6"
+      className="space-y-3 sm:space-y-6"
     >
       <div>
-        <h2 className="text-xl font-bold text-white mb-1">Company Details</h2>
-        <p className="text-white/40 text-sm">Tell freelancers about the organization they'll be working with.</p>
+        <h2 className="text-xl font-bold text-white mb-0 sm:mb-1">Company Details</h2>
+        <p className="text-white/40 text-xs sm:text-sm">Tell freelancers about the organization they'll be working with.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 sm:gap-x-8 gap-y-3 sm:gap-y-5">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-white/50 px-1 text-premium-label">Company Name</label>
+          <label className="text-sm font-medium text-white/50 px-1">Company Name</label>
           <input
             name="companyName"
             value={formData.companyName}
             onChange={handleChange}
             placeholder="e.g. Acme Innovations"
-            className="bg-transparent border border-white/10 p-3 rounded-xl w-full focus:border-accent outline-none transition-all text-white placeholder:text-white/20 text-sm"
+            className="w-full bg-secondary/20 border border-white/10 p-2 sm:p-4 rounded-lg sm:rounded-xl text-light-text focus:border-accent outline-none transition-all placeholder:text-white/20 text-xs sm:text-base"
           />
-          {errors.companyName && <p className="text-red-400 text-xs mt-1 px-1">{errors.companyName}</p>}
+          {errors.companyName && <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.companyName}</p>}
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-white/50 px-1 text-premium-label">Industry</label>
+          <label className="text-sm font-medium text-white/50 px-1">Industry</label>
           <CustomDropdown
             options={INDUSTRIES}
             value={formData.industry}
@@ -98,7 +123,7 @@ export default function StepCompany({ next, back }) {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-white/50 px-1 text-premium-label">Company Size</label>
+          <label className="text-sm font-medium text-white/50 px-1">Company Size</label>
           <CustomDropdown
             options={COMPANY_SIZES}
             value={formData.companySize}
@@ -109,44 +134,37 @@ export default function StepCompany({ next, back }) {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-white/50 px-1 text-premium-label text-premium-heading">Website (Optional)</label>
+          <label className="text-sm font-medium text-white/50 px-1">Website (Optional)</label>
           <div className="relative">
             <input
               name="website"
               value={formData.website}
               onChange={handleChange}
               placeholder="e.g. https://acme.com"
-              className="bg-transparent border border-white/10 p-3 pl-10 rounded-xl w-full focus:border-accent outline-none transition-all text-white placeholder:text-white/20 text-sm"
+              className="w-full bg-secondary/20 border border-white/10 p-2 sm:p-4 rounded-lg sm:rounded-xl text-light-text focus:border-accent outline-none transition-all placeholder:text-white/20 text-[10px] sm:text-sm pl-8 sm:pl-10"
             />
-            <FiGlobe className="absolute left-3 top-3.5 text-white/20" />
+            <FiGlobe className="absolute left-2.5 sm:left-3 top-2.5 sm:top-4 text-white/20 text-xs sm:text-base" />
           </div>
         </div>
       </div>
 
-      <div className="flex justify-end gap-5 pt-4">
+      {/* Buttons — fixed bottom on mobile, inline on desktop */}
+      <div className="fixed sm:relative bottom-0 left-0 right-0 sm:bottom-auto sm:left-auto sm:right-auto z-40 bg-primary sm:bg-transparent border-t border-white/5 sm:border-none px-4 sm:px-0 py-3 sm:py-0 sm:pt-4 flex justify-between gap-3 sm:gap-5">
         <button
           onClick={back}
-          className="flex items-center gap-2 px-8 py-4 text-white/40 hover:text-white transition-colors text-sm font-semibold"
+          className="flex-1 sm:flex-none flex items-center justify-center px-6 sm:px-8 py-2 sm:py-2.5 border border-white/20 rounded-full text-white/60 hover:text-white hover:bg-white/5 transition-colors text-xs sm:text-sm font-semibold"
         >
-          <FiArrowLeft />
           Back
         </button>
         <button
           onClick={handleContinue}
           disabled={loading}
-          className="bg-accent text-white font-bold px-10 py-4 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center gap-3 transition-all shadow-xl shadow-accent/10"
+          className="flex-1 sm:flex-none bg-accent text-white font-bold px-6 sm:px-10 py-2 sm:py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center justify-center transition-all text-sm sm:text-base"
         >
-          {loading ? (
-            <div className="animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent" />
-          ) : (
-            <>
-              Continue
-              <FiArrowRight />
-            </>
-          )}
+          {loading ? <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-2 border-primary border-t-transparent" /> : "Continue"}
         </button>
       </div>
+      <div className="h-16 sm:hidden" />
     </motion.div>
   );
 }
-

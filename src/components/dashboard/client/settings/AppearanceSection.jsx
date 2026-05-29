@@ -24,9 +24,9 @@ const AppearanceSection = () => {
           <button
             key={opt.key}
             onClick={() => setTheme(opt.key)}
-            className={`p-3 sm:p-6 rounded-2xl sm:rounded-[2rem] border-2 transition-all flex flex-col items-center gap-2 sm:gap-4 text-center ${theme === opt.key
-              ? "bg-accent/10 border-accent shadow-lg shadow-accent/10"
-              : "bg-transparent border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/20"
+            className={`p-3 sm:p-6 rounded-xl border-2 transition-all flex flex-col items-center gap-2 sm:gap-4 text-center ${theme === opt.key
+              ? "border-accent"
+              : "border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/20"
               }`}
           >
             <div className={`flex items-center justify-center ${typeof opt.icon === 'string' ? '' : `p-2 sm:p-3 rounded-full ${theme === opt.key ? 'bg-accent text-white' : 'bg-white/5 text-white/40'}`}`}>

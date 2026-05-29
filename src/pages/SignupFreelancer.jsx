@@ -12,13 +12,14 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import logger from "../utils/logger";
 import { getOauthRedirectUrl, getApiUrl } from "../utils/authUtils";
- 
+
 const API_URL = getApiUrl();
 import CustomDropdown from "../components/ui/CustomDropdown";
 import { countries } from "../utils/countries";
 
 const SignupFreelancer = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -26,22 +27,16 @@ const SignupFreelancer = () => {
     handleSubmit,
     control,
     formState: { errors, isSubmitting }
-  } = useForm({
-    resolver: zodResolver(registerSchema)
-  });
+  } = useForm({ resolver: zodResolver(registerSchema) });
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/auth/register`,
-        {
-          email: data.email,
-          password: data.password,
-          name: `${data.firstName} ${data.lastName}`,
-          role: "FREELANCER"
-        }
-      );
-
+      const response = await axios.post(`${API_URL}/api/auth/register`, {
+        email: data.email,
+        password: data.password,
+        name: `${data.firstName} ${data.lastName}`,
+        role: "FREELANCER"
+      });
       if (response.data.success) {
         toast.success("Account created!");
         localStorage.setItem('pending_role', 'FREELANCER');
@@ -59,14 +54,10 @@ const SignupFreelancer = () => {
       localStorage.setItem('oauth_mode', 'signup');
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: {
-          redirectTo: getOauthRedirectUrl()
-        }
+        options: { redirectTo: getOauthRedirectUrl() }
       });
       if (error) throw error;
-    } catch (error) {
-      logger.error("Error logging in with Google", error);
-    }
+    } catch (error) { logger.error("Error logging in with Google", error); }
   };
 
   const handleFacebookLogin = async () => {
@@ -75,14 +66,10 @@ const SignupFreelancer = () => {
       localStorage.setItem('oauth_mode', 'signup');
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook',
-        options: {
-          redirectTo: getOauthRedirectUrl()
-        }
+        options: { redirectTo: getOauthRedirectUrl() }
       });
       if (error) throw error;
-    } catch (error) {
-      logger.error("Error logging in with Facebook", error);
-    }
+    } catch (error) { logger.error("Error logging in with Facebook", error); }
   };
 
   return (
@@ -90,133 +77,132 @@ const SignupFreelancer = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="min-h-[10px] bg-primary text-light-text font-sans selection:bg-accent/30"
+      className="h-screen flex flex-col bg-primary text-light-text font-sans selection:bg-accent/30"
     >
-
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full bg-primary">
-        <div className="max-w-[1630px] mx-auto h-14 md:h-20 px-4 md:px-8 flex items-center justify-between">
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center group">
-              <img 
-                src="/Logo-LightMode-trimmed.png" 
-                alt="Connect" 
-                className="h-9 md:h-12 object-contain block dark:hidden transition-all duration-300" 
-              />
-              <img 
-                src="/Logo2.png" 
-                alt="Connect" 
-                className="h-8 md:h-10 object-contain hidden dark:block transition-all duration-300" 
-              />
-            </Link>
-          </div>
-
-          <div className="text-[13px] sm:text-[16px] text-light-text/80">
+      <header className="flex-shrink-0 w-full bg-primary">
+        <div className="max-w-[1630px] mx-auto h-12 md:h-20 px-4 md:px-8 flex items-center justify-between">
+          <Link to="/" className="flex items-center group">
+            <img src="/Logo-LightMode-trimmed.png" alt="Connect" className="h-8 md:h-12 object-contain block dark:hidden" />
+            <img src="/Logo2.png" alt="Connect" className="h-7 md:h-10 object-contain hidden dark:block" />
+          </Link>
+          <div className="text-[13px] md:text-[16px] text-light-text/80">
             Here to hire talent?{" "}
-            <Link
-              to="/signup-client"
-              className="text-accent font-medium"
-            >
-              Join as a Client
-            </Link>
+            <Link to="/signup-client" className="text-accent font-medium">Join as a Client</Link>
           </div>
         </div>
       </header>
 
-      {/* Form Container */}
-        <motion.main
-        initial={{ y: 40, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="max-w-[600px] mx-auto px-4 sm:px-6 pt-6 sm:pt-12 pb-8 sm:pb-20 flex flex-col min-h-[calc(100vh-70px)] sm:min-h-0 sm:block"
-      >
-          <>
-            <h1 className="text-lg sm:text-[32px] font-semibold text-center mb-6 sm:mb-10 tracking-tight leading-tight">
-              Sign up to find work you love
-            </h1>
+      {/* Scrollable content — padded at bottom so content doesn't hide behind fixed button */}
+      <div className="flex-1 overflow-y-auto pb-24 md:pb-0">
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="max-w-[520px] mx-auto px-5 pt-3 md:pt-10"
+        >
+          <h1 className="text-[18px] md:text-[32px] font-semibold text-center mb-3 md:mb-8 tracking-tight">
+            Sign up to find work you love
+          </h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-3 mb-4 sm:mb-4">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                type="button"
-                onClick={handleFacebookLogin}
-                className="flex items-center justify-center gap-2 border border-[#1877F2] bg-[#1877F2] rounded-full py-2.5 sm:py-2 px-4 hover:opacity-90 transition text-white"
-              >
-                <FaFacebook size={18} />
-                <span className="text-[14px] font-medium">Continue with Facebook</span>
-              </motion.button>
+          {/* Social buttons */}
+          <div className="flex flex-col gap-2 md:gap-3 mb-2 md:mb-4">
+            <motion.button
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+              type="button" onClick={handleFacebookLogin}
+              className="flex items-center justify-center gap-2 border border-[#1877F2] bg-[#1877F2] rounded-full py-2 md:py-2.5 px-4 hover:opacity-90 transition text-white w-full"
+            >
+              <FaFacebook size={16} />
+              <span className="text-[13px] md:text-[14px] font-medium">Continue with Facebook</span>
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+              type="button" onClick={handleGoogleLogin}
+              className="flex items-center justify-center gap-2 border border-[var(--color-border)] bg-secondary rounded-full py-2 md:py-2.5 px-4 hover:bg-[var(--color-hover)] transition text-light-text w-full"
+            >
+              <FcGoogle size={16} />
+              <span className="text-[13px] md:text-[14px] font-medium">Continue with Google</span>
+            </motion.button>
+          </div>
 
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                type="button"
-                onClick={handleGoogleLogin}
-                className="flex items-center justify-center gap-2 border border-[var(--color-border)] bg-secondary rounded-full py-2.5 sm:py-2 px-4 hover:bg-[var(--color-hover)] transition text-light-text"
-              >
-                <FcGoogle size={18} />
-                <span className="text-[14px] font-medium">Continue with Google</span>
-              </motion.button>
-            </div>
+          {/* Divider */}
+          <div className="relative flex py-2 md:py-5 items-center">
+            <div className="flex-grow border-t border-[var(--color-border)]" />
+            <span className="flex-shrink mx-4 text-text-muted text-xs md:text-sm">or</span>
+            <div className="flex-grow border-t border-[var(--color-border)]" />
+          </div>
 
-            <div className="relative flex py-6 sm:py-8 items-center">
-              <div className="flex-grow border-t border-[var(--color-border)]"></div>
-              <span className="flex-shrink mx-4 text-text-muted text-sm">or</span>
-              <div className="flex-grow border-t border-[var(--color-border)]"></div>
-            </div>
+          <form id="signup-freelancer-form" onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-2.5 md:space-y-5">
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 sm:space-y-6 flex flex-col flex-grow">
-              <div className="grid grid-cols-2 gap-4 sm:gap-4">
+              {/* First / Last */}
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[13px] sm:text-[14px] font-medium mb-1.5 sm:mb-2 text-light-text">First name</label>
+                  <label className="block text-[12px] md:text-[14px] font-medium mb-1 md:mb-2 text-light-text">First name</label>
                   <input
                     {...register("firstName")}
-                    className={`w-full bg-secondary border rounded-lg px-3 py-2 sm:py-2 transition focus:border-accent outline-none text-light-text ${errors.firstName ? 'border-red-500' : 'border-[var(--color-border)]'}`}
+                    className={`w-full bg-secondary border rounded-lg px-3 py-1.5 md:py-2 text-[13px] md:text-base transition focus:border-accent outline-none text-light-text ${errors.firstName ? 'border-red-500' : 'border-[var(--color-border)]'}`}
                   />
-                  {errors.firstName && <p className="text-red-400 text-xs mt-1">{errors.firstName.message}</p>}
+                  {errors.firstName && <p className="text-red-400 text-[10px] md:text-xs mt-0.5">{errors.firstName.message}</p>}
                 </div>
                 <div>
-                  <label className="block text-[13px] sm:text-[14px] font-medium mb-1.5 sm:mb-2 text-light-text">Last name</label>
+                  <label className="block text-[12px] md:text-[14px] font-medium mb-1 md:mb-2 text-light-text">Last name</label>
                   <input
                     {...register("lastName")}
-                    className={`w-full bg-secondary border rounded-lg px-3 py-2 sm:py-2 transition focus:border-accent outline-none ${errors.lastName ? 'border-red-500' : 'border-white/20'}`}
+                    className={`w-full bg-secondary border rounded-lg px-3 py-1.5 md:py-2 text-[13px] md:text-base transition focus:border-accent outline-none ${errors.lastName ? 'border-red-500' : 'border-white/20'}`}
                   />
-                  {errors.lastName && <p className="text-red-400 text-xs mt-1">{errors.lastName.message}</p>}
+                  {errors.lastName && <p className="text-red-400 text-[10px] md:text-xs mt-0.5">{errors.lastName.message}</p>}
                 </div>
               </div>
 
+              {/* Email */}
               <div>
-                <label className="block text-[13px] sm:text-[14px] font-medium mb-1.5 sm:mb-2 text-white/90">Email address</label>
+                <label className="block text-[12px] md:text-[14px] font-medium mb-1 md:mb-2 text-white/90">Email address</label>
                 <input
                   {...register("email")}
-                  className={`w-full bg-secondary border rounded-lg px-3 py-2 sm:py-2 transition focus:border-accent outline-none ${errors.email ? 'border-red-500' : 'border-white/20'}`}
+                  className={`w-full bg-secondary border rounded-lg px-3 py-1.5 md:py-2 text-[13px] md:text-base transition focus:border-accent outline-none ${errors.email ? 'border-red-500' : 'border-white/20'}`}
                 />
-                {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
+                {errors.email && <p className="text-red-400 text-[10px] md:text-xs mt-0.5">{errors.email.message}</p>}
               </div>
 
+              {/* Password */}
               <div>
-                <label className="block text-[13px] sm:text-[14px] font-medium mb-1.5 sm:mb-2 text-white/90">Password</label>
+                <label className="block text-[12px] md:text-[14px] font-medium mb-1 md:mb-2 text-white/90">Password</label>
                 <div className="relative">
                   <input
                     {...register("password")}
                     type={showPassword ? "text" : "password"}
                     placeholder="Password (8 or more characters)"
-                    className={`w-full bg-secondary border rounded-lg px-3 py-2 sm:py-2 pr-10 transition focus:border-accent outline-none ${errors.password ? 'border-red-500' : 'border-white/20'}`}
+                    className={`w-full bg-secondary border rounded-lg px-3 py-1.5 md:py-2 pr-9 text-[13px] md:text-base transition focus:border-accent outline-none ${errors.password ? 'border-red-500' : 'border-white/20'}`}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-text-muted"
-                  >
-                    {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-2 text-text-muted">
+                    {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
                   </button>
                 </div>
-                {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>}
+                {errors.password && <p className="text-red-400 text-[10px] md:text-xs mt-0.5">{errors.password.message}</p>}
               </div>
 
+              {/* Confirm Password */}
               <div>
-                <label className="block text-[13px] sm:text-[14px] font-medium mb-1.5 sm:mb-2 text-white/90">Country</label>
-                <div className="text-[13px] sm:text-base">
+                <label className="block text-[12px] md:text-[14px] font-medium mb-1 md:mb-2 text-white/90">Confirm password</label>
+                <div className="relative">
+                  <input
+                    {...register("confirmPassword")}
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Re-enter your password"
+                    className={`w-full bg-secondary border rounded-lg px-3 py-1.5 md:py-2 pr-9 text-[13px] md:text-base transition focus:border-accent outline-none ${errors.confirmPassword ? 'border-red-500' : 'border-white/20'}`}
+                  />
+                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-2 text-text-muted">
+                    {showConfirmPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                  </button>
+                </div>
+                {errors.confirmPassword && <p className="text-red-400 text-[10px] md:text-xs mt-0.5">{errors.confirmPassword.message}</p>}
+              </div>
+
+              {/* Country */}
+              <div>
+                <label className="block text-[12px] md:text-[14px] font-medium mb-1 md:mb-2 text-white/90">Country</label>
+                <div className="text-[12px] md:text-base">
                   <Controller
                     name="country"
                     control={control}
@@ -233,35 +219,61 @@ const SignupFreelancer = () => {
                 </div>
               </div>
 
-              <div className="space-y-3 sm:space-y-4 pt-2 sm:pt-2">
-                <label className="flex items-start gap-3 sm:gap-3 cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 sm:w-4 sm:h-4 mt-0.5 accent-accent rounded border-white/20 bg-secondary flex-shrink-0" />
-                  <span className="text-[13px] sm:text-[14px] text-text-secondary leading-tight sm:leading-snug">Send me helpful emails to find rewarding work and job leads.</span>
+              {/* Checkboxes */}
+              <div className="space-y-1.5 md:space-y-3">
+                <label className="flex items-start gap-2.5 cursor-pointer">
+                  <input type="checkbox" className="w-3.5 h-3.5 md:w-4 md:h-4 mt-0.5 accent-accent rounded border-white/20 bg-secondary flex-shrink-0" />
+                  <span className="text-[11px] md:text-[14px] text-text-secondary leading-snug">Send me helpful emails to find rewarding work and job leads.</span>
                 </label>
-                <label className="flex items-start gap-3 sm:gap-3 cursor-pointer">
-                  <input {...register("terms")} type="checkbox" className="w-4 h-4 sm:w-4 sm:h-4 mt-0.5 accent-accent rounded border-white/20 bg-secondary flex-shrink-0" />
-                  <span className="text-[13px] sm:text-[14px] text-text-secondary leading-tight sm:leading-snug">
-                    Yes, I understand and agree to the <Link to="/legal#terms" className="text-accent hover:underline">Terms of Service</Link>, including the <Link to="/legal#user-agreement" className="text-accent hover:underline">User Agreement</Link> and <Link to="/legal#privacy-policy" className="text-accent hover:underline">Privacy Policy</Link>.
+                <label className="flex items-start gap-2.5 cursor-pointer">
+                  <input {...register("terms")} type="checkbox" className="w-3.5 h-3.5 md:w-4 md:h-4 mt-0.5 accent-accent rounded border-white/20 bg-secondary flex-shrink-0" />
+                  <span className="text-[11px] md:text-[14px] text-text-secondary leading-snug">
+                    Yes, I understand and agree to the{" "}
+                    <Link to="/legal#terms" className="text-accent hover:underline">Terms of Service</Link>, including the{" "}
+                    <Link to="/legal#user-agreement" className="text-accent hover:underline">User Agreement</Link> and{" "}
+                    <Link to="/legal#privacy-policy" className="text-accent hover:underline">Privacy Policy</Link>.
                   </span>
                 </label>
-                {errors.terms && <p className="text-red-400 text-xs">{errors.terms.message}</p>}
+                {errors.terms && <p className="text-red-400 text-[10px] md:text-xs">{errors.terms.message}</p>}
               </div>
 
-              <div className="text-center pt-8 sm:pt-6 mt-auto sm:mt-0">
+              {/* Desktop-only submit (inline, after checkboxes) */}
+              <div className="hidden md:block text-center pt-4">
                 <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-accent hover:opacity-90 disabled:opacity-50 text-white font-medium px-8 sm:px-12 py-3 sm:py-2.5 rounded-full transition w-full sm:w-auto text-[15px] sm:text-base"
+                  className="bg-accent hover:opacity-90 disabled:opacity-50 text-white font-medium px-12 py-2.5 rounded-full transition w-auto text-base"
                 >
                   {isSubmitting ? "Creating..." : "Create my account"}
                 </motion.button>
-                <p className="mt-6 sm:mt-8 text-[14px] sm:text-[14px] text-text-muted">Already have an account? <Link to="/login" className="text-accent font-medium hover:underline">Log In</Link></p>
+                <p className="mt-6 text-[14px] text-text-muted">
+                  Already have an account?{" "}
+                  <Link to="/login" className="text-accent font-medium hover:underline">Log In</Link>
+                </p>
               </div>
-            </form>
-          </>
-      </motion.main>
+
+            </div>
+          </form>
+        </motion.div>
+      </div>
+
+      {/* Mobile-only: fixed button pinned to bottom */}
+      <div className="md:hidden flex-shrink-0 bg-primary px-5 py-3 border-t border-[var(--color-border)]">
+        <motion.button
+          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+          type="submit"
+          form="signup-freelancer-form"
+          disabled={isSubmitting}
+          className="bg-accent hover:opacity-90 disabled:opacity-50 text-white font-medium py-2.5 rounded-full transition w-full text-[14px]"
+        >
+          {isSubmitting ? "Creating..." : "Create my account"}
+        </motion.button>
+        <p className="mt-2 text-center text-[12px] text-text-muted">
+          Already have an account?{" "}
+          <Link to="/login" className="text-accent font-medium hover:underline">Log In</Link>
+        </p>
+      </div>
     </motion.div>
   );
 };

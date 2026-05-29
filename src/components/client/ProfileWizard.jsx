@@ -18,25 +18,15 @@ import StepFinish from "./steps/StepFinish";
 export default function ClientProfileWizard() {
     const [step, setStep] = useState(1);
     const [finishing, setFinishing] = useState(false);
-    const totalSteps = 6; // Matching freelancer step count
+    const totalSteps = 6;
     const navigate = useNavigate();
     const { status, loading, refetch } = useProfileCompletion();
-    const { refreshProfile, user } = useAuth();
+    const { refreshProfile, user, setProfile } = useAuth();
 
-    // Sync step with backend data on load (Identical to freelancer logic)
+    // Sync step with backend — identical logic to freelancer wizard
     useEffect(() => {
         if (!loading && status) {
-            const percentage = status.profile_completion_percentage || 0;
-
-            // Calculate step from backend percentage
-            let backendStep = 1;
-            if (percentage >= 83) backendStep = 6;
-            else if (percentage >= 66) backendStep = 5;
-            else if (percentage >= 50) backendStep = 4;
-            else if (percentage >= 33) backendStep = 3;
-            else if (percentage >= 16) backendStep = 2;
-
-            // Use backend step but allow local override for current session
+            const backendStep = Number(status.current_step) || 1;
             const savedStep = Number(localStorage.getItem("clientProfileStep")) || 1;
             const resumeStep = Math.min(Math.round(Math.max(savedStep, backendStep)), 6);
             setStep(resumeStep);
@@ -47,7 +37,7 @@ export default function ClientProfileWizard() {
         const newStep = step + 1;
         setStep(newStep);
         localStorage.setItem("clientProfileStep", String(newStep));
-        refetch(); // Refetch status to update progress bar
+        refetch();
         window.scrollTo(0, 0);
     };
 
@@ -63,16 +53,49 @@ export default function ClientProfileWizard() {
         try {
             logger.log("[ClientProfileWizard] Finalizing client profile...");
 
-            // 1. Persist 'finish' status to backend
             await profileApi.updateStepStatus('finish', {});
-
-            // 2. Clear local step tracking
             localStorage.removeItem("clientProfileStep");
 
-            // 3. Force-refresh global auth state
-            await refreshProfile();
+            // Fetch the latest client profile to get avatar_url and all fields
+            let freshAvatarUrl = null;
+            try {
+                const res = await profileApi.getClientProfile();
+                freshAvatarUrl = res?.data?.avatar_url || null;
+            } catch (_) {}
 
-            logger.log("[ClientProfileWizard] Profile finalized. Navigating to dashboard...");
+            // Stamp completion + avatar into localStorage and React context immediately
+            try {
+                const cachedProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+                cachedProfile.profile_completed = true;
+                cachedProfile.is_profile_complete = true;
+                cachedProfile.is_client_profile_complete = true;
+                cachedProfile.profile_completion_percentage = 100;
+                if (freshAvatarUrl) cachedProfile.avatar_url = freshAvatarUrl;
+                localStorage.setItem('user_profile', JSON.stringify(cachedProfile));
+
+                const cachedUser = JSON.parse(localStorage.getItem('user') || '{}');
+                cachedUser.is_profile_complete = true;
+                localStorage.setItem('user', JSON.stringify(cachedUser));
+
+                // Update in-memory React context so ProfileSetupGuard and navbar see it immediately
+                setProfile(prev => ({
+                    ...(prev || {}),
+                    profile_completed: true,
+                    is_profile_complete: true,
+                    is_client_profile_complete: true,
+                    profile_completion_percentage: 100,
+                    ...(freshAvatarUrl ? { avatar_url: freshAvatarUrl } : {})
+                }));
+            } catch (_) {}
+
+            // Await refreshProfile so the full profile (including avatar) is in context before navigating
+            try {
+                await refreshProfile();
+            } catch (e) {
+                logger.warn("[ClientProfileWizard] Background refresh failed:", e);
+            }
+
+            logger.log("[ClientProfileWizard] Profile finalized. Navigating to client dashboard...");
             navigate("/client/dashboard", { replace: true });
         } catch (error) {
             logger.error("[ClientProfileWizard] Error finishing profile:", error);
@@ -88,8 +111,8 @@ export default function ClientProfileWizard() {
 
     return (
         <div className="min-h-screen bg-primary flex flex-col items-center pt-20 pb-6 sm:pt-24 sm:pb-12 px-4 sm:px-6">
-            {/* Absolute Logo Header like Navbar */}
-            <div className="absolute top-6 left-6 sm:top-8 sm:left-10 z-50">
+            {/* Logo — identical position to freelancer wizard */}
+            <div className="absolute top-6 left-6 sm:top-6 sm:left-18 z-50">
                 <Link to="/" className="inline-flex items-center gap-2 group shrink-0">
                     <img
                         src="/Logo2.png"
@@ -100,14 +123,14 @@ export default function ClientProfileWizard() {
             </div>
 
             <div className="w-full max-w-4xl">
-                <div className="mb-4">
-                    <div className="flex justify-between items-end mb-4">
+                <div className="mb-2 sm:mb-4">
+                    <div className="flex justify-between items-end mb-2 sm:mb-4">
                         <div className="space-y-1">
-                            <span className="text-accent font-bold uppercase tracking-widest text-[10px]">Client Registration</span>
-                            <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Set up your mission</h1>
+                            <span className="text-accent font-bold uppercase tracking-widest text-[9px] sm:text-[10px]">Client Registration</span>
+                            <h1 className="text-xl md:text-3xl font-bold text-white tracking-tight">Set up your mission</h1>
                         </div>
                         <div className="text-right">
-                            <span className="text-sm font-medium text-white/40">Step {step} of {totalSteps}</span>
+                            <span className="text-[11px] sm:text-sm font-medium text-white/40">Step {step} of {totalSteps}</span>
                         </div>
                     </div>
                     <ProfileCompletionBar percentage={Math.round((step / totalSteps) * 100)} />
@@ -125,4 +148,3 @@ export default function ClientProfileWizard() {
         </div>
     );
 }
-

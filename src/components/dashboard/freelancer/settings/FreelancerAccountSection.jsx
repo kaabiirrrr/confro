@@ -50,7 +50,7 @@ const FreelancerAccountSection = ({ onOpenImageModal, updatedAvatar }) => {
   };
 
   return (
-    <div className="glass-card rounded-3xl p-4 sm:p-10 relative overflow-hidden group w-full min-w-0">
+    <div className="glass-card rounded-2xl p-4 sm:p-10 relative overflow-hidden group w-full min-w-0">
       {/* Decorative Gradient */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
 
@@ -65,13 +65,21 @@ const FreelancerAccountSection = ({ onOpenImageModal, updatedAvatar }) => {
             </h2>
             <p className="text-white/40 text-sm mt-1">Manage your personal information and profile picture</p>
           </div>
-          {!edit && (
+          {!edit ? (
             <button
               onClick={() => setEdit(true)}
               className="text-white/40 hover:text-accent transition-colors p-1 mt-1"
               aria-label="Edit Profile"
             >
               <Pencil size={18} />
+            </button>
+          ) : (
+            <button
+              onClick={() => setEdit(false)}
+              className="text-white/40 hover:text-accent transition-colors p-1 mt-1"
+              aria-label="Cancel Edit"
+            >
+              <X size={18} />
             </button>
           )}
         </div>

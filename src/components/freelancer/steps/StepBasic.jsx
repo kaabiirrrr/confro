@@ -256,22 +256,31 @@ export default function StepBasic({ next, status }) {
         </div>
       </div>
 
-      <div className="w-full flex justify-end pt-4 mt-2">
+      <div className="w-full flex justify-end pt-4 mt-2 pb-20 sm:pb-0">
         <button
           onClick={handleNext}
           disabled={uploading}
-          className="bg-accent text-white font-bold px-6 sm:px-8 py-2 sm:py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center gap-2 transition-all text-sm"
+          className="hidden sm:flex bg-accent text-white font-bold px-6 sm:px-8 py-2 sm:py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-50 items-center gap-2 transition-all text-sm"
         >
           {uploading ? (
-            <>
-              <div className="animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent" />
-              Saving Profile...
-            </>
+            <><div className="animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent" />Saving Profile...</>
           ) : (
-            <>
-              Continue
-              <FiArrowRight />
-            </>
+            <>Continue <FiArrowRight /></>
+          )}
+        </button>
+      </div>
+
+      {/* Mobile fixed bottom button */}
+      <div className="fixed sm:hidden bottom-0 left-0 right-0 z-40 bg-primary border-t border-white/5 px-4 py-3">
+        <button
+          onClick={handleNext}
+          disabled={uploading}
+          className="w-full bg-accent text-white font-bold py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center justify-center gap-2 transition-all text-sm"
+        >
+          {uploading ? (
+            <><div className="animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent" />Saving Profile...</>
+          ) : (
+            <>Continue <FiArrowRight /></>
           )}
         </button>
       </div>

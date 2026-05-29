@@ -28,59 +28,31 @@ export default function StepBasic({ next, status }) {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const validate = () => {
     let newErrors = {};
-
-    if (!avatarPreview)
-      newErrors.avatar = "Profile/Company photo is required";
-
-    if (!formData.fullName.trim())
-      newErrors.fullName = "Full name is required";
-
-    if (!formData.title.trim())
-      newErrors.title = "Role/Title is required";
-
-    if (!formData.bio.trim())
-      newErrors.bio = "Bio is required";
-
-    if (!formData.country.trim())
-      newErrors.country = "Country is required";
-
-    if (!formData.city.trim())
-      newErrors.city = "City is required";
-
-    if (!formData.dob)
-      newErrors.dob = "Date of birth is required";
-
-    if (!formData.gender)
-      newErrors.gender = "Gender is required";
-
+    if (!avatarPreview) newErrors.avatar = "Profile/Company photo is required";
+    if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
+    if (!formData.title.trim()) newErrors.title = "Role/Title is required";
+    if (!formData.bio.trim()) newErrors.bio = "Bio is required";
+    if (!formData.country.trim()) newErrors.country = "Country is required";
+    if (!formData.city.trim()) newErrors.city = "City is required";
+    if (!formData.dob) newErrors.dob = "Date of birth is required";
+    if (!formData.gender) newErrors.gender = "Gender is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleNext = async () => {
     if (!validate()) return;
-
     try {
       setUploading(true);
-
-      // Save step data to backend
-      const stepData = { ...formData, avatar_url: avatarPreview };
-
-      await profileApi.updateStepStatus("basic_info", stepData);
-
+      await profileApi.updateStepStatus("basic_info", { ...formData, avatar_url: avatarPreview });
       next();
     } catch (error) {
-      const msg = error?.response?.data?.message || error?.message || "Failed to save. Please try again.";
-      console.error("Failed to update profile step:", error?.response?.data || error);
-      toast.error(msg);
+      toast.error(error?.response?.data?.message || error?.message || "Failed to save. Please try again.");
     } finally {
       setUploading(false);
     }
@@ -90,51 +62,43 @@ export default function StepBasic({ next, status }) {
     <motion.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
-      className="space-y-6"
+      className="space-y-6 pb-20 sm:pb-0"
     >
       <div>
         <h2 className="text-xl font-bold text-white mb-1">Basic Information</h2>
         <p className="text-white/40 text-sm">Introduce yourself to the talent pool.</p>
       </div>
 
-      {/* Profile Photo Upload */}
+      {/* Profile Photo */}
       <div className="flex items-center gap-6 group">
         <div
           onClick={() => setIsImageModalOpen(true)}
           className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-4 border-white/5 cursor-pointer hover:border-accent/40 transition-all flex-shrink-0 bg-white/[0.02] flex items-center justify-center"
         >
           {avatarPreview ? (
-            <img
-              src={avatarPreview}
-              alt="Profile preview"
-              className="w-full h-full object-cover"
-            />
+            <img src={avatarPreview} alt="Profile preview" className="w-full h-full object-cover" />
           ) : (
             <FiUser className="text-4xl text-white/10" />
           )}
-
           <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
             <FiCamera className="text-2xl text-white" />
           </div>
         </div>
 
-        <ProfileImageModal 
-          isOpen={isImageModalOpen} 
-          onClose={() => setIsImageModalOpen(false)} 
-          onImageSelect={(url) => { setAvatarPreview(url); setErrors({ ...errors, avatar: null }); }} 
+        <ProfileImageModal
+          isOpen={isImageModalOpen}
+          onClose={() => setIsImageModalOpen(false)}
+          onImageSelect={(url) => { setAvatarPreview(url); setErrors({ ...errors, avatar: null }); }}
         />
 
-        <div className="space-y-0">
+        <div>
           <p className="text-sm font-semibold text-white">Profile Photo <span className="text-red-400 text-xs">*</span></p>
-          <p className="text-[10px] text-white/30">
-            Professional photos build trust. Max 20MB.
-          </p>
-          {errors.avatar && (
-            <p className="text-red-400 text-xs mt-2 font-medium">{errors.avatar}</p>
-          )}
+          <p className="text-[10px] text-white/30">Professional photos build trust. Max 20MB.</p>
+          {errors.avatar && <p className="text-red-400 text-xs mt-2 font-medium">{errors.avatar}</p>}
         </div>
       </div>
 
+      {/* Fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
         <div className="space-y-2">
           <label className="text-sm font-medium text-white/50 px-1">Full Name</label>
@@ -145,9 +109,7 @@ export default function StepBasic({ next, status }) {
             placeholder="e.g. John Doe"
             className="bg-transparent border border-white/10 p-3 rounded-xl w-full focus:border-accent outline-none transition-all text-white placeholder:text-white/20 text-sm"
           />
-          {errors.fullName && (
-            <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.fullName}</p>
-          )}
+          {errors.fullName && <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.fullName}</p>}
         </div>
 
         <div className="space-y-2">
@@ -159,20 +121,13 @@ export default function StepBasic({ next, status }) {
             placeholder="e.g. Hiring Manager, CEO"
             className="bg-transparent border border-white/10 p-3 rounded-xl w-full focus:border-accent outline-none transition-all text-white placeholder:text-white/20 text-sm"
           />
-          {errors.title && (
-            <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.title}</p>
-          )}
+          {errors.title && <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.title}</p>}
         </div>
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-white/50 px-1">Gender</label>
           <CustomDropdown
-            options={[
-              "Male",
-              "Female",
-              "Other",
-              "Prefer not to say"
-            ]}
+            options={["Male", "Female", "Other", "Prefer not to say"]}
             value={formData.gender}
             onChange={(val) => setFormData({ ...formData, gender: val })}
             placeholder="Select Gender"
@@ -210,9 +165,7 @@ export default function StepBasic({ next, status }) {
             placeholder="e.g. New York"
             className="bg-transparent border border-white/10 p-3 rounded-xl w-full focus:border-accent outline-none transition-all text-white placeholder:text-white/20 text-sm"
           />
-          {errors.city && (
-            <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.city}</p>
-          )}
+          {errors.city && <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.city}</p>}
         </div>
 
         <div className="col-span-1 md:col-span-2 space-y-2 pt-4">
@@ -238,32 +191,39 @@ export default function StepBasic({ next, status }) {
               </div>
             </div>
           </div>
-          {errors.bio && (
-            <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.bio}</p>
-          )}
+          {errors.bio && <p className="text-red-400 text-xs mt-1 font-medium px-1">{errors.bio}</p>}
         </div>
       </div>
 
-      <div className="w-full flex justify-end pt-4 mt-2">
+      {/* Desktop button — inline */}
+      <div className="hidden sm:flex justify-end pt-4 mt-2">
         <button
           onClick={handleNext}
           disabled={uploading}
-          className="bg-accent text-white font-bold px-6 sm:px-8 py-2 sm:py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center gap-2 transition-all text-sm"
+          className="bg-accent text-white font-bold px-8 py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center gap-2 transition-all text-sm"
         >
           {uploading ? (
-            <>
-              <div className="animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent" />
-              Saving...
-            </>
+            <><div className="animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent" />Saving...</>
           ) : (
-            <>
-              Continue
-              <FiArrowRight />
-            </>
+            <>Continue <FiArrowRight /></>
+          )}
+        </button>
+      </div>
+
+      {/* Mobile button — fixed to bottom */}
+      <div className="fixed sm:hidden bottom-0 left-0 right-0 z-40 bg-primary border-t border-white/5 px-4 py-3">
+        <button
+          onClick={handleNext}
+          disabled={uploading}
+          className="w-full bg-accent text-white font-bold py-2.5 rounded-full hover:bg-accent/90 disabled:opacity-50 flex items-center justify-center gap-2 transition-all text-sm"
+        >
+          {uploading ? (
+            <><div className="animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent" />Saving...</>
+          ) : (
+            <>Continue <FiArrowRight /></>
           )}
         </button>
       </div>
     </motion.div>
   );
 }
-

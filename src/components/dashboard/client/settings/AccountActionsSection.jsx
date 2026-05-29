@@ -122,7 +122,7 @@ const AccountActionsSection = () => {
             </button>
           </div>
 
-          <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+          <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6">
              <button
                 onClick={() => navigate("/join")}
                 className="w-full sm:w-auto h-11 px-6 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 text-sm font-bold transition-all"
@@ -149,32 +149,36 @@ const AccountActionsSection = () => {
             transition={{ duration: 0.3, ease: "circOut" }}
             className="overflow-hidden"
           >
-            <div className="glass-card rounded-[2rem] p-8 lg:p-10 relative shadow-2xl">
-              <div className="flex justify-between items-center mb-8">
+            <div className="glass-card rounded-2xl p-4 sm:p-10 relative overflow-hidden">
+              {/* Decorative Gradient */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
+              <div className="relative z-10">
+              <div className="flex justify-between items-start mb-8">
                 <div>
                   <h2 className="text-xl font-bold text-white tracking-tight">Transfer Ownership</h2>
-                  <p className="text-white/40 text-xs mt-1 font-medium">Assign a new owner to this client organization</p>
+                  <p className="text-white/40 text-sm mt-1">Assign a new owner to this client organization</p>
                 </div>
-                <button onClick={() => setShowTransfer(false)} className="text-white/20 hover:text-white transition-colors">
-                  <X size={20} />
+                <button onClick={() => setShowTransfer(false)} className="text-white/40 hover:text-accent transition-colors p-1 mt-1">
+                  <X size={18} />
                 </button>
               </div>
 
-              <div className="relative mb-8 group">
-                <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-accent transition-colors" />
+              <div className="relative mb-6 group">
+                <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-accent transition-colors" />
                 <input
                   placeholder="Enter team member name or email..."
-                  className="w-full pl-12 pr-5 py-4 bg-white/5 border border-white/10 rounded-full text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/20"
+                  className="w-full pl-11 pr-5 py-3 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/20 text-sm"
                 />
               </div>
 
-              <div className="flex justify-end pt-4 border-t border-white/5">
+              <div className="flex justify-end sm:justify-end pt-4 border-t border-white/5">
                 <button
                   onClick={() => setShowTransfer(false)}
-                  className="px-6 py-2 rounded-full bg-white/5 text-white/60 hover:text-white text-sm font-bold transition-all border border-white/10"
+                  className="w-full sm:w-auto px-6 py-2 rounded-full bg-white/5 text-white/60 hover:text-white text-sm font-bold transition-all border border-white/10"
                 >
                   Cancel Transfer
                 </button>
+              </div>
               </div>
             </div>
           </motion.div>

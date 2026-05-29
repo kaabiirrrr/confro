@@ -9,10 +9,14 @@ export const registerSchema = z.object({
         .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
         .regex(/[0-9]/, 'Password must contain at least one number')
         .regex(/[!@#$%^&*]/, 'Password must contain at least one special character'),
+    confirmPassword: z.string().min(1, 'Please confirm your password'),
     country: z.string().min(1, 'Please select a country'),
     terms: z.literal(true, {
         errorMap: () => ({ message: 'You must accept the Terms & Conditions' }),
     }),
+}).refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
 });
 
 export const loginSchema = z.object({

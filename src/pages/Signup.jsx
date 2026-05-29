@@ -47,7 +47,7 @@ const Signup = () => {
             onClick={() => setSelectedRole('client')}
             className={`cursor-pointer flex flex-col items-center text-center rounded-[10px] border-2 p-4 sm:p-6 transition-all duration-300 ${
               selectedRole === 'client'
-                ? 'border-accent bg-accent/5 opacity-100'
+                ? 'border-accent opacity-100'
                 : 'border-white/10 hover:border-white/30 opacity-60 hover:opacity-90'
             }`}
           >
@@ -67,7 +67,7 @@ const Signup = () => {
             onClick={() => setSelectedRole('freelancer')}
             className={`cursor-pointer flex flex-col items-center text-center rounded-[10px] border-2 p-4 sm:p-6 transition-all duration-300 ${
               selectedRole === 'freelancer'
-                ? 'border-accent bg-accent/5 opacity-100'
+                ? 'border-accent opacity-100'
                 : 'border-white/10 hover:border-white/30 opacity-60 hover:opacity-90'
             }`}
           >

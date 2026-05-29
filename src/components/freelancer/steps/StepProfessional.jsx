@@ -98,7 +98,7 @@ export default function StepProfessional({ next, back }) {
             <p className="text-white/40 text-xs sm:text-sm">Add your professional rate and experience to complete your profile.</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-x-3 sm:gap-x-8 gap-y-3 sm:gap-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 sm:gap-x-8 gap-y-3 sm:gap-y-5">
             <div className="space-y-2">
               <label className="text-sm font-medium text-white/50 px-1">Years of Experience</label>
               <input
@@ -155,21 +155,17 @@ export default function StepProfessional({ next, back }) {
             </div>
           </div>
 
-          <div className="flex justify-between gap-3 sm:gap-5 pt-2 sm:pt-4">
-            <button
-              onClick={back}
-              className="flex items-center justify-center px-6 sm:px-8 py-2 sm:py-2.5 border border-white/20 rounded-full text-white/60 hover:text-white hover:bg-white/5 transition-colors text-xs sm:text-sm font-semibold"
-            >
-              Back
-            </button>
-
-            <button
-              onClick={handleNext}
-              className="bg-accent text-white font-bold px-6 sm:px-10 py-2 sm:py-2.5 rounded-full hover:bg-accent/90 flex items-center justify-center transition-all text-sm sm:text-base"
-            >
-              Continue
-            </button>
+          <div className="hidden sm:flex justify-between gap-3 sm:gap-5 pt-2 sm:pt-4">
+            <button onClick={back} className="flex items-center justify-center px-6 sm:px-8 py-2 sm:py-2.5 border border-white/20 rounded-full text-white/60 hover:text-white hover:bg-white/5 transition-colors text-xs sm:text-sm font-semibold">Back</button>
+            <button onClick={handleNext} className="bg-accent text-white font-bold px-6 sm:px-10 py-2 sm:py-2.5 rounded-full hover:bg-accent/90 flex items-center justify-center transition-all text-sm sm:text-base">Continue</button>
           </div>
+
+          {/* Mobile fixed bottom buttons */}
+          <div className="fixed sm:hidden bottom-0 left-0 right-0 z-40 bg-primary border-t border-white/5 px-4 py-3 flex gap-3">
+            <button onClick={back} className="flex-1 flex items-center justify-center py-2.5 border border-white/20 rounded-full text-white/60 text-xs font-semibold">Back</button>
+            <button onClick={handleNext} className="flex-1 bg-accent text-white font-bold py-2.5 rounded-full hover:bg-accent/90 flex items-center justify-center text-sm">Continue</button>
+          </div>
+          <div className="h-16 sm:hidden" />
         </div>
       )}
     </motion.div>

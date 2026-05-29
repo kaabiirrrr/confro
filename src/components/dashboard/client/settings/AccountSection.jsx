@@ -53,7 +53,7 @@ const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
   };
 
   return (
-    <div className="glass-card rounded-3xl p-4 sm:p-10 relative overflow-hidden group w-full min-w-0">
+    <div className="glass-card rounded-2xl p-4 sm:p-10 relative overflow-hidden group w-full min-w-0">
       {/* Decorative Gradient */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -mr-32 -mt-32 pointer-events-none" />
 
@@ -71,9 +71,19 @@ const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
           {!edit && (
             <button
               onClick={() => setEdit(true)}
-              className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2 text-sm font-semibold shadow-sm"
+              className="text-white/40 hover:text-accent transition-colors p-1 mt-1"
+              aria-label="Edit Profile"
             >
-              <Pencil size={14} /> Edit Profile
+              <Pencil size={18} />
+            </button>
+          )}
+          {edit && (
+            <button
+              onClick={() => setEdit(false)}
+              className="text-white/40 hover:text-accent transition-colors p-1 mt-1"
+              aria-label="Cancel Edit"
+            >
+              <X size={18} />
             </button>
           )}
         </div>
@@ -150,17 +160,17 @@ const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
                   </div>
                 </div>
 
-                {/* Info rows — Centered on Mobile, Justified on Desktop */}
-                <div className="py-5 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-1 sm:gap-4 border-t border-white/5 first:border-none w-full min-w-0 text-center sm:text-left">
-                  <p className="text-white/30 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Full Name</p>
-                  <p className="text-white text-[14px] sm:text-base font-medium tracking-tight text-center sm:text-right break-words min-w-0 flex-1">{profile?.name || "Not provided"}</p>
+                {/* Info rows */}
+                <div className="py-4 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-1 sm:gap-4 border-t border-white/5 first:border-none w-full min-w-0 text-center sm:text-left">
+                  <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Full Name</p>
+                  <p className="text-white text-sm sm:text-base font-medium tracking-tight text-center sm:text-right break-words min-w-0 flex-1">{profile?.name || "Not provided"}</p>
                 </div>
 
-                <div className="py-5 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-1 sm:gap-4 border-t border-white/5 w-full min-w-0 text-center sm:text-left">
-                  <p className="text-white/30 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Email Address</p>
-                  <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-end gap-2 min-w-0 flex-1 w-full overflow-hidden">
-                    <p className="text-white text-[14px] sm:text-base font-medium tracking-tight truncate min-w-0">{form.email || "No email"}</p>
-                    <CheckCircle2 size={12} className="text-green-500/50 shrink-0" />
+                <div className="py-4 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-1 sm:gap-4 border-t border-white/5 w-full min-w-0 text-center sm:text-left">
+                  <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em] shrink-0">Email Address</p>
+                  <div className="flex items-center justify-center sm:justify-end gap-2 min-w-0 flex-1 w-full overflow-hidden">
+                    <p className="text-white text-sm sm:text-base font-medium tracking-tight truncate min-w-0">{form.email || "No email"}</p>
+                    <CheckCircle2 size={14} className="text-green-500 shrink-0" />
                   </div>
                 </div>
               </div>
@@ -172,36 +182,36 @@ const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-white/40 uppercase tracking-widest pl-1">First Name</label>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">First Name</label>
                     <input
                       name="firstName"
                       value={form.firstName}
                       onChange={handleChange}
                       placeholder="John"
-                      className="w-full px-5 py-3.5 rounded-full bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/10"
+                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/10 text-sm"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-white/40 uppercase tracking-widest pl-1">Last Name</label>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Last Name</label>
                     <input
                       name="lastName"
                       value={form.lastName}
                       onChange={handleChange}
                       placeholder="Doe"
-                      className="w-full px-5 py-3.5 rounded-full bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/10"
+                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white outline-none focus:border-accent/40 focus:bg-white/[0.07] transition-all placeholder:text-white/10 text-sm"
                     />
                   </div>
                 </div>
 
-                <div className="mb-8 space-y-2">
-                  <label className="text-xs font-bold text-white/40 uppercase tracking-widest pl-1">Email</label>
+                <div className="mb-6 space-y-1.5">
+                  <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Email</label>
                   <div className="relative">
                     <input
                       name="email"
                       value={form.email}
                       disabled
-                      className="w-full px-5 py-3.5 rounded-full bg-white/5 border border-white/10 text-white/30 cursor-not-allowed italic"
+                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white/30 cursor-not-allowed italic text-sm"
                     />
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded text-[9px] font-bold bg-white/5 text-white/40 border border-white/10 uppercase tracking-widest">Locked</div>
                   </div>
@@ -217,7 +227,7 @@ const AccountSection = ({ onOpenImageModal, updatedAvatar }) => {
                   <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="w-full sm:w-auto h-12 px-8 rounded-full bg-accent text-white font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                    className="w-full sm:w-auto h-11 px-8 rounded-full bg-accent text-white font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
                   >
                     {saving ? 'Processing...' : 'Save Changes'}
                   </button>
