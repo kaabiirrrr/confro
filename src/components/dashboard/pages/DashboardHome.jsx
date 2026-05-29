@@ -36,7 +36,7 @@ const PromoSlider = memo(({ ads, currentAd, setCurrentAd }) => {
   const isCoreTeam = ads[currentAd].image?.includes("CoreTeamBanner");
 
   return (
-    <div className="relative group rounded-xl sm:rounded-2xl border border-black/5 dark:border-white/10 overflow-hidden bg-secondary h-[180px] sm:h-[300px] flex items-center">
+    <div className="relative group rounded-xl border border-black/5 dark:border-white/10 overflow-hidden bg-secondary h-[180px] sm:h-[300px] flex items-center">
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.img
@@ -54,30 +54,9 @@ const PromoSlider = memo(({ ads, currentAd, setCurrentAd }) => {
             onError={(e) => { e.target.src = '/ad-direct-contracts.png' }}
           />
         </AnimatePresence>
-        <div className={`absolute inset-0 bg-gradient-to-r ${
-          isCoreTeam
-            ? "from-secondary/90 via-secondary/40 to-transparent"
-            : "from-secondary/95 via-secondary/70 to-transparent"
-        }`} />
       </div>
 
       <div className="relative z-10 flex flex-col items-start justify-center p-6 sm:p-16 gap-4 sm:gap-8 w-full max-w-2xl">
-        <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-accent/20 border border-accent/30 text-accent text-[10px] font-black uppercase tracking-[0.2em] backdrop-blur-md">
-          <Zap size={12} className="fill-accent" /> Featured Highlight
-        </div>
-        <div className="space-y-1 sm:space-y-3">
-          <h2 className="text-xl sm:text-3xl sm:text-5xl font-black text-white leading-tight tracking-tighter">
-            {ads[currentAd].title}
-          </h2>
-          <p className="text-white/60 text-sm sm:text-lg font-medium max-w-lg leading-relaxed hidden sm:block">
-            {ads[currentAd].text}
-          </p>
-        </div>
-        {ads[currentAd].button && (
-          <button className="px-5 sm:px-8 h-9 sm:h-11 bg-accent text-white font-black rounded-full hover:scale-105 transition-all flex items-center gap-2 sm:gap-4 active:scale-95 text-xs sm:text-sm">
-            {ads[currentAd].button} <ArrowRight size={16} />
-          </button>
-        )}
       </div>
 
       <div className="absolute bottom-6 right-6 sm:bottom-10 sm:right-16 flex gap-2 sm:gap-3 z-20">
@@ -561,7 +540,7 @@ function DashboardHome() {
             <InfinityLoader fullScreen={false} text="Syncing Network..."/>
           ) : displayedJobs.length === 0 ? (
             <div className="text-center py-20">
-              <Search size={48} className="text-slate-200 dark:text-white/5 mx-auto mb-6" />
+              <img src="/empty-jobs1.png" alt="No matches" className="w-40 h-40 object-contain mx-auto mb-6 opacity-80" />
               <h3 className="text-xl font-black text-slate-800 dark:text-white mb-2">Zero Matches Found</h3>
               <p className="text-slate-400 dark:text-white/20 text-sm font-medium">Try broadening your search or sync your profile tags.</p>
             </div>

@@ -98,7 +98,7 @@ const ContractHistory = () => {
   const totalEarnings = getFilteredEarnings();
 
   return (
-    <div className="max-w-[1500px] mx-auto space-y-4 sm:space-y-6 pb-10 animate-in ml-0 sm:ml-10 mr-0 sm:mr-6 fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight">
+    <div className="max-w-[1500px] mx-auto space-y-4 sm:space-y-6 pb-10 animate-in px-4 sm:ml-10 sm:mr-6 fade-in slide-in-from-bottom-4 duration-500 font-sans tracking-tight">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="text-lg sm:text-2xl font-semibold text-white tracking-tight">Contract History</h1>

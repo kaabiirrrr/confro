@@ -121,9 +121,6 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <p className="hover:text-accent">+91 XXXXXXXX58</p>
-              </li>
-              <li>
                 <p className="hover:text-accent">Nashik, Maharashtra</p>
               </li>
               <li>

@@ -487,15 +487,15 @@ export default function WithdrawalsPage() {
   ];
 
   return (
-    <div className="w-full px-4 sm:px-8 py-8 font-sans space-y-8">
+    <div className="w-full px-4 sm:px-8 pt-2 pb-8 font-sans space-y-8">
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-6">
-        <div className="text-center sm:text-left">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-950 dark:text-white tracking-tight">Withdrawals</h1>
           <p className="text-slate-900/40 dark:text-white/40 text-xs sm:text-sm mt-1">Manage your earnings and secure payouts</p>
         </div>
-        <div className="flex flex-col items-center sm:items-end gap-2 shrink-0 w-full sm:w-auto">
+        <div className="flex flex-col items-start sm:items-end gap-2 shrink-0 w-full sm:w-auto">
           <button onClick={() => setShowModal(true)} disabled={!canWithdraw || loading}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:grayscale text-white text-sm font-bold transition-all">
             Withdraw Funds
@@ -554,7 +554,7 @@ export default function WithdrawalsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
         {/* History */}
         <div>
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-6">
             <h2 className="text-slate-950 dark:text-white font-bold text-sm tracking-tight flex items-center gap-2">
               <Clock size={16} className="text-accent" /> Withdrawal History
             </h2>
