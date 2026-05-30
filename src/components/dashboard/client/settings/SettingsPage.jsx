@@ -30,7 +30,7 @@ const ClientSettingsSidebar = ({ active, setActive }) => {
   return (
     <div className="w-full lg:w-[220px] min-w-0">
       {/* Mobile: horizontal scrollable tabs */}
-      <div className="flex lg:hidden gap-1 overflow-x-auto no-scrollbar border-b border-white/5 w-full min-w-0 relative">
+      <div className="flex lg:hidden overflow-x-auto no-scrollbar border-b border-white/5 w-full min-w-0 relative -mx-4 px-4" style={{WebkitOverflowScrolling: 'touch'}}>
         {menu.map(item => (
           <button
             key={item.id}
