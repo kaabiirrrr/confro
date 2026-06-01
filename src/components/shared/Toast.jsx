@@ -142,7 +142,7 @@ function ToastItem({ t }) {
         alignItems: 'center',
         gap: 12,
         padding: '12px 16px',
-        borderRadius: 16,
+        borderRadius: 12,
         minWidth: 320,
         maxWidth: 450,
         opacity: visible ? 1 : 0,
@@ -182,7 +182,7 @@ function ToastItem({ t }) {
 
       <button
         onClick={e => { e.stopPropagation(); dismiss(); }}
-        className="w-[22px] h-[22px] rounded-md flex-shrink-0 flex items-center justify-center transition-all bg-black/[0.04] hover:bg-black/10 dark:bg-white/[0.04] dark:hover:bg-white/10 border border-black/[0.06] dark:border-white/[0.06] text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white"
+        className="w-[22px] h-[22px] flex-shrink-0 flex items-center justify-center transition-all text-black/30 hover:text-accent dark:text-white/30 dark:hover:text-accent"
       >
         <X size={12} strokeWidth={2.5} />
       </button>

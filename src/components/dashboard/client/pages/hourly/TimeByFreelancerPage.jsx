@@ -52,13 +52,13 @@ export default function TimeByFreelancerPage() {
       </div>
 
       {/* Filters Interface */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 p-3 sm:p-4 bg-transparent border border-white/10 rounded-[24px]">
-        <div className="space-y-2">
-          <label className="block text-[10px] text-white/30 uppercase font-black tracking-[0.2em] ml-1">Start Date</label>
+      <div className="flex flex-row items-end justify-end gap-3 sm:gap-4 mb-10">
+        <div className="space-y-2 w-48">
+          <label className="block text-[10px] text-white/30 uppercase font-black tracking-[0.2em]">Start Date</label>
           <CustomDatePicker value={from} onChange={setFrom} />
         </div>
-        <div className="space-y-2">
-          <label className="block text-[10px] text-white/30 uppercase font-black tracking-[0.2em] ml-1">End Date</label>
+        <div className="space-y-2 w-48">
+          <label className="block text-[10px] text-white/30 uppercase font-black tracking-[0.2em]">End Date</label>
           <CustomDatePicker value={to} onChange={setTo} />
         </div>
       </div>
@@ -72,8 +72,13 @@ export default function TimeByFreelancerPage() {
           {[1,2,3].map(i => <div key={i} className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-16" />)}
         </div>
       ) : rows.length === 0 ? (
-        <div className="text-center py-20 bg-transparent rounded-2xl">
-          <Users className="mx-auto text-white/20 mb-4" size={48} />
+        <div className="text-center bg-transparent rounded-2xl">
+          <img
+            src="/ChatGPT Image Jun 1, 2026, 01_20_47 PM.png"
+            alt="No data"
+            style={{ width: 300, height: 300 }}
+            className="object-contain mx-auto"
+          />
           <h3 className="text-white font-semibold text-lg">No Operational Data Found</h3>
           <p className="text-white/30 text-xs mt-2 max-w-xs mx-auto font-medium italic">
             Adjust the temporal parameters above to initialize the data stream for this reporting period.

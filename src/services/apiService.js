@@ -452,6 +452,11 @@ export const createDirectContract = async (payload) => {
     return data;
 };
 
+export const lookupFreelancerByEmail = async (email) => {
+    const { data } = await api.post(`/api/direct-contracts/lookup-freelancer`, { email });
+    return data;
+};
+
 export const getDirectContracts = async (params = {}) => {
     const query = new URLSearchParams(
         Object.fromEntries(Object.entries(params).filter(([, v]) => v != null && v !== ''))

@@ -61,16 +61,16 @@ export default function WeeklySummaryPage() {
         <p className="text-white/40 text-[11px] sm:text-sm mt-1 font-medium leading-relaxed max-w-2xl">Overview of your spending activity and transaction velocity over time.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4 p-3 sm:p-4 bg-transparent border border-white/10 rounded-[24px] items-end">
-        <div className="lg:col-span-3 space-y-1.5">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Temporal Start</label>
+      <div className="flex flex-row items-end justify-end gap-3 sm:gap-4 mb-8">
+        <div className="space-y-1.5 w-48">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Start Date</label>
           <CustomDatePicker value={from} onChange={setFrom} />
         </div>
-        <div className="lg:col-span-3 space-y-1.5">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Temporal End</label>
+        <div className="space-y-1.5 w-48">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">End Date</label>
           <CustomDatePicker value={to} onChange={setTo} />
         </div>
-        <div className="lg:col-span-6 flex gap-2 w-full overflow-x-auto no-scrollbar pb-1">
+        <div className="flex gap-2 pb-0.5">
           {[
             { label: '4 weeks', weeks: 4 },
             { label: '8 weeks', weeks: 8 },
@@ -92,10 +92,15 @@ export default function WeeklySummaryPage() {
           <div className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-80" />
         </div>
       ) : !summary ? (
-        <div className="text-center py-24 bg-transparent border border-white/10 rounded-2xl">
-          <BarChart3 className="mx-auto text-white/10 mb-6" size={56} strokeWidth={1.5} />
+        <div className="flex flex-col items-center justify-center text-center mt-20 px-4">
+          <img
+            src="/ChatGPT Image Jun 1, 2026, 01_41_35 PM.png"
+            alt="No data"
+            style={{ width: 200, height: 200 }}
+            className="object-contain mx-auto mb-6"
+          />
           <h3 className="text-white font-bold text-xl tracking-tight">No Data Available</h3>
-          <p className="text-white/30 text-xs mt-3 max-w-sm mx-auto font-medium leading-relaxed uppercase tracking-widest italic">
+          <p className="text-white/30 text-xs mt-3 max-w-sm mx-auto font-medium leading-relaxed">
             Zero financial metrics found for this period. Try extending the date range.
           </p>
         </div>
@@ -152,8 +157,16 @@ export default function WeeklySummaryPage() {
               </div>
             </div>
           ) : (
-            <div className="bg-transparent border border-white/10 rounded-2xl p-12 text-center text-white/30 text-sm font-medium italic tracking-wider">
-              No weekly breakdown available for this temporal range.
+            <div className="flex flex-col items-center justify-center text-center py-12 px-4">
+              <img
+                src="/ChatGPT Image Jun 1, 2026, 01_41_35 PM.png"
+                alt="No weekly breakdown"
+                style={{ width: 350, height: 350 }}
+                className="object-contain mx-auto mb-4"
+              />
+              <p className="text-white/30 text-sm font-medium italic">
+                No weekly breakdown available for this temporal range.
+              </p>
             </div>
           )}
         </>

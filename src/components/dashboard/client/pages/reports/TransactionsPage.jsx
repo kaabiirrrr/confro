@@ -73,17 +73,17 @@ export default function TransactionsPage() {
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 p-3 sm:p-4 bg-transparent border border-white/10 rounded-[24px]">
-        <div className="space-y-1.5">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Temporal Start</label>
+      <div className="flex flex-row flex-wrap items-end justify-end gap-3 sm:gap-4 mb-8">
+        <div className="space-y-1.5 w-44">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Start Date</label>
           <CustomDatePicker value={filters.from} onChange={(val) => setFilters(p => ({ ...p, from: val, page: 1 }))} />
         </div>
-        <div className="space-y-1.5">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Temporal End</label>
+        <div className="space-y-1.5 w-44">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">End Date</label>
           <CustomDatePicker value={filters.to} onChange={(val) => setFilters(p => ({ ...p, to: val, page: 1 }))} />
         </div>
-        <div className="space-y-1.5">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Status Protocol</label>
+        <div className="space-y-1.5 w-44">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Status</label>
           <CustomDropdown
             options={STATUSES.map(s => ({ label: s || 'All statuses', value: s }))}
             value={filters.status}
@@ -91,8 +91,8 @@ export default function TransactionsPage() {
             className="w-full"
           />
         </div>
-        <div className="space-y-1.5">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Contract Node</label>
+        <div className="space-y-1.5 w-52">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Contract</label>
           <CustomDropdown
             options={[
               { label: 'All contracts', value: '' },
@@ -110,10 +110,15 @@ export default function TransactionsPage() {
           {[1, 2, 3, 4, 5].map(i => <div key={i} className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-16 w-full" />)}
         </div>
       ) : rows.length === 0 ? (
-        <div className="text-center py-24 bg-transparent border border-white/10 rounded-2xl">
-          <Receipt className="mx-auto text-white/10 mb-6" size={56} strokeWidth={1.5} />
+        <div className="flex flex-col items-center justify-center text-center">
+          <img
+            src="/ChatGPT Image Jun 1, 2026, 02_23_18 PM.png"
+            alt="No transactions"
+            style={{ width: 350, height: 350 }}
+            className="object-contain mx-auto"
+          />
           <h3 className="text-white font-bold text-xl tracking-tight">No transactions found</h3>
-          <p className="text-white/30 text-xs mt-3 max-w-sm mx-auto font-medium leading-relaxed uppercase tracking-widest italic">
+          <p className="text-white/30 text-xs mt-3 max-w-sm mx-auto font-medium leading-relaxed">
             Try adjusting the filters to see results.
           </p>
         </div>

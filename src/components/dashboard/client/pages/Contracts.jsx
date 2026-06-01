@@ -74,19 +74,23 @@ const Contracts = () => {
           {[1, 2, 3].map(i => <div key={i} className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-48" />)}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-12 sm:p-20 bg-transparent border border-white/10 rounded-2xl text-center shadow-lg">
-          <FileSignature className="w-12 h-12 text-light-text/20 mb-6" />
-          <h3 className="text-lg font-semibold text-white mb-2">No contracts yet</h3>
-          <p className="text-light-text/50 text-base mb-8 max-w-md mx-auto">
+        <div className="flex flex-col items-center justify-center text-center">
+          <img
+            src="/ChatGPT Image Jun 1, 2026, 01_04_54 PM.png"
+            alt="No contracts yet"
+            style={{ width: 350, height: 350 }}
+            className="object-contain mx-auto"
+          />
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">No contracts yet</h3>
+          <p className="text-slate-500 dark:text-white/40 text-sm max-w-md mx-auto mb-6">
             Accept a proposal to create a contract and start working with talent.
           </p>
-          <Button 
-            onClick={() => navigate('/client/jobs')} 
-            variant="primary" 
-            className="rounded-full px-8 py-3 text-[11px] font-bold uppercase tracking-[0.2em] hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all"
+          <button
+            onClick={() => navigate('/client/jobs')}
+            className="px-6 py-2.5 rounded-full bg-accent text-white text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
           >
-            Manage your jobs →
-          </Button>
+            Manage your jobs
+          </button>
         </div>
       ) : (
         <div className="space-y-4">

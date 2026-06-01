@@ -58,24 +58,30 @@ const AccountHealthSection = () => {
         </div>
 
         {/* ACCOUNT STANDING */}
-        <div className="bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-6 sm:p-10 flex flex-col sm:flex-row justify-between items-center gap-6 relative overflow-hidden group">
+        <div className="bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-6 sm:p-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[100px] -mr-32 -mt-32 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
 
-          <div className="w-full sm:max-w-[400px] relative z-10 text-center sm:text-left">
+          <div className="w-full sm:max-w-[400px] relative z-10 text-center sm:text-left flex flex-col">
             <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">Account standing</h3>
             <p className="text-slate-500 dark:text-white/40 text-[11px] sm:text-sm leading-relaxed mb-6">
               Based on your enforcement history, your account is in good standing and meets our guidelines.
               Continue following best practices to maintain your status and avoid future enforcement.
             </p>
+            {/* Standing indicator — mobile only, shown above button */}
+            <div className="flex sm:hidden flex-col items-center gap-2 mb-4 relative z-10">
+              <div className="w-20 h-10 border-t-[5px] border-accent rounded-t-full opacity-60" />
+              <span className="text-accent text-[9px] font-black uppercase tracking-[0.2em] mt-2">Standing: Good</span>
+            </div>
             <Link
               to="/client/identity-verification"
-              className="w-full sm:w-auto flex sm:inline-flex items-center justify-center px-6 py-2.5 sm:py-3 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-bold rounded-full hover:bg-slate-200 dark:hover:bg-white/10 transition-all active:scale-95"
+              className="w-full sm:w-auto flex sm:inline-flex items-center justify-center px-10 py-2 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-bold rounded-full hover:bg-slate-200 dark:hover:bg-white/10 transition-all active:scale-95 mt-auto"
             >
               Verify Identity
             </Link>
           </div>
 
-          <div className="flex flex-col items-center gap-2 shrink-0 mx-auto sm:mx-0 relative z-10">
+          {/* Standing indicator — desktop only */}
+          <div className="hidden sm:flex flex-col items-center gap-2 shrink-0 mx-auto sm:mx-0 relative z-10">
             <div className="w-20 h-10 border-t-[5px] border-accent rounded-t-full opacity-60" />
             <span className="text-accent text-[9px] sm:text-xs font-black uppercase tracking-[0.2em] mt-2">Standing: Good</span>
           </div>

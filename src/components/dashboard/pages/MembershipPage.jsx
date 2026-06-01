@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../../context/ThemeContext';
 import { useAuth } from '../../../context/AuthContext';
 import { useProfile } from '../../../context/ProfileContext';
+import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
@@ -16,10 +17,24 @@ const MembershipPage = () => {
   const { theme } = useTheme();
   const { role, profile: user, membership, refreshProfile, setMembership } = useAuth();
   const { refetch: refetchProfileContext, setBalance } = useProfile();
+  const [searchParams] = useSearchParams();
   const [isYearly, setIsYearly] = useState(false);
   const isClient = role === 'CLIENT';
   const [activePlan, setActivePlan] = useState("PRO"); // Track selected plan for interactive layout
   const [isSalesModalOpen, setIsSalesModalOpen] = useState(false);
+
+  // Auto-highlight plan from URL param e.g. ?plan=elite
+  useEffect(() => {
+    const planParam = searchParams.get('plan');
+    if (planParam) {
+      setActivePlan(planParam.toUpperCase());
+      // Scroll to plans section after a short delay to let the page render
+      setTimeout(() => {
+        const el = document.getElementById('plans-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
+  }, [searchParams]);
 
   const [salesEmail, setSalesEmail] = useState('');
   const [salesNeeds, setSalesNeeds] = useState('');
@@ -497,7 +512,7 @@ const MembershipPage = () => {
       )}
 
       {/* 3-Card Layout */}
-      <div className="relative pt-10 pb-20">
+      <div className="relative pt-10 pb-20" id="plans-section">
         <div className="flex flex-row items-center lg:items-stretch justify-center gap-2 sm:gap-6 w-full max-w-6xl mx-auto px-1 sm:px-4 relative h-[530px] lg:h-auto overflow-visible">
           {plans.map((plan, index) => {
             // Exact ID match for the user's active plan row or fallback to free plan
@@ -542,8 +557,9 @@ const MembershipPage = () => {
                 }
                 transition={{
                   type: 'spring',
-                  stiffness: 300,
-                  damping: 25
+                  stiffness: 400,
+                  damping: 30,
+                  mass: 0.8
                 }}
                 className={`cursor-pointer border flex flex-col transition-all duration-300 shadow-none ${
                   isLargeScreen 

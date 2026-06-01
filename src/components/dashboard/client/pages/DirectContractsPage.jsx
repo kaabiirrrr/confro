@@ -76,9 +76,8 @@ export default function DirectContractsPage() {
         </div>
         <button
           onClick={() => navigate('/client/direct-contracts/new')}
-          className="flex items-center gap-2 px-5 py-2.5 bg-accent text-white rounded-full text-xs font-bold uppercase tracking-widest hover:bg-accent/90 transition shrink-0 w-full sm:w-auto justify-center"
+          className="flex items-center gap-2 px-5 py-2.5 bg-accent text-white rounded-full text-xs font-bold uppercase tracking-widest hover:opacity-90 active:scale-95 transition shrink-0 w-full sm:w-auto justify-center"
         >
-          <Plus size={14} strokeWidth={2.5} />
           New Direct Contract
         </button>
       </div>
@@ -89,19 +88,21 @@ export default function DirectContractsPage() {
           {[1, 2, 3, 4].map(i => <SkeletonCard key={i} />)}
         </div>
       ) : contracts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-transparent border border-dashed border-white/10 rounded-2xl text-center px-4">
-          <div className="w-16 h-16 flex items-center justify-center mb-5">
-            <img src="/Icons/icons8-empty-box-80.png" alt="No contracts" className="w-10 h-10 object-contain invert opacity-20" />
-          </div>
-          <h3 className="text-white font-bold text-base mb-2">No direct contracts yet</h3>
-          <p className="text-white/30 text-xs max-w-xs mx-auto leading-relaxed mb-6">
+        <div className="flex flex-col items-center justify-center text-center">
+          <img
+            src="/ChatGPT Image Jun 1, 2026, 12_40_50 PM.png"
+            alt="No direct contracts"
+            style={{ width: 350, height: 350 }}
+            className="object-contain mx-auto"
+          />
+          <h3 className="text-slate-900 dark:text-white font-bold text-base mb-2">No direct contracts yet</h3>
+          <p className="text-slate-500 dark:text-white/30 text-sm max-w-xs mx-auto leading-relaxed mb-6">
             Create a contract directly with a freelancer without posting a job.
           </p>
           <button
             onClick={() => navigate('/client/direct-contracts/new')}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/10 text-white rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition"
+            className="px-6 py-2.5 rounded-full bg-accent text-white text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
           >
-            <Plus size={14} />
             New Direct Contract
           </button>
         </div>

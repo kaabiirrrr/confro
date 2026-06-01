@@ -20,6 +20,7 @@ import OtpModal from '../../../OtpModal';
 import { useOtp } from '../../../../hooks/useOtp';
 import { useAuth } from '../../../../context/AuthContext';
 import { getApiUrl } from '../../../../utils/authUtils';
+import { useTheme } from '../../../../context/ThemeContext';
 
 const CATEGORIES = [
   'Web Development', 'Mobile Development', 'Design & Creative', 'Writing & Translation',
@@ -49,7 +50,12 @@ const PostJob = () => {
   const [searchParams] = useSearchParams();
   const editJobId = searchParams.get('edit');
   const { profile } = useAuth();
+  const { theme } = useTheme();
   const phone = profile?.mobile_number || profile?.phone || '';
+
+  // Connect AI logo — dark logo for light theme, white logo for dark theme
+  const isLight = theme === 'light' || (theme === 'auto' && typeof window !== 'undefined' && window.matchMedia && !window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const aiLogoSrc = isLight ? '/Icons/AI-Connect.png' : '/Icons/White-AI-Connect.png';
 
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(!!editJobId);
@@ -105,6 +111,7 @@ const PostJob = () => {
       }).catch(() => { });
     }
   }, [editJobId]);
+
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [skillInput, setSkillInput] = useState('');
   const [showSkillSuggestions, setShowSkillSuggestions] = useState(false);
@@ -120,8 +127,8 @@ const PostJob = () => {
     experience_level: 'intermediate',
     duration: '',
     bid_deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
-    job_mode: 'single', // NEW: 'single' | 'team'
-    roles: [{ title: '', description: '', budget: '', positions: 1, priority: 0 }], // NEW: Role Builder state
+    job_mode: 'single',
+    roles: [{ title: '', description: '', budget: '', positions: 1, priority: 0 }],
   });
 
   const [aiModal, setAiModal] = useState({
@@ -130,7 +137,6 @@ const PostJob = () => {
     type: 'improve',
     isThinking: false
   });
-
 
   const API_URL = getApiUrl();
 
@@ -222,19 +228,14 @@ const PostJob = () => {
     if (form.description.length < 10 && form.title.length < 5) {
       return toast.error('Please type a title or rough description first.');
     }
-
     setAiModal(prev => ({ ...prev, isThinking: true }));
     try {
-      // Send a clean, consolidated context string instead of raw JSON
       const context = `Title: ${form.title}\nDescription: ${form.description}`;
       const res = await aiImproveJob(context);
-
       if (res.success) {
-        // Ensure we handle both string and object data gracefully
         const description = typeof res.data === 'string'
           ? res.data
           : res.data.improvedPost || res.data.description || JSON.stringify(res.data);
-
         setAiModal({
           isOpen: true,
           aiData: { description: description, skills: [] },
@@ -250,7 +251,6 @@ const PostJob = () => {
 
   const handleAISuggestSkills = async () => {
     if (!form.category) return toast.error('Please select a category first.');
-
     setAiModal(prev => ({ ...prev, isThinking: true }));
     try {
       const res = await aiSuggestSkills(form.category);
@@ -325,45 +325,49 @@ const PostJob = () => {
     }
   };
 
-
   if (isFetching) {
     return (
       <div className="flex items-center justify-center h-64">
-        <InfinityLoader/>
+        <InfinityLoader />
       </div>
     );
   }
 
   return (
-    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <SectionHeader
-        title={editJobId ? 'Edit Job' : 'Post a Job'}
-        subtext="Find the perfect freelancer for your project"
-      />
+    <div className="max-w-[1500px] mx-auto mt-2 pb-12 space-y-1 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
-      {/* ECONOMY & BUDGET SUMMARY — Front and Center for Transparency */}
+      {/* TITLE */}
+      <div>
+        <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white tracking-tight">
+          {editJobId ? 'Edit Job' : 'Post a Job'}
+        </h1>
+        <p className="text-slate-500 dark:text-white/40 text-[11px] sm:text-sm mt-1 font-medium leading-relaxed max-w-2xl">
+          Find the perfect freelancer for your project.
+        </p>
+      </div>
+
+      {/* CONNECTS BANNER */}
       {connectsSettings?.is_connect_system_enabled && (
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-3 rounded-2xl bg-transparent"
+          className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-3 rounded-xl bg-transparent"
         >
           <div className="flex items-center gap-3">
             <img src="/Icons/link.png" alt="Connects" className="w-5 h-5 object-contain opacity-60" />
-            <p className="text-xs text-white/40">
+            <p className="text-xs text-slate-500 dark:text-white/40">
               Posting requires <span className="text-accent font-bold">{connectsSettings.job_post_cost} connects</span>
             </p>
           </div>
-
           <div className="flex items-center gap-3 sm:gap-6">
             <div className="flex items-center gap-1.5 sm:gap-2">
-              <p className="text-[9px] sm:text-[10px] text-white/20 uppercase tracking-widest whitespace-nowrap">Connects Required</p>
+              <p className="text-[9px] sm:text-[10px] text-slate-400 dark:text-white/20 uppercase tracking-widest whitespace-nowrap">Connects Required</p>
               <p className="text-xs sm:text-sm font-black text-accent">{connectsSettings.job_post_cost}</p>
             </div>
-            <div className="w-px h-4 bg-white/10 shrink-0" />
+            <div className="w-px h-4 bg-slate-200 dark:bg-white/10 shrink-0" />
             <div className="flex items-center gap-1.5 sm:gap-2">
-              <p className="text-[9px] sm:text-[10px] text-white/20 uppercase tracking-widest whitespace-nowrap">Connects Available</p>
-              <p className={`text-xs sm:text-sm font-black ${connectsBalance < connectsSettings.job_post_cost ? 'text-rose-500' : 'text-white/50'}`}>
+              <p className="text-[9px] sm:text-[10px] text-slate-400 dark:text-white/20 uppercase tracking-widest whitespace-nowrap">Connects Available</p>
+              <p className={`text-xs sm:text-sm font-black ${connectsBalance < connectsSettings.job_post_cost ? 'text-rose-500' : 'text-slate-500 dark:text-white/50'}`}>
                 {connectsBalance}
               </p>
             </div>
@@ -376,84 +380,98 @@ const PostJob = () => {
         </motion.div>
       )}
 
-      <div className="mt-10 space-y-12">
-
-        {/* Hiring Type Toggle */}
-        <FormSection label="Hiring Type" icon={<Layers size={14} />}>
+      {/* HIRING TYPE */}
+      <div className="rounded-xl p-3 sm:p-4 relative overflow-hidden">
+        
+        <div className="relative z-10">
+          <p className="text-[10px] font-black text-slate-900/30 dark:text-white/30 uppercase tracking-[0.2em] mb-5">Hiring Type</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button
               onClick={() => handleChange('job_mode', 'single')}
-              className={`p-6 rounded-2xl border text-left transition-all relative overflow-hidden group ${form.job_mode === 'single' ? 'border-accent bg-transparent' : 'bg-transparent border-white/5 hover:border-white/20'}`}
+              className={`relative border rounded-xl p-5 sm:p-6 text-left transition-all duration-300 ${form.job_mode === 'single' ? 'border-accent' : 'border-slate-200 dark:border-white/10 hover:border-accent/50'}`}
             >
-
-              <div className="flex items-center gap-3 mb-2">
-                <Briefcase size={20} className={form.job_mode === 'single' ? 'text-accent' : 'text-white/20'} />
-                <span className={`text-sm font-bold ${form.job_mode === 'single' ? 'text-accent' : 'text-white'}`}>Individual</span>
+              <div className="flex justify-between items-center mb-3">
+                <div className="flex items-center gap-2">
+                  <img src="/Icons/icons8-user-100.png" alt="Individual" className="w-5 h-5 object-contain" />
+                  <span className={`text-sm font-bold ${form.job_mode === 'single' ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-white/50'}`}>Individual</span>
+                </div>
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${form.job_mode === 'single' ? 'border-accent' : 'border-slate-300 dark:border-white/20'}`}>
+                  {form.job_mode === 'single' && <div className="w-2.5 h-2.5 rounded-full bg-accent" />}
+                </div>
               </div>
-              <p className="text-[10px] text-white/40 leading-relaxed font-medium uppercase tracking-wider">Hire one freelancer for a specific project with a single budget.</p>
-              {form.job_mode === 'single' && <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-accent" />}
+              <p className="text-[12px] sm:text-sm text-slate-400 dark:text-white/40 leading-relaxed font-medium">Hire one freelancer for a specific project with a single budget.</p>
             </button>
-
             <button
               onClick={() => handleChange('job_mode', 'team')}
-              className={`p-6 rounded-2xl border text-left transition-all relative overflow-hidden group ${form.job_mode === 'team' ? 'border-accent bg-transparent' : 'bg-transparent border-white/5 hover:border-white/20'}`}
+              className={`relative border rounded-xl p-5 sm:p-6 text-left transition-all duration-300 ${form.job_mode === 'team' ? 'border-accent' : 'border-slate-200 dark:border-white/10 hover:border-accent/50'}`}
             >
-
-              <div className="flex items-center gap-3 mb-2">
-                <Layers size={20} className={form.job_mode === 'team' ? 'text-accent' : 'text-white/20'} />
-                <span className={`text-sm font-bold ${form.job_mode === 'team' ? 'text-accent' : 'text-white'}`}>Team Hiring</span>
+              <div className="flex justify-between items-center mb-3">
+                <div className="flex items-center gap-2">
+                  <img src="/Icons/icons8-meeting-room-100.png" alt="Team Hiring" className="w-5 h-5 object-contain" />
+                  <span className={`text-sm font-bold ${form.job_mode === 'team' ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-white/50'}`}>Team Hiring</span>
+                </div>
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${form.job_mode === 'team' ? 'border-accent' : 'border-slate-300 dark:border-white/20'}`}>
+                  {form.job_mode === 'team' && <div className="w-2.5 h-2.5 rounded-full bg-accent" />}
+                </div>
               </div>
-              <p className="text-[10px] text-white/40 leading-relaxed font-medium uppercase tracking-wider">Build a team with multiple roles, each with their own budget and positions.</p>
-              {form.job_mode === 'team' && <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-accent" />}
+              <p className="text-[12px] sm:text-sm text-slate-400 dark:text-white/40 leading-relaxed font-medium">Build a team with multiple roles, each with their own budget and positions.</p>
             </button>
           </div>
-        </FormSection>
+        </div>
+      </div>
 
-
-        {/* Job Title */}
-        <FormSection label="Job Title" icon={<Briefcase size={14} />}>
+      {/* JOB TITLE */}
+      <div className="rounded-xl p-3 sm:p-4 relative overflow-hidden">
+        
+        <div className="relative z-10">
+          <p className="text-[10px] font-black text-slate-900/30 dark:text-white/30 uppercase tracking-[0.2em] mb-5">Job Title</p>
           <input
             type="text"
             value={form.title}
             onChange={e => handleChange('title', e.target.value)}
-            className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-5 py-4 text-sm text-white placeholder-white/10 focus:outline-none focus:border-accent transition-all"
+            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 outline-none focus:border-accent/50 rounded px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/20 transition-all"
             placeholder="e.g. React Developer Needed for E-commerce Website"
             maxLength={100}
           />
           <div className="flex justify-end mt-1.5">
-            <span className="text-[10px] font-medium text-white/10">{form.title.length}/100</span>
+            <span className="text-[10px] font-medium text-slate-400 dark:text-white/20">{form.title.length}/100</span>
           </div>
-        </FormSection>
+        </div>
+      </div>
 
-        {/* Description */}
-        <FormSection
-          label="Job Description"
-          icon={<FileText size={14} />}
-          action={
+      {/* DESCRIPTION */}
+      <div className="rounded-xl p-3 sm:p-4 relative overflow-hidden">
+        
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-5">
+            <p className="text-[10px] font-black text-slate-900/30 dark:text-white/30 uppercase tracking-[0.2em]">Job Description</p>
             <button
               onClick={handleAIImprove}
               disabled={aiModal.isThinking}
               className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-full text-accent text-[8px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50"
               title={aiModal.isThinking ? 'Reading Context...' : 'Rewrite with Connect AI'}
             >
-              <Sparkles size={12} className="sm:w-2.5 sm:h-2.5" />
+              <img src={aiLogoSrc} alt="Connect AI" className="w-3.5 h-3.5 object-contain" />
               <span className="hidden sm:inline">
                 {aiModal.isThinking ? 'Reading Context...' : 'Rewrite with Connect AI'}
               </span>
             </button>
-          }
-        >
+          </div>
           <textarea
             rows="10"
             value={form.description}
             onChange={e => handleChange('description', e.target.value)}
-            className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-5 py-5 text-sm text-white placeholder-white/10 focus:outline-none focus:border-accent resize-none transition-all leading-relaxed"
+            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 outline-none focus:border-accent/50 rounded-xl px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/20 transition-all resize-none leading-relaxed"
             placeholder="Describe your project in detail..."
           />
-        </FormSection>
+        </div>
+      </div>
 
-        {/* Category */}
-        <FormSection label="Category" icon={<Layers size={14} />}>
+      {/* CATEGORY */}
+      <div className="rounded-xl p-4 sm:p-6 relative">
+        
+        <div className="relative z-50">
+          <p className="text-[10px] font-black text-slate-900/30 dark:text-white/30 uppercase tracking-[0.2em] mb-5">Category</p>
           <CustomDropdown
             options={CATEGORIES}
             value={form.category}
@@ -461,26 +479,27 @@ const PostJob = () => {
             placeholder="Select a category..."
             className="w-full"
           />
-        </FormSection>
+        </div>
+      </div>
 
-        {/* Skills */}
-        <FormSection
-          label="Skills Required"
-          icon={<Tag size={14} />}
-          action={
+      {/* SKILLS */}
+      <div className="rounded-xl p-3 sm:p-4 relative overflow-hidden">
+        
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-5">
+            <p className="text-[10px] font-black text-slate-900/30 dark:text-white/30 uppercase tracking-[0.2em]">Skills Required</p>
             <button
               onClick={handleAISuggestSkills}
               disabled={aiModal.isThinking}
               className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-full text-accent text-[8px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50"
               title={aiModal.isThinking ? 'Analyzing Market...' : 'Suggest Skills'}
             >
-              <Wand2 size={12} className="sm:w-2.5 sm:h-2.5" />
+              <img src={aiLogoSrc} alt="Connect AI" className="w-3.5 h-3.5 object-contain" />
               <span className="hidden sm:inline">
                 {aiModal.isThinking ? 'Analyzing Market...' : 'Suggest Skills'}
               </span>
             </button>
-          }
-        >
+          </div>
           <div className="flex flex-wrap gap-2 mb-4">
             {selectedSkills.map(skill => (
               <span key={skill} className="flex items-center gap-1.5 bg-accent/5 text-accent border border-accent/10 rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wider">
@@ -491,23 +510,25 @@ const PostJob = () => {
               </span>
             ))}
           </div>
-          <div className="relative">
-            <input
-              type="text"
-              value={skillInput}
-              onChange={e => { setSkillInput(e.target.value); setShowSkillSuggestions(true); }}
-              onFocus={() => setShowSkillSuggestions(true)}
-              onKeyDown={e => { if (e.key === 'Enter' && skillInput.trim()) { addSkill(skillInput.trim()); } }}
-              className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-5 py-4 text-sm text-white placeholder-white/10 focus:outline-none focus:border-accent transition-all"
-              placeholder="Add skill (up to 10)..."
-              disabled={selectedSkills.length >= 10}
-            />
-          </div>
-        </FormSection>
+          <input
+            type="text"
+            value={skillInput}
+            onChange={e => { setSkillInput(e.target.value); setShowSkillSuggestions(true); }}
+            onFocus={() => setShowSkillSuggestions(true)}
+            onKeyDown={e => { if (e.key === 'Enter' && skillInput.trim()) { addSkill(skillInput.trim()); } }}
+            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 outline-none focus:border-accent/50 rounded px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/20 transition-all"
+            placeholder="Add skill (up to 10)..."
+            disabled={selectedSkills.length >= 10}
+          />
+        </div>
+      </div>
 
-        {/* Budget Section (Conditional) */}
-        {form.job_mode === 'single' ? (
-          <FormSection label="Budget & Pricing" icon={<IndianRupee size={14} />}>
+      {/* BUDGET — single mode */}
+      {form.job_mode === 'single' && (
+        <div className="rounded-xl p-3 sm:p-4 relative overflow-hidden">
+          
+          <div className="relative z-10">
+            <p className="text-[10px] font-black text-slate-900/30 dark:text-white/30 uppercase tracking-[0.2em] mb-5">Budget &amp; Pricing</p>
             <div className="space-y-4">
               <div className="flex gap-3">
                 {['fixed', 'hourly'].map(type => (
@@ -515,94 +536,98 @@ const PostJob = () => {
                     key={type}
                     type="button"
                     onClick={() => handleChange('budget_type', type)}
-                    className={`flex-1 py-3 px-4 rounded-2xl border text-[10px] font-bold uppercase tracking-widest transition-all ${form.budget_type === type
-                      ? 'bg-accent/10 border-accent text-accent'
-                      : 'bg-white/[0.02] border-white/5 text-white/40 hover:bg-white/[0.04]'
-                      }`}
+                    className={`flex-1 py-3 px-4 rounded-xl border text-[10px] font-bold uppercase tracking-widest transition-all ${form.budget_type === type
+                      ? 'border-accent text-accent'
+                      : 'border-slate-200 dark:border-white/10 text-slate-400 dark:text-white/40'
+                    }`}
                   >
                     {type === 'fixed' ? 'Fixed Price' : 'Hourly Rate'}
                   </button>
                 ))}
               </div>
               <div className="relative">
-                <IndianRupee size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" />
+                <IndianRupee size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/20" />
                 <input
                   type="number"
                   value={form.budget_amount}
                   onChange={e => handleChange('budget_amount', e.target.value)}
-                  className="w-full bg-white/[0.02] border border-white/5 rounded-2xl pl-12 pr-5 py-4 text-sm text-white focus:outline-none focus:border-accent transition-all"
+                  className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 outline-none focus:border-accent/50 rounded pl-12 pr-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/20 transition-all"
                   placeholder={form.budget_type === 'hourly' ? '0.00 / hr' : '0.00'}
                   min="1"
                 />
               </div>
             </div>
-          </FormSection>
-        ) : (
-          <FormSection label="Role Builder" icon={<Layers size={14} />}>
+          </div>
+        </div>
+      )}
+
+      {/* ROLE BUILDER — team mode */}
+      {form.job_mode === 'team' && (
+        <div className="rounded-xl p-3 sm:p-4 relative overflow-hidden">
+          
+          <div className="relative z-10">
+            <p className="text-[10px] font-black text-slate-900/30 dark:text-white/30 uppercase tracking-[0.2em] mb-5">Role Builder</p>
             <div className="space-y-6">
               {form.roles?.map((role, idx) => (
-                <div key={idx} className="p-6 bg-transparent border border-white/5 rounded-2xl relative group/role animate-in fade-in slide-in-from-right-4 duration-300">
-
+                <div key={idx} className="p-6 bg-transparent border border-slate-200 dark:border-white/10 rounded-xl relative group/role animate-in fade-in slide-in-from-right-4 duration-300">
                   {form.roles.length > 1 && (
                     <button
                       onClick={() => removeRole(idx)}
-                      className="absolute top-4 right-4 p-2 hover:bg-red-500/10 text-white/20 hover:text-red-400 rounded-lg transition-all opacity-0 group-hover/role:opacity-100"
+                      className="absolute top-4 right-4 p-2 hover:bg-red-500/10 text-slate-400 dark:text-white/20 hover:text-red-400 rounded-lg transition-all opacity-0 group-hover/role:opacity-100"
                     >
                       <X size={14} />
                     </button>
                   )}
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-white/20">Role Title</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-white/20">Role Title</label>
                         <input
                           type="text"
                           value={role.title}
                           onChange={e => updateRole(idx, 'title', e.target.value)}
-                          className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-5 py-3 text-sm text-white focus:outline-none focus:border-accent"
+                          className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 outline-none focus:border-accent/50 rounded px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/20 transition-all"
                           placeholder="e.g. Lead Frontend Architect"
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-white/20">Role Description (Internal)</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-white/20">Role Description (Internal)</label>
                         <textarea
                           value={role.description}
                           onChange={e => updateRole(idx, 'description', e.target.value)}
-                          className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-accent h-24 resize-none"
+                          className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 outline-none focus:border-accent/50 rounded-xl px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/20 transition-all resize-none h-24"
                           placeholder="What will this person specifically do?"
                         />
                       </div>
                     </div>
-
                     <div className="space-y-4">
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-white/20">Budget (₹)</label>
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-white/20">Budget (₹)</label>
                           <div className="relative">
-                            <IndianRupee size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+                            <IndianRupee size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/20" />
                             <input
                               type="number"
                               value={role.budget}
                               onChange={e => updateRole(idx, 'budget', e.target.value)}
-                              className="w-full bg-white/[0.02] border border-white/5 rounded-2xl pl-10 pr-5 py-3 text-sm text-white focus:outline-none focus:border-accent"
+                              className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 outline-none focus:border-accent/50 rounded pl-10 pr-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/20 transition-all"
                               placeholder="0.00"
                             />
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-white/20">Positions</label>
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-white/20">Positions</label>
                           <input
                             type="number"
                             value={role.positions}
                             onChange={e => updateRole(idx, 'positions', e.target.value)}
-                            className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-5 py-3 text-sm text-white focus:outline-none focus:border-accent"
+                            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 outline-none focus:border-accent/50 rounded px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/20 transition-all"
                             min="1"
                           />
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-white/20">Priority (0-10)</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-white/20">Priority (0-10)</label>
                         <input
                           type="range"
                           min="0"
@@ -611,7 +636,7 @@ const PostJob = () => {
                           onChange={e => updateRole(idx, 'priority', e.target.value)}
                           className="w-full accent-accent bg-transparent"
                         />
-                        <div className="flex justify-between text-[8px] font-black uppercase text-white/10 tracking-[0.2em]">
+                        <div className="flex justify-between text-[8px] font-black uppercase text-slate-400 dark:text-white/20 tracking-[0.2em]">
                           <span>Low Priority</span>
                           <span>High Priority ({role.priority})</span>
                         </div>
@@ -620,134 +645,151 @@ const PostJob = () => {
                   </div>
                 </div>
               ))}
-
               <button
                 type="button"
                 onClick={addRole}
-                className="w-full py-6 border-2 border-dashed border-white/5 rounded-2xl hover:border-accent hover:bg-accent/5 font-bold uppercase text-[10px] tracking-[0.2em] text-white/20 hover:text-accent transition-all flex items-center justify-center gap-3"
+                className="w-full py-6 border-2 border-dashed border-slate-200 dark:border-white/10 rounded-xl hover:border-accent hover:bg-accent/5 font-bold uppercase text-[10px] tracking-[0.2em] text-slate-400 dark:text-white/20 hover:text-accent transition-all flex items-center justify-center gap-3"
               >
                 <Plus size={16} />
                 Add Another Role
               </button>
             </div>
-          </FormSection>
-        )}
+          </div>
+        </div>
+      )}
 
-
-        {/* Experience Level */}
-        <FormSection label="Experience Level" icon={<Layers size={14} />}>
-          <div className="space-y-3">
+      {/* EXPERIENCE LEVEL */}
+      <div className="rounded-xl p-3 sm:p-4 relative overflow-hidden">
+        
+        <div className="relative z-10">
+          <p className="text-[10px] font-black text-slate-900/30 dark:text-white/30 uppercase tracking-[0.2em] mb-5">Experience Level</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {EXPERIENCE_LEVELS.map(level => (
               <button
                 key={level.value}
                 type="button"
                 onClick={() => handleChange('experience_level', level.value)}
-                className={`w-full p-4 rounded-2xl border text-left transition-all px-8 ${form.experience_level === level.value
-                  ? 'border-accent bg-accent/5'
-                  : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.04]'
-                  }`}
+                className={`relative border rounded-xl p-5 sm:p-6 text-left transition-all duration-300 ${form.experience_level === level.value
+                  ? 'border-accent'
+                  : 'border-slate-200 dark:border-white/10 hover:border-accent/50'
+                }`}
               >
-                <p className={`text-sm font-bold ${form.experience_level === level.value ? 'text-accent' : 'text-white'}`}>
-                  {level.label}
-                </p>
-                <p className="text-[10px] text-white/20 mt-0.5 uppercase font-bold tracking-wider">{level.desc}</p>
+                <div className="flex justify-between items-center mb-3">
+                  <h4 className={`text-sm font-bold transition-colors ${form.experience_level === level.value ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-white/50'}`}>
+                    {level.label}
+                  </h4>
+                  <div className={`w-5 h-5 rounded-full border-2 transition-all flex items-center justify-center shrink-0 ${form.experience_level === level.value ? 'border-accent' : 'border-slate-300 dark:border-white/20'}`}>
+                    {form.experience_level === level.value && <div className="w-2.5 h-2.5 rounded-full bg-accent" />}
+                  </div>
+                </div>
+                <p className="text-[12px] sm:text-sm text-slate-400 dark:text-white/40 leading-relaxed font-medium">{level.desc}</p>
               </button>
             ))}
           </div>
-        </FormSection>
+        </div>
+      </div>
 
-        {/* Project Timeline */}
-        <FormSection label="Project Timeline" icon={<Clock size={14} />}>
-          <div className="space-y-2">
+      {/* PROJECT TIMELINE */}
+      <div className="rounded-xl p-3 sm:p-4 relative overflow-hidden">
+        
+        <div className="relative z-10">
+          <p className="text-[10px] font-black text-slate-900/30 dark:text-white/30 uppercase tracking-[0.2em] mb-5">Project Timeline</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {DURATIONS.map(d => (
               <button
                 key={d}
                 type="button"
                 onClick={() => handleChange('duration', d)}
-                className={`w-full py-3.5 px-8 rounded-2xl border text-[10px] font-bold uppercase tracking-widest text-left transition-all ${form.duration === d
-                  ? 'border-accent bg-accent/5 text-accent'
-                  : 'bg-white/[0.02] border-white/5 text-white/20 hover:bg-white/[0.04]'
-                  }`}
+                className={`relative border rounded-xl p-5 text-left transition-all duration-300 ${form.duration === d
+                  ? 'border-accent'
+                  : 'border-slate-200 dark:border-white/10 hover:border-accent/50'
+                }`}
               >
-                {d}
+                <div className="flex justify-between items-center">
+                  <span className={`text-sm font-bold ${form.duration === d ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-white/50'}`}>{d}</span>
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${form.duration === d ? 'border-accent' : 'border-slate-300 dark:border-white/20'}`}>
+                    {form.duration === d && <div className="w-2.5 h-2.5 rounded-full bg-accent" />}
+                  </div>
+                </div>
               </button>
             ))}
           </div>
-        </FormSection>
+        </div>
+      </div>
 
-        {/* Bidding Deadline */}
-        <FormSection label="Bidding Deadline" icon={<Clock size={14} />}>
-          <div className="relative group">
-            <input
-              type="datetime-local"
-              value={form.bid_deadline}
-              onChange={e => handleChange('bid_deadline', e.target.value)}
-              className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-accent transition-all [color-scheme:dark]"
-            />
-            <p className="mt-2 text-[10px] text-white/20 uppercase font-bold tracking-wider">
-              Bidding will automatically close at this time.
-            </p>
-          </div>
-        </FormSection>
+      {/* BIDDING DEADLINE */}
+      <div className="rounded-xl p-3 sm:p-4 relative overflow-hidden">
+        
+        <div className="relative z-10">
+          <p className="text-[10px] font-black text-slate-900/30 dark:text-white/30 uppercase tracking-[0.2em] mb-5">Bidding Deadline</p>
+          <input
+            type="datetime-local"
+            value={form.bid_deadline}
+            onChange={e => handleChange('bid_deadline', e.target.value)}
+            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 outline-none focus:border-accent/50 rounded px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/20 transition-all [color-scheme:dark]"
+          />
+          <p className="mt-2 text-[10px] text-slate-400 dark:text-white/20 uppercase font-bold tracking-wider">
+            Bidding will automatically close at this time.
+          </p>
+        </div>
+      </div>
 
-        {/* Attachments */}
-        <FormSection label="Attachments (optional)" icon={<Paperclip size={14} />}>
+      {/* ATTACHMENTS */}
+      <div className="rounded-xl p-3 sm:p-4 relative overflow-hidden">
+        
+        <div className="relative z-10">
+          <p className="text-[10px] font-black text-slate-900/30 dark:text-white/30 uppercase tracking-[0.2em] mb-5">Attachments (optional)</p>
           <div className="grid grid-cols-1 gap-3">
             {attachments.map((file, i) => (
-              <div key={i} className="flex items-center justify-between p-3 bg-white/[0.04] border border-white/10 rounded-xl">
+              <div key={i} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 rounded-xl">
                 <div className="flex items-center gap-3 overflow-hidden">
                   <Paperclip size={14} className="text-accent shrink-0" />
-                  <span className="text-xs text-white/60 truncate">{file.name}</span>
+                  <span className="text-xs text-slate-600 dark:text-white/60 truncate">{file.name}</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setAttachments(prev => prev.filter((_, idx) => idx !== i))}
-                  className="p-1 hover:bg-red-500/10 text-white/20 hover:text-red-400 rounded-lg transition-colors"
+                  className="p-1 hover:bg-red-500/10 text-slate-400 dark:text-white/20 hover:text-red-400 rounded-lg transition-colors"
                 >
                   <X size={14} />
                 </button>
               </div>
             ))}
-            <label className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-white/5 rounded-2xl hover:border-accent hover:bg-accent/5 cursor-pointer transition-all group">
-              <Plus size={20} className="text-white/10 group-hover:text-accent mb-2 transition-colors" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-white/20 group-hover:text-accent transition-colors">
+            <label className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-200 dark:border-white/10 rounded-xl hover:border-accent hover:bg-accent/5 cursor-pointer transition-all group/upload">
+              <Plus size={20} className="text-slate-300 dark:text-white/10 group-hover/upload:text-accent mb-2 transition-colors" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-white/20 group-hover/upload:text-accent transition-colors">
                 {uploadingFile ? 'Uploading...' : 'Attach Files'}
               </span>
               <input type="file" multiple className="hidden" onChange={handleFileUpload} accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip" />
             </label>
           </div>
-        </FormSection>
-
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-10 border-t border-white/5">
-          <button
-            onClick={() => navigate('/client/jobs')}
-            className="w-full sm:w-auto py-4 px-8 rounded-full border border-white/5 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 hover:text-white hover:bg-white/5 transition-all order-2 sm:order-1"
-          >
-            Discard
-          </button>
-
-          <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto order-1 sm:order-2">
-            <button
-              onClick={() => handleSubmit('DRAFT')}
-              disabled={isLoading}
-              className="w-full sm:w-auto py-4 px-8 rounded-full bg-white/[0.04] border border-white/5 text-[10px] font-bold uppercase tracking-[0.2em] text-white hover:bg-white/[0.08] transition-all flex items-center justify-center gap-2"
-            >
-              {isLoading ? <InfinityLoader/> : <Save size={16} />}
-              Save as Draft
-            </button>
-            <button
-              onClick={() => handleSubmit('OPEN')}
-              disabled={isLoading}
-              className="w-full sm:w-auto py-4 px-10 rounded-full bg-accent text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-accent/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-accent/10"
-            >
-              {isLoading ? <InfinityLoader/> : <Send size={16} />}
-              {editJobId ? 'Update Job' : 'Launch Project'}
-            </button>
-          </div>
         </div>
+      </div>
 
+      {/* ACTION BUTTONS */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 border-t border-slate-200 dark:border-white/5 pt-8">
+        <button
+          onClick={() => navigate('/client/jobs')}
+          className="w-full sm:w-auto text-center border border-slate-200 dark:border-white/10 text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white px-8 py-3.5 rounded-full text-sm font-bold transition-all"
+        >
+          Discard
+        </button>
+        <button
+          onClick={() => handleSubmit('DRAFT')}
+          disabled={isLoading}
+          className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-2 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white disabled:opacity-50"
+        >
+          {isLoading ? <InfinityLoader /> : null}
+          Save as Draft
+        </button>
+        <button
+          onClick={() => handleSubmit('OPEN')}
+          disabled={isLoading}
+          className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-2 bg-accent text-white hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
+        >
+          {isLoading ? <InfinityLoader /> : null}
+          {editJobId ? 'Update Job' : 'Launch Project'}
+        </button>
       </div>
 
       <AIJobPreviewModal
@@ -762,22 +804,5 @@ const PostJob = () => {
     </div>
   );
 };
-
-const FormSection = ({ label, icon, action, children }) => (
-  <div className="mb-8 sm:mb-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-    <div className="flex items-center justify-between mb-4 gap-3">
-      <div className="flex items-center min-w-0">
-        <div className="w-8 h-8 flex items-center justify-center text-white/20 shrink-0">
-          {icon}
-        </div>
-        <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 truncate">{label}</h3>
-      </div>
-      {action && <div className="shrink-0">{action}</div>}
-    </div>
-    <div className="w-full">
-      {children}
-    </div>
-  </div>
-);
 
 export default PostJob;

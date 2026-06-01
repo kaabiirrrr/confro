@@ -53,15 +53,23 @@ const HiredTalent = () => {
           ))}
         </div>
       ) : freelancers.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-12 sm:p-20 bg-transparent border-none rounded-2xl text-center">
-          <Briefcase className="w-12 h-12 text-light-text/20 mb-6" />
-          <h3 className="text-lg font-semibold text-white mb-2">No freelancers hired yet</h3>
-          <p className="text-light-text/50 text-base mb-8 max-w-md mx-auto">
+        <div className="flex flex-col items-center justify-center text-center">
+          <img
+            src="/ChatGPT Image Jun 1, 2026, 12_27_56 PM.png"
+            alt="No freelancers hired yet"
+            style={{ width: 350, height: 350 }}
+            className="object-contain mx-auto"
+          />
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">No freelancers hired yet</h3>
+          <p className="text-slate-500 dark:text-white/40 text-sm max-w-md mx-auto mb-6">
             When you hire talent for your projects, they will appear here.
           </p>
-          <Button onClick={() => navigate('/client/find-talent')} variant="secondary" className="rounded-full px-8">
-            Find Talent →
-          </Button>
+          <button
+            onClick={() => navigate('/client/find-talent')}
+            className="px-6 py-2.5 rounded-full bg-accent text-white text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
+          >
+            Find Talent
+          </button>
         </div>
       ) : (
         <div className="space-y-4">

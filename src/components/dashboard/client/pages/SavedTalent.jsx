@@ -104,7 +104,7 @@ const SavedTalent = () => {
         </div>
       ) : freelancers.length === 0 ? (
         <EmptyState
-          imageSrc="/Icons/icons8-check-file-64.png"
+          imageSrc="/ChatGPT Image Jun 1, 2026, 12_33_58 PM.png"
           title="No saved talent yet"
           description="Save freelancers while browsing to quickly find them later."
           action={

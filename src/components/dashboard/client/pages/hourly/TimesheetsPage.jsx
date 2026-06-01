@@ -82,8 +82,8 @@ export default function TimesheetsPage() {
       </div>
 
       {/* Filters Interface */}
-      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-3 sm:gap-4 mb-8 p-3 sm:p-4 bg-transparent border border-white/10 rounded-2xl">
-        <div className="space-y-1.5 w-full sm:flex-1 sm:min-w-[240px]">
+      <div className="flex flex-row flex-wrap items-end gap-3 sm:gap-4 mb-8">
+        <div className="space-y-1.5 flex-1 min-w-[200px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Select Contract</label>
           <CustomDropdown
             options={[
@@ -96,12 +96,12 @@ export default function TimesheetsPage() {
           />
         </div>
 
-        <div className="space-y-1.5 w-full sm:min-w-[200px]">
+        <div className="space-y-1.5 flex-1 min-w-[180px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Week Start Date</label>
           <CustomDatePicker value={filters.week_start} onChange={(val) => setFilters(p => ({ ...p, week_start: val }))} />
         </div>
 
-        <div className="space-y-1.5 w-full sm:min-w-[180px]">
+        <div className="space-y-1.5 flex-1 min-w-[160px]">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Status Protocol</label>
           <CustomDropdown
             options={[
@@ -121,7 +121,7 @@ export default function TimesheetsPage() {
         </div>
       ) : timesheets.length === 0 ? (
         <div className="text-center py-20 bg-transparent rounded-2xl">
-          <img src="/Icons/icons8-clock-80.png" alt="" className="mx-auto w-12 h-12 object-contain mb-4" />
+          <img src="/Icons/icons8-clock-80.png" alt="" className="mx-auto w-20 h-20 object-contain mb-6" />
           <h3 className="text-white font-semibold text-lg">No Timesheets Found</h3>
           <p className="text-white/30 text-xs mt-2 max-w-xs mx-auto font-medium italic">
             Timesheets appear here once your authenticated freelancers log their operational hours.

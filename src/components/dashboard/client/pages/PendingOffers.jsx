@@ -85,16 +85,24 @@ const PendingOffers = () => {
           ))}
         </div>
       ) : offers.length === 0 ? (
-        <EmptyState
-          icon={Inbox}
-          title="No pending offers yet"
-          description="Once freelancers apply to your jobs, their proposals will appear here for your review."
-          action={
-            <Button onClick={() => navigate('/client/jobs')}>
-              View My Jobs
-            </Button>
-          }
-        />
+        <div className="flex flex-col items-center justify-center text-center">
+          <img
+            src="/ChatGPT Image Jun 1, 2026, 12_18_22 PM.png"
+            alt="No pending offers"
+            style={{ width: 350, height: 350 }}
+            className="object-contain mx-auto"
+          />
+          <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-2">No pending offers yet</h3>
+          <p className="text-slate-500 dark:text-white/40 text-sm max-w-md mx-auto mb-6">
+            Once freelancers apply to your jobs, their proposals will appear here for your review.
+          </p>
+          <button
+            onClick={() => navigate('/client/jobs')}
+            className="px-6 py-2.5 rounded-full bg-accent text-white text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
+          >
+            View My Jobs
+          </button>
+        </div>
       ) : (
         /* OFFERS LIST */
         <div className="space-y-4">

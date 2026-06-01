@@ -126,8 +126,8 @@ export default function WorkDiariesPage() {
       </div>
 
       {/* Filters Interface */}
-      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-3 sm:gap-4 mb-8 p-3 sm:p-4 bg-transparent border border-white/10 rounded-2xl">
-        <div className="space-y-1.5 w-full sm:flex-1 sm:min-w-[240px]">
+      <div className="flex flex-row items-end justify-end gap-3 sm:gap-4 mb-8">
+        <div className="space-y-1.5 w-56">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Select Contract</label>
           <CustomDropdown
             options={[
@@ -141,11 +141,10 @@ export default function WorkDiariesPage() {
           {errors.contract_id && <p className="text-red-400 text-[10px] font-bold uppercase tracking-wider mt-1">{errors.contract_id}</p>}
         </div>
         
-        <div className="space-y-1.5 w-full sm:min-w-[200px]">
+        <div className="space-y-1.5 w-48">
           <label className="block text-[10px] text-white/30 uppercase font-bold tracking-wider">Filter By Date</label>
           <CustomDatePicker value={filters.week_start} onChange={(val) => setFilters(p => ({ ...p, week_start: val }))} />
         </div>
-
       </div>
 
       {/* Log Time Command Console */}
@@ -197,8 +196,13 @@ export default function WorkDiariesPage() {
           {[1, 2, 3, 4].map(i => <div key={i} className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-24" />)}
         </div>
       ) : entries.length === 0 ? (
-        <div className="text-center py-20 bg-transparent rounded-2xl">
-          <img src="/Icons/icons8-spiral-bound-booklet-100.png" alt="" className="mx-auto w-12 h-12 object-contain mb-4" />
+        <div className="text-center bg-transparent rounded-2xl">
+          <img
+            src="/ChatGPT Image Jun 1, 2026, 01_28_28 PM.png"
+            alt="No activity logged"
+            style={{ width: 350, height: 350 }}
+            className="object-contain mx-auto"
+          />
           <h3 className="text-white font-semibold text-lg">No Activity Logged</h3>
           <p className="text-white/30 text-xs mt-2 max-w-xs mx-auto font-medium">
             {!filters.contract_id

@@ -69,16 +69,16 @@ export default function SpendingByActivityPage() {
       </div>
 
       {/* Temporal Parameters & Presets */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-10 p-3 sm:p-4 bg-transparent border border-white/10 rounded-[24px] items-end">
-        <div className="lg:col-span-3 space-y-1.5">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Temporal Start</label>
+      <div className="flex flex-row items-end justify-end gap-3 sm:gap-4 mb-10">
+        <div className="space-y-1.5 w-48">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Start Date</label>
           <CustomDatePicker value={from} onChange={setFrom} />
         </div>
-        <div className="lg:col-span-3 space-y-1.5">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em] ml-1">Temporal End</label>
+        <div className="space-y-1.5 w-48">
+          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">End Date</label>
           <CustomDatePicker value={to} onChange={setTo} />
         </div>
-        <div className="lg:col-span-6 flex gap-2 w-full overflow-x-auto no-scrollbar pb-1">
+        <div className="flex gap-2 pb-0.5">
           {RANGE_PRESETS.map(({ label, days }) => (
             <button
               key={days}
@@ -100,13 +100,16 @@ export default function SpendingByActivityPage() {
           </div>
         </div>
       ) : !data || (breakdown.length === 0 && byContract.length === 0) ? (
-        <div className="text-center py-24 bg-transparent border border-white/10 rounded-[2rem] animate-in fade-in zoom-in duration-700">
-          <div className="mx-auto mb-6 flex items-center justify-center">
-            <PieIcon size={48} className="text-white/10" strokeWidth={1.5} />
-          </div>
-          <h3 className="text-white font-bold text-xl tracking-tight mb-2">No Temporal Flux Detected</h3>
-          <p className="text-white/30 text-xs uppercase tracking-widest font-medium italic">
-            Zero transaction events identified within the current temporal parameters.
+        <div className="flex flex-col items-center justify-center text-center mt-20 px-4">
+          <img
+            src="/ChatGPT Image Jun 1, 2026, 02_33_11 PM.png"
+            alt="No spending data"
+            style={{ width: 350, height: 350 }}
+            className="object-contain mx-auto mb-6"
+          />
+          <h3 className="text-white font-bold text-xl tracking-tight mb-2">No Spending Data Found</h3>
+          <p className="text-white/30 text-xs mt-2 max-w-sm mx-auto font-medium leading-relaxed">
+            Zero transaction events identified within the current date range. Try adjusting the filters.
           </p>
         </div>
       ) : (

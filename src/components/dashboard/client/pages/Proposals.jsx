@@ -368,12 +368,12 @@ const Proposals = () => {
         <div className="flex items-center justify-center h-64"><InfinityLoader/></div>
       ) : jobs.length === 0 ? (
         <EmptyState
-          icon={FileText}
+          imageSrc="/ChatGPT Image Jun 1, 2026, 12_06_56 PM.png"
           title="No jobs posted yet"
           action={
-            <Button onClick={() => navigate('/client/post-job')} variant="ghost" className="text-accent hover:text-accent mt-2">
-              Post a job to get proposals →
-            </Button>
+            <button onClick={() => navigate('/client/post-job')} className="mt-2 px-6 py-2.5 rounded-full bg-accent text-white text-sm font-semibold hover:opacity-90 active:scale-95 transition-all">
+              Post a job to get proposals 
+            </button>
           }
         />
       ) : (

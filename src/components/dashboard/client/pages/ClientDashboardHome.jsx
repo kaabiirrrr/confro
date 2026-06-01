@@ -79,7 +79,7 @@ const fmtTimeAgo = (d) => {
 const WorkActivityCard = ({ activity, onAskUpdate, onClick }) => (
   <div
     onClick={onClick}
-    className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 hover:border-accent/40 cursor-pointer transition shadow-sm backdrop-blur-sm group"
+    className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-5 hover:border-accent/40 cursor-pointer transition backdrop-blur-sm group"
   >
     <div className="flex items-start justify-between mb-4">
       <div className="flex items-center gap-3">
@@ -453,7 +453,7 @@ const ClientDashboardHome = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-10 p-6 rounded-[24px] border border-slate-200 dark:border-white/10 relative overflow-hidden group"
+        className="mb-10 p-6 rounded-xl border border-slate-200 dark:border-white/10 relative overflow-hidden group"
       >
         <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
           <Shield size={120} />
@@ -498,7 +498,7 @@ const ClientDashboardHome = () => {
             <div className="flex items-center justify-center w-full sm:w-auto">
               <button
                 onClick={() => setIsTopUpOpen(true)}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-accent text-white text-[10px] font-black uppercase tracking-[0.1em] hover:bg-accent/90 shadow-lg shadow-accent/20 transition-all"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-accent text-white text-[10px] font-black uppercase tracking-[0.1em] hover:bg-accent/90 transition-all"
               >
                 Add Funds
               </button>
@@ -556,7 +556,7 @@ const ClientDashboardHome = () => {
             <button
               onClick={handleSendVerification}
               disabled={sendingVerification}
-              className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 flex justify-between items-start hover:border-accent/30 transition shadow-sm backdrop-blur-sm text-left w-full disabled:opacity-60 relative"
+              className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-6 flex justify-between items-start hover:border-accent/30 transition backdrop-blur-sm text-left w-full disabled:opacity-60 relative"
             >
               <div className="w-full flex flex-col items-center sm:items-start text-center sm:text-left pr-6 sm:pr-0">
                 <p className="text-[10px] sm:text-xs text-light-text/40 mb-2 uppercase tracking-wider">Required to hire</p>
@@ -579,7 +579,7 @@ const ClientDashboardHome = () => {
           {showBillingCard && (
             <button
               onClick={() => navigate("/client/billing")}
-              className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 sm:p-6 flex justify-between items-start hover:border-accent/30 transition shadow-sm backdrop-blur-sm text-left w-full relative"
+              className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-6 flex justify-between items-start hover:border-accent/30 transition backdrop-blur-sm text-left w-full relative"
             >
               <div className="w-full flex flex-col items-center sm:items-start text-center sm:text-left pr-6 sm:pr-0">
                 <p className="text-[10px] sm:text-xs text-light-text/40 mb-2 uppercase tracking-wider">Required to hire</p>
@@ -600,7 +600,7 @@ const ClientDashboardHome = () => {
 
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Overview</h2>
-        <div className="flex bg-slate-100 dark:bg-white/5 p-1 rounded-full border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-sm relative scale-90 sm:scale-100 origin-right">
+        <div className="flex bg-slate-100 dark:bg-white/5 p-1 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-sm relative scale-90 sm:scale-100 origin-right">
           <button
             onClick={() => setView("grid")}
             className={`px-4 py-1.5 sm:px-6 sm:py-2 rounded-full relative z-10 transition-colors duration-300 ${view === "grid" ? "text-white dark:text-primary" : "text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white"}`}
@@ -608,7 +608,7 @@ const ClientDashboardHome = () => {
             {view === "grid" && (
               <motion.div
                 layoutId="view-toggle"
-                className="absolute inset-0 bg-accent rounded-full -z-10 shadow-lg shadow-accent/20"
+                className="absolute inset-0 bg-accent rounded-full -z-10"
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
@@ -621,7 +621,7 @@ const ClientDashboardHome = () => {
             {view === "list" && (
               <motion.div
                 layoutId="view-toggle"
-                className="absolute inset-0 bg-accent rounded-full -z-10 shadow-lg shadow-accent/20"
+                className="absolute inset-0 bg-accent rounded-full -z-10"
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
@@ -635,7 +635,7 @@ const ClientDashboardHome = () => {
       {!dashLoading && (stats.open_jobs != null || stats.active_contracts != null) && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
           {STAT_CARDS.map(({ key, label, Icon }) => (
-            <div key={key} className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 shadow-sm backdrop-blur-sm flex items-center sm:block gap-4 sm:gap-0">
+            <div key={key} className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-5 backdrop-blur-sm flex items-center sm:block gap-4 sm:gap-0">
               <div className="w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center sm:mb-4 shrink-0">
                 <Icon size={40} />
               </div>
@@ -667,7 +667,7 @@ const ClientDashboardHome = () => {
               <div
                 key={item.id ?? i}
                 onClick={() => navigate(isContract ? `/client/contracts` : `/client/jobs`)}
-                className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex items-center gap-3 hover:border-accent/40 cursor-pointer transition shadow-sm backdrop-blur-sm group"
+                className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-4 flex items-center gap-3 hover:border-accent/40 cursor-pointer transition backdrop-blur-sm group"
               >
                 <div className="shrink-0">
                   {isContract ? (
@@ -698,7 +698,7 @@ const ClientDashboardHome = () => {
           })}
         </div>
       ) : (
-        <div className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-12 sm:p-20 text-center mb-16 sm:mb-20 backdrop-blur-sm">
+        <div className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-12 sm:p-20 text-center mb-16 sm:mb-20 backdrop-blur-sm">
           <div className="flex items-center justify-center mx-auto mb-6">
             <img src="/Icons/icons8-bag-100.png" alt="Job" className="w-24 h-24 object-contain" />
           </div>
@@ -713,7 +713,6 @@ const ClientDashboardHome = () => {
               onClick={() => navigate("/find-freelancers")}
               variant="secondary"
               className="rounded-full px-8"
-              icon={Search}
             >
               Find Talent
             </Button>
@@ -770,7 +769,7 @@ const ClientDashboardHome = () => {
         <div className="relative group">
           <button
             onClick={scrollLeft}
-            className="absolute -left-4 sm:-left-6 top-1/2 -translate-y-1/2 bg-primary/80 border border-white/10 p-2 sm:p-3 rounded-full hover:bg-white/5 z-10 opacity-0 group-hover:opacity-100 transition shadow-xl backdrop-blur-md"
+            className="absolute -left-4 sm:-left-6 top-1/2 -translate-y-1/2 bg-primary/80 border border-white/10 p-2 sm:p-3 rounded-full hover:bg-white/5 z-10 opacity-0 group-hover:opacity-100 transition backdrop-blur-md"
           >
             <ChevronLeft size={18} />
           </button>
@@ -786,7 +785,7 @@ const ClientDashboardHome = () => {
               </h3>
               <button
                 onClick={() => navigate("/client/consultations")}
-                className="bg-white text-blue-600 px-6 py-2 rounded-full w-fit text-sm font-bold shadow-lg hover:bg-gray-100 transition"
+                className="bg-white text-blue-600 px-6 py-2 rounded-full w-fit text-sm font-bold hover:bg-gray-100 transition"
               >
                 Learn more
               </button>
@@ -796,7 +795,7 @@ const ClientDashboardHome = () => {
               <div
                 key={index}
                 onClick={() => navigate(`/client/consultations?category=${encodeURIComponent(cat.title)}`)}
-                className="min-w-[280px] sm:min-w-[320px] h-[320px] sm:h-[360px] bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 flex flex-col items-center justify-center hover:border-accent/40 hover:bg-accent/5 transition-all cursor-pointer group shadow-sm backdrop-blur-sm"
+                className="min-w-[280px] sm:min-w-[320px] h-[320px] sm:h-[360px] bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-6 flex flex-col items-center justify-center hover:border-accent/40 hover:bg-accent/5 transition-all cursor-pointer group backdrop-blur-sm"
               >
                 <img
                   src={cat.image}
@@ -812,7 +811,7 @@ const ClientDashboardHome = () => {
 
           <button
             onClick={scrollRight}
-            className="absolute -right-4 sm:-right-6 top-1/2 -translate-y-1/2 bg-primary/80 border border-white/10 p-2 sm:p-3 rounded-full hover:bg-white/5 opacity-0 group-hover:opacity-100 transition shadow-xl backdrop-blur-md"
+            className="absolute -right-4 sm:-right-6 top-1/2 -translate-y-1/2 bg-primary/80 border border-white/10 p-2 sm:p-3 rounded-full hover:bg-white/5 opacity-0 group-hover:opacity-100 transition backdrop-blur-md"
           >
             <ChevronRight size={18} />
           </button>
@@ -834,7 +833,7 @@ const ClientDashboardHome = () => {
         <div className="relative group">
           <button
             onClick={scrollServicesLeft}
-            className="absolute -left-4 sm:-left-6 top-1/2 -translate-y-1/2 bg-primary/80 border border-white/10 p-2 sm:p-3 rounded-full hover:bg-white/5 z-10 opacity-0 group-hover:opacity-100 transition shadow-xl backdrop-blur-md"
+            className="absolute -left-4 sm:-left-6 top-1/2 -translate-y-1/2 bg-primary/80 border border-white/10 p-2 sm:p-3 rounded-full hover:bg-white/5 z-10 opacity-0 group-hover:opacity-100 transition backdrop-blur-md"
           >
             <ChevronLeft size={18} />
           </button>
@@ -845,13 +844,13 @@ const ClientDashboardHome = () => {
           >
             {servicesLoading ? (
               [1, 2, 3, 4].map(i => (
-                <div key={i} className="min-w-[280px] sm:min-w-[320px] h-[340px] bg-white/5 animate-pulse rounded-2xl border border-white/5" />
+                <div key={i} className="min-w-[280px] sm:min-w-[320px] h-[340px] bg-white/5 animate-pulse rounded-xl border border-white/5" />
               ))
             ) : services.length > 0 ? (
               services.map((svc) => (
                 <div
                   key={svc.id}
-                  className="min-w-[280px] sm:min-w-[320px] h-[340px] bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex flex-col hover:border-accent transition-all duration-300 cursor-pointer group shrink-0 backdrop-blur-sm shadow-sm"
+                  className="min-w-[280px] sm:min-w-[320px] h-[340px] bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-4 flex flex-col hover:border-accent transition-all duration-300 cursor-pointer group shrink-0 backdrop-blur-sm"
                   onClick={() => navigate(`/client/service/${svc.id}`)}
                 >
                   <div className="h-40 w-full rounded-xl overflow-hidden mb-4 border border-white/5 relative">
@@ -880,7 +879,7 @@ const ClientDashboardHome = () => {
                         <p className="text-slate-400 dark:text-white/20 text-[8px] uppercase font-bold tracking-widest leading-none mb-1">Starting at</p>
                         <p className="text-xl font-black text-slate-900 dark:text-white leading-none">{formatINR(svc.price)}</p>
                       </div>
-                      <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center group-hover:bg-accent group-hover:text-white dark:group-hover:text-primary group-hover:border-accent transition-all duration-300 shadow-lg">
+                      <div className="w-9 h-9 flex items-center justify-center group-hover:text-accent transition-all duration-300">
                         <ArrowRight size={16} />
                       </div>
                     </div>
@@ -889,7 +888,7 @@ const ClientDashboardHome = () => {
               ))
             ) : (
               <div className="w-full py-20 text-center bg-transparent rounded-[40px] border border-dashed border-white/10">
-                <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-white/5 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <LayoutGrid className="text-white/10" size={32} />
                 </div>
                 <h3 className="text-white/30 font-bold text-lg mb-1 uppercase tracking-tighter">Marketplace is growing</h3>
@@ -900,7 +899,7 @@ const ClientDashboardHome = () => {
 
           <button
             onClick={scrollServicesRight}
-            className="absolute -right-4 sm:-right-6 top-1/2 -translate-y-1/2 bg-primary/80 border border-white/10 p-2 sm:p-3 rounded-full hover:bg-white/5 opacity-0 group-hover:opacity-100 transition shadow-xl backdrop-blur-md"
+            className="absolute -right-4 sm:-right-6 top-1/2 -translate-y-1/2 bg-primary/80 border border-white/10 p-2 sm:p-3 rounded-full hover:bg-white/5 opacity-0 group-hover:opacity-100 transition backdrop-blur-md"
           >
             <ChevronRight size={18} />
           </button>
@@ -919,7 +918,7 @@ const ClientDashboardHome = () => {
             View all <ArrowRight size={14} />
           </button>
         </div>
-        <div className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-6 sm:p-10 flex flex-col lg:flex-row items-center justify-between mb-8 gap-6 hover:border-accent/40 transition shadow-sm backdrop-blur-sm">
+        <div className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-6 sm:p-10 flex flex-col lg:flex-row items-center justify-between mb-8 gap-6 hover:border-accent/40 transition backdrop-blur-sm">
           <div className="text-center lg:text-left w-full lg:w-auto">
             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2">Get started</p>
             <h3 className="text-lg sm:text-2xl font-semibold text-slate-900 dark:text-white mb-5 max-w-[520px] leading-tight">
@@ -937,7 +936,7 @@ const ClientDashboardHome = () => {
             { tag: "Billing", title: "How to set up your preferred billing method", img: "/billing.png" },
             { tag: "Trust & safety", title: "Keep yourself and others safe on Connect", img: "/safety.png" },
           ].map((item, i) => (
-            <div key={i} className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-2xl p-5 sm:p-8 flex justify-between items-center hover:border-accent/40 transition shadow-sm backdrop-blur-sm group cursor-pointer">
+            <div key={i} className="bg-secondary dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-xl p-5 sm:p-8 flex justify-between items-center hover:border-accent/40 transition backdrop-blur-sm group cursor-pointer">
               <div className="flex-1 pr-4">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-light-text/30 mb-2">{item.tag}</p>
                 <h3 className="text-sm sm:text-base font-semibold text-slate-700 dark:text-white/70 line-clamp-2 leading-snug">{item.title}</h3>
