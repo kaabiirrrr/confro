@@ -12,7 +12,7 @@ const EmptyState = ({
     <div className={`flex flex-col items-center justify-center text-center ${className}`}>
       {imageSrc ? (
         <div className="mb-4">
-          <img src={imageSrc} alt="" className="object-contain mx-auto" style={{ width: 250, height: 250 }} />
+          <img src={imageSrc} alt="" className="object-contain ml-4 mx-auto" style={{ width: 200, height: 200 }} />
         </div>
       ) : Icon ? (
         <div className="mb-4">

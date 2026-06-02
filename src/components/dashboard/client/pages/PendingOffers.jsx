@@ -89,7 +89,7 @@ const PendingOffers = () => {
           <img
             src="/ChatGPT Image Jun 1, 2026, 12_18_22 PM.png"
             alt="No pending offers"
-            style={{ width: 350, height: 350 }}
+            style={{ width: 300, height: 300 }}
             className="object-contain mx-auto"
           />
           <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-2">No pending offers yet</h3>

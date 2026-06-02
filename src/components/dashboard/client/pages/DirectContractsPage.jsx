@@ -92,7 +92,7 @@ export default function DirectContractsPage() {
           <img
             src="/ChatGPT Image Jun 1, 2026, 12_40_50 PM.png"
             alt="No direct contracts"
-            style={{ width: 350, height: 350 }}
+            style={{ width: 250, height: 250 }}
             className="object-contain mx-auto"
           />
           <h3 className="text-slate-900 dark:text-white font-bold text-base mb-2">No direct contracts yet</h3>

@@ -78,7 +78,7 @@ const Contracts = () => {
           <img
             src="/ChatGPT Image Jun 1, 2026, 01_04_54 PM.png"
             alt="No contracts yet"
-            style={{ width: 350, height: 350 }}
+            style={{ width: 250, height: 250 }}
             className="object-contain mx-auto"
           />
           <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">No contracts yet</h3>

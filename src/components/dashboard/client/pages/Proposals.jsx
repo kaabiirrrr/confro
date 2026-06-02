@@ -331,14 +331,17 @@ const Proposals = () => {
   };
 
   return (
-    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 sm:mt-6 pb-12 space-y-6">
+    <div className="max-w-[1500px] mx-auto px-0 sm:px-6 lg:px-8 mt-2 sm:mt-6 pb-12 space-y-6">
       <SectionHeader
         title="Proposals"
         subtext={`${proposals.length} proposal${proposals.length !== 1 ? 's' : ''} received`}
+        titleClass="text-lg sm:text-2xl font-semibold text-slate-900 dark:text-white tracking-tight"
+        subtextClass="text-xs sm:text-sm text-slate-500 dark:text-white/40 mt-1 font-medium"
       />
 
       {/* Tabs and Global Sort */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 sm:gap-4 mb-6">
+      <div className="flex flex-col gap-3 mb-6 px-4 sm:px-0">
+        {/* Tabs row — full width on mobile */}
         <Tabs
           tabs={STATUS_TABS.map(tab => ({
             ...tab,
@@ -346,10 +349,26 @@ const Proposals = () => {
           }))}
           activeTab={activeTab}
           onChange={setActiveTab}
-          className="-mx-4 px-4 sm:mx-0 sm:px-0 sm:w-auto"
+          className="w-full sm:w-auto"
         />
-
-        <div className="self-start sm:self-auto shrink-0 w-[140px]">
+        {/* Dropdown — full width on mobile, hidden on sm+ (shown inline via sm row) */}
+        <div className="sm:hidden w-full">
+          <CustomDropdown
+            value={sortBy}
+            onChange={(val) => setSortBy(val)}
+            options={[
+              { label: 'Best Match', value: 'match' },
+              { label: 'Price', value: 'price' },
+              { label: 'Recent', value: 'date' }
+            ]}
+            variant="glass"
+            fullWidth={true}
+          />
+        </div>
+      </div>
+      {/* Desktop: tabs + dropdown in one row */}
+      <div className="hidden sm:flex sm:flex-row sm:items-end justify-between gap-4 mb-6 -mt-6">
+        <div className="w-[140px] shrink-0 ml-auto">
           <CustomDropdown
             value={sortBy}
             onChange={(val) => setSortBy(val)}

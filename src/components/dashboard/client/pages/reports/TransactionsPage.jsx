@@ -73,35 +73,41 @@ export default function TransactionsPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-row flex-wrap items-end justify-end gap-3 sm:gap-4 mb-8">
-        <div className="space-y-1.5 w-44">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Start Date</label>
-          <CustomDatePicker value={filters.from} onChange={(val) => setFilters(p => ({ ...p, from: val, page: 1 }))} />
+      <div className="flex flex-col gap-3 mb-8 sm:flex-row sm:flex-wrap sm:items-end sm:justify-end">
+        {/* Row 1: Dates side by side */}
+        <div className="flex gap-3 w-full sm:w-auto">
+          <div className="space-y-1.5 flex-1 sm:w-44 sm:flex-none">
+            <label className="block text-[10px] sm:text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Start Date</label>
+            <CustomDatePicker value={filters.from} onChange={(val) => setFilters(p => ({ ...p, from: val, page: 1 }))} />
+          </div>
+          <div className="space-y-1.5 flex-1 sm:w-44 sm:flex-none">
+            <label className="block text-[10px] sm:text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">End Date</label>
+            <CustomDatePicker value={filters.to} onChange={(val) => setFilters(p => ({ ...p, to: val, page: 1 }))} />
+          </div>
         </div>
-        <div className="space-y-1.5 w-44">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">End Date</label>
-          <CustomDatePicker value={filters.to} onChange={(val) => setFilters(p => ({ ...p, to: val, page: 1 }))} />
-        </div>
-        <div className="space-y-1.5 w-44">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Status</label>
-          <CustomDropdown
-            options={STATUSES.map(s => ({ label: s || 'All statuses', value: s }))}
-            value={filters.status}
-            onChange={(val) => setFilters(p => ({ ...p, status: val, page: 1 }))}
-            className="w-full"
-          />
-        </div>
-        <div className="space-y-1.5 w-52">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Contract</label>
-          <CustomDropdown
-            options={[
-              { label: 'All contracts', value: '' },
-              ...contracts.map(c => ({ label: c.job?.title || c.title || `Contract #${c.id.substring(0, 8)}`, value: c.id }))
-            ]}
-            value={filters.contract_id}
-            onChange={(val) => setFilters(p => ({ ...p, contract_id: val, page: 1 }))}
-            className="w-full"
-          />
+        {/* Row 2: Status and Contract side by side */}
+        <div className="flex gap-3 w-full sm:w-auto">
+          <div className="space-y-1.5 flex-1 sm:w-44 sm:flex-none">
+            <label className="block text-[10px] sm:text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Status</label>
+            <CustomDropdown
+              options={STATUSES.map(s => ({ label: s || 'All statuses', value: s }))}
+              value={filters.status}
+              onChange={(val) => setFilters(p => ({ ...p, status: val, page: 1 }))}
+              className="w-full"
+            />
+          </div>
+          <div className="space-y-1.5 flex-1 sm:w-52 sm:flex-none">
+            <label className="block text-[10px] sm:text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Contract</label>
+            <CustomDropdown
+              options={[
+                { label: 'All contracts', value: '' },
+                ...contracts.map(c => ({ label: c.job?.title || c.title || `Contract #${c.id.substring(0, 8)}`, value: c.id }))
+              ]}
+              value={filters.contract_id}
+              onChange={(val) => setFilters(p => ({ ...p, contract_id: val, page: 1 }))}
+              className="w-full"
+            />
+          </div>
         </div>
       </div>
 
@@ -114,7 +120,7 @@ export default function TransactionsPage() {
           <img
             src="/ChatGPT Image Jun 1, 2026, 02_23_18 PM.png"
             alt="No transactions"
-            style={{ width: 350, height: 350 }}
+            style={{ width: 250, height: 250 }}
             className="object-contain mx-auto"
           />
           <h3 className="text-white font-bold text-xl tracking-tight">No transactions found</h3>

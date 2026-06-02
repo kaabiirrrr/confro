@@ -57,7 +57,7 @@ const HiredTalent = () => {
           <img
             src="/ChatGPT Image Jun 1, 2026, 12_27_56 PM.png"
             alt="No freelancers hired yet"
-            style={{ width: 350, height: 350 }}
+            style={{ width: 300, height: 300 }}
             className="object-contain mx-auto"
           />
           <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">No freelancers hired yet</h3>

@@ -200,7 +200,7 @@ export default function WorkDiariesPage() {
           <img
             src="/ChatGPT Image Jun 1, 2026, 01_28_28 PM.png"
             alt="No activity logged"
-            style={{ width: 350, height: 350 }}
+            style={{ width: 250, height: 250 }}
             className="object-contain mx-auto"
           />
           <h3 className="text-white font-semibold text-lg">No Activity Logged</h3>

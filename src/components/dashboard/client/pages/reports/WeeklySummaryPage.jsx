@@ -61,23 +61,26 @@ export default function WeeklySummaryPage() {
         <p className="text-white/40 text-[11px] sm:text-sm mt-1 font-medium leading-relaxed max-w-2xl">Overview of your spending activity and transaction velocity over time.</p>
       </div>
 
-      <div className="flex flex-row items-end justify-end gap-3 sm:gap-4 mb-8">
-        <div className="space-y-1.5 w-48">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Start Date</label>
-          <CustomDatePicker value={from} onChange={setFrom} />
+      {/* Filters — mobile: stacked full width, desktop: right-aligned row */}
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-end gap-3 sm:gap-4 mb-8">
+        <div className="flex gap-3 w-full sm:w-auto">
+          <div className="space-y-1.5 flex-1 sm:w-48 sm:flex-none">
+            <label className="block text-[10px] sm:text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Start Date</label>
+            <CustomDatePicker value={from} onChange={setFrom} />
+          </div>
+          <div className="space-y-1.5 flex-1 sm:w-48 sm:flex-none">
+            <label className="block text-[10px] sm:text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">End Date</label>
+            <CustomDatePicker value={to} onChange={setTo} />
+          </div>
         </div>
-        <div className="space-y-1.5 w-48">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">End Date</label>
-          <CustomDatePicker value={to} onChange={setTo} />
-        </div>
-        <div className="flex gap-2 pb-0.5">
+        <div className="flex justify-between sm:justify-start gap-2 pb-0.5">
           {[
             { label: '4 weeks', weeks: 4 },
             { label: '8 weeks', weeks: 8 },
             { label: '12 weeks', weeks: 12 },
           ].map(({ label, weeks }) => (
             <button key={weeks} onClick={() => { setFrom(nWeeksAgo(weeks)); setTo(toInputDate(new Date())); }}
-              className="flex-none px-4 py-2 text-[9px] font-black uppercase tracking-widest border border-white/5 text-white/30 hover:text-white hover:bg-white/5 hover:border-white/10 rounded-full transition-all active:scale-95">
+              className="flex-1 sm:flex-none px-3 sm:px-4 py-2 text-[9px] font-black uppercase tracking-widest border border-white/5 text-white/30 hover:text-white hover:bg-white/5 hover:border-white/10 rounded-full transition-all active:scale-95 whitespace-nowrap">
               Last {label}
             </button>
           ))}
@@ -157,12 +160,12 @@ export default function WeeklySummaryPage() {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center text-center py-12 px-4">
+            <div className="flex flex-col items-center justify-center text-center">
               <img
                 src="/ChatGPT Image Jun 1, 2026, 01_41_35 PM.png"
                 alt="No weekly breakdown"
-                style={{ width: 350, height: 350 }}
-                className="object-contain mx-auto mb-4"
+                style={{ width: 250, height: 250 }}
+                className="object-contain mx-auto"
               />
               <p className="text-white/30 text-sm font-medium italic">
                 No weekly breakdown available for this temporal range.

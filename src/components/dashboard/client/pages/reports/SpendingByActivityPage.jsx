@@ -70,15 +70,15 @@ export default function SpendingByActivityPage() {
 
       {/* Temporal Parameters & Presets */}
       <div className="flex flex-row items-end justify-end gap-3 sm:gap-4 mb-10">
-        <div className="space-y-1.5 w-48">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Start Date</label>
+        <div className="space-y-1.5 w-full sm:w-48">
+          <label className="block text-[10px] sm:text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">Start Date</label>
           <CustomDatePicker value={from} onChange={setFrom} />
         </div>
-        <div className="space-y-1.5 w-48">
-          <label className="block text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">End Date</label>
+        <div className="space-y-1.5 w-full sm:w-48">
+          <label className="block text-[10px] sm:text-[9px] text-white/20 font-black uppercase tracking-[0.25em]">End Date</label>
           <CustomDatePicker value={to} onChange={setTo} />
         </div>
-        <div className="flex gap-2 pb-0.5">
+        <div className="hidden sm:flex gap-2 pb-0.5">
           {RANGE_PRESETS.map(({ label, days }) => (
             <button
               key={days}
@@ -90,6 +90,18 @@ export default function SpendingByActivityPage() {
           ))}
         </div>
       </div>
+      {/* Mobile preset buttons */}
+      <div className="flex sm:hidden justify-between gap-2 -mt-6 mb-8">
+        {RANGE_PRESETS.map(({ label, days }) => (
+          <button
+            key={days}
+            onClick={() => { setFrom(nDaysAgo(days)); setTo(toInputDate(new Date())); }}
+            className="flex-1 px-3 py-2 text-[10px] font-black uppercase tracking-widest border border-white/5 text-white/30 hover:text-white hover:bg-white/5 hover:border-white/10 rounded-full transition-all active:scale-95"
+          >
+            Last {label}
+          </button>
+        ))}
+      </div>
 
       {loading ? (
         <div className="space-y-2">
@@ -100,12 +112,12 @@ export default function SpendingByActivityPage() {
           </div>
         </div>
       ) : !data || (breakdown.length === 0 && byContract.length === 0) ? (
-        <div className="flex flex-col items-center justify-center text-center mt-20 px-4">
+        <div className="flex flex-col items-center justify-center text-center">
           <img
             src="/ChatGPT Image Jun 1, 2026, 02_33_11 PM.png"
             alt="No spending data"
-            style={{ width: 350, height: 350 }}
-            className="object-contain mx-auto mb-6"
+            style={{ width: 250, height: 250 }}
+            className="object-contain mx-auto"
           />
           <h3 className="text-white font-bold text-xl tracking-tight mb-2">No Spending Data Found</h3>
           <p className="text-white/30 text-xs mt-2 max-w-sm mx-auto font-medium leading-relaxed">
