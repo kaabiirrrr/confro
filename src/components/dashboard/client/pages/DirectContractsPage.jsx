@@ -24,7 +24,7 @@ const StatusBadge = ({ status }) => {
 };
 
 const SkeletonCard = () => (
-  <div className="animate-pulse bg-transparent border border-white/5 rounded-2xl p-5 space-y-4">
+  <div className="animate-pulse bg-transparent border border-white/5 rounded-xl p-5 space-y-4">
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
         <div className="w-9 h-9 bg-white/10 rounded-full shrink-0" />
@@ -129,7 +129,7 @@ export default function DirectContractsPage() {
             return (
               <div
                 key={c.id}
-                className="group relative flex flex-col bg-transparent border border-white/5 hover:border-white/10 rounded-2xl p-5 transition-all duration-300 hover:bg-white/[0.02]"
+                className="group relative flex flex-col bg-transparent border border-white/10 hover:border-accent/40 rounded-xl p-5 transition-all duration-300 hover:bg-white/[0.02]"
               >
                 {/* ── TOP ROW: Freelancer info + Budget ── */}
                 <div className="flex items-center justify-between gap-3 mb-4">
@@ -176,14 +176,14 @@ export default function DirectContractsPage() {
                   )}
 
                   {/* Meta chips */}
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    <span className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-white/30 bg-white/5 px-2 py-1 rounded-full">
-                      <Briefcase size={9} />
+                  <div className="flex flex-col items-end sm:flex-row sm:items-center sm:justify-start gap-2 pt-1">
+                    <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest text-white/30">
+                      <img src="/Icons/icons8-bag-100.png" alt="Fixed Price" className="w-3.5 h-3.5 object-contain shrink-0" />
                       {c.project_type === 'HOURLY' ? 'Hourly' : 'Fixed Price'}
                     </span>
                     {startDate && (
-                      <span className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-white/30 bg-white/5 px-2 py-1 rounded-full">
-                        <Calendar size={9} />
+                      <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest text-white/30">
+                        <img src="/Icons/icons8-desk-calender-96.png" alt="Timestamp" className="w-3.5 h-3.5 object-contain shrink-0" />
                         {startDate}
                         {endDate && (
                           <><ArrowRight size={8} className="mx-0.5 text-white/20" />{endDate}</>

@@ -16,6 +16,8 @@ import { cleanImageUrl } from '../../../utils/imageUrl';
 import analytics from '../../../services/analytics.service';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { useAuth } from '../../../context/AuthContext';
+import OTPVerificationModal from '../../ui/OTPVerificationModal';
 
 dayjs.extend(relativeTime);
 
@@ -25,12 +27,14 @@ export default function SubmitProposal() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const preselectedRoleId = searchParams.get('role');
-
+    const { profile } = useAuth();
 
     const [job, setJob] = useState(null);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [attachments, setAttachments] = useState([]);
+    const [showOTP, setShowOTP] = useState(false);
+    const [pendingPayload, setPendingPayload] = useState(null);
 
     const [formData, setFormData] = useState({
         cover_letter: '',
@@ -38,6 +42,22 @@ export default function SubmitProposal() {
         delivery_time: '',
         role_id: preselectedRoleId || ''
     });
+
+    // Restore pending proposal from sessionStorage on page load / refresh
+    useEffect(() => {
+        const saved = sessionStorage.getItem('otp_pending_proposal');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                setFormData(parsed.formData);
+                setAttachments(parsed.attachments || []);
+                setPendingPayload(parsed.payload);
+                setShowOTP(true);
+            } catch (err) {
+                console.error('Failed to restore proposal from sessionStorage:', err);
+            }
+        }
+    }, []);
 
 
     useEffect(() => {
@@ -83,7 +103,7 @@ export default function SubmitProposal() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
 
         if (job.bid_deadline && new Date() > new Date(job.bid_deadline)) {
             toast.error('The bidding deadline for this job has passed');
@@ -104,33 +124,40 @@ export default function SubmitProposal() {
             return;
         }
 
+        const payload = {
+            job_id: jobId,
+            role_id: formData.role_id || job.roles?.[0]?.id, // Ensure role_id is passed
+            cover_letter: formData.cover_letter,
+            proposed_rate: convertToUSD(formData.bid_amount),
+            estimated_duration: formData.delivery_time,
+            attachments: attachments
+        };
+
+        setPendingPayload(payload);
+        sessionStorage.setItem('otp_pending_proposal', JSON.stringify({ formData, attachments, payload }));
+        setShowOTP(true);
+    };
+
+    const handleVerifiedSubmit = async () => {
+        if (!pendingPayload) return;
         setSubmitting(true);
         try {
-            const response = await submitProposal({
-                job_id: jobId,
-                role_id: formData.role_id || job.roles?.[0]?.id, // Ensure role_id is passed
-                cover_letter: formData.cover_letter,
-                proposed_rate: convertToUSD(formData.bid_amount),
-                estimated_duration: formData.delivery_time,
-                attachments: attachments
-            });
-
+            const response = await submitProposal(pendingPayload);
 
             if (response.success || response) {
                 analytics.trackFeature('proposal_submission', '/freelancer/submit-proposal', { jobId: jobId });
                 toast.success('Proposal submitted successfully!');
                 
-                // Ensure redirection happens after a small delay to let toast be seen
                 setTimeout(() => {
                     navigate('/freelancer/proposals', { replace: true });
                 }, 1000);
             }
-
         } catch (err) {
             console.error('[SubmitProposal] Error:', err);
             toastApiError(err, 'Failed to submit proposal');
         } finally {
             setSubmitting(false);
+            setPendingPayload(null);
         }
     };
 
@@ -462,6 +489,13 @@ export default function SubmitProposal() {
                     </div>
                 </div>
             </div>
+            <OTPVerificationModal
+                isOpen={showOTP}
+                onClose={() => setShowOTP(false)}
+                onVerified={handleVerifiedSubmit}
+                action="proposal_submit"
+                email={profile?.email || ''}
+            />
         </motion.div>
     );
 }

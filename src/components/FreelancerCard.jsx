@@ -114,9 +114,8 @@ const FreelancerCard = ({
   const showActions = !user || role === 'CLIENT';
 
   return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      className="h-full bg-transparent border border-white/10 rounded-2xl p-4 sm:p-5 hover:border-accent/40 transition-all group flex flex-col gap-3 sm:gap-4 relative"
+    <div
+      className="h-full bg-transparent border border-white/10 rounded-xl p-4 sm:p-5 hover:border-accent/40 transition-all group flex flex-col gap-3 sm:gap-4 relative"
     >
       {/* Save Button */}
       {showSave && (
@@ -249,14 +248,14 @@ const FreelancerCard = ({
               onClick={handleMessage}
               className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-white/5 text-white/70 border border-white/10 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all"
             >
-              <MessageSquare size={14} />
+              <img src="/Icons/icons8-communication-100.png" alt="Message" className="w-4 h-4 object-contain" />
               Message
             </button>
             <button
               onClick={handleHire}
               className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-accent text-white border border-accent rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest hover:bg-accent/90 transition-all"
             >
-              <Briefcase size={14} />
+              <img src="/Icons/icons8-bag-100.png" alt="Hire" className="w-4 h-4 object-contain brightness-0 invert" />
               Hire
             </button>
           </div>
@@ -273,7 +272,7 @@ const FreelancerCard = ({
           )}
         </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 

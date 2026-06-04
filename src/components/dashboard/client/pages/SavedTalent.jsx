@@ -3,7 +3,7 @@ import {
   getSavedFreelancers,
   removeSavedFreelancer,
 } from '../../../../services/apiService';
-import { MessageCircle, Trash2, ExternalLink, ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Trash2, Bookmark } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { toastApiError } from '../../../../utils/apiErrorToast';
@@ -11,6 +11,7 @@ import Card from '../../../ui/Card';
 import Button from '../../../ui/Button';
 import SectionHeader from '../../../ui/SectionHeader';
 import EmptyState from '../../../ui/EmptyState';
+import Avatar from '../../../Avatar';
 
 const normalizeList = (payload) => {
   if (!payload) return [];
@@ -124,70 +125,119 @@ const SavedTalent = () => {
             const busy = removingId === id;
 
             return (
-              <Card key={id} className="flex flex-col md:flex-row md:items-center gap-5">
+              <div
+                key={id}
+                className="bg-transparent border border-white/10 rounded-xl p-5 hover:border-accent/40 transition-all shadow-sm group relative flex flex-col md:flex-row md:items-start gap-5"
+              >
+                {/* Bookmark & Delete absolute buttons on top-right */}
+                <div className="absolute top-5 right-5 flex items-center gap-3">
+                  <button
+                    disabled={busy}
+                    onClick={() => handleRemove(id)}
+                    className="p-1 text-accent/80 hover:text-accent transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
+                    title="Unsave Freelancer"
+                  >
+                    <Bookmark size={15} className="fill-accent text-accent" />
+                  </button>
+                  <button
+                    disabled={busy}
+                    onClick={() => handleRemove(id)}
+                    className="p-1 text-white/40 hover:text-red-500 transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
+                    title="Remove"
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                </div>
+
                 {/* Avatar & Name */}
-                <div className="flex items-center gap-4 md:w-56 shrink-0">
-                  <img
-                    src={avatarUrl}
-                    alt={name}
-                    className="w-14 h-14 rounded-full object-cover border-2 border-white/10 bg-white/5 shrink-0"
-                  />
-                  <div className="flex flex-col justify-center min-h-16">
-                    <div className="flex items-center gap-1.5">
-                      <h3 className="font-bold text-lg leading-tight text-white truncate">{name}</h3>
-                      {f.is_verified && (
-                        <ShieldCheck size={15} className="text-blue-400 shrink-0" title="Identity Verified" />
-                      )}
+                <div className="flex items-start gap-4 md:w-64 shrink-0 pr-16 md:pr-0">
+                  <div className="relative">
+                    <Avatar
+                      src={f.image || f.avatar_url}
+                      name={name}
+                      size="lg"
+                      className="ring-2 ring-border group-hover:ring-accent/40 transition-all"
+                    />
+                    {f.is_verified && (
+                      <div className="absolute -bottom-1 -right-1 bg-accent rounded-full p-0.5">
+                        <ShieldCheck size={10} className="text-white" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <h3 className="text-white font-semibold text-sm truncate group-hover:text-accent transition-colors">{name}</h3>
                       {f.has_availability_badge && (
-                        <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 shadow-sm shadow-emerald-500/5 animate-pulse ml-1">
-                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-                          <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest">Available</span>
+                        <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 shadow-sm shadow-emerald-500/5 animate-pulse shrink-0">
+                          <div className="w-1 h-1 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                          <span className="text-[8px] font-bold text-emerald-500 uppercase tracking-widest">Available</span>
                         </div>
                       )}
                     </div>
-                    {title && <p className="text-sm text-white/50 mt-1 line-clamp-2">{title}</p>}
+                    {title && <p className="text-white/40 text-[10px] mt-0.5 italic leading-relaxed">{title}</p>}
+                    {f.price && <p className="text-[10px] font-bold text-accent mt-1">{f.price}</p>}
                   </div>
                 </div>
 
-                {/* Skills */}
-                <div className="flex-1 flex flex-wrap gap-2">
-                  {(f.skills || []).slice(0, 6).map((skill, i) => (
-                    <span key={i} className="text-xs bg-accent/10 text-accent border border-accent/20 px-3 py-1 rounded-full">
-                      {skill}
-                    </span>
-                  ))}
+                {/* Details Section */}
+                <div className="flex-1 min-w-0 flex flex-col gap-3.5 w-full md:w-auto">
+                  {/* Top: Skills */}
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1.5">Skills</p>
+                    {f.skills && f.skills.length > 0 ? (
+                      <div className="flex flex-wrap gap-1.5">
+                        {f.skills.slice(0, 6).map((skill, i) => (
+                          <span key={i} className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 text-light-text/60">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-[10px] text-white/30 italic">No skills listed</p>
+                    )}
+                  </div>
+
+                  {/* Bottom: Metadata Grid */}
+                  <div className="grid grid-cols-2 gap-x-6 gap-y-2 pt-2.5 border-t border-white/5">
+                    {/* Experience */}
+                    <div>
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-0.5">Experience</p>
+                      <p className="text-xs text-white/60 font-medium">
+                        {f.experience_years ? (String(f.experience_years).toLowerCase().includes('year') || String(f.experience_years).toLowerCase().includes('yr') ? f.experience_years : `${f.experience_years} years`) : 'Not specified'}
+                      </p>
+                    </div>
+                    {/* Reliability */}
+                    <div>
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-0.5">Reliability Score</p>
+                      <p className="text-xs text-white/60 font-medium">
+                        {f.reliability_score != null ? `${f.reliability_score}%` : '100%'}
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-wrap items-center gap-2 shrink-0 justify-end ml-auto">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={busy}
-                    loading={busy}
-                    onClick={() => handleRemove(id)}
-                    icon={Trash2}
-                    className={busy ? 'opacity-50' : ''}
+                <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-1.5 sm:gap-3 shrink-0 self-end md:self-end mt-2 md:mt-0 flex-wrap">
+                  <button
+                    onClick={() => navigate(`/client/direct-contracts/new?freelancer_id=${id}`)}
+                    className="flex-1 md:flex-none flex items-center justify-center px-2.5 sm:px-4 py-1.5 sm:py-2 bg-white/5 text-white/50 border border-white/10 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider hover:border-accent/40 hover:text-accent transition-all cursor-pointer whitespace-nowrap"
                   >
-                    {busy ? 'Removing…' : 'Remove'}
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
+                    Direct Contract
+                  </button>
+                  <button
                     onClick={() => navigate(`/freelancer/${id}`)}
-                    icon={ExternalLink}
+                    className="flex-1 md:flex-none flex items-center justify-center px-2.5 sm:px-4 py-1.5 sm:py-2 bg-white/5 text-white/70 border border-white/10 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-all shadow-sm cursor-pointer whitespace-nowrap"
                   >
-                    View Profile
-                  </Button>
-                  <Button
-                    size="sm"
+                    Profile
+                  </button>
+                  <button
                     onClick={() => handleMessage(id)}
-                    icon={MessageCircle}
+                    className="flex-1 md:flex-none flex items-center justify-center px-3 sm:px-5 py-1.5 sm:py-2 bg-accent text-white border border-accent rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider hover:bg-accent/90 transition-all cursor-pointer whitespace-nowrap"
                   >
                     Message
-                  </Button>
+                  </button>
                 </div>
-              </Card>
+              </div>
             );
           })}
         </div>

@@ -134,7 +134,7 @@ const ConnectsActivitySection = memo(() => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/api/connects/history?dateFilter=30')
+    api.get('/api/connects/history?dateFilter=90')
       .then(res => { if (res.data.success) setHistory(res.data.data.slice(0, 5)); })
       .catch(() => { })
       .finally(() => setLoading(false));
@@ -145,24 +145,44 @@ const ConnectsActivitySection = memo(() => {
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-white/40">Connect Activity</h3>
-        <Link to="/client/connects" className="text-[9px] font-black uppercase tracking-widest text-accent hover:text-accent/80 transition">View All →</Link>
-      </div>
-      <div className="overflow-hidden divide-y divide-white/5">
-        {history.map((tx, i) => (
-          <div key={tx.id || i} className="px-2 py-3 flex items-center justify-between transition-colors">
-            <div className="flex items-center gap-3">
-              <div>
-                <p className="text-sm font-bold text-white">{tx.description}</p>
-                <p className="text-xs text-white/30">{fmtDate(tx.created_at)}</p>
+      <div className="border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-3 border-b border-slate-200 dark:border-white/5">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-white/40">Connect Activity</h3>
+          <Link to="/client/connects" className="text-[9px] font-black uppercase tracking-widest text-accent hover:text-accent/80 transition">View All →</Link>
+        </div>
+        {/* Rows */}
+        <div className="divide-y divide-slate-100 dark:divide-white/5">
+          {history.map((tx, i) => {
+            const jobTitle = tx.job_title
+              || tx.metadata?.job_title
+              || tx.metadata?.job_name
+              // Some records embed title in description as "Job Posted · Title"
+              || (tx.description?.includes(' · ') ? tx.description.split(' · ').slice(1).join(' · ') : null)
+              || null;
+
+            return (
+              <div key={tx.id || i} className="px-5 py-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
+                <div className="min-w-0 pr-3">
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                    {tx.description}
+                    {jobTitle && (
+                      <span className="text-accent/80 font-normal"> — {jobTitle}</span>
+                    )}
+                  </p>
+                  <p className="text-xs text-slate-400 dark:text-white/30 mt-0.5">
+                    {new Date(tx.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    {' · '}
+                    {new Date(tx.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+                <span className={`text-sm font-black shrink-0 ${tx.amount > 0 ? 'text-green-500' : 'text-red-400'}`}>
+                  {tx.amount > 0 ? '+' : ''}{tx.amount}
+                </span>
               </div>
-            </div>
-            <span className={`text-sm font-black ${tx.amount > 0 ? 'text-green-400' : 'text-red-400'}`}>
-              {tx.amount > 0 ? '+' : ''}{tx.amount}
-            </span>
-          </div>
-        ))}
+            );
+          })}
+        </div>
       </div>
     </motion.div>
   );
@@ -376,8 +396,15 @@ const ClientDashboardHome = () => {
   }, [profile]);
 
 
-  const handleTopupSuccess = () => {
-    refreshWallet();
+  const handleTopupSuccess = async () => {
+    await refreshWallet();
+    // Also refresh transaction history so the new deposit shows immediately
+    try {
+      const { data: res } = await api.get('/api/wallet/history');
+      if (res.success) setWalletHistory(res.data || []);
+    } catch (err) {
+      console.error('Wallet history refresh error:', err);
+    }
   };
 
   const handleAskUpdate = async (jobId, freelancerId) => {
@@ -524,27 +551,25 @@ const ClientDashboardHome = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-10"
         >
-          <div className="flex items-center justify-between mb-4 px-2">
-            <div>
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Recent Activity</h4>
+          <div className="border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-3 border-b border-slate-200 dark:border-white/5">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-white/40">Recent Activity</h4>
             </div>
-          </div>
-          <div className="overflow-hidden divide-y divide-white/5">
-            {walletHistory.slice(0, 5).map((tx, idx) => (
-              <div key={tx.id || idx} className="p-4 flex items-center justify-between transition-colors">
-                <div className="flex items-center gap-4">
+            {/* Rows */}
+            <div className="divide-y divide-slate-100 dark:divide-white/5">
+              {walletHistory.slice(0, 5).map((tx, idx) => (
+                <div key={tx.id || idx} className="px-5 py-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
                   <div>
-                    <p className="text-sm font-bold text-white uppercase tracking-wider">{tx.description || 'Wallet Transaction'}</p>
-                    <p className="text-xs text-white/30 font-medium">{fmtDate(tx.created_at)} • {tx.status || 'completed'}</p>
+                    <p className="text-sm font-semibold text-slate-900 dark:text-white uppercase tracking-wider">{tx.description || 'Wallet Transaction'}</p>
+                    <p className="text-xs text-slate-400 dark:text-white/30 font-medium mt-0.5">{fmtDate(tx.created_at)} · {tx.status || 'completed'}</p>
                   </div>
-                </div>
-                <div className="text-right">
                   <p className={`text-sm font-black ${tx.type === 'deposit' ? 'text-emerald-500' : 'text-rose-500'}`}>
                     {tx.type === 'deposit' ? '+' : '-'}{formatINR(tx.amount)}
                   </p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </motion.div>
       )}

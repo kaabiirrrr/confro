@@ -113,9 +113,8 @@ const AIJobPreviewModal = ({
                             </button>
                             <button
                                 onClick={() => onApply({ ...aiData, skills: selectedSkills })}
-                                className="w-full sm:w-auto px-10 py-3 rounded-full bg-accent text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-accent/90 transition-all shadow-xl shadow-accent/10 flex items-center justify-center gap-2 active:scale-95"
+                                className="w-full sm:w-auto px-10 py-3 rounded-full bg-accent text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-accent/90 transition-all flex items-center justify-center gap-2 active:scale-95"
                             >
-                                <Check size={16} />
                                 Apply AI Suggestions
                             </button>
                         </div>

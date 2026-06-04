@@ -16,8 +16,7 @@ import analytics from "../../../../services/analytics.service";
 import CustomDropdown from '../../../ui/CustomDropdown';
 import AIJobPreviewModal from './AIJobPreviewModal';
 import { Sparkles, Wand2 } from 'lucide-react';
-import OtpModal from '../../../OtpModal';
-import { useOtp } from '../../../../hooks/useOtp';
+import OTPVerificationModal from '../../../ui/OTPVerificationModal';
 import { useAuth } from '../../../../context/AuthContext';
 import { getApiUrl } from '../../../../utils/authUtils';
 import { useTheme } from '../../../../context/ThemeContext';
@@ -81,36 +80,34 @@ const PostJob = () => {
     fetchConnectsInfo();
   }, []);
 
-  const { openOtp, otpProps } = useOtp({
-    phone,
-    onSuccess: async () => {
-      if (pendingPayload) {
-        setIsLoading(true);
-        try {
-          const result = editJobId
-            ? await updateJob(editJobId, pendingPayload)
-            : await createJob(pendingPayload);
-          toast.success(editJobId ? 'Job updated!' : pendingStatus === 'DRAFT' ? 'Draft saved!' : 'Job posted successfully!');
-          navigate('/client/jobs');
-        } catch (err) {
-          toastApiError(err, 'Failed to post job');
-        } finally {
-          setIsLoading(false);
-          setPendingPayload(null);
-        }
-      }
-    },
-  });
+  const [showOTP, setShowOTP] = useState(false);
 
-  // Check if this is the client's first job
+  // Restore pending job post from sessionStorage on page load / refresh
   useEffect(() => {
-    if (!editJobId) {
-      getMyJobs().then(res => {
-        const jobs = res?.data ?? res ?? [];
-        setIsFirstJob(Array.isArray(jobs) ? jobs.length === 0 : false);
-      }).catch(() => { });
+    const saved = sessionStorage.getItem('otp_pending_job');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setForm(parsed.form);
+        setSelectedSkills(parsed.selectedSkills || []);
+        setAttachments(parsed.attachments || []);
+        setPendingStatus(parsed.status || 'OPEN');
+        
+        const payload = {
+          ...parsed.form,
+          budget_amount: parsed.form.job_mode === 'single' ? convertToUSD(parsed.form.budget_amount) : 0,
+          skills: parsed.selectedSkills || [],
+          attachments: parsed.attachments || [],
+          status: parsed.status || 'OPEN',
+          roles: parsed.form.job_mode === 'team' ? parsed.form.roles.map(r => ({ ...r, budget: convertToUSD(r.budget) })) : undefined
+        };
+        setPendingPayload(payload);
+        setShowOTP(true);
+      } catch (err) {
+        console.error('Failed to restore job posting from sessionStorage:', err);
+      }
     }
-  }, [editJobId]);
+  }, []);
 
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [skillInput, setSkillInput] = useState('');
@@ -303,11 +300,12 @@ const PostJob = () => {
       roles: form.job_mode === 'team' ? form.roles.map(r => ({ ...r, budget: convertToUSD(r.budget) })) : undefined
     };
 
-    // Gate first job post behind OTP
-    if (isFirstJob && !editJobId && phone) {
+    // Gate job post behind OTP (only for new posts, i.e., !editJobId)
+    if (!editJobId) {
       setPendingPayload(payload);
       setPendingStatus(status);
-      openOtp('first_job');
+      sessionStorage.setItem('otp_pending_job', JSON.stringify({ form, selectedSkills, attachments, status }));
+      setShowOTP(true);
       return;
     }
 
@@ -470,7 +468,7 @@ const PostJob = () => {
       {/* CATEGORY */}
       <div className="rounded-xl p-4 sm:p-6 relative">
         
-        <div className="relative z-50">
+        <div className="relative z-30">
           <p className="text-[10px] font-black text-slate-900/30 dark:text-white/30 uppercase tracking-[0.2em] mb-5">Category</p>
           <CustomDropdown
             options={CATEGORIES}
@@ -800,7 +798,30 @@ const PostJob = () => {
         aiData={aiModal.aiData}
         type={aiModal.type}
       />
-      <OtpModal {...otpProps} />
+      <OTPVerificationModal
+        isOpen={showOTP}
+        onClose={() => setShowOTP(false)}
+        onVerified={async () => {
+          setShowOTP(false);
+          if (pendingPayload) {
+            setIsLoading(true);
+            try {
+              const result = editJobId
+                ? await updateJob(editJobId, pendingPayload)
+                : await createJob(pendingPayload);
+              toast.success(editJobId ? 'Job updated!' : pendingStatus === 'DRAFT' ? 'Draft saved!' : 'Job posted successfully!');
+              navigate('/client/jobs');
+            } catch (err) {
+              toastApiError(err, 'Failed to post job');
+            } finally {
+              setIsLoading(false);
+              setPendingPayload(null);
+            }
+          }
+        }}
+        action="job_post"
+        email={profile?.email || ''}
+      />
     </div>
   );
 };

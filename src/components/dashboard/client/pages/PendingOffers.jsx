@@ -117,7 +117,7 @@ const PendingOffers = () => {
             return (
               <Card 
                 key={offerId} 
-                className="flex flex-col md:flex-row gap-6"
+                className="flex flex-col md:flex-row gap-6 !rounded-xl"
               >
                 {/* LEFT: Freelancer Info */}
                 <div className="flex items-center gap-4 w-full md:w-1/4 shrink-0">
@@ -173,7 +173,6 @@ const PendingOffers = () => {
                     variant="primary"
                     size="sm"
                     onClick={() => handleAction(offerId, "ACCEPTED")}
-                    icon={Check}
                     className="w-full !text-slate-950 dark:!text-slate-950 shadow-none font-bold"
                   >
                     Accept
@@ -182,7 +181,6 @@ const PendingOffers = () => {
                     variant="danger"
                     size="sm"
                     onClick={() => handleAction(offerId, "REJECTED")}
-                    icon={X}
                     className="w-full !bg-red-500 hover:!bg-red-600 !text-white !border-red-500 shadow-none font-bold"
                   >
                     Reject

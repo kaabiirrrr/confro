@@ -123,21 +123,20 @@ const MyJobs = () => {
   };
 
   return (
-    <div className="max-w-[1500px] mx-auto py-6 sm:py-8 text-light-text font-sans tracking-tight">
+    <div className="max-w-[1500px] mx-auto px-0 sm:px-6 lg:px-8 mt-2 sm:mt-6 pb-12 space-y-6 text-light-text font-sans tracking-tight">
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
-        <div className="space-y-1">
-          <h1 className="text-lg sm:text-2xl font-semibold text-white tracking-tight">My Jobs</h1>
-          <p className="text-sm sm:text-base text-light-text/70">{jobs.length} job{jobs.length !== 1 ? 's' : ''} posted</p>
-        </div>
-        <Button 
-          onClick={() => navigate('/client/post-job')} 
-          className="rounded-full px-6 h-10 text-sm font-semibold shadow-lg shadow-accent/20 hover:scale-105 transition-all w-full sm:w-fit"
-          icon={Plus}
-        >
-          Post New Job
-        </Button>
-      </div>
+      <SectionHeader
+        title="My Jobs"
+        subtext={`${jobs.length} job${jobs.length !== 1 ? 's' : ''} posted`}
+        action={
+          <Button 
+            onClick={() => navigate('/client/post-job')} 
+            className="rounded-full px-6 h-10 text-sm font-semibold hover:scale-105 transition-all w-full sm:w-fit"
+          >
+            Post New Job
+          </Button>
+        }
+      />
 
       {/* Tabs — Justify Between on Mobile */}
       <div className="flex items-center justify-between sm:justify-start gap-4 sm:gap-10 border-b border-white/5 mb-8 sm:mb-10 overflow-x-auto no-scrollbar w-full">
@@ -172,20 +171,20 @@ const MyJobs = () => {
           {[1, 2, 3].map(i => <div key={i} className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-40" />)}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-12 sm:p-20 bg-transparent border border-white/10 rounded-2xl text-center">
+        <div className="flex flex-col items-center justify-center p-12 sm:p-20 bg-transparent border border-white/10 rounded-xl text-center">
           <Briefcase className="w-12 h-12 text-light-text/20 mb-6" />
           <h3 className="text-lg font-semibold text-white mb-2">No jobs found</h3>
           <p className="text-light-text/50 text-base mb-8 max-w-md mx-auto">
             {activeTab === 'all' ? "You haven't posted any jobs yet. Get started by posting your first job." : `No jobs found with status "${activeTab.toLowerCase().replace(/_/g, ' ')}".`}
           </p>
           <Button onClick={() => navigate('/client/post-job')} variant="secondary" className="rounded-full px-8">
-            Post your first job →
+            Post your first job
           </Button>
         </div>
       ) : (
         <div className="space-y-4">
           {filtered.map(job => (
-            <div key={job.id} className="bg-transparent border border-white/10 rounded-2xl p-6 hover:border-accent/40 transition-all shadow-sm group">
+            <div key={job.id} className="bg-transparent border border-white/10 rounded-xl p-6 hover:border-accent/40 transition-all shadow-sm group">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between md:justify-start gap-3 mb-4">
@@ -246,12 +245,12 @@ const MyJobs = () => {
                     {(job.proposal_count || 0) > 0 && (
                       <button
                         onClick={() => navigate(`/client/proposals?job=${job.id}`)}
-                        className="h-10 px-5 bg-accent text-white rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 flex items-center gap-2 active:scale-95 whitespace-nowrap"
+                        className="h-10 px-5 bg-accent text-white rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-accent/90 transition-all flex items-center gap-2 active:scale-95 whitespace-nowrap"
                       >
-                        Proposals <ChevronRight size={14} />
+                        Proposals
                       </button>
                     )}
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 ml-auto">
                       {job.is_bidding_open !== false && (job.status === 'OPEN' || job.status === 'IN_PROGRESS') && (
                         <button
                             onClick={() => {
@@ -332,8 +331,8 @@ const MyJobs = () => {
                             onClick={confirmModal.onConfirm}
                             className={`px-6 py-4 rounded-full font-bold text-[11px] uppercase tracking-widest transition-all ${
                                 confirmModal.type === 'danger' 
-                                ? 'bg-red-500 hover:bg-red-400 text-white shadow-lg shadow-red-500/20' 
-                                : 'bg-accent hover:bg-accent/80 text-white shadow-lg shadow-accent/20'
+                                ? 'bg-red-500 hover:bg-red-400 text-white' 
+                                : 'bg-accent hover:bg-accent/80 text-white'
                             }`}
                         >
                             {confirmModal.confirmText}

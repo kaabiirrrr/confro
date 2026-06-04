@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { getHourlyExport, getMyContracts, getHiredFreelancers } from '../../../../../services/apiService';
 import { toastApiError } from '../../../../../utils/apiErrorToast';
 import { toast } from 'react-hot-toast';
-import InfinityLoader from '../../../../common/InfinityLoader';
 import CustomDropdown from '../../../../ui/CustomDropdown';
 
 const toInputDate = (d) => d.toISOString().split('T')[0];
@@ -179,11 +178,21 @@ export default function CustomExportPage() {
 </body>
 </html>`;
 
-      const win = window.open('', '_blank');
-      win.document.write(html);
-      win.document.close();
-      win.focus();
-      setTimeout(() => { win.print(); }, 600);
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const win = window.open(url, '_blank');
+      if (win) {
+        win.addEventListener('load', () => {
+          setTimeout(() => { win.print(); URL.revokeObjectURL(url); }, 400);
+        });
+      } else {
+        // fallback: download as .html file
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `export-report-${new Date().toISOString().split('T')[0]}.html`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
       toast.success('PDF ready — use "Save as PDF" in the print dialog.');
     } catch (err) {
       toastApiError(err, 'Export failed');
@@ -322,7 +331,10 @@ export default function CustomExportPage() {
           className="w-full sm:w-auto px-8 py-3.5 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-2 bg-accent text-white hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
         >
           {loading ? (
-            <><InfinityLoader fullScreen={false} text="" /> Generating...</>
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />
+              Generating...
+            </span>
           ) : (
             'Export as PDF'
           )}

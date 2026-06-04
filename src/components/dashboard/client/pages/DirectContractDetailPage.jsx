@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   AlertCircle, MessageCircle, Calendar, IndianRupee, User,
-  CheckCircle2, Clock, XCircle, ArrowLeft, Video
+  CheckCircle2, Clock, XCircle, ArrowLeft, Video, Hash, FileSignature
 } from 'lucide-react';
 import { formatINR } from '../../../../utils/currencyUtils';
 import { getDirectContractById, updateDirectContractStatus, getOrCreateConversation } from '../../../../services/apiService';
@@ -30,12 +30,16 @@ const StatusBadge = ({ status }) => {
   );
 };
 
-const InfoRow = ({ icon: Icon, label, value }) => (
+const InfoRow = ({ icon: Icon, imgSrc, label, value }) => (
   <div className="flex items-center gap-2.5">
-    <Icon size={13} className="text-white/30 shrink-0" />
-    <div>
+    {imgSrc ? (
+      <img src={imgSrc} alt={label} className="w-4 h-4 object-contain shrink-0" />
+    ) : Icon ? (
+      <Icon size={13} className="text-white/30 shrink-0" />
+    ) : null}
+    <div className="min-w-0 flex-1">
       <p className="text-white/30 text-[10px] uppercase tracking-widest font-bold">{label}</p>
-      <p className="text-white text-xs font-medium mt-0.5">{value || '—'}</p>
+      <p className="text-white text-xs font-medium mt-0.5 break-all sm:break-normal">{value || '—'}</p>
     </div>
   </div>
 );
@@ -140,10 +144,10 @@ export default function DirectContractDetailPage() {
     );
   }
 
-  const freelancerProfiles = contract.freelancer?.profiles || {};
-  const name = freelancerProfiles.name || contract.freelancer?.name || contract.freelancer_name || 'Freelancer';
-  const avatar = freelancerProfiles.avatar_url || contract.freelancer?.avatar_url || null;
-  const freelancerTitle = freelancerProfiles.title || contract.freelancer?.title || null;
+  const freelancerObj = contract.freelancer || {};
+  const name = freelancerObj.name || contract.freelancer_name || 'Freelancer';
+  const avatar = freelancerObj.avatar_url || freelancerObj.image || null;
+  const freelancerTitle = freelancerObj.title || null;
 
   const rate = contract.agreed_rate != null
     ? `₹${Number(contract.agreed_rate).toLocaleString('en-IN')}${contract.project_type === 'HOURLY' ? '/hr' : ' fixed'}`
@@ -175,7 +179,7 @@ export default function DirectContractDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         <div className="lg:col-span-2 space-y-8 md:space-y-10">
           {/* Freelancer Profile */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-transparent border border-white/10 rounded-xl p-5 hover:border-white/15 transition-all shadow-sm">
             <div className="flex items-center gap-4">
               {avatar ? (
                 <img src={avatar} alt={name} className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover ring-2 ring-white/5" />
@@ -193,18 +197,18 @@ export default function DirectContractDetailPage() {
               <button
                 onClick={handleMessage}
                 disabled={messaging}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-accent text-white font-bold text-xs uppercase tracking-widest hover:bg-accent/90 transition disabled:opacity-50"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-accent text-white font-bold text-xs uppercase tracking-widest hover:bg-accent/90 transition disabled:opacity-50 cursor-pointer"
               >
-                {messaging ? <InfinityLoader/> : <MessageCircle size={14} />}
+                {messaging ? <InfinityLoader/> : null}
                 Message
               </button>
 
               {contract.status === 'ACTIVE' && (
                 <button
                   onClick={() => navigate(`/meeting/create?projectId=${contract.job_id}&clientId=${contract.client_id}&freelancerId=${contract.freelancer?.id}`)}
-                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-blue-600/10 border border-blue-500/20 text-blue-400 font-bold text-xs uppercase tracking-widest hover:bg-blue-600/20 transition"
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-blue-600/10 border border-blue-500/20 text-blue-400 font-bold text-xs uppercase tracking-widest hover:bg-blue-600/20 transition cursor-pointer"
                 >
-                  <Video size={14} /> Meeting
+                  Meeting
                 </button>
               )}
             </div>
@@ -221,8 +225,8 @@ export default function DirectContractDetailPage() {
 
           {/* Contract Description */}
           {contract.description && (
-            <div className="bg-transparent border-none p-0 backdrop-blur-none">
-              <h3 className="text-white/20 text-[9px] font-bold uppercase tracking-[0.2em] mb-3">Original Description</h3>
+            <div className="bg-transparent border border-white/10 rounded-xl p-5 hover:border-white/15 transition-all shadow-sm">
+              <h3 className="text-white/20 text-[9px] font-bold uppercase tracking-[0.2em] border-b border-white/5 pb-3 mb-3">Original Description</h3>
               <p className="text-white/60 text-xs leading-relaxed whitespace-pre-wrap">{contract.description}</p>
             </div>
           )}
@@ -235,39 +239,42 @@ export default function DirectContractDetailPage() {
           )}
 
           {/* Financials & Dates */}
-          <div className="bg-transparent border-none p-0 space-y-6 backdrop-blur-none transition-all">
+          <div className="bg-transparent border border-white/10 rounded-xl p-5 hover:border-white/15 transition-all shadow-sm space-y-6">
             <h3 className="text-white/20 text-[9px] font-bold uppercase tracking-[0.2em] border-b border-white/5 pb-3 mb-2">Contract Terms</h3>
             <div className="space-y-5">
-              <InfoRow icon={IndianRupee} label="Agreed Rate" value={rate} />
+              <InfoRow imgSrc="/Icons/icons8-bag-100.png" label="Contract ID" value={contract.id} />
+              <InfoRow imgSrc="/Icons/icons8-bag-100.png" label="Contract Type" value={contract.project_type === 'HOURLY' ? 'Hourly Project' : 'Fixed Price Project'} />
+              <InfoRow imgSrc="/Icons/icons8-rupee-64.png" label="Agreed Rate" value={rate} />
               {contract.weekly_limit && (
                 <InfoRow icon={Clock} label="Weekly Limit" value={`${contract.weekly_limit} hrs`} />
               )}
-              <InfoRow icon={Calendar} label="Start Date" value={contract.start_date ? new Date(contract.start_date).toLocaleDateString() : 'Immediate'} />
-              <InfoRow icon={Calendar} label="Target End Date" value={contract.end_date ? new Date(contract.end_date).toLocaleDateString() : 'Milestone Based'} />
+              <InfoRow imgSrc="/Icons/icons8-desk-calender-96.png" label="Created On" value={contract.created_at ? new Date(contract.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'} />
+              <InfoRow imgSrc="/Icons/icons8-desk-calender-96.png" label="Start Date" value={contract.start_date ? new Date(contract.start_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Immediate'} />
+              <InfoRow imgSrc="/Icons/icons8-desk-calender-96.png" label="Target End Date" value={contract.end_date ? new Date(contract.end_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Milestone Based'} />
             </div>
           </div>
 
           {/* Dangerous Actions */}
           {canAct && (
-            <div className="bg-transparent border-none p-0 space-y-4 backdrop-blur-none transition-all">
+            <div className="bg-transparent border border-white/10 rounded-xl p-5 hover:border-white/15 transition-all shadow-sm space-y-4">
                <h3 className="text-white/20 text-[9px] font-bold uppercase tracking-[0.2em] border-b border-white/5 pb-4 mb-2">Management</h3>
               <div className="flex flex-col gap-3">
                 {isClient && (
                   <button
                     onClick={() => setConfirm({ status: 'COMPLETED', message: 'Mark this contract as completed? All milestones and deliveries should be finalized.' })}
                     disabled={!!updating}
-                    className="flex items-center justify-center gap-2 px-4 py-3.5 bg-green-500/10 border border-green-500/20 text-green-400 font-bold text-[11px] uppercase tracking-widest rounded-full hover:bg-green-500/20 transition-all disabled:opacity-50 active:scale-95"
+                    className="flex items-center justify-center gap-2 px-4 py-3.5 bg-green-600 text-white font-bold text-[11px] uppercase tracking-widest rounded-full hover:bg-green-500 transition-all disabled:opacity-50 active:scale-95 cursor-pointer border-none"
                   >
-                    {updating === 'COMPLETED' ? <InfinityLoader/> : <CheckCircle2 size={16} />}
+                    {updating === 'COMPLETED' ? <InfinityLoader/> : null}
                     Complete Contract
                   </button>
                 )}
                 <button
                   onClick={() => setConfirm({ status: 'CANCELLED', message: 'Are you sure you want to cancel this contract? Ongoing work will be stopped.' })}
                   disabled={!!updating}
-                  className="flex items-center justify-center gap-2 px-4 py-3.5 bg-red-500/10 border border-red-500/20 text-red-500 font-bold text-[11px] uppercase tracking-widest rounded-full hover:bg-red-500/20 transition-all disabled:opacity-50 active:scale-95"
+                  className="flex items-center justify-center gap-2 px-4 py-3.5 bg-red-600 text-white font-bold text-[11px] uppercase tracking-widest rounded-full hover:bg-red-500 transition-all disabled:opacity-50 active:scale-95 cursor-pointer border-none"
                 >
-                  {updating === 'CANCELLED' ? <InfinityLoader/> : <XCircle size={16} />}
+                  {updating === 'CANCELLED' ? <InfinityLoader/> : null}
                   Terminate Contract
                 </button>
               </div>

@@ -76,7 +76,7 @@ export default function StepSkills({ next, back, wizardData = {} }) {
                     </div>
 
             <div className="space-y-5 pt-2">
-                <div className="flex flex-col gap-2 relative z-50">
+                <div className="flex flex-col gap-2 relative z-30">
                     <label className="text-sm font-medium text-white/50 px-1">Primary Category</label>
                     <CustomDropdown
                         options={CATEGORIES}

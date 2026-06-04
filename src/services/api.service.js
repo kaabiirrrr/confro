@@ -30,7 +30,8 @@ api.interceptors.response.use(
     const message = error.response?.data?.message || 'Something went wrong';
     
     // Handle Unauthorized (401)
-    if (error.response?.status === 401) {
+    const isExempt = error.config?.url?.includes('/api/otp/') || error.config?.url?.includes('/api/auth/login');
+    if (error.response?.status === 401 && !isExempt) {
       // Dispatch global event for AuthContext to handle logout
       window.dispatchEvent(new Event('auth-unauthorized'));
     }

@@ -36,7 +36,9 @@ const Proposals = () => {
   const [jobs, setJobs] = useState([]);
   const [proposals, setProposals] = useState([]);
   const [matchData, setMatchData] = useState({});
-  const [sortBy, setSortBy] = useState('match'); // 'match', 'price', 'date'
+  const [sortByMap, setSortByMap] = useState({}); // per-job sort: { [jobId]: 'match'|'price'|'date' }
+  const getSortBy = (jobId) => sortByMap[jobId] || 'match';
+  const setSortBy = (jobId, val) => setSortByMap(prev => ({ ...prev, [jobId]: val }));
   const { wallet, refreshWallet } = useAuth();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -227,9 +229,10 @@ const Proposals = () => {
       const roleProps = groupedByJob[jobId].roles[roleId].proposals;
 
       // ENTERPRISE SORTING LOGIC
+      const jobSortBy = getSortBy(jobId);
       roleProps.sort((a, b) => {
-        if (sortBy === 'price') return (a.proposed_rate || 0) - (b.proposed_rate || 0);
-        if (sortBy === 'date') return new Date(b.created_at) - new Date(a.created_at);
+        if (jobSortBy === 'price') return (a.proposed_rate || 0) - (b.proposed_rate || 0);
+        if (jobSortBy === 'date') return new Date(b.created_at) - new Date(a.created_at);
 
         // Default: Sort by Match Score
         const matchA = matchData[a.id]?.match_score || 0;
@@ -339,9 +342,9 @@ const Proposals = () => {
         subtextClass="text-xs sm:text-sm text-slate-500 dark:text-white/40 mt-1 font-medium"
       />
 
-      {/* Tabs and Global Sort */}
-      <div className="flex flex-col gap-3 mb-6 px-4 sm:px-0">
-        {/* Tabs row — full width on mobile */}
+      {/* Tabs and Global Sort — one row on desktop, stacked on mobile */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6 px-4 sm:px-0">
+        {/* Tabs */}
         <Tabs
           tabs={STATUS_TABS.map(tab => ({
             ...tab,
@@ -351,36 +354,6 @@ const Proposals = () => {
           onChange={setActiveTab}
           className="w-full sm:w-auto"
         />
-        {/* Dropdown — full width on mobile, hidden on sm+ (shown inline via sm row) */}
-        <div className="sm:hidden w-full">
-          <CustomDropdown
-            value={sortBy}
-            onChange={(val) => setSortBy(val)}
-            options={[
-              { label: 'Best Match', value: 'match' },
-              { label: 'Price', value: 'price' },
-              { label: 'Recent', value: 'date' }
-            ]}
-            variant="glass"
-            fullWidth={true}
-          />
-        </div>
-      </div>
-      {/* Desktop: tabs + dropdown in one row */}
-      <div className="hidden sm:flex sm:flex-row sm:items-end justify-between gap-4 mb-6 -mt-6">
-        <div className="w-[140px] shrink-0 ml-auto">
-          <CustomDropdown
-            value={sortBy}
-            onChange={(val) => setSortBy(val)}
-            options={[
-              { label: 'Best Match', value: 'match' },
-              { label: 'Price', value: 'price' },
-              { label: 'Recent', value: 'date' }
-            ]}
-            variant="glass"
-            fullWidth={true}
-          />
-        </div>
       </div>
 
       {isLoading ? (
@@ -403,21 +376,57 @@ const Proposals = () => {
               if (activeTab !== 'all' && jobProposals.length === 0) return null;
               const isExpanded = expandedJob === job.id;
               return (
-                <Card key={job.id} padding="p-0" className="bg-transparent overflow-hidden">
-                  <button onClick={() => setExpandedJob(isExpanded ? null : job.id)}
-                    className="w-full flex items-center justify-between px-4 sm:px-5 py-4 hover:bg-accent/5 transition gap-4 text-left">
-                    <p className="text-slate-950 dark:text-white font-medium truncate flex-1">{job?.title || 'Job'}</p>
-                    <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-                      <span className="shrink-0 bg-accent/10 text-accent border border-accent/20 rounded-full px-3 py-1 text-[10px] sm:text-xs font-bold">{jobProposals.length} proposals</span>
-                      <div className="shrink-0 flex items-center justify-center">
-                        {isExpanded ? <ChevronUp size={18} className="text-slate-900/40 dark:text-white/40" /> : <ChevronDown size={18} className="text-slate-900/40 dark:text-white/40" />}
+                <Card key={job.id} padding="p-0" className="bg-transparent overflow-hidden rounded-xl">
+                  <div
+                    onClick={() => setExpandedJob(isExpanded ? null : job.id)}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-5 py-4 gap-3 sm:gap-4 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition-colors"
+                  >
+                    {/* Left group / Row 1 in mobile */}
+                    <div className="flex items-center justify-between w-full sm:w-auto min-w-0 gap-4">
+                      <div className="flex-1 flex items-center gap-4 text-left min-w-0">
+                        <p className="text-slate-950 dark:text-white font-medium truncate">{job?.title || 'Job'}</p>
+                        <span className="hidden sm:inline-block shrink-0 bg-accent/10 text-accent border border-accent/20 rounded-full px-3 py-1 text-xs font-bold overflow-visible">{jobProposals.length} proposals</span>
+                      </div>
+                      <div className="flex sm:hidden items-center gap-3 shrink-0">
+                        <span className="bg-accent/10 text-accent border border-accent/20 rounded-full px-3 py-1 text-[10px] font-bold overflow-visible">{jobProposals.length} proposals</span>
+                        <ChevronDown size={18} className={`text-slate-900/40 dark:text-white/40 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
                       </div>
                     </div>
-                  </button>
+
+                    {/* Right group / Row 2 in mobile */}
+                    <div className={`flex items-center gap-2 sm:gap-3 w-full sm:w-auto shrink-0 justify-between sm:justify-start ${!isExpanded ? 'hidden sm:flex' : 'flex'}`}>
+                      {/* Per-card sort dropdown */}
+                      {isExpanded && (
+                        <div className="w-full sm:w-[140px]" onClick={e => e.stopPropagation()}>
+                          <CustomDropdown
+                            value={getSortBy(job.id)}
+                            onChange={(val) => setSortBy(job.id, val)}
+                            options={[
+                              { label: 'Best Match', value: 'match' },
+                              { label: 'Price', value: 'price' },
+                              { label: 'Recent', value: 'date' }
+                            ]}
+                            variant="transparent"
+                            fullWidth={true}
+                            compact={true}
+                          />
+                        </div>
+                      )}
+                      <div className="hidden sm:flex shrink-0 items-center justify-center">
+                        <ChevronDown size={18} className={`text-slate-900/40 dark:text-white/40 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
+                      </div>
+                    </div>
+                  </div>
 
 
-                  {isExpanded && (
-                    <>
+                  <div
+                    className={`grid transition-all duration-500 ease-in-out ${
+                      isExpanded
+                        ? "grid-rows-[1fr] opacity-100"
+                        : "grid-rows-[0fr] opacity-0 pointer-events-none"
+                    }`}
+                  >
+                    <div className="overflow-hidden min-h-0">
                       <div className="border-t border-white/10">
                         {Object.keys(groupedByJob[job.id]?.roles || {}).length === 0 ? (
 
@@ -463,7 +472,7 @@ const Proposals = () => {
 
                                         {/* TOP SECTION: Freelancer Profile & Match */}
                                         <div className="flex items-center justify-between gap-4 sm:gap-6">
-                                          <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                                          <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0 flex-1">
                                             <div className="shrink-0 relative group/avatar">
                                               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent text-lg font-black overflow-hidden relative">
                                                 {proposal.freelancer?.avatar_url ? (
@@ -471,25 +480,49 @@ const Proposals = () => {
                                                 ) : (
                                                   (proposal.freelancer?.name || '?')[0]
                                                 )}
-                                                {proposal.freelancer?.is_verified && (
-                                                  <div className="absolute -bottom-1 -right-1 p-1 bg-accent rounded-full ring-2 ring-primary shadow-lg">
-                                                    <ShieldCheck size={11} className="text-white fill-white/10" />
-                                                  </div>
-                                                )}
                                               </div>
+                                              {proposal.freelancer?.is_verified && (
+                                                <div className="absolute -bottom-1 -right-1 p-1 bg-accent rounded-full ring-2 ring-primary shadow-lg z-10">
+                                                  <ShieldCheck size={11} className="text-white fill-white/10" />
+                                                </div>
+                                              )}
                                             </div>
 
-                                            <div className="min-w-0 flex-1">
-                                              <div className="flex flex-col-reverse sm:flex-row sm:items-center gap-1 sm:gap-3 mb-1">
+                                            <div className="min-w-0 flex-1 pt-0.5 sm:pt-0">
+                                              <div className="flex flex-row items-center justify-between sm:justify-start gap-2 mb-1 w-full">
                                                 <p onClick={() => navigate(`/freelancer/${proposal.freelancer_id}`)} className="text-slate-950 dark:text-white font-black text-base sm:text-lg hover:text-accent cursor-pointer transition-colors truncate tracking-tight">
                                                   {proposal.freelancer?.name || 'Freelancer'}
                                                 </p>
-                                                <div className="flex justify-end sm:block">
-                                                  <span className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-full text-[8px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 ${sc.cls}`}>
+                                                
+                                                {/* Desktop Only: Bid + Status Badge */}
+                                                <div className="hidden sm:flex items-center gap-3 shrink-0 ml-auto">
+                                                  <div className="flex items-center gap-2">
+                                                    <span className="text-[9px] text-slate-400 dark:text-white/30 uppercase font-bold tracking-widest whitespace-nowrap">Freelancer Bid</span>
+                                                    <span className="text-sm sm:text-base font-black text-slate-950 dark:text-white tracking-tighter">
+                                                      ₹{formatINR(proposal.proposed_rate).replace('₹', '')}
+                                                    </span>
+                                                  </div>
+                                                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${sc.cls}`}>
+                                                    {sc.icon} {proposal.status}
+                                                  </span>
+                                                </div>
+
+                                                {/* Mobile Only: Status Badge on the right */}
+                                                <div className="flex sm:hidden shrink-0">
+                                                  <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[8px] font-bold uppercase tracking-wider ${sc.cls}`}>
                                                     {sc.icon} {proposal.status}
                                                   </span>
                                                 </div>
                                               </div>
+
+                                              {/* Mobile Only: Bid amount on its own separate line */}
+                                              <div className="flex sm:hidden items-center justify-end gap-2 mb-2">
+                                                <span className="text-[9px] text-slate-400 dark:text-white/30 uppercase font-bold tracking-widest whitespace-nowrap">Freelancer Bid</span>
+                                                <span className="text-sm font-black text-slate-950 dark:text-white tracking-tighter">
+                                                  ₹{formatINR(proposal.proposed_rate).replace('₹', '')}
+                                                </span>
+                                              </div>
+
                                               <ProposalBadges match={matchData[proposal.id]} />
                                             </div>
                                           </div>
@@ -511,9 +544,9 @@ const Proposals = () => {
                                         </div>
 
                                         {/* BOTTOM SECTION: AI Insights & Bid Actions */}
-                                        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pt-1">
-                                          <div className="flex-1 w-full lg:w-auto">
-                                            {matchData[proposal.id]?.ai_summary && (
+                                        <div className="flex flex-col gap-4 pt-1">
+                                          {matchData[proposal.id]?.ai_summary && (
+                                            <div className="w-full">
                                               <div className="flex items-start gap-3 p-3 bg-accent/5 rounded-xl animate-in slide-in-from-left-2 duration-500 max-w-2xl">
                                                 <div className="p-1.5 bg-accent/10 rounded-full shrink-0">
                                                   <Zap size={14} className="text-accent fill-accent/20" />
@@ -528,42 +561,36 @@ const Proposals = () => {
                                                   </div>
                                                 </div>
                                               </div>
-                                            )}
-                                          </div>
-
-                                          <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 w-full lg:w-auto justify-between lg:justify-end">
-                                            <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-2 border-b sm:border-0 border-white/5 pb-2 sm:pb-0">
-                                              <span className="text-[8px] sm:text-[10px] text-slate-900/40 dark:text-white/30 uppercase font-black tracking-widest">Proposed Bid:</span>
-                                              <span className="text-lg sm:text-xl font-black text-slate-950 dark:text-white tracking-tighter">
-                                                ₹{formatINR(proposal.proposed_rate).replace('₹', '')}
-                                              </span>
                                             </div>
+                                          )}
 
-                                            {proposal.status === 'PENDING' && (
-                                              <div className="flex items-center justify-end w-full sm:w-auto gap-1.5 sm:gap-3">
-                                                <button
-                                                  onClick={() => handleStatusUpdate(proposal.id, 'REJECTED')}
-                                                  className="p-1.5 sm:p-2 text-slate-400 dark:text-white/20 hover:text-red-500 hover:bg-red-500/5 rounded-full transition-all duration-200"
-                                                  title="Reject Proposal"
-                                                >
-                                                  <X size={18} className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
-                                                </button>
+                                          {proposal.status === 'PENDING' ? (
+                                            <div className="flex flex-row items-center justify-between w-full gap-2 sm:gap-3 flex-wrap">
+                                              <button
+                                                onClick={() => handleStatusUpdate(proposal.id, 'REJECTED')}
+                                                className="rounded-full px-4 sm:px-6 py-1.5 sm:py-2 bg-rose-600 hover:bg-rose-700 text-white font-black text-[8px] sm:text-[10px] uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
+                                              >
+                                                Reject
+                                              </button>
+                                              <div className="flex items-center gap-2 sm:gap-3">
                                                 <button
                                                   onClick={() => navigate(`/client/messages?userId=${proposal.freelancer_id}`)}
-                                                  className="px-3 sm:px-5 py-1.5 sm:py-2 bg-accent text-white border border-accent rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition-all shadow-md shadow-accent/20"
+                                                  className="px-3 sm:px-5 py-1.5 sm:py-2 bg-accent text-white border border-accent rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-accent/90 transition-all"
                                                 >
                                                   Message
                                                 </button>
                                                 <Button
                                                   onClick={() => setRoleModal({ isOpen: true, proposal: proposal, role: roleInfo.title, scope: '' })}
                                                   disabled={updatingId === proposal.id}
-                                                  className="!rounded-full px-4 sm:px-6 py-1.5 sm:py-2 bg-green-500 text-white hover:bg-green-600 font-black text-[8px] sm:text-[10px] uppercase tracking-widest shadow-lg shadow-green-500/20 transition-all hover:scale-105 active:scale-95"
+                                                  className="!rounded-full px-4 sm:px-6 py-1.5 sm:py-2 bg-green-500 text-white hover:bg-green-600 font-black text-[8px] sm:text-[10px] uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
                                                 >
                                                   Fund Now
                                                 </Button>
                                               </div>
-                                            )}
-                                          </div>
+                                            </div>
+                                          ) : (
+                                            null
+                                          )}
                                         </div>
                                       </div>
                                     );
@@ -580,7 +607,7 @@ const Proposals = () => {
                           <h4 className="text-slate-950/70 dark:text-white/70 text-xs sm:text-sm font-semibold tracking-wide uppercase whitespace-nowrap">Job Posting Details</h4>
                           <button
                             onClick={() => navigate(`/client/jobs`)}
-                            className="text-accent text-[10px] sm:text-xs hover:underline flex items-center gap-1 sm:gap-1.5 font-medium shrink-0"
+                            className="text-white hover:text-accent flex items-center gap-1 sm:gap-1.5 font-medium shrink-0 text-[10px] sm:text-xs transition-colors no-underline"
                           >
                             Manage in My Jobs <ChevronRight size={14} className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                           </button>
@@ -634,8 +661,8 @@ const Proposals = () => {
                           )}
                         </div>
                       </div>
-                    </>
-                  )}
+                    </div>
+                  </div>
                 </Card>
               );
             })}
@@ -669,19 +696,19 @@ const Proposals = () => {
 
 
           {/* Page Footer Navigation */}
-          <div className="pt-8 border-t border-slate-200 dark:border-white/10 flex justify-center sm:justify-end">
+          <div className="pt-8 border-t border-slate-200 dark:border-white/10 w-full">
             <button
               onClick={() => navigate('/client/jobs')}
-              className="group flex items-center gap-3 px-6 py-3 bg-transparent border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 text-slate-950 dark:text-white rounded-full transition"
+              className="w-full group flex items-center justify-between px-6 py-4 bg-transparent border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 text-slate-950 dark:text-white rounded-xl transition"
             >
-              <div className="p-2 transition">
-                <Briefcase size={20} className="text-accent" />
+              <div className="flex items-center gap-4 min-w-0">
+                <img src="/Icons/icons8-bag-96.png" alt="Bag" className="w-8 h-8 object-contain shrink-0" />
+                <div className="text-left min-w-0">
+                  <p className="text-sm font-semibold">Manage All Jobs</p>
+                  <p className="text-slate-900/40 dark:text-white/40 text-[10px]">View, edit, or close your other listings</p>
+                </div>
               </div>
-              <div className="text-left">
-                <p className="text-sm font-semibold">Manage All Jobs</p>
-                <p className="text-slate-900/40 dark:text-white/40 text-[10px]">View, edit, or close your other listings</p>
-              </div>
-              <ChevronRight size={18} className="ml-4 text-slate-900/20 dark:text-white/20 group-hover:text-slate-950 dark:group-hover:text-white transition" />
+              <ChevronRight size={18} className="text-slate-900/20 dark:text-white/20 group-hover:text-slate-950 dark:group-hover:text-white transition shrink-0" />
             </button>
           </div>
         </div>

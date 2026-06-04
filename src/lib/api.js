@@ -93,7 +93,8 @@ api.interceptors.response.use((response) => {
     // Strategy: attempt a silent Supabase token refresh before giving up.
     // NEVER delete sb-* keys — those belong to the Supabase SDK and are needed
     // for refresh. Only clear our app-level 'token' key if the refresh also fails.
-    if (error.response?.status === 401 && !originalRequest._retried) {
+    const isExempt = originalRequest?.url?.includes('/api/otp/') || originalRequest?.url?.includes('/api/auth/login');
+    if (error.response?.status === 401 && !isExempt && !originalRequest._retried) {
         originalRequest._retried = true;
 
         try {

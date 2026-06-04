@@ -105,10 +105,10 @@ export default function SpendingByActivityPage() {
 
       {loading ? (
         <div className="space-y-2">
-          <div className="animate-pulse bg-white/5 border border-white/10 rounded-[2rem] h-24 w-full" />
+          <div className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-24 w-full" />
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="animate-pulse bg-white/5 border border-white/10 rounded-[2rem] h-80" />
-            <div className="animate-pulse bg-white/5 border border-white/10 rounded-[2rem] h-80" />
+            <div className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-80" />
+            <div className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-80" />
           </div>
         </div>
       ) : !data || (breakdown.length === 0 && byContract.length === 0) ? (
@@ -127,7 +127,7 @@ export default function SpendingByActivityPage() {
       ) : (
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 mt-2 pb-12 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {/* Aggregate Expenditure Card */}
-          <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative overflow-hidden group">
+          <div className="bg-transparent border border-white/10 rounded-2xl p-6 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative overflow-hidden group">
             {/* Subtle decorative glow similar to account health */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[100px] -mr-32 -mt-32 rounded-full pointer-events-none group-hover:bg-accent/10 transition-all duration-700" />
 
@@ -144,7 +144,7 @@ export default function SpendingByActivityPage() {
           <div className="flex flex-col gap-8">
             {/* Visual Analytics Segment */}
             {breakdown.length > 0 && (
-              <div className="bg-transparent border border-white/10 rounded-[2rem] p-6 sm:p-10">
+              <div className="bg-transparent border border-white/10 rounded-2xl p-6 sm:p-10">
                 <div className="flex items-center gap-3 mb-8">
                   <PieIcon size={20} className="text-accent" />
                   <div>
@@ -212,7 +212,7 @@ export default function SpendingByActivityPage() {
 
             {/* Strategic Contract Breakdown Table */}
             {byContract.length > 0 && (
-              <div className="bg-transparent border border-white/10 rounded-[2rem] overflow-hidden self-stretch flex flex-col">
+              <div className="bg-transparent border border-white/10 rounded-2xl overflow-hidden self-stretch flex flex-col">
                 <div className="px-8 py-6 border-b border-white/10 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-1.5 h-5 bg-accent/40 rounded-full" />

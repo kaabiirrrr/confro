@@ -13,7 +13,8 @@ const CustomDropdown = ({
   className = "", 
   fullWidth = true,
   error = "",
-  variant = "glass"
+  variant = "glass",
+  compact = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -180,9 +181,9 @@ const CustomDropdown = ({
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         className={`
-          group flex items-center justify-between px-2 sm:px-4 py-2 sm:py-3 
+          group flex items-center justify-between px-2 sm:px-4 ${compact ? 'py-2 sm:py-1.5' : 'py-2 sm:py-3'} 
           transition-all duration-300 cursor-pointer
-          ${variant === 'minimal' ? 'border-none bg-transparent !p-0' : variant === 'transparent' ? 'border border-slate-200 dark:border-white/10 bg-transparent rounded-xl sm:rounded-2xl' : 'border rounded-xl sm:rounded-2xl bg-white dark:bg-secondary'}
+          ${variant === 'minimal' ? 'border-none bg-transparent !p-0' : variant === 'transparent' ? `border border-slate-200 dark:border-white/10 bg-transparent ${compact ? 'rounded-lg' : 'rounded-xl sm:rounded-2xl'}` : `border ${compact ? 'rounded-lg' : 'rounded-xl sm:rounded-2xl'} bg-white dark:bg-secondary`}
           ${isOpen && variant !== 'minimal' ? 'border-accent shadow-[0_0_0_3px_rgba(59,130,246,0.1)]' : variant !== 'minimal' ? 'border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20' : ''}
           ${error ? 'border-red-500/50' : ''}
         `}
@@ -191,12 +192,12 @@ const CustomDropdown = ({
           {selectedOption?.icon && (
             <span className="text-accent flex-shrink-0">{selectedOption.icon}</span>
           )}
-          <span className={`text-sm truncate ${!selectedOption ? 'text-slate-400 dark:text-white/40' : 'text-slate-800 dark:text-white font-medium'}`}>
+          <span className={`${compact ? 'text-sm sm:text-xs' : 'text-sm'} truncate ${!selectedOption ? 'text-slate-400 dark:text-white/40' : 'text-slate-800 dark:text-white font-medium'}`}>
             {selectedOption ? selectedOption.label : placeholder}
           </span>
         </div>
         <ChevronDown 
-          size={16} 
+          size={compact ? 14 : 16} 
           className={`flex-shrink-0 text-slate-400 dark:text-white/30 transition-transform duration-300 ${isOpen ? 'rotate-180 text-accent' : 'group-hover:text-slate-600 dark:group-hover:text-white/50'}`} 
         />
       </div>

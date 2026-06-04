@@ -66,8 +66,8 @@ export default function WalletModal({ isOpen, onClose, onSuccess }) {
 
             if (verifyRes.success) {
               toast.success("Funds added successfully!");
-              if (onSuccess) onSuccess(verifyRes.data.newBalance);
               onClose();
+              if (onSuccess) onSuccess(verifyRes.balance ?? verifyRes.newBalance);
             } else {
               throw new Error(verifyRes.message || "Verification failed");
             }

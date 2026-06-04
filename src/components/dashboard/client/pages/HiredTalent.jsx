@@ -49,7 +49,7 @@ const HiredTalent = () => {
       {loading ? (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-32" />
+            <div key={i} className="animate-pulse bg-white/5 border border-white/10 rounded-xl h-32" />
           ))}
         </div>
       ) : freelancers.length === 0 ? (
@@ -81,16 +81,28 @@ const HiredTalent = () => {
             const jobTitle = contract.jobTitle || 'Unknown Job';
             const status = contract.status || 'ACTIVE';
             const budget = contract.budget_amount;
+            const jobBudget = contract.job_budget;
             const budgetType = contract.budget_type;
             const startDate = contract.start_date ? new Date(contract.start_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : null;
             const endDate = contract.end_date ? new Date(contract.end_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : null;
             const deadline = contract.bid_deadline ? new Date(contract.bid_deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : null;
             const createdAt = new Date(contract.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 
+            const getStatusBadgeClass = (statusName) => {
+              const s = statusName?.toUpperCase() || '';
+              if (s === 'ACTIVE') {
+                return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+              }
+              if (s === 'PENDING') {
+                return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+              }
+              return 'bg-white/5 text-white/40 border-white/10';
+            };
+
             return (
               <div
                 key={contract.id || Math.random()}
-                className="bg-transparent border border-white/10 rounded-2xl p-5 hover:border-accent/40 transition-all shadow-sm group relative"
+                className="bg-transparent border border-white/10 rounded-xl p-5 hover:border-accent/40 transition-all shadow-sm group relative"
               >
                 <div className="flex flex-col md:flex-row md:items-start gap-5">
                   {/* Avatar + Name + Email */}
@@ -111,54 +123,59 @@ const HiredTalent = () => {
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <h3 className="text-white font-semibold text-sm truncate group-hover:text-accent transition-colors">{freelancerName}</h3>
-                        <span className={`md:hidden absolute top-5 right-5 inline-block px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest border ${status.toUpperCase() === 'ACTIVE'
-                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                          : 'bg-white/5 text-white/40 border-white/10'
-                          }`}>{status}</span>
+                        <span className={`md:hidden absolute top-5 right-5 inline-block px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest border ${getStatusBadgeClass(status)}`}>{status}</span>
                       </div>
                       {freelancerTitle && <p className="text-white/40 text-[10px] truncate mt-0.5 italic">{freelancerTitle}</p>}
-                      <span className={`hidden md:inline-block mt-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest border ${status.toUpperCase() === 'ACTIVE'
-                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                        : 'bg-white/5 text-white/40 border-white/10'
-                        }`}>{status}</span>
+                      <span className={`hidden md:inline-block mt-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest border ${getStatusBadgeClass(status)}`}>{status}</span>
                     </div>
                   </div>
 
                   {/* Contract Details */}
-                  <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-4">
-                    <div className="min-w-0">
-                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Contract Title</p>
-                      <p className="text-sm font-medium text-white truncate">{jobTitle}</p>
+                  <div className="flex-1 min-w-0 flex flex-col">
+                    {/* Top Row: Full Contract Title */}
+                    <div className="mb-2">
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-0.5">Contract Title</p>
+                      <h4 className="text-sm font-semibold text-white break-words leading-snug">{jobTitle}</h4>
                     </div>
-                    {budget != null && (
-                      <div className="text-right sm:text-left">
-                        <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Bid Budget</p>
-                        <p className="text-sm font-semibold text-accent">₹{parseFloat(budget).toLocaleString('en-IN')}{budgetType === 'hourly' ? '/hr' : ''}</p>
-                      </div>
-                    )}
-                    <div>
-                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Started</p>
-                      <p className="text-xs text-white/60">{startDate || createdAt}</p>
-                    </div>
-                    {deadline && (
-                      <div className="text-right sm:text-left">
-                        <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Bid Deadline</p>
-                        <p className="text-xs text-white/60">{deadline}</p>
-                      </div>
-                    )}
-                    {endDate && (
+
+                    {/* Bottom Row: Other Info (Separate Line) */}
+                    {/* Mobile: 2-col grid (Started left, Budget right) + Completion below spanning full width */}
+                    {/* Desktop: 3-col grid in one row */}
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-2.5 pt-2.5 border-t border-white/5">
+                      {/* Started */}
                       <div>
-                        <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Completion</p>
-                        <p className="text-xs text-white/60">{endDate}</p>
+                        <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Started</p>
+                        <p className="text-xs text-white/60">{startDate || createdAt}</p>
                       </div>
-                    )}
 
-                    {/* Spacer to push 'Hired On' to the right column on mobile (2rd row, 2nd col) */}
-                    {!endDate && <div className="sm:hidden" />}
+                      {/* Budgets — right col on mobile, centre col on desktop */}
+                      <div className="text-right md:text-right">
+                        <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Budget Details</p>
+                        <div className="space-y-0.5">
+                          {jobBudget != null && (
+                            <div className="flex items-center justify-end gap-1.5">
+                              <span className="text-[9px] text-white/40 font-medium">Job:</span>
+                              <span className="text-xs font-semibold text-white/70">₹{parseFloat(jobBudget).toLocaleString('en-IN')}{budgetType === 'hourly' ? '/hr' : ''}</span>
+                            </div>
+                          )}
+                          {budget != null && (
+                            <div className="flex items-center justify-end gap-1.5">
+                              <span className="text-[9px] text-accent/65 font-medium">Bid:</span>
+                              <span className="text-xs font-bold text-accent">₹{parseFloat(budget).toLocaleString('en-IN')}{budgetType === 'hourly' ? '/hr' : ''}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
 
-                    <div className="text-right sm:text-left">
-                      <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1">Hired On</p>
-                      <p className="text-xs text-white/60">{createdAt}</p>
+                      {/* Completion / Deadline / Hired On — full-width on mobile, right col on desktop */}
+                      <div className="col-span-2 md:col-span-1 md:text-right">
+                        <p className="text-[9px] font-bold uppercase tracking-widest text-white/20 mb-1 md:text-right">
+                          {endDate ? 'Completion' : deadline ? 'Bid Deadline' : 'Hired On'}
+                        </p>
+                        <p className="text-xs text-white/60 md:text-right">
+                          {endDate || deadline || createdAt}
+                        </p>
+                      </div>
                     </div>
                   </div>
 
@@ -169,15 +186,15 @@ const HiredTalent = () => {
                         const fid = contract.freelancer_id || contract.freelancer?.id;
                         if (fid) navigate(`/freelancer/${fid}`);
                       }}
-                      className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4 py-2 bg-white/5 text-white/70 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all shadow-sm"
+                      className="flex-1 md:flex-none flex items-center justify-center px-4 py-2 bg-white/5 text-white/70 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all shadow-sm"
                     >
-                      <ExternalLink size={12} /> Profile
+                      Profile
                     </button>
                     <button
                       onClick={() => handleMessage(contract.freelancer_id || contract.freelancer?.id)}
-                      className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-5 py-2 bg-accent text-white border border-accent rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-accent/90 transition-all shadow-md shadow-accent/20"
+                      className="flex-1 md:flex-none flex items-center justify-center px-5 py-2 bg-accent text-white border border-accent rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-accent/90 transition-all"
                     >
-                      <MessageSquare size={12} /> Message
+                      Message
                     </button>
                   </div>
                 </div>

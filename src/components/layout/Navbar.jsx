@@ -64,7 +64,7 @@ const Navbar = ({
             <div className="hidden lg:block relative">
               <form
                 onSubmit={(e) => { e.preventDefault(); onSearch(); }}
-                className="flex items-center bg-secondary border border-border rounded-full px-4 py-2 w-[300px] transition-all focus-within:border-accent group"
+                className="flex items-center border border-border rounded-full px-4 py-2 w-[200px] lg:w-[300px] xl:w-[400px] transition-all focus-within:border-accent group"
               >
                 <button type="submit" className="flex-shrink-0">
                   <Search size={16} className="text-white/40 group-focus-within:text-accent transition-colors" />
