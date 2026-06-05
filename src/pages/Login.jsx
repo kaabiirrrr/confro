@@ -107,7 +107,18 @@ const Login = () => {
     if (!unverifiedEmail || resendCooldown > 0) return;
     try {
       const { error } = await supabase.auth.resend({ type: 'signup', email: unverifiedEmail });
-      if (error) throw error;
+      if (error) {
+        // Supabase rate-limits resend requests; surface a friendly message instead of the raw error.
+        const msg = error.message?.toLowerCase() || '';
+        if (msg.includes('rate') || msg.includes('too many') || msg.includes('limit') || error.status === 429) {
+          toast.error('Please wait a minute before requesting another email.');
+        } else if (msg.includes('sending') || msg.includes('smtp') || msg.includes('email')) {
+          toast.error('Could not send the email right now. Please try again in a moment.');
+        } else {
+          toast.error('Failed to resend. Please try again later.');
+        }
+        return;
+      }
       setResendSuccess(true);
       setResendCooldown(60);
       cooldownRef.current = setInterval(() => {
@@ -117,7 +128,7 @@ const Login = () => {
         });
       }, 1000);
     } catch (err) {
-      toast.error(err.message || 'Failed to resend. Try again.');
+      toast.error('Failed to resend. Please try again later.');
     }
   };
 
@@ -407,24 +418,23 @@ const Login = () => {
                 <motion.div
                   initial={{ opacity: 0, y: -8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="rounded-xl border border-yellow-500/30 bg-yellow-500/8 p-4 space-y-3"
-                  style={{ background: 'rgba(234,179,8,0.06)' }}
+                  className="verify-email-banner"
                 >
                   <div className="flex items-start gap-3">
                     <span style={{ fontSize: 18, lineHeight: 1 }}>✉️</span>
                     <div>
-                      <p style={{ color: '#fbbf24', fontWeight: 600, fontSize: 13, marginBottom: 4 }}>
+                      <p className="verify-banner-title">
                         Please verify your email
                       </p>
-                      <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, lineHeight: 1.5 }}>
-                        We sent a confirmation link to <strong style={{ color: 'rgba(255,255,255,0.75)' }}>{unverifiedEmail}</strong>.
+                      <p className="verify-banner-body">
+                        We sent a confirmation link to <strong className="verify-banner-email">{unverifiedEmail}</strong>.
                         Check your inbox and click the link to activate your account.
                       </p>
                     </div>
                   </div>
 
                   {resendSuccess && (
-                    <p style={{ color: '#4ade80', fontSize: 12, paddingLeft: 30 }}>
+                    <p className="verify-banner-success">
                       ✓ Confirmation email resent. Check your inbox.
                     </p>
                   )}
@@ -434,18 +444,7 @@ const Login = () => {
                       type="button"
                       onClick={handleResend}
                       disabled={resendCooldown > 0}
-                      style={{
-                        background: resendCooldown > 0 ? 'rgba(255,255,255,0.05)' : 'rgba(251,191,36,0.15)',
-                        border: '1px solid rgba(251,191,36,0.3)',
-                        color: resendCooldown > 0 ? 'rgba(255,255,255,0.3)' : '#fbbf24',
-                        borderRadius: 10,
-                        padding: '8px 14px',
-                        fontSize: 12,
-                        fontWeight: 600,
-                        cursor: resendCooldown > 0 ? 'not-allowed' : 'pointer',
-                        transition: 'all 0.2s',
-                        width: 'fit-content',
-                      }}
+                      className={`verify-resend-btn${resendCooldown > 0 ? ' disabled' : ''}`}
                     >
                       {resendCooldown > 0
                         ? `Resend in ${resendCooldown}s`
@@ -454,7 +453,7 @@ const Login = () => {
 
                     <Link
                       to="/signup"
-                      style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, textDecoration: 'none' }}
+                      className="verify-wrong-email-link"
                     >
                       Wrong email? Sign up again →
                     </Link>

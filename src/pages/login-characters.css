@@ -247,6 +247,101 @@
   text-decoration: none;
 }
 
+/* ================= EMAIL VERIFICATION BANNER ================= */
+
+.verify-email-banner {
+  border-radius: 12px;
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  background: rgba(234, 179, 8, 0.08);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Light mode: slightly more visible amber tint */
+html:not(.dark) .verify-email-banner {
+  background: rgba(251, 191, 36, 0.07);
+  border-color: rgba(217, 119, 6, 0.3);
+}
+
+.verify-banner-title {
+  color: #b45309; /* amber-700 — readable on white */
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.dark .verify-banner-title {
+  color: #fbbf24; /* amber-400 — vivid on dark */
+}
+
+.verify-banner-body {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.verify-banner-email {
+  color: var(--color-light-text);
+  font-weight: 600;
+}
+
+.verify-banner-success {
+  color: #16a34a; /* green-700 for light mode */
+  font-size: 12px;
+  padding-left: 30px;
+}
+
+.dark .verify-banner-success {
+  color: #4ade80; /* green-400 for dark mode */
+}
+
+.verify-resend-btn {
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(217, 119, 6, 0.4);
+  color: #b45309;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: fit-content;
+}
+
+.dark .verify-resend-btn {
+  background: rgba(251, 191, 36, 0.15);
+  border-color: rgba(251, 191, 36, 0.3);
+  color: #fbbf24;
+}
+
+.verify-resend-btn:hover:not(.disabled) {
+  background: rgba(217, 119, 6, 0.18);
+}
+
+.dark .verify-resend-btn:hover:not(.disabled) {
+  background: rgba(251, 191, 36, 0.22);
+}
+
+.verify-resend-btn.disabled {
+  background: var(--color-hover);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.verify-wrong-email-link {
+  color: var(--color-text-muted);
+  font-size: 11px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.verify-wrong-email-link:hover {
+  color: var(--color-accent);
+}
+
 /* ================= CHARACTER ANIMATION ================= */
 
 .character {
