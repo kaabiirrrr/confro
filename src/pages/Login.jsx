@@ -21,6 +21,7 @@ const Login = () => {
   const [searchParams] = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [unverifiedEmail, setUnverifiedEmail] = useState(null); // triggers verification banner
+  const [deletedUser, setDeletedUser] = useState(false); // triggers deleted-user banner
   const [resendCooldown, setResendCooldown] = useState(0);
   const [resendSuccess, setResendSuccess] = useState(false);
   const cooldownRef = useRef(null);
@@ -95,6 +96,15 @@ const Login = () => {
       }
     } catch (err) {
       logger.error("Login error", err);
+      const status = err?.response?.status;
+      const code = err?.response?.data?.code;
+
+      // Deleted user — show inline banner with Sign Up link
+      if (status === 410 || code === 'USER_NOT_FOUND') {
+        setDeletedUser(true);
+        return;
+      }
+
       const msg = err?.response?.data?.message || err?.message || '';
       if (msg.toLowerCase().includes('email not confirmed') || msg.toLowerCase().includes('email_not_confirmed')) {
         setUnverifiedEmail(data.email);
@@ -457,6 +467,45 @@ const Login = () => {
                     >
                       Wrong email? Sign up again →
                     </Link>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* ── Deleted user banner ── */}
+              {deletedUser && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="verify-email-banner"
+                  style={{ borderColor: 'rgba(239,68,68,0.35)', background: 'rgba(239,68,68,0.08)' }}
+                >
+                  <div className="flex items-start gap-3">
+                    <span style={{ fontSize: 18, lineHeight: 1 }}>🚫</span>
+                    <div>
+                      <p className="verify-banner-title" style={{ color: '#f87171' }}>
+                        User not found
+                      </p>
+                      <p className="verify-banner-body">
+                        It looks like this account no longer exists on our platform.
+                        Please create a new profile to get started.
+                      </p>
+                    </div>
+                  </div>
+                  <div style={{ paddingLeft: 30, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <Link
+                      to="/signup"
+                      className="verify-resend-btn"
+                      style={{ textAlign: 'center', textDecoration: 'none' }}
+                    >
+                      Create a Profile →
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => setDeletedUser(false)}
+                      className="verify-wrong-email-link"
+                    >
+                      Try a different account
+                    </button>
                   </div>
                 </motion.div>
               )}

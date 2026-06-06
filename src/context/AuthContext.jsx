@@ -233,6 +233,16 @@ export function AuthProvider({ children }) {
                 return response.data;
             }
         } catch (error) {
+            const status = error.response?.status;
+            const code = error.response?.data?.code;
+
+            // ── Deleted User: suppress generic toast ──────────────────────────
+            // Login.jsx shows its own "User not found — please sign up" banner
+            // for this specific case. A toast here would be redundant/confusing.
+            if (status === 410 || code === 'USER_NOT_FOUND') {
+                throw error;
+            }
+
             let message = error.response?.data?.message || 'Login failed';
             
             // Critical Network Detection
@@ -245,6 +255,7 @@ export function AuthProvider({ children }) {
             toast.error(message);
             throw new Error(message);
         }
+
     };
 
     const updateUserRole = async (newRole) => {

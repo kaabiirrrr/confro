@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Mail, Loader2 } from 'lucide-react';
 import axios from 'axios';
@@ -14,6 +15,7 @@ const ForgotPassword = () => {
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState('');
+    const [isUserNotFound, setIsUserNotFound] = useState(false);
 
     const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
     const isGmail = email.toLowerCase().endsWith('@gmail.com');
@@ -24,21 +26,36 @@ const ForgotPassword = () => {
 
         setLoading(true);
         setError('');
+        setIsUserNotFound(false);
         try {
             await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
         } catch (err) {
-            // Only surface network/server errors — never 404 (no enumeration)
+            const status = err.response?.status;
+            const code = err.response?.data?.code;
+
+            // ── Deleted / non-existent user ──────────────────────────────────
+            // Backend returns 404 + USER_NOT_FOUND when no profile row exists.
+            // Show a clear, actionable error rather than the success screen.
+            if (status === 404 || code === 'USER_NOT_FOUND') {
+                setError('No account found with this email. Please sign up to create a profile.');
+                setIsUserNotFound(true);
+                setLoading(false);
+                return;
+            }
+
+            // Only surface network/server errors — never 404 for other reasons
             if (!err.response || err.response.status >= 500) {
                 setError('Something went wrong. Try again.');
                 setLoading(false);
                 return;
             }
-            // 404 or any other 4xx → still show success (no enumeration)
+            // Other 4xx → still show success (no enumeration for non-deleted cases)
         } finally {
             setLoading(false);
         }
         setSubmitted(true);
     };
+
 
     return (
         <div className="min-h-screen bg-primary flex flex-col font-sans selection:bg-accent/30">
@@ -96,7 +113,17 @@ const ForgotPassword = () => {
                                         />
                                     </div>
                                     {error && (
-                                        <p className="text-red-400 text-xs mt-1.5">{error}</p>
+                                        <div className="mt-1.5">
+                                            <p className="text-red-400 text-xs">{error}</p>
+                                            {isUserNotFound && (
+                                                <Link
+                                                    to="/signup"
+                                                    className="inline-block mt-2 text-xs font-semibold text-accent hover:underline"
+                                                >
+                                                    Create a new profile →
+                                                </Link>
+                                            )}
+                                        </div>
                                     )}
                                 </div>
 
